@@ -163,12 +163,39 @@ function get_past_events(\WP_REST_Request $request): \WP_REST_Response {
  * ─────────────────────────────────────────────── */
 
 function submit_rsvp(\WP_REST_Request $request): \WP_REST_Response {
+    $name = (string) $request->get_param('name');
+    $note = (string) $request->get_param('note');
+
+    // Optional content screening via Simple Spam Shield (keyword, link, and
+    // duplicate guards), complementing this module's own honeypot, rate
+    // limiting, and duplicate detection in add_rsvp(). Skipped when the
+    // honeypot is tripped so those bots still get add_rsvp()'s silent
+    // fake-success rather than a visible rejection. Degrades gracefully when
+    // Simple Spam Shield is not installed.
+    if (function_exists('simple_spam_shield_check') && '' === trim((string) $request->get_param('website'))) {
+        $check = simple_spam_shield_check(
+            [
+                'content' => trim($note . ' ' . $name),
+                'author'  => $name,
+                'email'   => (string) $request->get_param('email'),
+            ],
+            'rsvp_form',
+        );
+
+        if (is_wp_error($check)) {
+            return new \WP_REST_Response(
+                ['message' => $check->get_error_message(), 'code' => $check->get_error_code()],
+                400,
+            );
+        }
+    }
+
     $result = RSVP\add_rsvp([
         'event_id'   => $request->get_param('id'),
-        'name'       => $request->get_param('name'),
+        'name'       => $name,
         'email'      => $request->get_param('email'),
         'party_size' => $request->get_param('party_size'),
-        'note'       => $request->get_param('note'),
+        'note'       => $note,
         'honeypot'   => $request->get_param('website'), // Honeypot field.
     ]);
 
