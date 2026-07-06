@@ -189,6 +189,7 @@ function render_page(): void {
                 <?php
                 printf(
                     wp_kses(
+                        /* translators: %s: URL of the "Add New Product" admin screen. */
                         __('No products found. <a href="%s">Add your first product</a> to get started.', 'farm-stand-manager'),
                         ['a' => ['href' => []]],
                     ),

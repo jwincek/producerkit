@@ -56,7 +56,7 @@ $section_label = sprintf(
 );
 ?>
 
-<section <?php echo $wrapper_attrs; ?> aria-label="<?php echo esc_attr($section_label); ?>">
+<section <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?> aria-label="<?php echo esc_attr($section_label); ?>">
     <div class="lfuf-location-info__header">
         <h3 class="lfuf-location-info__title">
             <?php echo esc_html($location->post_title); ?>
@@ -99,7 +99,10 @@ $section_label = sprintf(
             target="_blank"
             rel="noopener noreferrer"
         >
-            <?php printf(esc_html__('Pay via Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@'))); ?>
+            <?php
+            /* translators: %s: Venmo handle (without the @ sign). */
+            printf(esc_html__('Pay via Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@')));
+            ?>
             <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
         </a>
     <?php endif; ?>

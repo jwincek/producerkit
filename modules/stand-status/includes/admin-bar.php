@@ -119,7 +119,8 @@ function add_stand_nodes(\WP_Admin_Bar $bar): void {
         $top_title = sprintf(
             '<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s',
             $open_count > 0 ? 'open' : 'closed',
-            sprintf(__('Stands (%d/%d open)', 'farm-stand-manager'), $open_count, $total),
+            /* translators: %1$d: number of open stands, %2$d: total number of stands. */
+            sprintf(__('Stands (%1$d/%2$d open)', 'farm-stand-manager'), $open_count, $total),
         );
     }
 

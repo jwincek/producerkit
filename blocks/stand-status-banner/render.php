@@ -90,7 +90,8 @@ $venmo_url = $venmo_handle
 // Season display strings.
 $season_range_full = ($season_start && $season_end)
     ? sprintf(
-        __('Our season runs %s – %s. See you then!', 'farm-stand-manager'),
+        /* translators: %1$s: season start date, %2$s: season end date. */
+        __('Our season runs %1$s – %2$s. See you then!', 'farm-stand-manager'),
         date_i18n('F j', strtotime($season_start)),
         date_i18n('F j', strtotime($season_end)),
     )
@@ -98,7 +99,8 @@ $season_range_full = ($season_start && $season_end)
 
 $season_range_short = ($season_start && $season_end)
     ? sprintf(
-        __('Season: %s – %s', 'farm-stand-manager'),
+        /* translators: %1$s: season start date, %2$s: season end date. */
+        __('Season: %1$s – %2$s', 'farm-stand-manager'),
         date_i18n('M j', strtotime($season_start)),
         date_i18n('M j', strtotime($season_end)),
     )
@@ -130,10 +132,10 @@ $section_label = sprintf(
 ?>
 
 <section
-    <?php echo $wrapper_attrs; ?>
+    <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
     aria-label="<?php echo esc_attr($section_label); ?>"
     data-wp-interactive="leftfield/stand-status"
-    <?php echo wp_interactivity_data_wp_context($context); ?>
+    <?php echo wp_interactivity_data_wp_context($context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
     data-wp-init="callbacks.initPolling"
     data-wp-class--lfuf-stand-banner--open="context.isOpen"
     data-wp-class--lfuf-stand-banner--closed="!context.isOpen"
@@ -174,6 +176,7 @@ $section_label = sprintf(
             <?php echo (! $is_open && $next_open) ? '' : 'hidden'; ?>
         ><?php
             if (! $is_open && $next_open) {
+                /* translators: %s: date and time the stand next opens. */
                 printf(esc_html__('Next open: %s', 'farm-stand-manager'), esc_html($next_open));
             }
         ?></p>
@@ -182,7 +185,10 @@ $section_label = sprintf(
             <span
                 class="lfuf-stand-banner__updated"
                 data-wp-text="state.updatedText"
-            ><?php printf(esc_html__('Updated %s', 'farm-stand-manager'), esc_html($time_ago)); ?></span>
+            ><?php
+                /* translators: %s: human-readable time since the last status update (e.g. "5 mins ago"). */
+                printf(esc_html__('Updated %s', 'farm-stand-manager'), esc_html($time_ago));
+            ?></span>
         <?php endif; ?>
     </div>
 
@@ -223,6 +229,7 @@ $section_label = sprintf(
                 <span class="lfuf-stand-banner__icon" aria-hidden="true">💸</span>
                 <?php
                 printf(
+                    /* translators: %s: Venmo handle (without the @ sign). */
                     esc_html__('Pay with Venmo (@%s)', 'farm-stand-manager'),
                     esc_html(ltrim($venmo_handle, '@')),
                 );

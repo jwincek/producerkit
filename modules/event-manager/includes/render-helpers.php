@@ -172,11 +172,13 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                         <span data-wp-text="state.rsvpSummaryText">
                             <?php
                             printf(
+                                /* translators: %d: number of people who have RSVPed. */
                                 esc_html__('%d people coming', 'farm-stand-manager'),
                                 (int) $rsvp['headcount'],
                             );
                             if ($rsvp['spots_left'] !== null) {
                                 printf(' · %s', sprintf(
+                                    /* translators: %d: number of RSVP spots remaining. */
                                     esc_html__('%d spots left', 'farm-stand-manager'),
                                     (int) $rsvp['spots_left'],
                                 ));

@@ -59,7 +59,7 @@ $section_label = sprintf(
 );
 ?>
 
-<section <?php echo $wrapper_attrs; ?> aria-label="<?php echo esc_attr($section_label); ?>">
+<section <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?> aria-label="<?php echo esc_attr($section_label); ?>">
     <?php if (empty($by_day)) : ?>
         <?php if ($hours_fallback) : ?>
             <p class="lfuf-stand-schedule__fallback">

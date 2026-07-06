@@ -41,9 +41,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
 ?>
 
 <div
-    <?php echo $wrapper_attrs; ?>
+    <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
     data-wp-interactive="leftfield/event-list"
-    <?php echo wp_interactivity_data_wp_context($context); ?>
+    <?php echo wp_interactivity_data_wp_context($context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
-    <?php echo \Leftfield\EventManager\Render\render_event_card($event_data, $show_image, $show_rsvp, $show_location); ?>
+    <?php echo \Leftfield\EventManager\Render\render_event_card($event_data, $show_image, $show_rsvp, $show_location); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally. ?>
 </div>

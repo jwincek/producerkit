@@ -126,12 +126,16 @@ function render_dashboard(): void {
                     <?php if ($stand_data['last_toggled']) :
                         $ago = human_time_diff(strtotime($stand_data['last_toggled']), current_time('timestamp'));
                     ?>
-                        <span><?php printf(esc_html__('Updated %s ago', 'farm-stand-manager'), esc_html($ago)); ?></span>
+                        <span><?php
+                            /* translators: %s: human-readable time since the last update (e.g. "5 mins"). */
+                            printf(esc_html__('Updated %s ago', 'farm-stand-manager'), esc_html($ago));
+                        ?></span>
                     <?php endif; ?>
                     <?php if ($stand_data['season_start'] && $stand_data['season_end']) : ?>
                         <span>
                             <?php printf(
-                                esc_html__('Season: %s – %s', 'farm-stand-manager'),
+                                /* translators: %1$s: season start date, %2$s: season end date. */
+                                esc_html__('Season: %1$s – %2$s', 'farm-stand-manager'),
                                 esc_html(date_i18n('M j', strtotime($stand_data['season_start']))),
                                 esc_html(date_i18n('M j', strtotime($stand_data['season_end']))),
                             ); ?>
@@ -150,7 +154,7 @@ function render_dashboard(): void {
             <div class="lfuf-dashboard__cards">
                 <?php foreach ($cpt_counts as $post_type => $data) : ?>
                     <div class="lfuf-dashboard__card">
-                        <span class="lfuf-dashboard__card-icon"><?php echo $data['icon']; ?></span>
+                        <span class="lfuf-dashboard__card-icon"><?php echo esc_html($data['icon']); ?></span>
                         <div class="lfuf-dashboard__card-body">
                             <span class="lfuf-dashboard__card-count"><?php echo (int) $data['published']; ?></span>
                             <span class="lfuf-dashboard__card-label"><?php echo esc_html($data['label']); ?></span>
@@ -194,7 +198,7 @@ function render_dashboard(): void {
                 <div class="lfuf-dashboard__gaps">
                     <?php foreach ($gaps as $gap) : ?>
                         <div class="lfuf-dashboard__gap lfuf-dashboard__gap--<?php echo esc_attr($gap['severity']); ?>">
-                            <span class="lfuf-dashboard__gap-icon"><?php echo $gap['icon']; ?></span>
+                            <span class="lfuf-dashboard__gap-icon"><?php echo esc_html($gap['icon']); ?></span>
                             <div class="lfuf-dashboard__gap-body">
                                 <strong><?php echo esc_html($gap['label']); ?></strong>
                                 <span class="lfuf-dashboard__gap-detail"><?php echo esc_html($gap['detail']); ?></span>
@@ -253,10 +257,16 @@ function render_dashboard(): void {
             <h2><?php esc_html_e('Platform', 'farm-stand-manager'); ?></h2>
             <ul class="lfuf-dashboard__platform-list">
                 <li>
-                    <?php printf(esc_html__('WordPress %s', 'farm-stand-manager'), esc_html(get_bloginfo('version'))); ?>
+                    <?php
+                    /* translators: %s: WordPress version number. */
+                    printf(esc_html__('WordPress %s', 'farm-stand-manager'), esc_html(get_bloginfo('version')));
+                    ?>
                 </li>
                 <li>
-                    <?php printf(esc_html__('PHP %s', 'farm-stand-manager'), esc_html(PHP_VERSION)); ?>
+                    <?php
+                    /* translators: %s: PHP version number. */
+                    printf(esc_html__('PHP %s', 'farm-stand-manager'), esc_html(PHP_VERSION));
+                    ?>
                 </li>
                 <li>
                     <?php esc_html_e('Interactivity API:', 'farm-stand-manager'); ?>
@@ -278,7 +288,7 @@ function render_dashboard(): void {
         <!-- ── Sample Data ── -->
         <?php
         if (function_exists('Leftfield\\SampleData\\get_dashboard_html')) {
-            echo \Leftfield\SampleData\get_dashboard_html();
+            echo \Leftfield\SampleData\get_dashboard_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_dashboard_html() escapes all output internally.
         }
         ?>
     </div>
@@ -310,6 +320,7 @@ function get_content_gaps(): array {
     if ($no_thumb_count > 0) {
         $gaps[] = [
             'icon'     => '📷',
+            /* translators: %d: number of products without a featured photo. */
             'label'    => sprintf(_n('%d product without a photo', '%d products without photos', $no_thumb_count, 'farm-stand-manager'), $no_thumb_count),
             'detail'   => __('Products look better on the availability board with images.', 'farm-stand-manager'),
             'severity' => 'info',
@@ -328,6 +339,7 @@ function get_content_gaps(): array {
     if ($no_price_count > 0) {
         $gaps[] = [
             'icon'     => '💲',
+            /* translators: %d: number of products without a price. */
             'label'    => sprintf(_n('%d product without a price', '%d products without prices', $no_price_count, 'farm-stand-manager'), $no_price_count),
             'detail'   => __('Visitors see the price on the availability board and product pages.', 'farm-stand-manager'),
             'severity' => 'warning',
@@ -346,6 +358,7 @@ function get_content_gaps(): array {
     if ($no_date_count > 0) {
         $gaps[] = [
             'icon'     => '📅',
+            /* translators: %d: number of events without a start date. */
             'label'    => sprintf(_n('%d event without a start date', '%d events without start dates', $no_date_count, 'farm-stand-manager'), $no_date_count),
             'detail'   => __('Events need a start date to appear in the event list.', 'farm-stand-manager'),
             'severity' => 'warning',
@@ -364,6 +377,7 @@ function get_content_gaps(): array {
     if ($no_addr_count > 0) {
         $gaps[] = [
             'icon'     => '📍',
+            /* translators: %d: number of locations without an address. */
             'label'    => sprintf(_n('%d location without an address', '%d locations without addresses', $no_addr_count, 'farm-stand-manager'), $no_addr_count),
             'detail'   => __('The address shows on location cards and the stand banner.', 'farm-stand-manager'),
             'severity' => 'warning',
@@ -376,7 +390,7 @@ function get_content_gaps(): array {
     $avail_table = $wpdb->prefix . 'lfuf_availability';
     if ($wpdb->get_var("SHOW TABLES LIKE '{$avail_table}'") === $avail_table) {
         $today    = current_time('Y-m-d');
-        $week_ago = date('Y-m-d', strtotime('-7 days', current_time('timestamp')));
+        $week_ago = gmdate('Y-m-d', strtotime('-7 days', current_time('timestamp')));
 
         // Products with availability older than 7 days.
         $stale_count = (int) $wpdb->get_var($wpdb->prepare(
@@ -392,6 +406,7 @@ function get_content_gaps(): array {
         if ($stale_count > 0) {
             $gaps[] = [
                 'icon'     => '🕐',
+                /* translators: %d: number of products with availability over a week old. */
                 'label'    => sprintf(_n('%d product with availability over a week old', '%d products with availability over a week old', $stale_count, 'farm-stand-manager'), $stale_count),
                 'detail'   => __('Consider refreshing the availability board.', 'farm-stand-manager'),
                 'severity' => 'info',
@@ -414,7 +429,8 @@ function get_content_gaps(): array {
         if ($unlisted > 0 && $total_products > 0) {
             $gaps[] = [
                 'icon'     => '🫥',
-                'label'    => sprintf(_n('%d product not on the availability board', '%d products not on the availability board', $unlisted, 'farm-stand-manager'), $unlisted),
+                /* translators: %d: number of products not on the availability board. */
+            'label'    => sprintf(_n('%d product not on the availability board', '%d products not on the availability board', $unlisted, 'farm-stand-manager'), $unlisted),
                 'detail'   => __('These products won\'t show up for visitors until you set their status.', 'farm-stand-manager'),
                 'severity' => 'info',
                 'url'      => admin_url('admin.php?page=farm-stand-availability'),

@@ -70,9 +70,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
 ?>
 
 <div
-    <?php echo $wrapper_attrs; ?>
+    <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
     data-wp-interactive="leftfield/event-list"
-    <?php echo wp_interactivity_data_wp_context($context); ?>
+    <?php echo wp_interactivity_data_wp_context($context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
     <?php if (! $has_events) : ?>
         <p class="lfuf-event-list__empty"><?php echo esc_html($empty_message); ?></p>
@@ -109,7 +109,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
             <div class="lfuf-event-list__section">
                 <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Upcoming', 'farm-stand-manager'); ?></h3>
                 <?php foreach ($upcoming as $event) :
-                    echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, $show_rsvp, $show_location);
+                    echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, $show_rsvp, $show_location); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
                 endforeach; ?>
             </div>
         <?php endif; ?>
@@ -119,7 +119,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
             <div class="lfuf-event-list__section lfuf-event-list__section--past">
                 <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Past Events', 'farm-stand-manager'); ?></h3>
                 <?php foreach ($past as $event) :
-                    echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, false, $show_location);
+                    echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, false, $show_location); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
                 endforeach; ?>
             </div>
         <?php endif; ?>

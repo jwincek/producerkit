@@ -280,7 +280,10 @@ function render_location_details(\WP_Post $post): string {
                 <span class="lfuf-single-details__value">
                     <a href="<?php echo esc_url('https://venmo.com/' . ltrim($venmo_handle, '@')); ?>"
                        target="_blank" rel="noopener noreferrer">
-                        <?php printf(esc_html__('Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@'))); ?>
+                        <?php
+                        /* translators: %s: Venmo handle (without the @ sign). */
+                        printf(esc_html__('Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@')));
+                        ?>
                         <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
                     </a>
                 </span>
@@ -391,9 +394,15 @@ function render_event_details(\WP_Post $post): string {
             <div class="lfuf-single-details__row">
                 <span class="lfuf-single-details__label"><?php esc_html_e('RSVPs', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
-                    <?php printf(esc_html__('%d people coming', 'farm-stand-manager'), (int) $rsvp_summary['headcount']); ?>
+                    <?php
+                    /* translators: %d: number of people who have RSVPed. */
+                    printf(esc_html__('%d people coming', 'farm-stand-manager'), (int) $rsvp_summary['headcount']);
+                    ?>
                     <?php if ($rsvp_summary['cap'] > 0) : ?>
-                        <?php printf(esc_html__('(%d spots total)', 'farm-stand-manager'), (int) $rsvp_summary['cap']); ?>
+                        <?php
+                        /* translators: %d: total number of RSVP spots. */
+                        printf(esc_html__('(%d spots total)', 'farm-stand-manager'), (int) $rsvp_summary['cap']);
+                        ?>
                     <?php endif; ?>
                     <?php if ($rsvp_summary['is_full']) : ?>
                         — <strong><?php esc_html_e('Full', 'farm-stand-manager'); ?></strong>

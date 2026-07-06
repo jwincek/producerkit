@@ -71,10 +71,10 @@ $wrapper_attrs = get_block_wrapper_attributes([
 ?>
 
 <section
-    <?php echo $wrapper_attrs; ?>
+    <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
     aria-label="<?php esc_attr_e('Product Availability', 'farm-stand-manager'); ?>"
     data-wp-interactive="leftfield/availability-board"
-    <?php echo wp_interactivity_data_wp_context($context); ?>
+    <?php echo wp_interactivity_data_wp_context($context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
     <?php if ($total === 0) : ?>
         <p class="lfuf-avail-board__empty">
@@ -255,8 +255,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
         <p class="lfuf-avail-board__footer" aria-live="polite" aria-atomic="true">
             <span data-wp-text="state.footerText">
                 <?php printf(
+                    /* translators: %d: number of items shown on the availability board. */
                     esc_html__('Showing %d items', 'farm-stand-manager'),
-                    $total,
+                    (int) $total,
                 ); ?>
             </span>
             <?php if ($board['generated_at'] ?? false) : ?>

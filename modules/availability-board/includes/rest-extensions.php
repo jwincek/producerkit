@@ -137,7 +137,7 @@ function get_board(\WP_REST_Request $request): \WP_REST_Response {
             p.post_title ASC
     ";
 
-    $rows = $wpdb->get_results($sql);
+    $rows = $wpdb->get_results($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- every variable fragment in $sql is built with $wpdb->prepare() above; remaining interpolations are wpdb table names.
 
     // Enrich with product meta and taxonomy terms.
     $items = [];

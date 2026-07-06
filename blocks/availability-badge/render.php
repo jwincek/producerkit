@@ -33,10 +33,11 @@ $wrapper_attrs = get_block_wrapper_attributes([
 ]);
 ?>
 
-<span <?php echo $wrapper_attrs; ?> role="status">
+<span <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?> role="status">
     <span class="screen-reader-text">
         <?php
         if ($product_name) {
+            /* translators: %s: product name. */
             printf(esc_html__('%s availability:', 'farm-stand-manager'), esc_html($product_name));
         } else {
             esc_html_e('Availability:', 'farm-stand-manager');

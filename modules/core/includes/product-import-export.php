@@ -56,16 +56,16 @@ function handle_export(): void {
         'order'          => 'ASC',
     ]);
 
-    $filename = 'farm-stand-products-' . date('Y-m-d') . '.csv';
+    $filename = 'farm-stand-products-' . gmdate('Y-m-d') . '.csv';
 
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     header('Pragma: no-cache');
 
-    $out = fopen('php://output', 'w');
+    $out = fopen('php://output', 'w'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming CSV to the response; WP_Filesystem cannot write to php://output.
 
     // BOM for Excel UTF-8 compatibility.
-    fwrite($out, "\xEF\xBB\xBF");
+    fwrite($out, "\xEF\xBB\xBF"); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- see fopen above.
 
     // Header row.
     fputcsv($out, [
@@ -124,7 +124,7 @@ function handle_export(): void {
         ]);
     }
 
-    fclose($out);
+    fclose($out); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
     exit;
 }
 
@@ -170,20 +170,20 @@ function handle_import(): void {
  * @return array<array<string,string>>
  */
 function parse_csv(string $filepath): array {
-    $handle = fopen($filepath, 'r');
+    $handle = fopen($filepath, 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming row-by-row CSV parse of an uploaded file via fgetcsv(); WP_Filesystem has no CSV reader.
     if (! $handle) {
         return [];
     }
 
     // Skip BOM if present.
-    $bom = fread($handle, 3);
+    $bom = fread($handle, 3); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- see fopen above.
     if ($bom !== "\xEF\xBB\xBF") {
         rewind($handle);
     }
 
     $headers = fgetcsv($handle);
     if (! $headers) {
-        fclose($handle);
+        fclose($handle); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
         return [];
     }
 
@@ -201,7 +201,7 @@ function parse_csv(string $filepath): array {
         }
     }
 
-    fclose($handle);
+    fclose($handle); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
     return $rows;
 }
 
@@ -232,12 +232,25 @@ function import_rows(array $rows): array {
         $title = sanitize_text_field(trim($row['title'] ?? ''));
 
         if (empty($title)) {
+            /* translators: %d: CSV row number. */
             $errors[] = sprintf(__('Row %d: missing title, skipped.', 'farm-stand-manager'), $line);
             continue;
         }
 
         // Check if product already exists by title.
-        $existing = get_page_by_title($title, OBJECT, 'lfuf_product');
+        // (get_page_by_title() is deprecated since WP 6.2.)
+        $title_query = new \WP_Query([
+            'post_type'              => 'lfuf_product',
+            'title'                  => $title,
+            'post_status'            => 'all',
+            'posts_per_page'         => 1,
+            'no_found_rows'          => true,
+            'update_post_term_cache' => false,
+            'update_post_meta_cache' => false,
+            'orderby'                => 'post_date ID',
+            'order'                  => 'ASC',
+        ]);
+        $existing = $title_query->posts[0] ?? null;
         $post_status = sanitize_text_field($row['status'] ?? 'publish');
         if (! in_array($post_status, ['publish', 'draft', 'pending'], true)) {
             $post_status = 'publish';
@@ -254,14 +267,16 @@ function import_rows(array $rows): array {
             $post_data['ID'] = $existing->ID;
             $pid = wp_update_post($post_data, true);
             if (is_wp_error($pid)) {
-                $errors[] = sprintf(__('Row %d: failed to update "%s" — %s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
+                /* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
+                $errors[] = sprintf(__('Row %1$d: failed to update "%2$s" — %3$s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
                 continue;
             }
             $updated++;
         } else {
             $pid = wp_insert_post($post_data, true);
             if (is_wp_error($pid)) {
-                $errors[] = sprintf(__('Row %d: failed to create "%s" — %s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
+                /* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
+                $errors[] = sprintf(__('Row %1$d: failed to create "%2$s" — %3$s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
                 continue;
             }
             $created++;
@@ -345,9 +360,11 @@ function render_page(): void {
                     <?php
                     $parts = [];
                     if ($results['created'] > 0) {
+                        /* translators: %d: number of products created. */
                         $parts[] = sprintf(_n('%d product created', '%d products created', $results['created'], 'farm-stand-manager'), $results['created']);
                     }
                     if ($results['updated'] > 0) {
+                        /* translators: %d: number of products updated. */
                         $parts[] = sprintf(_n('%d product updated', '%d products updated', $results['updated'], 'farm-stand-manager'), $results['updated']);
                     }
                     echo esc_html(implode(', ', $parts) ?: __('No changes made.', 'farm-stand-manager'));
@@ -371,8 +388,9 @@ function render_page(): void {
             <div class="lfuf-product-io__panel">
                 <h2><?php esc_html_e('Export', 'farm-stand-manager'); ?></h2>
                 <p><?php printf(
+                    /* translators: %d: number of published products. */
                     esc_html__('Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits.', 'farm-stand-manager'),
-                    $product_count,
+                    (int) $product_count,
                 ); ?></p>
                 <a
                     href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=farm-stand-product-io&lfuf_export_products=1'), 'lfuf_export_products')); ?>"

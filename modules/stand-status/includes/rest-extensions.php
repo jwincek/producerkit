@@ -292,9 +292,11 @@ function compute_next_open(string $schedule_json): string {
     $formatted_time = date_i18n('g:i A', strtotime('2000-01-01 ' . $next['open']));
 
     if ($next['delta'] === 0) {
+        /* translators: %s: opening time (e.g. "9:00 AM"). */
         return sprintf(__('Today at %s', 'farm-stand-manager'), $formatted_time);
     }
     if ($next['delta'] === 1) {
+        /* translators: %s: opening time (e.g. "9:00 AM"). */
         return sprintf(__('Tomorrow at %s', 'farm-stand-manager'), $formatted_time);
     }
 

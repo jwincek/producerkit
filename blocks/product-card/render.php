@@ -63,10 +63,10 @@ $wrapper_attrs = get_block_wrapper_attributes([
 ]);
 ?>
 
-<article <?php echo $wrapper_attrs; ?> aria-label="<?php echo esc_attr(implode(' — ', $aria_parts)); ?>">
+<article <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?> aria-label="<?php echo esc_attr(implode(' — ', $aria_parts)); ?>">
     <?php if ($thumbnail) : ?>
         <div class="lfuf-product-card__image">
-            <?php echo $thumbnail; ?>
+            <?php echo $thumbnail; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core get_the_post_thumbnail() output. ?>
         </div>
     <?php endif; ?>
 
