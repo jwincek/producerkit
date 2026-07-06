@@ -180,6 +180,26 @@ function delete_row(int $id): bool {
     return (bool) $wpdb->delete(table_name(), ['id' => $id], ['%d']);
 }
 
+/**
+ * Delete availability rows referencing a product or location that is
+ * being permanently deleted, so the table never holds orphaned rows.
+ *
+ * Runs on before_delete_post (permanent delete only, not trash —
+ * trashed posts can be restored, so their rows are kept).
+ */
+function on_post_delete(int $post_id, \WP_Post $post): void {
+    global $wpdb;
+
+    if ($post->post_type === 'lfuf_product') {
+        $wpdb->delete(table_name(), ['product_id' => $post_id], ['%d']);
+    } elseif ($post->post_type === 'lfuf_location') {
+        // location_id = 0 means "all locations" — only exact matches are orphans.
+        $wpdb->delete(table_name(), ['location_id' => $post_id], ['%d']);
+    }
+}
+
+add_action('before_delete_post', __NAMESPACE__ . '\\on_post_delete', 10, 2);
+
 /* ───────────────────────────────────────────────
  * Expiration cleanup (WP-Cron)
  * ─────────────────────────────────────────────── */
