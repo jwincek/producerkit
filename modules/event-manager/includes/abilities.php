@@ -29,7 +29,7 @@ add_action('wp_abilities_api_init', function (): void {
         'label'       => __('List Upcoming Events', 'leftfield-farm'),
         'description' => __('Retrieve upcoming farm events with location, RSVP status, and event type.', 'leftfield-farm'),
         'category'    => 'leftfield-events',
-        'callback'    => function (array $input = []): array {
+        'execute_callback' => function (array $input = []): array {
             $request = new \WP_REST_Request('GET', '/lfuf/v1/events/upcoming');
             $request->set_param('per_page', (int) ($input['per_page'] ?? 10));
             $request->set_param('event_type', $input['event_type'] ?? '');
@@ -43,6 +43,7 @@ add_action('wp_abilities_api_init', function (): void {
                 'per_page'   => ['type' => 'integer', 'description' => 'Max events to return (default 10).'],
                 'event_type' => ['type' => 'string',  'description' => 'Filter by event type slug.'],
             ],
+            'default'    => [],
         ],
         'output_schema' => [
             'type'  => 'array',
@@ -69,7 +70,7 @@ add_action('wp_abilities_api_init', function (): void {
         'label'       => __('RSVP to Event', 'leftfield-farm'),
         'description' => __('Submit an RSVP to a farm event. Returns a cancellation token.', 'leftfield-farm'),
         'category'    => 'leftfield-events',
-        'callback'    => function (array $input): array {
+        'execute_callback' => function (array $input): array {
             $result = \Leftfield\EventManager\RSVP\add_rsvp($input);
             if (is_wp_error($result)) {
                 return ['success' => false, 'message' => $result->get_error_message()];

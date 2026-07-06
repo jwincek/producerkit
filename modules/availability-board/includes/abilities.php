@@ -21,7 +21,7 @@ add_action('wp_abilities_api_init', function (): void {
         'label'       => __('Get Availability Board', 'leftfield-farm'),
         'description' => __('Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'leftfield-farm'),
         'category'    => 'leftfield-availability',
-        'callback'    => function (array $input = []): array {
+        'execute_callback' => function (array $input = []): array {
             // Reuse the REST callback by constructing a mock request.
             $request = new \WP_REST_Request('GET', '/lfuf/v1/board');
             $request->set_param('status', $input['status'] ?? '');
@@ -38,6 +38,7 @@ add_action('wp_abilities_api_init', function (): void {
                 'product_type' => ['type' => 'string', 'description' => 'Product type term slug filter.'],
                 'location_id'  => ['type' => 'integer', 'description' => 'Location ID filter (0 = all).'],
             ],
+            'default'      => [],
         ],
         'output_schema' => [
             'type'       => 'object',

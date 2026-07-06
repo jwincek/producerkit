@@ -74,7 +74,7 @@ function register_product_abilities(): void {
         'label'       => __('List Products', 'leftfield-core'),
         'description' => __('Retrieve a list of all published farm products with their type, season, price, and unit.', 'leftfield-core'),
         'category'    => 'leftfield-products',
-        'callback'    => function (): array {
+        'execute_callback' => function (): array {
             $products = get_posts([
                 'post_type'   => 'lfuf_product',
                 'post_status' => 'publish',
@@ -128,7 +128,7 @@ function register_product_abilities(): void {
         'label'       => __('Get Product Sources', 'leftfield-core'),
         'description' => __('Retrieve the grain origins and partner farms linked to a product.', 'leftfield-core'),
         'category'    => 'leftfield-products',
-        'callback'    => function (array $input): array {
+        'execute_callback' => function (array $input): array {
             $source_ids = get_post_meta($input['product_id'], '_lfuf_source_ids', true);
             if (empty($source_ids) || ! is_array($source_ids)) {
                 return [];
@@ -187,7 +187,7 @@ function register_availability_abilities(): void {
         'label'       => __('Get Current Availability', 'leftfield-core'),
         'description' => __('Retrieve the current availability status of all products, optionally filtered by product or location.', 'leftfield-core'),
         'category'    => 'leftfield-availability',
-        'callback'    => function (array $input = []): array {
+        'execute_callback' => function (array $input = []): array {
             $product_id  = (int) ($input['product_id'] ?? 0);
             $location_id = (int) ($input['location_id'] ?? 0);
 
@@ -197,7 +197,14 @@ function register_availability_abilities(): void {
                 $rows = \Leftfield\Core\Availability\get_all_current();
             }
 
-            return array_map(fn ($row) => (array) $row, $rows);
+            // wpdb returns every column as a string; cast to match the output schema.
+            return array_map(function ($row): array {
+                $row                = (array) $row;
+                $row['id']          = (int) $row['id'];
+                $row['product_id']  = (int) $row['product_id'];
+                $row['location_id'] = (int) $row['location_id'];
+                return $row;
+            }, $rows);
         },
         'input_schema' => [
             'type'       => 'object',
@@ -205,6 +212,7 @@ function register_availability_abilities(): void {
                 'product_id'  => ['type' => 'integer', 'description' => 'Filter by product ID (0 = all).'],
                 'location_id' => ['type' => 'integer', 'description' => 'Filter by location ID (0 = all).'],
             ],
+            'default'    => [],
         ],
         'output_schema' => [
             'type'  => 'array',
@@ -233,7 +241,7 @@ function register_availability_abilities(): void {
         'label'       => __('Update Product Availability', 'leftfield-core'),
         'description' => __('Set the availability status of a product at a location for a given date.', 'leftfield-core'),
         'category'    => 'leftfield-availability',
-        'callback'    => function (array $input): array {
+        'execute_callback' => function (array $input): array {
             $id = \Leftfield\Core\Availability\upsert($input);
             if ($id === false) {
                 return ['success' => false, 'message' => 'Invalid data.'];
@@ -277,7 +285,7 @@ function register_location_abilities(): void {
         'label'       => __('List Locations', 'leftfield-core'),
         'description' => __('Retrieve all published sales locations with address, type, hours, and open/closed status.', 'leftfield-core'),
         'category'    => 'leftfield-locations',
-        'callback'    => function (): array {
+        'execute_callback' => function (): array {
             $locations = get_posts([
                 'post_type'   => 'lfuf_location',
                 'post_status' => 'publish',

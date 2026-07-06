@@ -23,7 +23,7 @@ add_action('wp_abilities_api_init', function (): void {
         'label'       => __('Toggle Stand Status', 'leftfield-stand-status'),
         'description' => __('Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'leftfield-stand-status'),
         'category'    => 'leftfield-locations',
-        'callback'    => function (array $input): array {
+        'execute_callback' => function (array $input): array {
             $location_id    = (int) $input['location_id'];
             $is_open        = (bool) $input['is_open'];
             $status_message = sanitize_text_field($input['status_message'] ?? '');
@@ -76,7 +76,7 @@ add_action('wp_abilities_api_init', function (): void {
         'label'       => __('Get Stand Info', 'leftfield-stand-status'),
         'description' => __('Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'leftfield-stand-status'),
         'category'    => 'leftfield-locations',
-        'callback'    => function (array $input): array {
+        'execute_callback' => function (array $input): array {
             $post = get_post((int) $input['location_id']);
             if (! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish') {
                 return ['error' => 'Stand not found.'];
