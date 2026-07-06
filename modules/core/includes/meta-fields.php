@@ -1,6 +1,6 @@
 <?php
 /**
- * Meta field registration for all Leftfield CPTs.
+ * Meta field registration for all plugin CPTs.
  *
  * Every field is registered with show_in_rest so it's available
  * to Gutenberg and the REST API out of the box.

@@ -64,15 +64,15 @@ if ($season_start && $season_end) {
 
 $status_slug  = $is_open ? 'open' : 'closed';
 $status_label = $is_open
-    ? __('Open Now', 'leftfield-farm')
-    : __('Closed', 'leftfield-farm');
+    ? __('Open Now', 'farm-stand-manager')
+    : __('Closed', 'farm-stand-manager');
 
 // Format "last updated" as relative time.
 $time_ago = '';
 if ($last_toggled) {
     $toggled_ts = strtotime($last_toggled);
     if ($toggled_ts) {
-        $time_ago = human_time_diff($toggled_ts, current_time('timestamp')) . ' ' . __('ago', 'leftfield-farm');
+        $time_ago = human_time_diff($toggled_ts, current_time('timestamp')) . ' ' . __('ago', 'farm-stand-manager');
     }
 }
 
@@ -90,7 +90,7 @@ $venmo_url = $venmo_handle
 // Season display strings.
 $season_range_full = ($season_start && $season_end)
     ? sprintf(
-        __('Our season runs %s – %s. See you then!', 'leftfield-farm'),
+        __('Our season runs %s – %s. See you then!', 'farm-stand-manager'),
         date_i18n('F j', strtotime($season_start)),
         date_i18n('F j', strtotime($season_end)),
     )
@@ -98,7 +98,7 @@ $season_range_full = ($season_start && $season_end)
 
 $season_range_short = ($season_start && $season_end)
     ? sprintf(
-        __('Season: %s – %s', 'leftfield-farm'),
+        __('Season: %s – %s', 'farm-stand-manager'),
         date_i18n('M j', strtotime($season_start)),
         date_i18n('M j', strtotime($season_end)),
     )
@@ -124,7 +124,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
 // Aria label for the section landmark.
 $section_label = sprintf(
     /* translators: %s = stand name */
-    __('%s — Farm Stand Status', 'leftfield-farm'),
+    __('%s — Farm Stand Status', 'farm-stand-manager'),
     $post->post_title,
 );
 ?>
@@ -174,7 +174,7 @@ $section_label = sprintf(
             <?php echo (! $is_open && $next_open) ? '' : 'hidden'; ?>
         ><?php
             if (! $is_open && $next_open) {
-                printf(esc_html__('Next open: %s', 'leftfield-farm'), esc_html($next_open));
+                printf(esc_html__('Next open: %s', 'farm-stand-manager'), esc_html($next_open));
             }
         ?></p>
 
@@ -182,7 +182,7 @@ $section_label = sprintf(
             <span
                 class="lfuf-stand-banner__updated"
                 data-wp-text="state.updatedText"
-            ><?php printf(esc_html__('Updated %s', 'leftfield-farm'), esc_html($time_ago)); ?></span>
+            ><?php printf(esc_html__('Updated %s', 'farm-stand-manager'), esc_html($time_ago)); ?></span>
         <?php endif; ?>
     </div>
 
@@ -202,7 +202,7 @@ $section_label = sprintf(
         <?php if ($show_address && $address) : ?>
             <p class="lfuf-stand-banner__address">
                 <span class="lfuf-stand-banner__icon" aria-hidden="true">📍</span>
-                <span class="screen-reader-text"><?php esc_html_e('Address:', 'leftfield-farm'); ?> </span>
+                <span class="screen-reader-text"><?php esc_html_e('Address:', 'farm-stand-manager'); ?> </span>
                 <?php echo esc_html($address); ?>
             </p>
         <?php endif; ?>
@@ -210,7 +210,7 @@ $section_label = sprintf(
         <?php if ($show_hours && $hours) : ?>
             <p class="lfuf-stand-banner__hours">
                 <span class="lfuf-stand-banner__icon" aria-hidden="true">🕐</span>
-                <span class="screen-reader-text"><?php esc_html_e('Hours:', 'leftfield-farm'); ?> </span>
+                <span class="screen-reader-text"><?php esc_html_e('Hours:', 'farm-stand-manager'); ?> </span>
                 <?php echo esc_html($hours); ?>
             </p>
         <?php endif; ?>
@@ -223,11 +223,11 @@ $section_label = sprintf(
                 <span class="lfuf-stand-banner__icon" aria-hidden="true">💸</span>
                 <?php
                 printf(
-                    esc_html__('Pay with Venmo (@%s)', 'leftfield-farm'),
+                    esc_html__('Pay with Venmo (@%s)', 'farm-stand-manager'),
                     esc_html(ltrim($venmo_handle, '@')),
                 );
                 ?>
-                <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'leftfield-farm'); ?></span>
+                <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
             </a>
         <?php endif; ?>
     </div>

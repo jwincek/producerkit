@@ -7,7 +7,7 @@
  * and quantity note fields. Saves via AJAX to the existing
  * REST availability endpoint.
  *
- * Accessible under the Leftfield menu.
+ * Accessible under the Farm Stand menu.
  */
 
 declare(strict_types=1);
@@ -20,11 +20,11 @@ add_action('admin_menu', __NAMESPACE__ . '\\register_page');
 
 function register_page(): void {
     add_submenu_page(
-        'leftfield-dashboard',
-        __('Update Availability', 'leftfield-farm'),
-        __('Availability', 'leftfield-farm'),
+        'farm-stand-dashboard',
+        __('Update Availability', 'farm-stand-manager'),
+        __('Availability', 'farm-stand-manager'),
         'edit_posts',
-        'leftfield-availability',
+        'farm-stand-availability',
         __NAMESPACE__ . '\\render_page',
     );
 }
@@ -71,17 +71,17 @@ function render_page(): void {
 
     ?>
     <div class="wrap lfuf-quick-entry">
-        <h1><?php esc_html_e('Update Availability', 'leftfield-farm'); ?></h1>
+        <h1><?php esc_html_e('Update Availability', 'farm-stand-manager'); ?></h1>
         <p class="description">
-            <?php esc_html_e('Set what\'s available this week. Changes take effect immediately on the site.', 'leftfield-farm'); ?>
+            <?php esc_html_e('Set what\'s available this week. Changes take effect immediately on the site.', 'farm-stand-manager'); ?>
         </p>
 
         <div class="lfuf-quick-entry__toolbar">
             <label for="lfuf-qe-location">
-                <?php esc_html_e('Location:', 'leftfield-farm'); ?>
+                <?php esc_html_e('Location:', 'farm-stand-manager'); ?>
             </label>
             <select id="lfuf-qe-location">
-                <option value="0"><?php esc_html_e('All locations', 'leftfield-farm'); ?></option>
+                <option value="0"><?php esc_html_e('All locations', 'farm-stand-manager'); ?></option>
                 <?php foreach ($locations as $loc) : ?>
                     <option value="<?php echo (int) $loc->ID; ?>">
                         <?php echo esc_html($loc->post_title); ?>
@@ -90,16 +90,16 @@ function render_page(): void {
             </select>
 
             <label for="lfuf-qe-date">
-                <?php esc_html_e('Effective date:', 'leftfield-farm'); ?>
+                <?php esc_html_e('Effective date:', 'farm-stand-manager'); ?>
             </label>
             <input type="date" id="lfuf-qe-date" value="<?php echo esc_attr($today); ?>">
 
             <button type="button" id="lfuf-qe-copy-last" class="button">
-                <?php esc_html_e('Copy Last Week', 'leftfield-farm'); ?>
+                <?php esc_html_e('Copy Last Week', 'farm-stand-manager'); ?>
             </button>
 
             <button type="button" id="lfuf-qe-save-all" class="button button-primary" disabled>
-                <?php esc_html_e('Save All Changes', 'leftfield-farm'); ?>
+                <?php esc_html_e('Save All Changes', 'farm-stand-manager'); ?>
             </button>
             <span id="lfuf-qe-status" class="lfuf-quick-entry__save-status"></span>
         </div>
@@ -108,11 +108,11 @@ function render_page(): void {
             <thead>
                 <tr>
                     <th class="lfuf-qe-col-thumb"></th>
-                    <th class="lfuf-qe-col-product"><?php esc_html_e('Product', 'leftfield-farm'); ?></th>
-                    <th class="lfuf-qe-col-type"><?php esc_html_e('Type', 'leftfield-farm'); ?></th>
-                    <th class="lfuf-qe-col-status"><?php esc_html_e('Status', 'leftfield-farm'); ?></th>
-                    <th class="lfuf-qe-col-note"><?php esc_html_e('Quantity Note', 'leftfield-farm'); ?></th>
-                    <th class="lfuf-qe-col-current"><?php esc_html_e('Current', 'leftfield-farm'); ?></th>
+                    <th class="lfuf-qe-col-product"><?php esc_html_e('Product', 'farm-stand-manager'); ?></th>
+                    <th class="lfuf-qe-col-type"><?php esc_html_e('Type', 'farm-stand-manager'); ?></th>
+                    <th class="lfuf-qe-col-status"><?php esc_html_e('Status', 'farm-stand-manager'); ?></th>
+                    <th class="lfuf-qe-col-note"><?php esc_html_e('Quantity Note', 'farm-stand-manager'); ?></th>
+                    <th class="lfuf-qe-col-current"><?php esc_html_e('Current', 'farm-stand-manager'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -150,7 +150,7 @@ function render_page(): void {
                         </td>
                         <td class="lfuf-qe-col-status">
                             <select class="lfuf-qe-status-select" data-original="<?php echo esc_attr($existing->status ?? ''); ?>">
-                                <option value=""><?php esc_html_e('— Not listed —', 'leftfield-farm'); ?></option>
+                                <option value=""><?php esc_html_e('— Not listed —', 'farm-stand-manager'); ?></option>
                                 <?php foreach ($statuses as $s) : ?>
                                     <option
                                         value="<?php echo esc_attr($s); ?>"
@@ -167,7 +167,7 @@ function render_page(): void {
                                 class="lfuf-qe-note-input"
                                 value="<?php echo esc_attr($existing->quantity_note ?? ''); ?>"
                                 data-original="<?php echo esc_attr($existing->quantity_note ?? ''); ?>"
-                                placeholder="<?php esc_attr_e('e.g. ~3 bunches left', 'leftfield-farm'); ?>"
+                                placeholder="<?php esc_attr_e('e.g. ~3 bunches left', 'farm-stand-manager'); ?>"
                             >
                         </td>
                         <td class="lfuf-qe-col-current">
@@ -176,7 +176,7 @@ function render_page(): void {
                                     <?php echo esc_html(ucfirst(str_replace('_', ' ', $existing->status))); ?>
                                 </span>
                             <?php else : ?>
-                                <span class="lfuf-qe-not-listed"><?php esc_html_e('Not listed', 'leftfield-farm'); ?></span>
+                                <span class="lfuf-qe-not-listed"><?php esc_html_e('Not listed', 'farm-stand-manager'); ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -189,7 +189,7 @@ function render_page(): void {
                 <?php
                 printf(
                     wp_kses(
-                        __('No products found. <a href="%s">Add your first product</a> to get started.', 'leftfield-farm'),
+                        __('No products found. <a href="%s">Add your first product</a> to get started.', 'farm-stand-manager'),
                         ['a' => ['href' => []]],
                     ),
                     esc_url(admin_url('post-new.php?post_type=lfuf_product')),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom admin columns for Leftfield CPT list tables.
+ * Custom admin columns for plugin CPT list tables.
  *
  * Adds sortable columns with key meta for:
  *   - Products: price, availability status
@@ -27,8 +27,8 @@ add_filter('manage_lfuf_product_posts_columns', function (array $columns): array
         $new[$key] = $label;
         // Insert after title.
         if ($key === 'title') {
-            $new['lfuf_price']        = __('Price', 'leftfield-farm');
-            $new['lfuf_availability'] = __('Availability', 'leftfield-farm');
+            $new['lfuf_price']        = __('Price', 'farm-stand-manager');
+            $new['lfuf_availability'] = __('Availability', 'farm-stand-manager');
         }
     }
     // Remove the default date column — not useful for products.
@@ -114,9 +114,9 @@ add_filter('manage_lfuf_event_posts_columns', function (array $columns): array {
     foreach ($columns as $key => $label) {
         $new[$key] = $label;
         if ($key === 'title') {
-            $new['lfuf_event_date']     = __('Event Date', 'leftfield-farm');
-            $new['lfuf_event_location'] = __('Location', 'leftfield-farm');
-            $new['lfuf_event_rsvp']     = __('RSVPs', 'leftfield-farm');
+            $new['lfuf_event_date']     = __('Event Date', 'farm-stand-manager');
+            $new['lfuf_event_location'] = __('Location', 'farm-stand-manager');
+            $new['lfuf_event_rsvp']     = __('RSVPs', 'farm-stand-manager');
         }
     }
     unset($new['date']);
@@ -240,9 +240,9 @@ add_filter('manage_lfuf_location_posts_columns', function (array $columns): arra
     foreach ($columns as $key => $label) {
         $new[$key] = $label;
         if ($key === 'title') {
-            $new['lfuf_loc_type']   = __('Type', 'leftfield-farm');
-            $new['lfuf_loc_status'] = __('Status', 'leftfield-farm');
-            $new['lfuf_loc_address'] = __('Address', 'leftfield-farm');
+            $new['lfuf_loc_type']   = __('Type', 'farm-stand-manager');
+            $new['lfuf_loc_status'] = __('Status', 'farm-stand-manager');
+            $new['lfuf_loc_address'] = __('Address', 'farm-stand-manager');
         }
     }
     unset($new['date']);

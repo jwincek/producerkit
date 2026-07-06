@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name:       Leftfield Farm
- * Plugin URI:        https://github.com/jwincek/leftfield-farm
- * Description:       Custom data layer, blocks, and tools for Leftfield Urban Farm + Slowbird Bread Co.
+ * Plugin Name:       Farm Stand Manager
+ * Plugin URI:        https://github.com/jwincek/farm-stand-manager
+ * Description:       Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
  * Version:           1.0.0
  * Requires at least: 6.9
- * Requires PHP:      8.3
+ * Requires PHP:      8.1
  * Author:            Jerome Wincek
  * Author URI:        https://github.com/jwincek
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       leftfield-farm
+ * Text Domain:       farm-stand-manager
  * Domain Path:       /languages
  */
 
@@ -30,33 +30,33 @@ const PREFIX     = 'lfuf';
  * Each module has a slug, a label (for future admin UI),
  * and a bootstrap file. The core module is always loaded.
  * Feature modules can be toggled via the
- * 'leftfield_active_modules' filter.
+ * 'lfuf_active_modules' filter.
  * ─────────────────────────────────────────────── */
 
 function get_registered_modules(): array {
     return [
         'core' => [
-            'label'     => __('Core Data Layer', 'leftfield-farm'),
+            'label'     => __('Core Data Layer', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/core/bootstrap.php',
             'required'  => true,
         ],
         'stand-status' => [
-            'label'     => __('Stand Status', 'leftfield-farm'),
+            'label'     => __('Stand Status', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/stand-status/bootstrap.php',
             'required'  => false,
         ],
         'availability-board' => [
-            'label'     => __('Availability Board', 'leftfield-farm'),
+            'label'     => __('Availability Board', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/availability-board/bootstrap.php',
             'required'  => false,
         ],
         'event-manager' => [
-            'label'     => __('Event Manager', 'leftfield-farm'),
+            'label'     => __('Event Manager', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/event-manager/bootstrap.php',
             'required'  => false,
         ],
         'notifications' => [
-            'label'     => __('Notifications', 'leftfield-farm'),
+            'label'     => __('Notifications', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/notifications/bootstrap.php',
             'required'  => false,
         ],
@@ -79,7 +79,7 @@ function get_active_modules(): array {
     $defaults   = array_keys($registered);
 
     /** @var string[] $active */
-    $active = apply_filters('leftfield_active_modules', $defaults);
+    $active = apply_filters('lfuf_active_modules', $defaults);
 
     // Ensure required modules are always loaded.
     foreach ($registered as $slug => $config) {
@@ -149,7 +149,7 @@ add_action('init', function (): void {
 add_filter('block_categories_all', function (array $categories): array {
     array_unshift($categories, [
         'slug'  => 'leftfield',
-        'title' => __('Leftfield Farm', 'leftfield-farm'),
+        'title' => __('Farm Stand Manager', 'farm-stand-manager'),
         'icon'  => 'carrot',
     ]);
     return $categories;

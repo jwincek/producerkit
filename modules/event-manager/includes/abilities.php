@@ -14,9 +14,9 @@ add_action('wp_abilities_api_categories_init', function (): void {
         return;
     }
 
-    wp_register_ability_category('leftfield-events', [
-        'label'       => __('Leftfield Events', 'leftfield-farm'),
-        'description' => __('Abilities for farm events — pizza nights, potlucks, workshops, and tours.', 'leftfield-farm'),
+    wp_register_ability_category('farm-events', [
+        'label'       => __('Farm Events', 'farm-stand-manager'),
+        'description' => __('Abilities for farm events — pizza nights, potlucks, workshops, and tours.', 'farm-stand-manager'),
     ]);
 });
 
@@ -25,10 +25,10 @@ add_action('wp_abilities_api_init', function (): void {
         return;
     }
 
-    wp_register_ability('leftfield/list-upcoming-events', [
-        'label'       => __('List Upcoming Events', 'leftfield-farm'),
-        'description' => __('Retrieve upcoming farm events with location, RSVP status, and event type.', 'leftfield-farm'),
-        'category'    => 'leftfield-events',
+    wp_register_ability('farm-stand-manager/list-upcoming-events', [
+        'label'       => __('List Upcoming Events', 'farm-stand-manager'),
+        'description' => __('Retrieve upcoming farm events with location, RSVP status, and event type.', 'farm-stand-manager'),
+        'category'    => 'farm-events',
         'execute_callback' => function (array $input = []): array {
             $request = new \WP_REST_Request('GET', '/lfuf/v1/events/upcoming');
             $request->set_param('per_page', (int) ($input['per_page'] ?? 10));
@@ -66,10 +66,10 @@ add_action('wp_abilities_api_init', function (): void {
         ],
     ]);
 
-    wp_register_ability('leftfield/rsvp-to-event', [
-        'label'       => __('RSVP to Event', 'leftfield-farm'),
-        'description' => __('Submit an RSVP to a farm event. Returns a cancellation token.', 'leftfield-farm'),
-        'category'    => 'leftfield-events',
+    wp_register_ability('farm-stand-manager/rsvp-to-event', [
+        'label'       => __('RSVP to Event', 'farm-stand-manager'),
+        'description' => __('Submit an RSVP to a farm event. Returns a cancellation token.', 'farm-stand-manager'),
+        'category'    => 'farm-events',
         'execute_callback' => function (array $input): array {
             $result = \Leftfield\EventManager\RSVP\add_rsvp($input);
             if (is_wp_error($result)) {

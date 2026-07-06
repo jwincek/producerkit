@@ -26,11 +26,11 @@ add_action('admin_init', __NAMESPACE__ . '\\handle_import');
 
 function register_page(): void {
     add_submenu_page(
-        'leftfield-dashboard',
-        __('Import / Export Products', 'leftfield-farm'),
-        __('Product Import', 'leftfield-farm'),
+        'farm-stand-dashboard',
+        __('Import / Export Products', 'farm-stand-manager'),
+        __('Product Import', 'farm-stand-manager'),
         'edit_posts',
-        'leftfield-product-io',
+        'farm-stand-product-io',
         __NAMESPACE__ . '\\render_page',
     );
 }
@@ -56,7 +56,7 @@ function handle_export(): void {
         'order'          => 'ASC',
     ]);
 
-    $filename = 'leftfield-products-' . date('Y-m-d') . '.csv';
+    $filename = 'farm-stand-products-' . date('Y-m-d') . '.csv';
 
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -143,7 +143,7 @@ function handle_import(): void {
 
     if (empty($_FILES['lfuf_csv']['tmp_name']) || $_FILES['lfuf_csv']['error'] !== UPLOAD_ERR_OK) {
         add_action('admin_notices', function () {
-            echo '<div class="notice notice-error"><p>' . esc_html__('No file uploaded or upload error.', 'leftfield-farm') . '</p></div>';
+            echo '<div class="notice notice-error"><p>' . esc_html__('No file uploaded or upload error.', 'farm-stand-manager') . '</p></div>';
         });
         return;
     }
@@ -153,7 +153,7 @@ function handle_import(): void {
 
     if (empty($rows)) {
         add_action('admin_notices', function () {
-            echo '<div class="notice notice-error"><p>' . esc_html__('CSV file is empty or could not be parsed.', 'leftfield-farm') . '</p></div>';
+            echo '<div class="notice notice-error"><p>' . esc_html__('CSV file is empty or could not be parsed.', 'farm-stand-manager') . '</p></div>';
         });
         return;
     }
@@ -232,7 +232,7 @@ function import_rows(array $rows): array {
         $title = sanitize_text_field(trim($row['title'] ?? ''));
 
         if (empty($title)) {
-            $errors[] = sprintf(__('Row %d: missing title, skipped.', 'leftfield-farm'), $line);
+            $errors[] = sprintf(__('Row %d: missing title, skipped.', 'farm-stand-manager'), $line);
             continue;
         }
 
@@ -254,14 +254,14 @@ function import_rows(array $rows): array {
             $post_data['ID'] = $existing->ID;
             $pid = wp_update_post($post_data, true);
             if (is_wp_error($pid)) {
-                $errors[] = sprintf(__('Row %d: failed to update "%s" — %s', 'leftfield-farm'), $line, $title, $pid->get_error_message());
+                $errors[] = sprintf(__('Row %d: failed to update "%s" — %s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
                 continue;
             }
             $updated++;
         } else {
             $pid = wp_insert_post($post_data, true);
             if (is_wp_error($pid)) {
-                $errors[] = sprintf(__('Row %d: failed to create "%s" — %s', 'leftfield-farm'), $line, $title, $pid->get_error_message());
+                $errors[] = sprintf(__('Row %d: failed to create "%s" — %s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
                 continue;
             }
             $created++;
@@ -337,7 +337,7 @@ function render_page(): void {
     $product_count = (int) wp_count_posts('lfuf_product')->publish;
     ?>
     <div class="wrap lfuf-product-io">
-        <h1><?php esc_html_e('Product Import / Export', 'leftfield-farm'); ?></h1>
+        <h1><?php esc_html_e('Product Import / Export', 'farm-stand-manager'); ?></h1>
 
         <?php if ($results) : ?>
             <div class="notice notice-success is-dismissible">
@@ -345,18 +345,18 @@ function render_page(): void {
                     <?php
                     $parts = [];
                     if ($results['created'] > 0) {
-                        $parts[] = sprintf(_n('%d product created', '%d products created', $results['created'], 'leftfield-farm'), $results['created']);
+                        $parts[] = sprintf(_n('%d product created', '%d products created', $results['created'], 'farm-stand-manager'), $results['created']);
                     }
                     if ($results['updated'] > 0) {
-                        $parts[] = sprintf(_n('%d product updated', '%d products updated', $results['updated'], 'leftfield-farm'), $results['updated']);
+                        $parts[] = sprintf(_n('%d product updated', '%d products updated', $results['updated'], 'farm-stand-manager'), $results['updated']);
                     }
-                    echo esc_html(implode(', ', $parts) ?: __('No changes made.', 'leftfield-farm'));
+                    echo esc_html(implode(', ', $parts) ?: __('No changes made.', 'farm-stand-manager'));
                     ?>
                 </p>
             </div>
             <?php if (! empty($results['errors'])) : ?>
                 <div class="notice notice-warning">
-                    <p><strong><?php esc_html_e('Some rows had issues:', 'leftfield-farm'); ?></strong></p>
+                    <p><strong><?php esc_html_e('Some rows had issues:', 'farm-stand-manager'); ?></strong></p>
                     <ul style="list-style:disc;padding-left:20px;">
                         <?php foreach ($results['errors'] as $error) : ?>
                             <li><?php echo esc_html($error); ?></li>
@@ -369,24 +369,24 @@ function render_page(): void {
         <div class="lfuf-product-io__panels">
             <!-- ── Export ── -->
             <div class="lfuf-product-io__panel">
-                <h2><?php esc_html_e('Export', 'leftfield-farm'); ?></h2>
+                <h2><?php esc_html_e('Export', 'farm-stand-manager'); ?></h2>
                 <p><?php printf(
-                    esc_html__('Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits.', 'leftfield-farm'),
+                    esc_html__('Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits.', 'farm-stand-manager'),
                     $product_count,
                 ); ?></p>
                 <a
-                    href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=leftfield-product-io&lfuf_export_products=1'), 'lfuf_export_products')); ?>"
+                    href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=farm-stand-product-io&lfuf_export_products=1'), 'lfuf_export_products')); ?>"
                     class="button button-primary"
                     <?php disabled($product_count, 0); ?>
                 >
-                    <?php esc_html_e('Download CSV', 'leftfield-farm'); ?>
+                    <?php esc_html_e('Download CSV', 'farm-stand-manager'); ?>
                 </a>
             </div>
 
             <!-- ── Import ── -->
             <div class="lfuf-product-io__panel">
-                <h2><?php esc_html_e('Import', 'leftfield-farm'); ?></h2>
-                <p><?php esc_html_e('Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated.', 'leftfield-farm'); ?></p>
+                <h2><?php esc_html_e('Import', 'farm-stand-manager'); ?></h2>
+                <p><?php esc_html_e('Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated.', 'farm-stand-manager'); ?></p>
 
                 <form method="post" enctype="multipart/form-data">
                     <?php wp_nonce_field('lfuf_import_products'); ?>
@@ -398,42 +398,42 @@ function render_page(): void {
 
                     <p>
                         <button type="submit" class="button button-primary">
-                            <?php esc_html_e('Upload & Import', 'leftfield-farm'); ?>
+                            <?php esc_html_e('Upload & Import', 'farm-stand-manager'); ?>
                         </button>
                     </p>
                 </form>
 
                 <details style="margin-top:16px;">
                     <summary style="cursor:pointer;font-weight:600;font-size:13px;">
-                        <?php esc_html_e('CSV format reference', 'leftfield-farm'); ?>
+                        <?php esc_html_e('CSV format reference', 'farm-stand-manager'); ?>
                     </summary>
                     <div style="margin-top:8px;padding:12px;background:#f9fafb;border-radius:4px;font-size:13px;">
-                        <p><?php esc_html_e('The CSV should have these columns (in any order):', 'leftfield-farm'); ?></p>
+                        <p><?php esc_html_e('The CSV should have these columns (in any order):', 'farm-stand-manager'); ?></p>
                         <table class="widefat" style="max-width:600px;">
                             <thead>
                                 <tr>
-                                    <th><?php esc_html_e('Column', 'leftfield-farm'); ?></th>
-                                    <th><?php esc_html_e('Required', 'leftfield-farm'); ?></th>
-                                    <th><?php esc_html_e('Example', 'leftfield-farm'); ?></th>
+                                    <th><?php esc_html_e('Column', 'farm-stand-manager'); ?></th>
+                                    <th><?php esc_html_e('Required', 'farm-stand-manager'); ?></th>
+                                    <th><?php esc_html_e('Example', 'farm-stand-manager'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td><code>title</code></td><td><?php esc_html_e('Yes', 'leftfield-farm'); ?></td><td>Arugula</td></tr>
-                                <tr><td><code>status</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>publish</td></tr>
-                                <tr><td><code>excerpt</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>Peppery and fresh</td></tr>
-                                <tr><td><code>price</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>$4</td></tr>
-                                <tr><td><code>unit</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>bunch</td></tr>
-                                <tr><td><code>growing_notes</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>No-till, heirloom variety</td></tr>
-                                <tr><td><code>product_types</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>Produce</td></tr>
-                                <tr><td><code>seasons</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>Spring|Fall</td></tr>
-                                <tr><td><code>sources</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>Anson Mills|Boulted Bread</td></tr>
-                                <tr><td><code>featured_image_url</code></td><td><?php esc_html_e('No', 'leftfield-farm'); ?></td><td>https://example.com/arugula.jpg</td></tr>
+                                <tr><td><code>title</code></td><td><?php esc_html_e('Yes', 'farm-stand-manager'); ?></td><td>Arugula</td></tr>
+                                <tr><td><code>status</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>publish</td></tr>
+                                <tr><td><code>excerpt</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Peppery and fresh</td></tr>
+                                <tr><td><code>price</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>$4</td></tr>
+                                <tr><td><code>unit</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>bunch</td></tr>
+                                <tr><td><code>growing_notes</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>No-till, heirloom variety</td></tr>
+                                <tr><td><code>product_types</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Produce</td></tr>
+                                <tr><td><code>seasons</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Spring|Fall</td></tr>
+                                <tr><td><code>sources</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Anson Mills|Boulted Bread</td></tr>
+                                <tr><td><code>featured_image_url</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>https://example.com/arugula.jpg</td></tr>
                             </tbody>
                         </table>
                         <p style="margin-top:8px;">
-                            <?php esc_html_e('Use pipes (|) to separate multiple values in product_types, seasons, and sources.', 'leftfield-farm'); ?>
+                            <?php esc_html_e('Use pipes (|) to separate multiple values in product_types, seasons, and sources.', 'farm-stand-manager'); ?>
                         </p>
-                        <p><?php esc_html_e('Tip: export your existing products first to see the format, then edit the CSV and re-import.', 'leftfield-farm'); ?></p>
+                        <p><?php esc_html_e('Tip: export your existing products first to see the format, then edit the CSV and re-import.', 'farm-stand-manager'); ?></p>
                     </div>
                 </details>
             </div>

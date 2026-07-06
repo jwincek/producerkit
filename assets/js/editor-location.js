@@ -94,7 +94,7 @@
                 label: 'Venmo Handle',
                 value: meta._lfuf_venmo_handle || '',
                 onChange: function ( val ) { updateMeta( '_lfuf_venmo_handle', val.replace( /^@/, '' ) ); },
-                placeholder: 'leftfieldfarm',
+                placeholder: 'examplefarm',
                 help: 'Without the @. Used to generate the Venmo payment link.',
             } ),
 

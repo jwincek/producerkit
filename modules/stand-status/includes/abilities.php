@@ -2,7 +2,7 @@
 /**
  * Abilities API registration for Stand Status.
  *
- * Extends the core leftfield-locations category with
+ * Extends the core farm-locations category with
  * stand-specific abilities for toggling and querying status.
  *
  * Requires WordPress 6.9+ (gracefully skips on older versions).
@@ -19,10 +19,10 @@ add_action('wp_abilities_api_init', function (): void {
         return;
     }
 
-    wp_register_ability('leftfield/toggle-stand-status', [
-        'label'       => __('Toggle Stand Status', 'leftfield-stand-status'),
-        'description' => __('Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'leftfield-stand-status'),
-        'category'    => 'leftfield-locations',
+    wp_register_ability('farm-stand-manager/toggle-stand-status', [
+        'label'       => __('Toggle Stand Status', 'farm-stand-manager'),
+        'description' => __('Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'farm-stand-manager'),
+        'category'    => 'farm-locations',
         'execute_callback' => function (array $input): array {
             $location_id    = (int) $input['location_id'];
             $is_open        = (bool) $input['is_open'];
@@ -72,10 +72,10 @@ add_action('wp_abilities_api_init', function (): void {
         ],
     ]);
 
-    wp_register_ability('leftfield/get-stand-info', [
-        'label'       => __('Get Stand Info', 'leftfield-stand-status'),
-        'description' => __('Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'leftfield-stand-status'),
-        'category'    => 'leftfield-locations',
+    wp_register_ability('farm-stand-manager/get-stand-info', [
+        'label'       => __('Get Stand Info', 'farm-stand-manager'),
+        'description' => __('Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'farm-stand-manager'),
+        'category'    => 'farm-locations',
         'execute_callback' => function (array $input): array {
             $post = get_post((int) $input['location_id']);
             if (! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish') {

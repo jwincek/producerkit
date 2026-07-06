@@ -166,7 +166,7 @@
                 label: 'Donation / Payment Link',
                 value: meta._lfuf_donation_link || '',
                 onChange: function ( val ) { updateMeta( '_lfuf_donation_link', val ); },
-                placeholder: 'https://venmo.com/leftfieldfarm',
+                placeholder: 'https://venmo.com/examplefarm',
                 help: 'Venmo link or other payment URL.',
                 type: 'url',
             } )

@@ -37,7 +37,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
     // Build rich aria-label for the article.
     $aria_parts = [$event['title']];
     if ($cancelled) {
-        $aria_parts[] = __('Cancelled', 'leftfield-farm');
+        $aria_parts[] = __('Cancelled', 'farm-stand-manager');
     }
     if ($date_str) {
         $aria_parts[] = $date_str;
@@ -98,7 +98,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
 
                 <?php if ($cancelled) : ?>
                     <span class="lfuf-event-card__cancelled-badge" role="status">
-                        <?php esc_html_e('Cancelled', 'leftfield-farm'); ?>
+                        <?php esc_html_e('Cancelled', 'farm-stand-manager'); ?>
                     </span>
                 <?php endif; ?>
             </div>
@@ -111,11 +111,11 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
 
             <?php if ($date_str) : ?>
                 <p class="lfuf-event-card__datetime">
-                    <span class="screen-reader-text"><?php esc_html_e('Date:', 'leftfield-farm'); ?> </span>
+                    <span class="screen-reader-text"><?php esc_html_e('Date:', 'farm-stand-manager'); ?> </span>
                     <span class="lfuf-event-card__date"><?php echo esc_html($date_str); ?></span>
                     <?php if ($time_str) : ?>
                         <span class="lfuf-event-card__time">
-                            <span class="screen-reader-text"><?php esc_html_e('Time:', 'leftfield-farm'); ?> </span>
+                            <span class="screen-reader-text"><?php esc_html_e('Time:', 'farm-stand-manager'); ?> </span>
                             <?php echo esc_html($time_str); ?>
                         </span>
                     <?php endif; ?>
@@ -125,7 +125,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
             <?php if ($show_location && $event['location']) : ?>
                 <p class="lfuf-event-card__location">
                     <span class="lfuf-event-card__icon" aria-hidden="true">📍</span>
-                    <span class="screen-reader-text"><?php esc_html_e('Location:', 'leftfield-farm'); ?> </span>
+                    <span class="screen-reader-text"><?php esc_html_e('Location:', 'farm-stand-manager'); ?> </span>
                     <?php echo esc_html($event['location']['title']); ?>
                     <?php if ($event['location']['address']) : ?>
                         <span class="lfuf-event-card__address">— <?php echo esc_html($event['location']['address']); ?></span>
@@ -142,14 +142,14 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                     <?php if ($event['cost_note']) : ?>
                         <span class="lfuf-event-card__cost">
                             <span aria-hidden="true">💸</span>
-                            <span class="screen-reader-text"><?php esc_html_e('Cost:', 'leftfield-farm'); ?> </span>
+                            <span class="screen-reader-text"><?php esc_html_e('Cost:', 'farm-stand-manager'); ?> </span>
                             <?php echo esc_html($event['cost_note']); ?>
                         </span>
                     <?php endif; ?>
                     <?php if ($event['what_to_bring']) : ?>
                         <span class="lfuf-event-card__bring">
                             <span aria-hidden="true">🧺</span>
-                            <span class="screen-reader-text"><?php esc_html_e('What to bring:', 'leftfield-farm'); ?> </span>
+                            <span class="screen-reader-text"><?php esc_html_e('What to bring:', 'farm-stand-manager'); ?> </span>
                             <?php echo esc_html($event['what_to_bring']); ?>
                         </span>
                     <?php endif; ?>
@@ -161,8 +161,8 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                    href="<?php echo esc_url($event['donation_link']); ?>"
                    target="_blank"
                    rel="noopener noreferrer">
-                    <?php esc_html_e('Donate / Pay', 'leftfield-farm'); ?>
-                    <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'leftfield-farm'); ?></span>
+                    <?php esc_html_e('Donate / Pay', 'farm-stand-manager'); ?>
+                    <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
                 </a>
             <?php endif; ?>
 
@@ -172,12 +172,12 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                         <span data-wp-text="state.rsvpSummaryText">
                             <?php
                             printf(
-                                esc_html__('%d people coming', 'leftfield-farm'),
+                                esc_html__('%d people coming', 'farm-stand-manager'),
                                 (int) $rsvp['headcount'],
                             );
                             if ($rsvp['spots_left'] !== null) {
                                 printf(' · %s', sprintf(
-                                    esc_html__('%d spots left', 'leftfield-farm'),
+                                    esc_html__('%d spots left', 'farm-stand-manager'),
                                     (int) $rsvp['spots_left'],
                                 ));
                             }
@@ -187,16 +187,16 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
 
                     <div data-wp-bind--hidden="context.rsvpSubmitted">
                         <?php if (! $rsvp['closed'] && ! $rsvp['is_full']) : ?>
-                            <div class="lfuf-event-card__rsvp-form" role="group" aria-label="<?php esc_attr_e('RSVP form', 'leftfield-farm'); ?>">
+                            <div class="lfuf-event-card__rsvp-form" role="group" aria-label="<?php esc_attr_e('RSVP form', 'farm-stand-manager'); ?>">
                                 <div class="lfuf-event-card__rsvp-field">
                                     <label for="<?php echo esc_attr($uid); ?>-name" class="screen-reader-text">
-                                        <?php esc_html_e('Your name', 'leftfield-farm'); ?>
+                                        <?php esc_html_e('Your name', 'farm-stand-manager'); ?>
                                     </label>
                                     <input
                                         type="text"
                                         id="<?php echo esc_attr($uid); ?>-name"
                                         class="lfuf-event-card__rsvp-input"
-                                        placeholder="<?php esc_attr_e('Your name', 'leftfield-farm'); ?>"
+                                        placeholder="<?php esc_attr_e('Your name', 'farm-stand-manager'); ?>"
                                         autocomplete="name"
                                         data-wp-on--input="actions.updateRsvpName"
                                         data-wp-bind--value="context.rsvpName"
@@ -205,7 +205,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                                 </div>
                                 <div class="lfuf-event-card__rsvp-field">
                                     <label for="<?php echo esc_attr($uid); ?>-size" class="screen-reader-text">
-                                        <?php esc_html_e('Party size', 'leftfield-farm'); ?>
+                                        <?php esc_html_e('Party size', 'farm-stand-manager'); ?>
                                     </label>
                                     <input
                                         type="number"
@@ -239,7 +239,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                                     data-wp-bind--disabled="context.submitting"
                                     data-wp-text="state.rsvpButtonText"
                                 ><?php echo esc_html(
-                                    get_post_meta($id, '_lfuf_em_rsvp_label', true) ?: __("I'm coming!", 'leftfield-farm')
+                                    get_post_meta($id, '_lfuf_em_rsvp_label', true) ?: __("I'm coming!", 'farm-stand-manager')
                                 ); ?></button>
                             </div>
                             <p class="lfuf-event-card__rsvp-error"
@@ -248,11 +248,11 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                                data-wp-bind--hidden="!context.rsvpError"></p>
                         <?php elseif ($rsvp['is_full']) : ?>
                             <p class="lfuf-event-card__rsvp-full">
-                                <?php esc_html_e('This event is full!', 'leftfield-farm'); ?>
+                                <?php esc_html_e('This event is full!', 'farm-stand-manager'); ?>
                             </p>
                         <?php else : ?>
                             <p class="lfuf-event-card__rsvp-closed">
-                                <?php esc_html_e('RSVPs are closed.', 'leftfield-farm'); ?>
+                                <?php esc_html_e('RSVPs are closed.', 'farm-stand-manager'); ?>
                             </p>
                         <?php endif; ?>
                     </div>
@@ -263,7 +263,7 @@ function render_event_card(array $event, bool $show_image, bool $show_rsvp, bool
                             type="button"
                             class="lfuf-event-card__rsvp-cancel-btn"
                             data-wp-on--click="actions.cancelRsvp"
-                        ><?php esc_html_e('Cancel my RSVP', 'leftfield-farm'); ?></button>
+                        ><?php esc_html_e('Cancel my RSVP', 'farm-stand-manager'); ?></button>
                     </div>
                 </div>
             <?php endif; ?>

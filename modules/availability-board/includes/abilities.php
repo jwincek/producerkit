@@ -17,10 +17,10 @@ add_action('wp_abilities_api_init', function (): void {
         return;
     }
 
-    wp_register_ability('leftfield/get-board', [
-        'label'       => __('Get Availability Board', 'leftfield-farm'),
-        'description' => __('Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'leftfield-farm'),
-        'category'    => 'leftfield-availability',
+    wp_register_ability('farm-stand-manager/get-board', [
+        'label'       => __('Get Availability Board', 'farm-stand-manager'),
+        'description' => __('Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'farm-stand-manager'),
+        'category'    => 'farm-availability',
         'execute_callback' => function (array $input = []): array {
             // Reuse the REST callback by constructing a mock request.
             $request = new \WP_REST_Request('GET', '/lfuf/v1/board');

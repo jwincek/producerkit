@@ -1,6 +1,6 @@
 {
-    "name": "jwincek/leftfield-farm",
-    "description": "Custom WordPress plugin for Leftfield Urban Farm + Slowbird Bread Co.",
+    "name": "jwincek/farm-stand-manager",
+    "description": "Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [

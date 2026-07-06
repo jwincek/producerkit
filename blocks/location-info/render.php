@@ -51,7 +51,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
 
 $section_label = sprintf(
     /* translators: %s = location name */
-    __('%s — Location Details', 'leftfield-farm'),
+    __('%s — Location Details', 'farm-stand-manager'),
     $location->post_title,
 );
 ?>
@@ -67,7 +67,7 @@ $section_label = sprintf(
                 class="lfuf-location-info__status lfuf-location-info__status--<?php echo $is_open ? 'open' : 'closed'; ?>"
                 role="status"
             >
-                <?php echo $is_open ? esc_html__('Open Now', 'leftfield-farm') : esc_html__('Closed', 'leftfield-farm'); ?>
+                <?php echo $is_open ? esc_html__('Open Now', 'farm-stand-manager') : esc_html__('Closed', 'farm-stand-manager'); ?>
             </span>
         <?php endif; ?>
     </div>
@@ -80,14 +80,14 @@ $section_label = sprintf(
 
     <?php if ($address) : ?>
         <p class="lfuf-location-info__address">
-            <span class="screen-reader-text"><?php esc_html_e('Address:', 'leftfield-farm'); ?> </span>
+            <span class="screen-reader-text"><?php esc_html_e('Address:', 'farm-stand-manager'); ?> </span>
             <?php echo esc_html($address); ?>
         </p>
     <?php endif; ?>
 
     <?php if ($hours) : ?>
         <p class="lfuf-location-info__hours">
-            <span class="screen-reader-text"><?php esc_html_e('Hours:', 'leftfield-farm'); ?> </span>
+            <span class="screen-reader-text"><?php esc_html_e('Hours:', 'farm-stand-manager'); ?> </span>
             <?php echo esc_html($hours); ?>
         </p>
     <?php endif; ?>
@@ -99,8 +99,8 @@ $section_label = sprintf(
             target="_blank"
             rel="noopener noreferrer"
         >
-            <?php printf(esc_html__('Pay via Venmo (@%s)', 'leftfield-farm'), esc_html(ltrim($venmo_handle, '@'))); ?>
-            <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'leftfield-farm'); ?></span>
+            <?php printf(esc_html__('Pay via Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@'))); ?>
+            <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
         </a>
     <?php endif; ?>
 </section>

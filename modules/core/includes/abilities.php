@@ -1,6 +1,6 @@
 <?php
 /**
- * Abilities API registration for Leftfield Core.
+ * Abilities API registration for the core module.
  *
  * Registers discoverable abilities for products, availability,
  * and locations. These wrap the existing REST/PHP logic in the
@@ -36,19 +36,19 @@ add_action('wp_abilities_api_categories_init', function (): void {
         return;
     }
 
-    wp_register_ability_category('leftfield-products', [
-        'label'       => __('Leftfield Products', 'leftfield-core'),
-        'description' => __('Abilities for managing farm products — produce, bread, pantry goods.', 'leftfield-core'),
+    wp_register_ability_category('farm-products', [
+        'label'       => __('Farm Products', 'farm-stand-manager'),
+        'description' => __('Abilities for managing farm products — produce, bread, pantry goods.', 'farm-stand-manager'),
     ]);
 
-    wp_register_ability_category('leftfield-availability', [
-        'label'       => __('Leftfield Availability', 'leftfield-core'),
-        'description' => __('Abilities for querying and updating product availability at locations.', 'leftfield-core'),
+    wp_register_ability_category('farm-availability', [
+        'label'       => __('Farm Availability', 'farm-stand-manager'),
+        'description' => __('Abilities for querying and updating product availability at locations.', 'farm-stand-manager'),
     ]);
 
-    wp_register_ability_category('leftfield-locations', [
-        'label'       => __('Leftfield Locations', 'leftfield-core'),
-        'description' => __('Abilities for managing sales locations — stand, market, on-farm.', 'leftfield-core'),
+    wp_register_ability_category('farm-locations', [
+        'label'       => __('Farm Locations', 'farm-stand-manager'),
+        'description' => __('Abilities for managing sales locations — stand, market, on-farm.', 'farm-stand-manager'),
     ]);
 });
 
@@ -70,10 +70,10 @@ add_action('wp_abilities_api_init', function (): void {
 
 function register_product_abilities(): void {
 
-    wp_register_ability('leftfield/list-products', [
-        'label'       => __('List Products', 'leftfield-core'),
-        'description' => __('Retrieve a list of all published farm products with their type, season, price, and unit.', 'leftfield-core'),
-        'category'    => 'leftfield-products',
+    wp_register_ability('farm-stand-manager/list-products', [
+        'label'       => __('List Products', 'farm-stand-manager'),
+        'description' => __('Retrieve a list of all published farm products with their type, season, price, and unit.', 'farm-stand-manager'),
+        'category'    => 'farm-products',
         'execute_callback' => function (): array {
             $products = get_posts([
                 'post_type'   => 'lfuf_product',
@@ -124,10 +124,10 @@ function register_product_abilities(): void {
         ],
     ]);
 
-    wp_register_ability('leftfield/get-product-sources', [
-        'label'       => __('Get Product Sources', 'leftfield-core'),
-        'description' => __('Retrieve the grain origins and partner farms linked to a product.', 'leftfield-core'),
-        'category'    => 'leftfield-products',
+    wp_register_ability('farm-stand-manager/get-product-sources', [
+        'label'       => __('Get Product Sources', 'farm-stand-manager'),
+        'description' => __('Retrieve the grain origins and partner farms linked to a product.', 'farm-stand-manager'),
+        'category'    => 'farm-products',
         'execute_callback' => function (array $input): array {
             $source_ids = get_post_meta($input['product_id'], '_lfuf_source_ids', true);
             if (empty($source_ids) || ! is_array($source_ids)) {
@@ -183,10 +183,10 @@ function register_product_abilities(): void {
 
 function register_availability_abilities(): void {
 
-    wp_register_ability('leftfield/get-availability', [
-        'label'       => __('Get Current Availability', 'leftfield-core'),
-        'description' => __('Retrieve the current availability status of all products, optionally filtered by product or location.', 'leftfield-core'),
-        'category'    => 'leftfield-availability',
+    wp_register_ability('farm-stand-manager/get-availability', [
+        'label'       => __('Get Current Availability', 'farm-stand-manager'),
+        'description' => __('Retrieve the current availability status of all products, optionally filtered by product or location.', 'farm-stand-manager'),
+        'category'    => 'farm-availability',
         'execute_callback' => function (array $input = []): array {
             $product_id  = (int) ($input['product_id'] ?? 0);
             $location_id = (int) ($input['location_id'] ?? 0);
@@ -237,10 +237,10 @@ function register_availability_abilities(): void {
         ],
     ]);
 
-    wp_register_ability('leftfield/update-availability', [
-        'label'       => __('Update Product Availability', 'leftfield-core'),
-        'description' => __('Set the availability status of a product at a location for a given date.', 'leftfield-core'),
-        'category'    => 'leftfield-availability',
+    wp_register_ability('farm-stand-manager/update-availability', [
+        'label'       => __('Update Product Availability', 'farm-stand-manager'),
+        'description' => __('Set the availability status of a product at a location for a given date.', 'farm-stand-manager'),
+        'category'    => 'farm-availability',
         'execute_callback' => function (array $input): array {
             $id = \Leftfield\Core\Availability\upsert($input);
             if ($id === false) {
@@ -281,10 +281,10 @@ function register_availability_abilities(): void {
 
 function register_location_abilities(): void {
 
-    wp_register_ability('leftfield/list-locations', [
-        'label'       => __('List Locations', 'leftfield-core'),
-        'description' => __('Retrieve all published sales locations with address, type, hours, and open/closed status.', 'leftfield-core'),
-        'category'    => 'leftfield-locations',
+    wp_register_ability('farm-stand-manager/list-locations', [
+        'label'       => __('List Locations', 'farm-stand-manager'),
+        'description' => __('Retrieve all published sales locations with address, type, hours, and open/closed status.', 'farm-stand-manager'),
+        'category'    => 'farm-locations',
         'execute_callback' => function (): array {
             $locations = get_posts([
                 'post_type'   => 'lfuf_location',

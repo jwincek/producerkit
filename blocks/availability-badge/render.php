@@ -37,9 +37,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
     <span class="screen-reader-text">
         <?php
         if ($product_name) {
-            printf(esc_html__('%s availability:', 'leftfield-farm'), esc_html($product_name));
+            printf(esc_html__('%s availability:', 'farm-stand-manager'), esc_html($product_name));
         } else {
-            esc_html_e('Availability:', 'leftfield-farm');
+            esc_html_e('Availability:', 'farm-stand-manager');
         }
         ?>
     </span>

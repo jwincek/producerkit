@@ -223,7 +223,7 @@ function submit_rsvp(\WP_REST_Request $request): \WP_REST_Response {
             'token'      => $result['token'],
         ],
         'summary' => $summary,
-        'message' => __('You\'re on the list! See you there.', 'leftfield-farm'),
+        'message' => __('You\'re on the list! See you there.', 'farm-stand-manager'),
     ], 201);
 }
 
@@ -237,14 +237,14 @@ function cancel_rsvp(\WP_REST_Request $request): \WP_REST_Response {
 
     if (! $deleted) {
         return new \WP_REST_Response(
-            ['message' => __('RSVP not found or already cancelled.', 'leftfield-farm')],
+            ['message' => __('RSVP not found or already cancelled.', 'farm-stand-manager')],
             404,
         );
     }
 
     return new \WP_REST_Response([
         'deleted' => true,
-        'message' => __('Your RSVP has been cancelled.', 'leftfield-farm'),
+        'message' => __('Your RSVP has been cancelled.', 'farm-stand-manager'),
     ], 200);
 }
 

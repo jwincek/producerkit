@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "clock",
     "description": "Display the stand's weekly schedule with visual indicators for today's hours. Reads from the stand's schedule meta.",
-    "textdomain": "leftfield-farm",
+    "textdomain": "farm-stand-manager",
     "attributes": {
         "locationId": {
             "type": "number",

@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "store",
     "description": "Display a Leftfield location with open/closed status, hours, address, and Venmo link.",
-    "textdomain": "leftfield-farm",
+    "textdomain": "farm-stand-manager",
     "attributes": {
         "locationId": {
             "type": "number",

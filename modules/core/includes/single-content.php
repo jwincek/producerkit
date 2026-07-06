@@ -1,6 +1,6 @@
 <?php
 /**
- * Single post content enhancement for Leftfield CPTs.
+ * Single post content enhancement for plugin CPTs.
  *
  * When viewing a single product, source, location, or event,
  * this appends the structured meta data below the post content.
@@ -81,7 +81,7 @@ function render_product_details(\WP_Post $post): string {
     <div class="lfuf-single-details lfuf-single-details--product">
         <?php if ($price || $unit) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Price', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Price', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php echo esc_html($price); ?>
                     <?php if ($unit) : ?>
@@ -93,7 +93,7 @@ function render_product_details(\WP_Post $post): string {
 
         <?php if ($types && ! is_wp_error($types)) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php echo esc_html(implode(', ', wp_list_pluck($types, 'name'))); ?>
                 </span>
@@ -102,7 +102,7 @@ function render_product_details(\WP_Post $post): string {
 
         <?php if ($seasons && ! is_wp_error($seasons)) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Season', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Season', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php echo esc_html(implode(', ', wp_list_pluck($seasons, 'name'))); ?>
                 </span>
@@ -114,7 +114,7 @@ function render_product_details(\WP_Post $post): string {
             $status_text = ucfirst(str_replace('_', ' ', $row->status));
         ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Availability', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Availability', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr($row->status); ?>">
                         <?php echo esc_html($status_text); ?>
@@ -128,14 +128,14 @@ function render_product_details(\WP_Post $post): string {
 
         <?php if ($growing_notes) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Notes', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Notes', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($growing_notes); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if (! empty($sources)) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Sourced from', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Sourced from', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php foreach ($sources as $source) :
                         $farm_name = get_post_meta($source->ID, '_lfuf_source_farm_name', true) ?: $source->post_title;
@@ -186,35 +186,35 @@ function render_source_details(\WP_Post $post): string {
     <div class="lfuf-single-details lfuf-single-details--source">
         <?php if ($farm_name) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Farm', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Farm', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($farm_name); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($location) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Location', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Location', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($location); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($history) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('History', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('History', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($history); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($milling_notes) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Milling Notes', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Milling Notes', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($milling_notes); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if (! empty($products)) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Used in', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Used in', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value lfuf-single-details__links">
                     <?php foreach ($products as $product) : ?>
                         <a href="<?php echo esc_url(get_permalink($product->ID)); ?>">
@@ -245,43 +245,43 @@ function render_location_details(\WP_Post $post): string {
     ?>
     <div class="lfuf-single-details lfuf-single-details--location">
         <div class="lfuf-single-details__row">
-            <span class="lfuf-single-details__label"><?php esc_html_e('Status', 'leftfield-farm'); ?></span>
+            <span class="lfuf-single-details__label"><?php esc_html_e('Status', 'farm-stand-manager'); ?></span>
             <span class="lfuf-single-details__value">
                 <span class="lfuf-location-info__status lfuf-location-info__status--<?php echo $is_open ? 'open' : 'closed'; ?>">
-                    <?php echo $is_open ? esc_html__('Open Now', 'leftfield-farm') : esc_html__('Closed', 'leftfield-farm'); ?>
+                    <?php echo $is_open ? esc_html__('Open Now', 'farm-stand-manager') : esc_html__('Closed', 'farm-stand-manager'); ?>
                 </span>
             </span>
         </div>
 
         <?php if ($location_type) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html(ucfirst($location_type)); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($address) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Address', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Address', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($address); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($hours) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Hours', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Hours', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($hours); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($venmo_handle) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Payment', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Payment', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <a href="<?php echo esc_url('https://venmo.com/' . ltrim($venmo_handle, '@')); ?>"
                        target="_blank" rel="noopener noreferrer">
-                        <?php printf(esc_html__('Venmo (@%s)', 'leftfield-farm'), esc_html(ltrim($venmo_handle, '@'))); ?>
-                        <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'leftfield-farm'); ?></span>
+                        <?php printf(esc_html__('Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@'))); ?>
+                        <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
                     </a>
                 </span>
             </div>
@@ -327,17 +327,17 @@ function render_event_details(\WP_Post $post): string {
     <div class="lfuf-single-details lfuf-single-details--event">
         <?php if ($cancelled) : ?>
             <div class="lfuf-single-details__alert">
-                <?php esc_html_e('This event has been cancelled.', 'leftfield-farm'); ?>
+                <?php esc_html_e('This event has been cancelled.', 'farm-stand-manager'); ?>
             </div>
         <?php endif; ?>
 
         <?php if ($start_ts) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Date', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Date', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html(date_i18n('l, F j, Y', $start_ts)); ?></span>
             </div>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Time', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Time', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php echo esc_html(date_i18n('g:i A', $start_ts)); ?>
                     <?php if ($end_ts) : ?>
@@ -349,7 +349,7 @@ function render_event_details(\WP_Post $post): string {
 
         <?php if ($types && ! is_wp_error($types)) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Type', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <?php echo esc_html(implode(', ', wp_list_pluck($types, 'name'))); ?>
                 </span>
@@ -358,7 +358,7 @@ function render_event_details(\WP_Post $post): string {
 
         <?php if ($location) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Location', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Location', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <a href="<?php echo esc_url(get_permalink($location->ID)); ?>">
                         <?php echo esc_html($location->post_title); ?>
@@ -375,28 +375,28 @@ function render_event_details(\WP_Post $post): string {
 
         <?php if ($cost_note) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Cost', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Cost', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($cost_note); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($bring) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('What to bring', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('What to bring', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value"><?php echo esc_html($bring); ?></span>
             </div>
         <?php endif; ?>
 
         <?php if ($rsvp_summary && $rsvp_summary['enabled']) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('RSVPs', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('RSVPs', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
-                    <?php printf(esc_html__('%d people coming', 'leftfield-farm'), (int) $rsvp_summary['headcount']); ?>
+                    <?php printf(esc_html__('%d people coming', 'farm-stand-manager'), (int) $rsvp_summary['headcount']); ?>
                     <?php if ($rsvp_summary['cap'] > 0) : ?>
-                        <?php printf(esc_html__('(%d spots total)', 'leftfield-farm'), (int) $rsvp_summary['cap']); ?>
+                        <?php printf(esc_html__('(%d spots total)', 'farm-stand-manager'), (int) $rsvp_summary['cap']); ?>
                     <?php endif; ?>
                     <?php if ($rsvp_summary['is_full']) : ?>
-                        — <strong><?php esc_html_e('Full', 'leftfield-farm'); ?></strong>
+                        — <strong><?php esc_html_e('Full', 'farm-stand-manager'); ?></strong>
                     <?php endif; ?>
                 </span>
             </div>
@@ -404,11 +404,11 @@ function render_event_details(\WP_Post $post): string {
 
         <?php if ($donation && ! $cancelled) : ?>
             <div class="lfuf-single-details__row">
-                <span class="lfuf-single-details__label"><?php esc_html_e('Payment', 'leftfield-farm'); ?></span>
+                <span class="lfuf-single-details__label"><?php esc_html_e('Payment', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
                     <a href="<?php echo esc_url($donation); ?>" target="_blank" rel="noopener noreferrer">
-                        <?php esc_html_e('Donate / Pay', 'leftfield-farm'); ?>
-                        <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'leftfield-farm'); ?></span>
+                        <?php esc_html_e('Donate / Pay', 'farm-stand-manager'); ?>
+                        <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
                     </a>
                 </span>
             </div>

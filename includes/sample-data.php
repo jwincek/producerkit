@@ -1,6 +1,6 @@
 <?php
 /**
- * Sample Data seeder for Leftfield Farm.
+ * Sample Data seeder for Farm Stand Manager.
  *
  * Provides a "Load Sample Data" / "Remove Sample Data" toggle
  * on the admin dashboard. Creates realistic products, locations,
@@ -39,14 +39,14 @@ add_action('admin_init', function (): void {
         if ($action === 'load' && ! is_loaded()) {
             seed_all();
             update_option('lfuf_sample_data_loaded', true);
-            wp_safe_redirect(admin_url('admin.php?page=leftfield-dashboard&lfuf_sample=loaded'));
+            wp_safe_redirect(admin_url('admin.php?page=farm-stand-dashboard&lfuf_sample=loaded'));
             exit;
         }
 
         if ($action === 'remove' && is_loaded()) {
             remove_all();
             delete_option('lfuf_sample_data_loaded');
-            wp_safe_redirect(admin_url('admin.php?page=leftfield-dashboard&lfuf_sample=removed'));
+            wp_safe_redirect(admin_url('admin.php?page=farm-stand-dashboard&lfuf_sample=removed'));
             exit;
         }
     }
@@ -59,14 +59,14 @@ function get_dashboard_html(): string {
     $loaded = is_loaded();
     $action = $loaded ? 'remove' : 'load';
     $label  = $loaded
-        ? __('Remove Sample Data', 'leftfield-farm')
-        : __('Load Sample Data', 'leftfield-farm');
+        ? __('Remove Sample Data', 'farm-stand-manager')
+        : __('Load Sample Data', 'farm-stand-manager');
     $description = $loaded
-        ? __('Remove all sample products, locations, events, and availability entries.', 'leftfield-farm')
-        : __('Load example products, a stand location, events, and availability entries so you can see how the blocks look with content.', 'leftfield-farm');
+        ? __('Remove all sample products, locations, events, and availability entries.', 'farm-stand-manager')
+        : __('Load example products, a stand location, events, and availability entries so you can see how the blocks look with content.', 'farm-stand-manager');
 
     $url = wp_nonce_url(
-        admin_url('admin.php?page=leftfield-dashboard&lfuf_sample_action=' . $action),
+        admin_url('admin.php?page=farm-stand-dashboard&lfuf_sample_action=' . $action),
         'lfuf_sample_action',
     );
 
@@ -74,8 +74,8 @@ function get_dashboard_html(): string {
     if (isset($_GET['lfuf_sample'])) {
         $type = $_GET['lfuf_sample'] === 'loaded' ? 'success' : 'info';
         $msg  = $_GET['lfuf_sample'] === 'loaded'
-            ? __('Sample data loaded! Check your Products, Locations, and Events.', 'leftfield-farm')
-            : __('Sample data removed.', 'leftfield-farm');
+            ? __('Sample data loaded! Check your Products, Locations, and Events.', 'farm-stand-manager')
+            : __('Sample data removed.', 'farm-stand-manager');
         $notice = sprintf(
             '<div class="notice notice-%s inline" style="margin-bottom:0.75rem;"><p>%s</p></div>',
             esc_attr($type),
@@ -95,7 +95,7 @@ function get_dashboard_html(): string {
             <p class="description">%s</p>
             <a href="%s" class="%s" onclick=\'%s\'>%s</a>
         </div>',
-        esc_html__('Sample Data', 'leftfield-farm'),
+        esc_html__('Sample Data', 'farm-stand-manager'),
         $notice,
         esc_html($description),
         esc_url($url),
@@ -131,7 +131,7 @@ function seed_locations(): int {
     update_post_meta($id, SAMPLE_META_KEY, '1');
     update_post_meta($id, '_lfuf_address', '1820 E Myrtle Ave, Johnson City, TN 37601');
     update_post_meta($id, '_lfuf_location_type', 'stand');
-    update_post_meta($id, '_lfuf_venmo_handle', 'leftfieldfarm');
+    update_post_meta($id, '_lfuf_venmo_handle', 'examplefarm');
     update_post_meta($id, '_lfuf_hours', 'Saturdays 1:00 – 4:00 PM, May – December');
     update_post_meta($id, '_lfuf_is_open', false);
     update_post_meta($id, '_lfuf_lat', 36.3134);
@@ -215,7 +215,7 @@ function seed_products(): array {
             'seasons' => ['Spring', 'Summer', 'Fall', 'Winter'],
             'price'   => '$8',
             'unit'    => 'half dozen',
-            'notes'   => 'A Slowbird Bread signature.',
+            'notes'   => 'A bakery signature.',
         ],
         [
             'title'   => 'Garlic Dill Pickles (Sample)',
@@ -296,7 +296,7 @@ function seed_events(int $location_id, array $product_ids): void {
         'post_type'    => 'lfuf_event',
         'post_title'   => 'Pizza Night (Sample)',
         'post_excerpt' => 'Wood-fired pizza in the field. Bring a dish to share!',
-        'post_content' => 'Join us for a laid-back evening of wood-fired pizza made with Slowbird Bread dough and farm-fresh toppings. This is a donation-based event — pay what you can. Bring a side dish, a dessert, or just your appetite.',
+        'post_content' => 'Join us for a laid-back evening of wood-fired pizza made with our own sourdough and farm-fresh toppings. This is a donation-based event — pay what you can. Bring a side dish, a dessert, or just your appetite.',
         'post_status'  => 'publish',
     ]);
 
@@ -305,7 +305,7 @@ function seed_events(int $location_id, array $product_ids): void {
         update_post_meta($pizza_id, '_lfuf_start_datetime', $pizza_date . 'T18:00:00');
         update_post_meta($pizza_id, '_lfuf_end_datetime', $pizza_date . 'T21:00:00');
         update_post_meta($pizza_id, '_lfuf_event_location_id', $location_id);
-        update_post_meta($pizza_id, '_lfuf_donation_link', 'https://venmo.com/leftfieldfarm');
+        update_post_meta($pizza_id, '_lfuf_donation_link', 'https://venmo.com/examplefarm');
         update_post_meta($pizza_id, '_lfuf_rsvp_cap', 30);
         update_post_meta($pizza_id, '_lfuf_em_rsvp_enabled', true);
         update_post_meta($pizza_id, '_lfuf_em_rsvp_label', "Count me in!");
@@ -346,7 +346,7 @@ function seed_events(int $location_id, array $product_ids): void {
         'post_type'    => 'lfuf_event',
         'post_title'   => 'Farm Tour + Workshop: No-Till Growing (Sample)',
         'post_excerpt' => 'Learn how we grow without tilling and see the farm up close.',
-        'post_content' => 'A guided tour of Leftfield Urban Farm followed by a hands-on workshop on no-till growing methods. We\'ll cover bed preparation, mulching, composting, and succession planting. Great for beginning and experienced gardeners alike.',
+        'post_content' => 'A guided tour of the farm followed by a hands-on workshop on no-till growing methods. We\'ll cover bed preparation, mulching, composting, and succession planting. Great for beginning and experienced gardeners alike.',
         'post_status'  => 'publish',
     ]);
 
@@ -360,7 +360,7 @@ function seed_events(int $location_id, array $product_ids): void {
         update_post_meta($tour_id, '_lfuf_em_rsvp_label', 'Reserve my spot');
         update_post_meta($tour_id, '_lfuf_em_cost_note', '$15/person — supports the farm');
         update_post_meta($tour_id, '_lfuf_em_what_to_bring', 'Comfortable shoes and water');
-        update_post_meta($tour_id, '_lfuf_donation_link', 'https://venmo.com/leftfieldfarm');
+        update_post_meta($tour_id, '_lfuf_donation_link', 'https://venmo.com/examplefarm');
         wp_set_object_terms($tour_id, ['Farm Tour', 'Workshop'], 'lfuf_event_type');
     }
 }

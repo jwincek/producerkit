@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "store",
     "description": "A prominent banner showing the farm stand's current open/closed status, address, hours, Venmo link, and custom status message. Uses the Interactivity API for reactive updates.",
-    "textdomain": "leftfield-stand-status",
+    "textdomain": "farm-stand-manager",
     "attributes": {
         "locationId": {
             "type": "number",

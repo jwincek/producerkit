@@ -21,17 +21,17 @@ function register(): void {
  * ─────────────────────────────────────────────── */
 function register_product(): void {
     $labels = [
-        'name'                  => __('Products', 'leftfield-core'),
-        'singular_name'         => __('Product', 'leftfield-core'),
-        'add_new_item'          => __('Add New Product', 'leftfield-core'),
-        'edit_item'             => __('Edit Product', 'leftfield-core'),
-        'new_item'              => __('New Product', 'leftfield-core'),
-        'view_item'             => __('View Product', 'leftfield-core'),
-        'search_items'          => __('Search Products', 'leftfield-core'),
-        'not_found'             => __('No products found.', 'leftfield-core'),
-        'not_found_in_trash'    => __('No products found in Trash.', 'leftfield-core'),
-        'all_items'             => __('All Products', 'leftfield-core'),
-        'menu_name'             => __('Products', 'leftfield-core'),
+        'name'                  => __('Products', 'farm-stand-manager'),
+        'singular_name'         => __('Product', 'farm-stand-manager'),
+        'add_new_item'          => __('Add New Product', 'farm-stand-manager'),
+        'edit_item'             => __('Edit Product', 'farm-stand-manager'),
+        'new_item'              => __('New Product', 'farm-stand-manager'),
+        'view_item'             => __('View Product', 'farm-stand-manager'),
+        'search_items'          => __('Search Products', 'farm-stand-manager'),
+        'not_found'             => __('No products found.', 'farm-stand-manager'),
+        'not_found_in_trash'    => __('No products found in Trash.', 'farm-stand-manager'),
+        'all_items'             => __('All Products', 'farm-stand-manager'),
+        'menu_name'             => __('Products', 'farm-stand-manager'),
     ];
 
     register_post_type('lfuf_product', [
@@ -55,16 +55,16 @@ function register_product(): void {
  * ─────────────────────────────────────────────── */
 function register_source(): void {
     $labels = [
-        'name'                  => __('Sources', 'leftfield-core'),
-        'singular_name'         => __('Source', 'leftfield-core'),
-        'add_new_item'          => __('Add New Source', 'leftfield-core'),
-        'edit_item'             => __('Edit Source', 'leftfield-core'),
-        'new_item'              => __('New Source', 'leftfield-core'),
-        'view_item'             => __('View Source', 'leftfield-core'),
-        'search_items'          => __('Search Sources', 'leftfield-core'),
-        'not_found'             => __('No sources found.', 'leftfield-core'),
-        'all_items'             => __('All Sources', 'leftfield-core'),
-        'menu_name'             => __('Sources', 'leftfield-core'),
+        'name'                  => __('Sources', 'farm-stand-manager'),
+        'singular_name'         => __('Source', 'farm-stand-manager'),
+        'add_new_item'          => __('Add New Source', 'farm-stand-manager'),
+        'edit_item'             => __('Edit Source', 'farm-stand-manager'),
+        'new_item'              => __('New Source', 'farm-stand-manager'),
+        'view_item'             => __('View Source', 'farm-stand-manager'),
+        'search_items'          => __('Search Sources', 'farm-stand-manager'),
+        'not_found'             => __('No sources found.', 'farm-stand-manager'),
+        'all_items'             => __('All Sources', 'farm-stand-manager'),
+        'menu_name'             => __('Sources', 'farm-stand-manager'),
     ];
 
     register_post_type('lfuf_source', [
@@ -86,16 +86,16 @@ function register_source(): void {
  * ─────────────────────────────────────────────── */
 function register_location(): void {
     $labels = [
-        'name'                  => __('Locations', 'leftfield-core'),
-        'singular_name'         => __('Location', 'leftfield-core'),
-        'add_new_item'          => __('Add New Location', 'leftfield-core'),
-        'edit_item'             => __('Edit Location', 'leftfield-core'),
-        'new_item'              => __('New Location', 'leftfield-core'),
-        'view_item'             => __('View Location', 'leftfield-core'),
-        'search_items'          => __('Search Locations', 'leftfield-core'),
-        'not_found'             => __('No locations found.', 'leftfield-core'),
-        'all_items'             => __('All Locations', 'leftfield-core'),
-        'menu_name'             => __('Locations', 'leftfield-core'),
+        'name'                  => __('Locations', 'farm-stand-manager'),
+        'singular_name'         => __('Location', 'farm-stand-manager'),
+        'add_new_item'          => __('Add New Location', 'farm-stand-manager'),
+        'edit_item'             => __('Edit Location', 'farm-stand-manager'),
+        'new_item'              => __('New Location', 'farm-stand-manager'),
+        'view_item'             => __('View Location', 'farm-stand-manager'),
+        'search_items'          => __('Search Locations', 'farm-stand-manager'),
+        'not_found'             => __('No locations found.', 'farm-stand-manager'),
+        'all_items'             => __('All Locations', 'farm-stand-manager'),
+        'menu_name'             => __('Locations', 'farm-stand-manager'),
     ];
 
     register_post_type('lfuf_location', [
@@ -117,16 +117,16 @@ function register_location(): void {
  * ─────────────────────────────────────────────── */
 function register_event(): void {
     $labels = [
-        'name'                  => __('Events', 'leftfield-core'),
-        'singular_name'         => __('Event', 'leftfield-core'),
-        'add_new_item'          => __('Add New Event', 'leftfield-core'),
-        'edit_item'             => __('Edit Event', 'leftfield-core'),
-        'new_item'              => __('New Event', 'leftfield-core'),
-        'view_item'             => __('View Event', 'leftfield-core'),
-        'search_items'          => __('Search Events', 'leftfield-core'),
-        'not_found'             => __('No events found.', 'leftfield-core'),
-        'all_items'             => __('All Events', 'leftfield-core'),
-        'menu_name'             => __('Events', 'leftfield-core'),
+        'name'                  => __('Events', 'farm-stand-manager'),
+        'singular_name'         => __('Event', 'farm-stand-manager'),
+        'add_new_item'          => __('Add New Event', 'farm-stand-manager'),
+        'edit_item'             => __('Edit Event', 'farm-stand-manager'),
+        'new_item'              => __('New Event', 'farm-stand-manager'),
+        'view_item'             => __('View Event', 'farm-stand-manager'),
+        'search_items'          => __('Search Events', 'farm-stand-manager'),
+        'not_found'             => __('No events found.', 'farm-stand-manager'),
+        'all_items'             => __('All Events', 'farm-stand-manager'),
+        'menu_name'             => __('Events', 'farm-stand-manager'),
     ];
 
     register_post_type('lfuf_event', [

@@ -24,17 +24,17 @@ function register(): void {
  * ─────────────────────────────────────────────── */
 function register_product_type(): void {
     $labels = [
-        'name'              => __('Product Types', 'leftfield-core'),
-        'singular_name'     => __('Product Type', 'leftfield-core'),
-        'search_items'      => __('Search Product Types', 'leftfield-core'),
-        'all_items'         => __('All Product Types', 'leftfield-core'),
-        'parent_item'       => __('Parent Product Type', 'leftfield-core'),
-        'parent_item_colon' => __('Parent Product Type:', 'leftfield-core'),
-        'edit_item'         => __('Edit Product Type', 'leftfield-core'),
-        'update_item'       => __('Update Product Type', 'leftfield-core'),
-        'add_new_item'      => __('Add New Product Type', 'leftfield-core'),
-        'new_item_name'     => __('New Product Type Name', 'leftfield-core'),
-        'menu_name'         => __('Product Types', 'leftfield-core'),
+        'name'              => __('Product Types', 'farm-stand-manager'),
+        'singular_name'     => __('Product Type', 'farm-stand-manager'),
+        'search_items'      => __('Search Product Types', 'farm-stand-manager'),
+        'all_items'         => __('All Product Types', 'farm-stand-manager'),
+        'parent_item'       => __('Parent Product Type', 'farm-stand-manager'),
+        'parent_item_colon' => __('Parent Product Type:', 'farm-stand-manager'),
+        'edit_item'         => __('Edit Product Type', 'farm-stand-manager'),
+        'update_item'       => __('Update Product Type', 'farm-stand-manager'),
+        'add_new_item'      => __('Add New Product Type', 'farm-stand-manager'),
+        'new_item_name'     => __('New Product Type Name', 'farm-stand-manager'),
+        'menu_name'         => __('Product Types', 'farm-stand-manager'),
     ];
 
     register_taxonomy('lfuf_product_type', ['lfuf_product'], [
@@ -64,15 +64,15 @@ function register_product_type(): void {
  * ─────────────────────────────────────────────── */
 function register_season(): void {
     $labels = [
-        'name'              => __('Seasons', 'leftfield-core'),
-        'singular_name'     => __('Season', 'leftfield-core'),
-        'search_items'      => __('Search Seasons', 'leftfield-core'),
-        'all_items'         => __('All Seasons', 'leftfield-core'),
-        'edit_item'         => __('Edit Season', 'leftfield-core'),
-        'update_item'       => __('Update Season', 'leftfield-core'),
-        'add_new_item'      => __('Add New Season', 'leftfield-core'),
-        'new_item_name'     => __('New Season Name', 'leftfield-core'),
-        'menu_name'         => __('Seasons', 'leftfield-core'),
+        'name'              => __('Seasons', 'farm-stand-manager'),
+        'singular_name'     => __('Season', 'farm-stand-manager'),
+        'search_items'      => __('Search Seasons', 'farm-stand-manager'),
+        'all_items'         => __('All Seasons', 'farm-stand-manager'),
+        'edit_item'         => __('Edit Season', 'farm-stand-manager'),
+        'update_item'       => __('Update Season', 'farm-stand-manager'),
+        'add_new_item'      => __('Add New Season', 'farm-stand-manager'),
+        'new_item_name'     => __('New Season Name', 'farm-stand-manager'),
+        'menu_name'         => __('Seasons', 'farm-stand-manager'),
     ];
 
     register_taxonomy('lfuf_season', ['lfuf_product', 'lfuf_event'], [
@@ -101,15 +101,15 @@ function register_season(): void {
  * ─────────────────────────────────────────────── */
 function register_event_type(): void {
     $labels = [
-        'name'              => __('Event Types', 'leftfield-core'),
-        'singular_name'     => __('Event Type', 'leftfield-core'),
-        'search_items'      => __('Search Event Types', 'leftfield-core'),
-        'all_items'         => __('All Event Types', 'leftfield-core'),
-        'edit_item'         => __('Edit Event Type', 'leftfield-core'),
-        'update_item'       => __('Update Event Type', 'leftfield-core'),
-        'add_new_item'      => __('Add New Event Type', 'leftfield-core'),
-        'new_item_name'     => __('New Event Type Name', 'leftfield-core'),
-        'menu_name'         => __('Event Types', 'leftfield-core'),
+        'name'              => __('Event Types', 'farm-stand-manager'),
+        'singular_name'     => __('Event Type', 'farm-stand-manager'),
+        'search_items'      => __('Search Event Types', 'farm-stand-manager'),
+        'all_items'         => __('All Event Types', 'farm-stand-manager'),
+        'edit_item'         => __('Edit Event Type', 'farm-stand-manager'),
+        'update_item'       => __('Update Event Type', 'farm-stand-manager'),
+        'add_new_item'      => __('Add New Event Type', 'farm-stand-manager'),
+        'new_item_name'     => __('New Event Type Name', 'farm-stand-manager'),
+        'menu_name'         => __('Event Types', 'farm-stand-manager'),
     ];
 
     register_taxonomy('lfuf_event_type', ['lfuf_event'], [

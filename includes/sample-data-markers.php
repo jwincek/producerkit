@@ -72,17 +72,17 @@ add_action('wp_footer', function (): void {
     }
 
     $remove_url = wp_nonce_url(
-        admin_url('admin.php?page=leftfield-dashboard&lfuf_sample_action=remove'),
+        admin_url('admin.php?page=farm-stand-dashboard&lfuf_sample_action=remove'),
         'lfuf_sample_action',
     );
     ?>
     <div class="lfuf-sample-banner">
         <span class="lfuf-sample-banner__icon">🧪</span>
         <span class="lfuf-sample-banner__text">
-            <?php esc_html_e('Sample data is active. Content marked "Sample" is test data.', 'leftfield-farm'); ?>
+            <?php esc_html_e('Sample data is active. Content marked "Sample" is test data.', 'farm-stand-manager'); ?>
         </span>
         <a href="<?php echo esc_url($remove_url); ?>" class="lfuf-sample-banner__link">
-            <?php esc_html_e('Remove sample data →', 'leftfield-farm'); ?>
+            <?php esc_html_e('Remove sample data →', 'farm-stand-manager'); ?>
         </a>
     </div>
     <?php
@@ -170,19 +170,19 @@ add_action('admin_notices', function (): void {
 
     // Don't show on the dashboard page itself (it has its own section).
     $screen = get_current_screen();
-    if ($screen && $screen->id === 'toplevel_page_leftfield-dashboard') {
+    if ($screen && $screen->id === 'toplevel_page_farm-stand-dashboard') {
         return;
     }
 
     $remove_url = wp_nonce_url(
-        admin_url('admin.php?page=leftfield-dashboard&lfuf_sample_action=remove'),
+        admin_url('admin.php?page=farm-stand-dashboard&lfuf_sample_action=remove'),
         'lfuf_sample_action',
     );
 
     printf(
         '<div class="notice notice-warning"><p>🧪 %s <a href="%s">%s</a></p></div>',
-        esc_html__('Leftfield Farm sample data is loaded. Remember to remove it before going live.', 'leftfield-farm'),
+        esc_html__('Farm Stand Manager sample data is loaded. Remember to remove it before going live.', 'farm-stand-manager'),
         esc_url($remove_url),
-        esc_html__('Remove sample data →', 'leftfield-farm'),
+        esc_html__('Remove sample data →', 'farm-stand-manager'),
     );
 });

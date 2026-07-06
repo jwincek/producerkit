@@ -84,7 +84,7 @@ function send(string $subject, string $body, array $to = []): bool {
     $html .= '<h2 style="color:#065f46;margin-top:0;">🥕 ' . esc_html($site_name) . '</h2>';
     $html .= $body;
     $html .= '<hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0 12px;">';
-    $html .= '<p style="font-size:12px;color:#9ca3af;">This is an automated notification from the Leftfield Farm plugin.</p>';
+    $html .= '<p style="font-size:12px;color:#9ca3af;">This is an automated notification from the Farm Stand Manager plugin.</p>';
     $html .= '</body></html>';
 
     $headers = ['Content-Type: text/html; charset=UTF-8'];

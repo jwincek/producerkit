@@ -112,14 +112,14 @@ function add_stand_nodes(\WP_Admin_Bar $bar): void {
         $top_title = sprintf(
             '<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s%s',
             $d['is_open'] ? 'open' : 'closed',
-            $d['is_open'] ? __('Stand Open', 'leftfield-stand-status') : __('Stand Closed', 'leftfield-stand-status'),
+            $d['is_open'] ? __('Stand Open', 'farm-stand-manager') : __('Stand Closed', 'farm-stand-manager'),
             $d['message'] ? ' &mdash; <span class="lfuf-ab-msg">' . esc_html($d['message']) . '</span>' : '',
         );
     } else {
         $top_title = sprintf(
             '<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s',
             $open_count > 0 ? 'open' : 'closed',
-            sprintf(__('Stands (%d/%d open)', 'leftfield-stand-status'), $open_count, $total),
+            sprintf(__('Stands (%d/%d open)', 'farm-stand-manager'), $open_count, $total),
         );
     }
 
@@ -160,8 +160,8 @@ function add_stand_nodes(\WP_Admin_Bar $bar): void {
             'id'     => 'lfuf-stand-' . $sid . '-toggle',
             'parent' => $parent,
             'title'  => $is_open
-                ? __('Close the Stand', 'leftfield-stand-status')
-                : __('Open the Stand', 'leftfield-stand-status'),
+                ? __('Close the Stand', 'farm-stand-manager')
+                : __('Open the Stand', 'farm-stand-manager'),
             'href'   => '#',
             'meta'   => [
                 'class'         => 'lfuf-stand-toggle-action',
@@ -176,10 +176,10 @@ function add_stand_nodes(\WP_Admin_Bar $bar): void {
             . ' placeholder="%3$s" value="%4$s" data-stand-id="%1$d" />'
             . '<button type="button" class="lfuf-ab-msg-save" data-stand-id="%1$d">%5$s</button>',
             $sid,
-            esc_attr__('Status message', 'leftfield-stand-status'),
-            esc_attr__("Status message\u{2026}", 'leftfield-stand-status'),
+            esc_attr__('Status message', 'farm-stand-manager'),
+            esc_attr__("Status message\u{2026}", 'farm-stand-manager'),
             esc_attr($message),
-            esc_html__('Save', 'leftfield-stand-status'),
+            esc_html__('Save', 'farm-stand-manager'),
         );
 
         $bar->add_node([
@@ -194,7 +194,7 @@ function add_stand_nodes(\WP_Admin_Bar $bar): void {
         $bar->add_node([
             'id'     => 'lfuf-stand-' . $sid . '-edit',
             'parent' => $parent,
-            'title'  => __('Edit Stand Settings', 'leftfield-stand-status'),
+            'title'  => __('Edit Stand Settings', 'farm-stand-manager'),
             'href'   => get_edit_post_link($sid, 'raw'),
         ]);
     }

@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "calendar-alt",
     "description": "Display upcoming (and optionally past) farm events with RSVP forms, location info, and event type filtering. Uses the Interactivity API for RSVP submission without page reload.",
-    "textdomain": "leftfield-farm",
+    "textdomain": "farm-stand-manager",
     "attributes": {
         "showPastEvents": {
             "type": "boolean",

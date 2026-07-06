@@ -20,7 +20,7 @@ $show_images       = (bool) ($attributes['showImages'] ?? true);
 $show_rsvp         = (bool) ($attributes['showRsvp'] ?? true);
 $show_location     = (bool) ($attributes['showLocation'] ?? true);
 $show_type_filters = (bool) ($attributes['showTypeFilters'] ?? true);
-$empty_message     = $attributes['emptyMessage'] ?? __('No upcoming events right now — check back soon!', 'leftfield-farm');
+$empty_message     = $attributes['emptyMessage'] ?? __('No upcoming events right now — check back soon!', 'farm-stand-manager');
 
 // Fetch upcoming events.
 $request = new \WP_REST_Request('GET', '/lfuf/v1/events/upcoming');
@@ -89,7 +89,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
                     data-wp-class--lfuf-event-list__filter-btn--active="state.isCurrentTypeActive"
                     data-wp-bind--aria-pressed="state.isCurrentTypeActive"
                     aria-pressed="true"
-                ><?php esc_html_e('All Events', 'leftfield-farm'); ?></button>
+                ><?php esc_html_e('All Events', 'farm-stand-manager'); ?></button>
                 <?php foreach ($filter_types as $ft) : ?>
                     <button
                         type="button"
@@ -107,7 +107,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
         <!-- ── Upcoming events ── -->
         <?php if (! empty($upcoming)) : ?>
             <div class="lfuf-event-list__section">
-                <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Upcoming', 'leftfield-farm'); ?></h3>
+                <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Upcoming', 'farm-stand-manager'); ?></h3>
                 <?php foreach ($upcoming as $event) :
                     echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, $show_rsvp, $show_location);
                 endforeach; ?>
@@ -117,7 +117,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
         <!-- ── Past events ── -->
         <?php if ($show_past && ! empty($past)) : ?>
             <div class="lfuf-event-list__section lfuf-event-list__section--past">
-                <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Past Events', 'leftfield-farm'); ?></h3>
+                <h3 class="lfuf-event-list__section-title"><?php esc_html_e('Past Events', 'farm-stand-manager'); ?></h3>
                 <?php foreach ($past as $event) :
                     echo \Leftfield\EventManager\Render\render_event_card($event, $show_images, false, $show_location);
                 endforeach; ?>

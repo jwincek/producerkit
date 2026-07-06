@@ -39,13 +39,13 @@ if (is_array($schedule)) {
 
 $today     = (int) current_datetime()->format('w');
 $day_names = [
-    0 => __('Sunday', 'leftfield-farm'),
-    1 => __('Monday', 'leftfield-farm'),
-    2 => __('Tuesday', 'leftfield-farm'),
-    3 => __('Wednesday', 'leftfield-farm'),
-    4 => __('Thursday', 'leftfield-farm'),
-    5 => __('Friday', 'leftfield-farm'),
-    6 => __('Saturday', 'leftfield-farm'),
+    0 => __('Sunday', 'farm-stand-manager'),
+    1 => __('Monday', 'farm-stand-manager'),
+    2 => __('Tuesday', 'farm-stand-manager'),
+    3 => __('Wednesday', 'farm-stand-manager'),
+    4 => __('Thursday', 'farm-stand-manager'),
+    5 => __('Friday', 'farm-stand-manager'),
+    6 => __('Saturday', 'farm-stand-manager'),
 ];
 
 $wrapper_attrs = get_block_wrapper_attributes([
@@ -54,7 +54,7 @@ $wrapper_attrs = get_block_wrapper_attributes([
 
 $section_label = sprintf(
     /* translators: %s = location name */
-    __('%s — Weekly Schedule', 'leftfield-farm'),
+    __('%s — Weekly Schedule', 'farm-stand-manager'),
     $post->post_title,
 );
 ?>
@@ -64,12 +64,12 @@ $section_label = sprintf(
         <?php if ($hours_fallback) : ?>
             <p class="lfuf-stand-schedule__fallback">
                 <span aria-hidden="true">🕐</span>
-                <span class="screen-reader-text"><?php esc_html_e('Hours:', 'leftfield-farm'); ?> </span>
+                <span class="screen-reader-text"><?php esc_html_e('Hours:', 'farm-stand-manager'); ?> </span>
                 <?php echo esc_html($hours_fallback); ?>
             </p>
         <?php else : ?>
             <p class="lfuf-stand-schedule__empty">
-                <?php esc_html_e('No schedule set yet.', 'leftfield-farm'); ?>
+                <?php esc_html_e('No schedule set yet.', 'farm-stand-manager'); ?>
             </p>
         <?php endif; ?>
     <?php else : ?>
@@ -79,8 +79,8 @@ $section_label = sprintf(
             </caption>
             <thead class="screen-reader-text">
                 <tr>
-                    <th scope="col"><?php esc_html_e('Day', 'leftfield-farm'); ?></th>
-                    <th scope="col"><?php esc_html_e('Hours', 'leftfield-farm'); ?></th>
+                    <th scope="col"><?php esc_html_e('Day', 'farm-stand-manager'); ?></th>
+                    <th scope="col"><?php esc_html_e('Hours', 'farm-stand-manager'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -103,7 +103,7 @@ $section_label = sprintf(
                             <?php echo esc_html($day_names[$d]); ?>
                             <?php if ($is_today) : ?>
                                 <span class="lfuf-stand-schedule__today-badge">
-                                    <?php esc_html_e('Today', 'leftfield-farm'); ?>
+                                    <?php esc_html_e('Today', 'farm-stand-manager'); ?>
                                 </span>
                             <?php endif; ?>
                         </th>
@@ -116,7 +116,7 @@ $section_label = sprintf(
                                 }, $by_day[$d]);
                                 echo esc_html(implode(', ', $time_strings));
                             else : ?>
-                                <?php esc_html_e('Closed', 'leftfield-farm'); ?>
+                                <?php esc_html_e('Closed', 'farm-stand-manager'); ?>
                             <?php endif; ?>
                         </td>
                     </tr>

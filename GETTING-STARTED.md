@@ -1,4 +1,4 @@
-# Getting Started with Leftfield Farm Plugin
+# Getting Started with Farm Stand Manager
 
 Welcome! This guide walks you through setting up your website's farm tools — the stand status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.
 
@@ -6,7 +6,7 @@ Welcome! This guide walks you through setting up your website's farm tools — t
 
 ## First Things First
 
-After the plugin is activated, you'll see a **🥕 Leftfield** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
+After the plugin is activated, you'll see a **🥕 Farm Stand** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
 
 The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked Good, Pantry Good, Seedling), Seasons (Spring, Summer, Fall, Winter), and Event Types (Pizza Night, Potluck, Farm Dinner, Workshop, Farm Tour, Seed Exchange, Mini Market). You can use these as-is or rename them.
 
@@ -20,7 +20,7 @@ Your roadside stand needs to exist as a Location in WordPress before the stand s
 2. **Title**: `Farm Stand` (or whatever you call it).
 3. In the post editor sidebar, you'll see a **Location Details** panel with proper form fields:
    - **Location Type**: Pick "Farm Stand" from the dropdown.
-   - **Address**: `1820 E Myrtle Ave, Johnson City, TN 37601`
+   - **Address**: `123 Farm Road, Yourtown, ST 00000`
    - **Hours**: `Saturdays 1:00 – 4:00 PM, May – December`
    - **Venmo Handle**: Your Venmo username (without the @). A payment link is generated automatically.
    - **Latitude / Longitude**: Optional. Used for map links.
@@ -56,7 +56,7 @@ Repeat for each product. Don't worry about getting them all in at once — you c
 
 **Tip**: The Products list table shows price and availability status at a glance. You can sort by price.
 
-**Bulk import**: If you have many products to add at once, go to **🥕 Leftfield → Product Import**. You can download a CSV template (or export your existing products), edit it in a spreadsheet, and upload it to create or update products in bulk. The format reference on the page explains every column.
+**Bulk import**: If you have many products to add at once, go to **🥕 Farm Stand → Product Import**. You can download a CSV template (or export your existing products), edit it in a spreadsheet, and upload it to create or update products in bulk. The format reference on the page explains every column.
 
 ---
 
@@ -64,7 +64,7 @@ Repeat for each product. Don't worry about getting them all in at once — you c
 
 This is the task you'll do most often — probably every Saturday morning.
 
-1. Go to **🥕 Leftfield → Availability** in the sidebar.
+1. Go to **🥕 Farm Stand → Availability** in the sidebar.
 2. You'll see all your products in a table with thumbnails and prices. For each one:
    - Pick a **Status**: Abundant, Available, Limited, Sold Out, or leave it blank (not listed).
    - Add a **Quantity Note** if helpful (e.g., `~3 bunches left`, `Last 2 loaves`).
@@ -78,7 +78,7 @@ That's it — the availability board on your website updates immediately.
 
 ## Step 4: Place Blocks on Your Pages
 
-Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **Leftfield Farm** category:
+Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **Farm Stand Manager** category:
 
 ### Homepage (recommended blocks)
 
@@ -157,12 +157,12 @@ You can now set availability per-location on the Availability page, and the boar
 |------|-------|-----------|
 | Open/close the stand | Admin bar dot (any page) | Every stand day |
 | Set a status message | Admin bar → "Set Status Message…" | As needed |
-| Update availability | 🥕 Leftfield → Availability | Weekly (Saturday morning) |
+| Update availability | 🥕 Farm Stand → Availability | Weekly (Saturday morning) |
 | Add a new product | Products → Add New | As new crops/items come in |
-| Bulk add products | 🥕 Leftfield → Product Import | Start of season |
+| Bulk add products | 🥕 Farm Stand → Product Import | Start of season |
 | Create an event | Events → Add New | When planning events |
 | Check RSVPs | Events list → RSVP column | Before each event |
-| Check for content gaps | 🥕 Leftfield dashboard | Occasionally |
+| Check for content gaps | 🥕 Farm Stand dashboard | Occasionally |
 
 ---
 
@@ -170,7 +170,7 @@ You can now set availability per-location on the Availability page, and the boar
 
 If you want to see how everything looks with example products, events, and availability before entering your real data:
 
-1. Go to **🥕 Leftfield** dashboard.
+1. Go to **🥕 Farm Stand** dashboard.
 2. Click **Load Sample Data**.
 3. Explore the blocks on your pages to see how they look.
 4. When you're ready, click **Remove Sample Data** to clear it all out.
@@ -196,4 +196,4 @@ Sample content is labeled with amber "Sample" badges on the front end and a noti
 
 ## Need Help?
 
-This plugin was custom-built for Leftfield Urban Farm. If something isn't working right or you have ideas for improvements, reach out to Jerome.
+If something isn't working right or you have ideas for improvements, open an issue on the plugin's GitHub repository.
