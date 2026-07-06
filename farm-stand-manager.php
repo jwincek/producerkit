@@ -142,6 +142,30 @@ add_action('init', function (): void {
 });
 
 /* ───────────────────────────────────────────────
+ * Front-end QR support (bundled qrcode-generator, MIT)
+ *
+ * Registered here, enqueued on demand by blocks that render a
+ * [data-lfuf-qr] container (e.g. location-info with showQR on).
+ * ─────────────────────────────────────────────── */
+
+add_action('wp_enqueue_scripts', function (): void {
+    wp_register_script(
+        'lfuf-qrcode-vendor',
+        plugins_url('assets/js/vendor/qrcode.js', __FILE__),
+        [],
+        VERSION,
+        true,
+    );
+    wp_register_script(
+        'lfuf-qr',
+        plugins_url('assets/js/lfuf-qr.js', __FILE__),
+        ['lfuf-qrcode-vendor'],
+        VERSION,
+        true,
+    );
+});
+
+/* ───────────────────────────────────────────────
  * Block category
  * ─────────────────────────────────────────────── */
 

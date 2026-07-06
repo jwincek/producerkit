@@ -20,11 +20,17 @@
         "showStatus": {
             "type": "boolean",
             "default": true
+        },
+        "showQR": {
+            "type": "boolean",
+            "default": false
         }
     },
     "supports": {
         "html": false,
-        "align": ["wide"],
+        "align": [
+            "wide"
+        ],
         "color": {
             "background": true,
             "text": true

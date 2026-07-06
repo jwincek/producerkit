@@ -29,6 +29,7 @@
 			var locationId = attributes.locationId;
 			var showVenmo = attributes.showVenmo;
 			var showStatus = attributes.showStatus;
+			var showQR = attributes.showQR;
 
 			// Location data from REST.
 			var _stand = useState( null );
@@ -167,6 +168,19 @@
 					( showVenmo && payMethods.length )
 						? el( 'div', { className: 'lfuf-location-info__payments' },
 							el( 'span', { className: 'lfuf-location-info__payments-label' }, 'Payment options:' ),
+							( showQR && payMethods.some( function ( m ) { return m.is_link; } ) )
+								? el( 'div', { className: 'lfuf-location-info__qr lfuf-location-info__qr--editor' },
+									el( 'div', {
+										className: 'lfuf-location-info__qr-code',
+										style: {
+											width: '96px', height: '96px',
+											display: 'flex', alignItems: 'center', justifyContent: 'center',
+											border: '1px dashed #9ca3af', borderRadius: '4px',
+											fontSize: '11px', color: '#6b7280', textAlign: 'center',
+										},
+									}, 'QR renders on the front end' )
+								)
+								: null,
 							el( 'ul', { className: 'lfuf-location-info__payments-list' },
 								payMethods.map( function ( m, i ) {
 									var text = ( [ 'venmo', 'cashapp', 'paypal' ].indexOf( m.type ) !== -1 )
@@ -208,6 +222,12 @@
 							checked: showVenmo,
 							onChange: function ( val ) { setAttributes( { showVenmo: val } ); },
 							help: 'Links and accepted-payment badges from the location\u2019s Payment Options panel.',
+						} ),
+						el( ToggleControl, {
+							label: 'Show payment QR code',
+							checked: !! showQR,
+							onChange: function ( val ) { setAttributes( { showQR: val } ); },
+							help: 'A scannable code for the first payment link \u2014 handy for signage at the stand.',
 						} )
 					)
 				);

@@ -14,6 +14,7 @@ defined('ABSPATH') || exit;
 $location_id = (int) ($attributes['locationId'] ?? 0);
 $show_venmo  = (bool) ($attributes['showVenmo'] ?? true);
 $show_status = (bool) ($attributes['showStatus'] ?? true);
+$show_qr     = (bool) ($attributes['showQR'] ?? false);
 
 if ($location_id < 1) {
     return;
@@ -126,6 +127,44 @@ $section_label = sprintf(
                     </li>
                 <?php endforeach; ?>
             </ul>
+
+            <?php
+            // QR code for the first payment link (rendered client-side by lfuf-qr).
+            $qr_link = null;
+            if ($show_qr) {
+                foreach ($payment_methods as $method) {
+                    if ($method['is_link']) {
+                        $qr_link = $method;
+                        break;
+                    }
+                }
+            }
+            ?>
+            <?php if ($qr_link) : ?>
+                <?php wp_enqueue_script('lfuf-qr'); ?>
+                <div class="lfuf-location-info__qr">
+                    <div
+                        class="lfuf-location-info__qr-code"
+                        data-lfuf-qr="<?php echo esc_attr($qr_link['url']); ?>"
+                        data-lfuf-qr-label="<?php
+                            printf(
+                                /* translators: %s: payment method label. */
+                                esc_attr__('QR code: pay with %s', 'farm-stand-manager'),
+                                esc_attr($qr_link['label']),
+                            );
+                        ?>"
+                    ></div>
+                    <span class="lfuf-location-info__qr-caption">
+                        <?php
+                        printf(
+                            /* translators: %s: payment method label. */
+                            esc_html__('Scan to pay with %s', 'farm-stand-manager'),
+                            esc_html($qr_link['label']),
+                        );
+                        ?>
+                    </span>
+                </div>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 </section>

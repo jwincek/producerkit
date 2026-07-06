@@ -162,3 +162,32 @@
     color: #374151;
     border: 1px solid #e5e7eb;
 }
+
+/* ── Payment QR ── */
+.lfuf-location-info__qr {
+    margin-top: 0.625rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lfuf-location-info__qr-code {
+    width: 6.5rem;
+}
+
+.lfuf-location-info__qr-code svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.lfuf-location-info__qr-caption {
+    font-size: 0.8125rem;
+    color: #6b7280;
+}
+
+@media print {
+    .lfuf-location-info__qr-code {
+        width: 12rem;
+    }
+}
