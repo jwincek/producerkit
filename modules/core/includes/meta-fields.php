@@ -121,6 +121,7 @@ function register_location_meta(): void {
             'type'        => 'string',
             'description' => 'Venmo handle for payment at this location.',
             'default'     => '',
+            'sanitize'    => __NAMESPACE__ . '\\sanitize_payment_handle',
         ],
         '_lfuf_hours' => [
             'type'        => 'string',
@@ -151,7 +152,7 @@ function register_location_meta(): void {
             'type'              => $args['type'],
             'description'       => $args['description'],
             'default'           => $args['default'],
-            'sanitize_callback' => match ($args['type']) {
+            'sanitize_callback' => $args['sanitize'] ?? match ($args['type']) {
                 'boolean' => 'rest_sanitize_boolean',
                 'number'  => fn ($v) => (float) $v,
                 default   => 'sanitize_text_field',
@@ -201,6 +202,7 @@ function register_event_meta(): void {
             'type'        => 'string',
             'description' => 'Venmo deeplink or external donation URL.',
             'default'     => '',
+            'sanitize'    => __NAMESPACE__ . '\\sanitize_url_field',
         ],
     ];
 
@@ -210,7 +212,7 @@ function register_event_meta(): void {
             default                   => true,
         };
 
-        $sanitize = match ($args['type']) {
+        $sanitize = $args['sanitize'] ?? match ($args['type']) {
             'integer' => fn ($v) => (int) $v,
             'array'   => __NAMESPACE__ . '\\sanitize_int_array',
             default   => 'sanitize_text_field',
@@ -236,4 +238,33 @@ function sanitize_int_array(mixed $value): array {
         return [];
     }
     return array_values(array_map('intval', $value));
+}
+
+/**
+ * Sanitize an external payment/donation URL.
+ *
+ * Only http(s) URLs survive; anything else (javascript:, data:, mailto:)
+ * is stored as ''. Output escaping alone isn't enough here because the
+ * REST API and Abilities emit this meta raw to non-block consumers.
+ */
+function sanitize_url_field(mixed $value): string {
+    if (! is_string($value) || trim($value) === '') {
+        return '';
+    }
+    return esc_url_raw(trim($value), ['http', 'https']);
+}
+
+/**
+ * Sanitize a Venmo-style payment handle.
+ *
+ * Strips a leading @ and anything outside Venmo's handle charset
+ * ([A-Za-z0-9_-], max 30 chars) so the stored value can never smuggle
+ * path or query segments into URLs built from it.
+ */
+function sanitize_payment_handle(mixed $value): string {
+    if (! is_string($value)) {
+        return '';
+    }
+    $handle = preg_replace('/[^A-Za-z0-9_\-]/', '', ltrim(trim($value), '@')) ?? '';
+    return substr($handle, 0, 30);
 }
