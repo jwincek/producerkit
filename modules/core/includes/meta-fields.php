@@ -119,9 +119,15 @@ function register_location_meta(): void {
         ],
         '_lfuf_venmo_handle' => [
             'type'        => 'string',
-            'description' => 'Venmo handle for payment at this location.',
+            'description' => 'Venmo handle for payment at this location (legacy; merged into _lfuf_payment_methods on read).',
             'default'     => '',
             'sanitize'    => __NAMESPACE__ . '\\sanitize_payment_handle',
+        ],
+        '_lfuf_payment_methods' => [
+            'type'        => 'string',
+            'description' => 'JSON array of payment methods: [{type, value, label}].',
+            'default'     => '',
+            'sanitize'    => '\\Leftfield\\Core\\Payments\\sanitize_payment_methods',
         ],
         '_lfuf_hours' => [
             'type'        => 'string',

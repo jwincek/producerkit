@@ -82,10 +82,8 @@
 
 			var blockProps = useBlockProps( { className: 'lfuf-location-info' } );
 
-			// Derive display values.
-			var venmoUrl = ( stand && stand.venmo_handle )
-				? 'https://venmo.com/' + stand.venmo_handle.replace( /^@/, '' )
-				: '';
+			// Payment methods come enriched from the stand info endpoint.
+			var payMethods = ( stand && stand.payment_methods ) || [];
 
 			// No location selected — placeholder with inline picker.
 			if ( ! locationId ) {
@@ -165,10 +163,25 @@
 						? el( 'p', { className: 'lfuf-location-info__hours' }, stand.hours )
 						: null,
 
-					// Venmo.
-					( showVenmo && venmoUrl )
-						? el( 'span', { className: 'lfuf-location-info__venmo' },
-							'Pay via Venmo (@' + stand.venmo_handle.replace( /^@/, '' ) + ')'
+					// Payment options.
+					( showVenmo && payMethods.length )
+						? el( 'div', { className: 'lfuf-location-info__payments' },
+							el( 'span', { className: 'lfuf-location-info__payments-label' }, 'Payment options:' ),
+							el( 'ul', { className: 'lfuf-location-info__payments-list' },
+								payMethods.map( function ( m, i ) {
+									var text = ( [ 'venmo', 'cashapp', 'paypal' ].indexOf( m.type ) !== -1 )
+										? m.label + ' (@' + m.value + ')'
+										: m.label;
+									return el( 'li', {
+										key: i,
+										className: 'lfuf-location-info__payment lfuf-location-info__payment--' + m.type,
+									},
+										m.is_link
+											? el( 'span', { className: 'lfuf-location-info__payment-link' }, text )
+											: el( 'span', { className: 'lfuf-location-info__payment-badge' }, text )
+									);
+								} )
+							)
 						)
 						: null
 				)
@@ -191,9 +204,10 @@
 							onChange: function ( val ) { setAttributes( { showStatus: val } ); },
 						} ),
 						el( ToggleControl, {
-							label: 'Show Venmo link',
+							label: 'Show payment options',
 							checked: showVenmo,
 							onChange: function ( val ) { setAttributes( { showVenmo: val } ); },
+							help: 'Links and accepted-payment badges from the location\u2019s Payment Options panel.',
 						} )
 					)
 				);

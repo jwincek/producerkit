@@ -41,7 +41,7 @@ if (! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'p
 $is_open        = (bool) get_post_meta($location_id, '_lfuf_is_open', true);
 $address        = get_post_meta($location_id, '_lfuf_address', true);
 $hours          = get_post_meta($location_id, '_lfuf_hours', true);
-$venmo_handle   = get_post_meta($location_id, '_lfuf_venmo_handle', true);
+$pay_methods    = \Leftfield\Core\Payments\get_payment_methods($location_id);
 $status_message = get_post_meta($location_id, '_lfuf_ss_status_message', true);
 $last_toggled   = get_post_meta($location_id, '_lfuf_ss_last_toggled', true);
 $season_start   = get_post_meta($location_id, '_lfuf_ss_season_start', true);
@@ -82,10 +82,14 @@ if (! $is_open && $schedule) {
     $next_open = \Leftfield\StandStatus\REST\compute_next_open($schedule);
 }
 
-// Venmo URL.
-$venmo_url = $venmo_handle
-    ? 'https://venmo.com/' . ltrim($venmo_handle, '@')
-    : '';
+// Primary payment link: the first link-kind method (legacy Venmo merges in first).
+$pay_link = null;
+foreach ($pay_methods as $m) {
+    if ($m['is_link']) {
+        $pay_link = $m;
+        break;
+    }
+}
 
 // Season display strings.
 $season_range_full = ($season_start && $season_end)
@@ -221,18 +225,27 @@ $section_label = sprintf(
             </p>
         <?php endif; ?>
 
-        <?php if ($show_venmo && $venmo_url) : ?>
+        <?php if ($show_venmo && $pay_link) : ?>
             <a class="lfuf-stand-banner__venmo-link"
-               href="<?php echo esc_url($venmo_url); ?>"
+               href="<?php echo esc_url($pay_link['url']); ?>"
                target="_blank"
                rel="noopener noreferrer">
                 <span class="lfuf-stand-banner__icon" aria-hidden="true">💸</span>
                 <?php
-                printf(
-                    /* translators: %s: Venmo handle (without the @ sign). */
-                    esc_html__('Pay with Venmo (@%s)', 'farm-stand-manager'),
-                    esc_html(ltrim($venmo_handle, '@')),
-                );
+                if (in_array($pay_link['type'], ['venmo', 'cashapp', 'paypal'], true)) {
+                    printf(
+                        /* translators: 1: payment service name, 2: account handle. */
+                        esc_html__('Pay with %1$s (@%2$s)', 'farm-stand-manager'),
+                        esc_html($pay_link['label']),
+                        esc_html($pay_link['value']),
+                    );
+                } else {
+                    printf(
+                        /* translators: %s: payment method label. */
+                        esc_html__('Pay online: %s', 'farm-stand-manager'),
+                        esc_html($pay_link['label']),
+                    );
+                }
                 ?>
                 <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
             </a>

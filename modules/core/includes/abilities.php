@@ -300,6 +300,7 @@ function register_location_abilities(): void {
                 'hours'   => get_post_meta($p->ID, '_lfuf_hours', true),
                 'is_open' => (bool) get_post_meta($p->ID, '_lfuf_is_open', true),
                 'venmo'   => get_post_meta($p->ID, '_lfuf_venmo_handle', true),
+                'payment_methods' => \Leftfield\Core\Payments\get_payment_methods($p->ID),
             ], $locations);
         },
         'output_schema' => [
@@ -313,7 +314,21 @@ function register_location_abilities(): void {
                     'address' => ['type' => 'string'],
                     'hours'   => ['type' => 'string'],
                     'is_open' => ['type' => 'boolean'],
-                    'venmo'   => ['type' => 'string'],
+                    'venmo'   => ['type' => 'string', 'description' => 'Legacy Venmo handle; prefer payment_methods.'],
+                    'payment_methods' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'type'    => ['type' => 'string'],
+                                'label'   => ['type' => 'string'],
+                                'value'   => ['type' => 'string'],
+                                'url'     => ['type' => 'string'],
+                                'is_link' => ['type' => 'boolean'],
+                            ],
+                        ],
+                        'description' => 'Accepted payment methods: links (Venmo, Cash App, PayPal, custom) and badges (cash, check, SNAP/EBT, market vouchers).',
+                    ],
                 ],
             ],
         ],

@@ -78,7 +78,7 @@
                 label: 'Address',
                 value: meta._lfuf_address || '',
                 onChange: function ( val ) { updateMeta( '_lfuf_address', val ); },
-                placeholder: '1820 E Myrtle Ave, Johnson City, TN 37601',
+                placeholder: '123 Farm Road, Yourtown, ST 00000',
                 help: 'Full street address shown to visitors.',
             } ),
 
@@ -320,6 +320,162 @@
     }
 
     /* ─────────────────────────────────────────────
+     * Panel 3: Payment Options
+     * ───────────────────────────────────────────── */
+
+    // Mirrors Leftfield\Core\Payments\method_types(). kind: handle | url | badge.
+    var PAYMENT_TYPES = [
+        { value: 'venmo',          label: 'Venmo',                          kind: 'handle' },
+        { value: 'cashapp',        label: 'Cash App',                       kind: 'handle' },
+        { value: 'paypal',         label: 'PayPal',                         kind: 'handle' },
+        { value: 'link',           label: 'Payment Link',                   kind: 'url' },
+        { value: 'cash',           label: 'Cash',                           kind: 'badge' },
+        { value: 'check',          label: 'Check',                          kind: 'badge' },
+        { value: 'snap_ebt',       label: 'SNAP/EBT',                       kind: 'badge' },
+        { value: 'market_voucher', label: 'Market Vouchers (WIC/Sr FMNP)',  kind: 'badge' },
+    ];
+
+    function paymentKind( type ) {
+        var found = PAYMENT_TYPES.filter( function ( t ) { return t.value === type; } )[ 0 ];
+        return found ? found.kind : 'badge';
+    }
+
+    function PaymentOptionsPanel() {
+        var postType = useSelect( function ( select ) {
+            return select( 'core/editor' ).getCurrentPostType();
+        }, [] );
+
+        if ( postType !== 'lfuf_location' ) return null;
+
+        var _meta   = useEntityProp( 'postType', 'lfuf_location', 'meta' );
+        var meta    = _meta[ 0 ];
+        var setMeta = _meta[ 1 ];
+
+        var methodsRaw = meta._lfuf_payment_methods || '[]';
+        var methods;
+        try {
+            methods = JSON.parse( methodsRaw );
+            if ( ! Array.isArray( methods ) ) methods = [];
+        } catch ( e ) {
+            methods = [];
+        }
+
+        function updateMethods( next ) {
+            var updated = {};
+            updated._lfuf_payment_methods = JSON.stringify( next );
+            setMeta( Object.assign( {}, meta, updated ) );
+        }
+
+        function addMethod() {
+            updateMethods( methods.concat( [ { type: 'cash', value: '', label: '' } ] ) );
+        }
+
+        function removeMethod( index ) {
+            updateMethods( methods.filter( function ( _, i ) { return i !== index; } ) );
+        }
+
+        function updateMethod( index, field, value ) {
+            updateMethods( methods.map( function ( entry, i ) {
+                if ( i !== index ) return entry;
+                var copy = Object.assign( {}, entry );
+                copy[ field ] = value;
+                // Reset the value when switching to a badge type.
+                if ( field === 'type' && paymentKind( value ) === 'badge' ) {
+                    copy.value = '';
+                }
+                return copy;
+            } ) );
+        }
+
+        return el(
+            PluginDocumentSettingPanel,
+            {
+                name: 'lfuf-payment-options',
+                title: 'Payment Options',
+                initialOpen: false,
+                icon: 'money-alt',
+            },
+
+            el( 'p', {
+                className: 'components-base-control__help',
+                style: { marginTop: 0 },
+            }, 'Links (Venmo, Cash App, PayPal, custom) and accepted-payment badges (cash, SNAP/EBT, …) shown on the front end. The legacy Venmo Handle field still works if this list is empty.' ),
+
+            methods.length === 0
+                ? el( 'p', {
+                    style: { color: '#6b7280', fontStyle: 'italic', fontSize: '13px' },
+                }, 'No payment options set. Add one below.' )
+                : null,
+
+            methods.map( function ( entry, i ) {
+                var kind = paymentKind( entry.type );
+                return el( 'div', {
+                    key: i,
+                    style: {
+                        marginBottom: '8px',
+                        padding: '8px',
+                        background: '#f9fafb',
+                        borderRadius: '4px',
+                    },
+                },
+                    el( 'div', { style: { display: 'flex', gap: '6px', alignItems: 'flex-end' } },
+                        el( SelectControl, {
+                            label: 'Method',
+                            value: entry.type,
+                            options: PAYMENT_TYPES.map( function ( t ) {
+                                return { label: t.label, value: t.value };
+                            } ),
+                            onChange: function ( val ) { updateMethod( i, 'type', val ); },
+                            style: { flex: 2 },
+                            __nextHasNoMarginBottom: true,
+                        } ),
+                        el( Button, {
+                            isDestructive: true,
+                            isSmall: true,
+                            icon: 'no-alt',
+                            label: 'Remove',
+                            onClick: function () { removeMethod( i ); },
+                            style: { marginBottom: '2px' },
+                        } )
+                    ),
+                    kind === 'handle'
+                        ? el( TextControl, {
+                            label: 'Handle',
+                            value: entry.value || '',
+                            onChange: function ( val ) { updateMethod( i, 'value', val.replace( /^[@$]/, '' ) ); },
+                            placeholder: 'examplefarm',
+                            help: 'Username without the @ or $.',
+                        } )
+                        : null,
+                    kind === 'url'
+                        ? el( TextControl, {
+                            label: 'URL',
+                            type: 'url',
+                            value: entry.value || '',
+                            onChange: function ( val ) { updateMethod( i, 'value', val ); },
+                            placeholder: 'https://squareup.com/…',
+                        } )
+                        : null,
+                    el( TextControl, {
+                        label: 'Display label (optional)',
+                        value: entry.label || '',
+                        onChange: function ( val ) { updateMethod( i, 'label', val ); },
+                        placeholder: '',
+                    } )
+                );
+            } ),
+
+            el( Button, {
+                variant: 'secondary',
+                isSmall: true,
+                icon: 'plus-alt2',
+                onClick: addMethod,
+                style: { marginTop: '4px' },
+            }, 'Add Payment Option' )
+        );
+    }
+
+    /* ─────────────────────────────────────────────
      * Register
      * ───────────────────────────────────────────── */
 
@@ -331,6 +487,11 @@
     registerPlugin( 'lfuf-stand-schedule', {
         render: StandSchedulePanel,
         icon: 'clock',
+    } );
+
+    registerPlugin( 'lfuf-payment-options', {
+        render: PaymentOptionsPanel,
+        icon: 'money-alt',
     } );
 
 } )();

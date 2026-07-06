@@ -17,6 +17,7 @@ $module_dir = __DIR__;
 require_once $module_dir . '/includes/post-types.php';
 require_once $module_dir . '/includes/taxonomies.php';
 require_once $module_dir . '/includes/meta-fields.php';
+require_once $module_dir . '/includes/payments.php';
 require_once $module_dir . '/includes/availability-table.php';
 require_once $module_dir . '/includes/rest-api.php';
 require_once $module_dir . '/includes/abilities.php';

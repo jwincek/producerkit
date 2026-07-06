@@ -100,7 +100,20 @@ add_action('wp_abilities_api_init', function (): void {
                 'status_message' => ['type' => 'string'],
                 'address'        => ['type' => 'string'],
                 'hours'          => ['type' => 'string'],
-                'venmo_handle'   => ['type' => 'string'],
+                'venmo_handle'   => ['type' => 'string', 'description' => 'Legacy Venmo handle; prefer payment_methods.'],
+                'payment_methods' => [
+                    'type'  => 'array',
+                    'items' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'type'    => ['type' => 'string'],
+                            'label'   => ['type' => 'string'],
+                            'value'   => ['type' => 'string'],
+                            'url'     => ['type' => 'string'],
+                            'is_link' => ['type' => 'boolean'],
+                        ],
+                    ],
+                ],
                 'season_start'   => ['type' => 'string'],
                 'season_end'     => ['type' => 'string'],
             ],

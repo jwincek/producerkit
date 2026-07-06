@@ -120,7 +120,7 @@ function seed_locations(): int {
     $id = wp_insert_post([
         'post_type'    => 'lfuf_location',
         'post_title'   => 'Farm Stand (Sample)',
-        'post_content' => 'Our honor-system roadside stand at 1820 E Myrtle Ave. Cash and Venmo accepted.',
+        'post_content' => 'Our honor-system roadside stand at 123 Farm Road. Cash and Venmo accepted.',
         'post_status'  => 'publish',
     ]);
 
@@ -129,9 +129,14 @@ function seed_locations(): int {
     }
 
     update_post_meta($id, SAMPLE_META_KEY, '1');
-    update_post_meta($id, '_lfuf_address', '1820 E Myrtle Ave, Johnson City, TN 37601');
+    update_post_meta($id, '_lfuf_address', '123 Farm Road, Yourtown, ST 00000');
     update_post_meta($id, '_lfuf_location_type', 'stand');
     update_post_meta($id, '_lfuf_venmo_handle', 'examplefarm');
+    update_post_meta($id, '_lfuf_payment_methods', (string) wp_json_encode([
+        ['type' => 'venmo',    'value' => 'examplefarm', 'label' => ''],
+        ['type' => 'cash',     'value' => '',            'label' => ''],
+        ['type' => 'snap_ebt', 'value' => '',            'label' => ''],
+    ]));
     update_post_meta($id, '_lfuf_hours', 'Saturdays 1:00 – 4:00 PM, May – December');
     update_post_meta($id, '_lfuf_is_open', false);
     update_post_meta($id, '_lfuf_lat', 36.3134);

@@ -113,3 +113,52 @@
         border: 1px solid CanvasText;
     }
 }
+/* ── Payment options ── */
+.lfuf-location-info__payments {
+    margin-top: 0.75rem;
+}
+
+.lfuf-location-info__payments-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.lfuf-location-info__payments-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+}
+
+.lfuf-location-info__payment-link,
+.lfuf-location-info__payment-badge {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.lfuf-location-info__payment-link {
+    background: #eff6ff;
+    color: #1d4ed8;
+    text-decoration: none;
+    border: 1px solid #bfdbfe;
+}
+
+.lfuf-location-info__payment-link:hover,
+.lfuf-location-info__payment-link:focus {
+    background: #dbeafe;
+    text-decoration: underline;
+}
+
+.lfuf-location-info__payment-badge {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}

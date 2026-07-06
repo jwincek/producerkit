@@ -24,10 +24,10 @@ if (! $location || $location->post_type !== 'lfuf_location' || $location->post_s
     return;
 }
 
-$address       = get_post_meta($location_id, '_lfuf_address', true);
-$location_type = get_post_meta($location_id, '_lfuf_location_type', true);
-$venmo_handle  = get_post_meta($location_id, '_lfuf_venmo_handle', true);
-$hours         = get_post_meta($location_id, '_lfuf_hours', true);
+$address         = get_post_meta($location_id, '_lfuf_address', true);
+$location_type   = get_post_meta($location_id, '_lfuf_location_type', true);
+$payment_methods = \Leftfield\Core\Payments\get_payment_methods($location_id);
+$hours           = get_post_meta($location_id, '_lfuf_hours', true);
 $is_open       = (bool) get_post_meta($location_id, '_lfuf_is_open', true);
 
 // Compute effective status from schedule + season (matches stand-status-banner logic).
@@ -92,18 +92,40 @@ $section_label = sprintf(
         </p>
     <?php endif; ?>
 
-    <?php if ($show_venmo && $venmo_handle) : ?>
-        <a
-            class="lfuf-location-info__venmo"
-            href="<?php echo esc_url('https://venmo.com/' . ltrim($venmo_handle, '@')); ?>"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <?php
-            /* translators: %s: Venmo handle (without the @ sign). */
-            printf(esc_html__('Pay via Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@')));
-            ?>
-            <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
-        </a>
+    <?php // showVenmo is the stored attribute key (pre-payment-methods content); it now means "show payment options". ?>
+    <?php if ($show_venmo && $payment_methods) : ?>
+        <div class="lfuf-location-info__payments">
+            <span class="lfuf-location-info__payments-label"><?php esc_html_e('Payment options:', 'farm-stand-manager'); ?></span>
+            <ul class="lfuf-location-info__payments-list">
+                <?php foreach ($payment_methods as $method) : ?>
+                    <li class="lfuf-location-info__payment lfuf-location-info__payment--<?php echo esc_attr($method['type']); ?>">
+                        <?php if ($method['is_link']) : ?>
+                            <a
+                                class="lfuf-location-info__payment-link"
+                                href="<?php echo esc_url($method['url']); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <?php
+                                if (in_array($method['type'], ['venmo', 'cashapp', 'paypal'], true)) {
+                                    printf(
+                                        /* translators: 1: payment service name, 2: account handle. */
+                                        esc_html__('%1$s (@%2$s)', 'farm-stand-manager'),
+                                        esc_html($method['label']),
+                                        esc_html($method['value']),
+                                    );
+                                } else {
+                                    echo esc_html($method['label']);
+                                }
+                                ?>
+                                <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
+                            </a>
+                        <?php else : ?>
+                            <span class="lfuf-location-info__payment-badge"><?php echo esc_html($method['label']); ?></span>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     <?php endif; ?>
 </section>

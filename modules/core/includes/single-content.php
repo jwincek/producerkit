@@ -234,12 +234,12 @@ function render_source_details(\WP_Post $post): string {
  * ─────────────────────────────────────────────── */
 
 function render_location_details(\WP_Post $post): string {
-    $id            = $post->ID;
-    $address       = get_post_meta($id, '_lfuf_address', true);
-    $location_type = get_post_meta($id, '_lfuf_location_type', true);
-    $hours         = get_post_meta($id, '_lfuf_hours', true);
-    $venmo_handle  = get_post_meta($id, '_lfuf_venmo_handle', true);
-    $is_open       = (bool) get_post_meta($id, '_lfuf_is_open', true);
+    $id              = $post->ID;
+    $address         = get_post_meta($id, '_lfuf_address', true);
+    $location_type   = get_post_meta($id, '_lfuf_location_type', true);
+    $hours           = get_post_meta($id, '_lfuf_hours', true);
+    $payment_methods = \Leftfield\Core\Payments\get_payment_methods($id);
+    $is_open         = (bool) get_post_meta($id, '_lfuf_is_open', true);
 
     ob_start();
     ?>
@@ -274,18 +274,33 @@ function render_location_details(\WP_Post $post): string {
             </div>
         <?php endif; ?>
 
-        <?php if ($venmo_handle) : ?>
+        <?php if ($payment_methods) : ?>
             <div class="lfuf-single-details__row">
                 <span class="lfuf-single-details__label"><?php esc_html_e('Payment', 'farm-stand-manager'); ?></span>
                 <span class="lfuf-single-details__value">
-                    <a href="<?php echo esc_url('https://venmo.com/' . ltrim($venmo_handle, '@')); ?>"
-                       target="_blank" rel="noopener noreferrer">
-                        <?php
-                        /* translators: %s: Venmo handle (without the @ sign). */
-                        printf(esc_html__('Venmo (@%s)', 'farm-stand-manager'), esc_html(ltrim($venmo_handle, '@')));
-                        ?>
-                        <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
-                    </a>
+                    <?php foreach ($payment_methods as $i => $method) : ?>
+                        <?php if ($i > 0) { echo ' · '; } ?>
+                        <?php if ($method['is_link']) : ?>
+                            <a href="<?php echo esc_url($method['url']); ?>"
+                               target="_blank" rel="noopener noreferrer">
+                                <?php
+                                if (in_array($method['type'], ['venmo', 'cashapp', 'paypal'], true)) {
+                                    printf(
+                                        /* translators: 1: payment service name, 2: account handle. */
+                                        esc_html__('%1$s (@%2$s)', 'farm-stand-manager'),
+                                        esc_html($method['label']),
+                                        esc_html($method['value']),
+                                    );
+                                } else {
+                                    echo esc_html($method['label']);
+                                }
+                                ?>
+                                <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
+                            </a>
+                        <?php else : ?>
+                            <?php echo esc_html($method['label']); ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </span>
             </div>
         <?php endif; ?>
