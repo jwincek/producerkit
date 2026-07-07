@@ -31,6 +31,14 @@ Farm Stand Manager gives small farms, farm stands, and market gardeners a comple
 * **Payment options per location** — list every way customers can pay: Venmo, Cash App, PayPal, a custom payment link, plus accepted-payment badges for cash, check, SNAP/EBT, and WIC/Senior FMNP market vouchers.
 * **QR codes** — show a scannable code for your payment link right in the location card; the print stylesheet enlarges it for stand signage. Generated locally by a bundled library — no external service.
 * **Pre-orders** — visitors reserve products for a pickup date and pay at the stand. Orders are rate-limited and spam-protected, staff manage them from a dedicated admin screen (pending → confirmed → ready → picked up), and email notifications keep both sides informed. No payment processing, no checkout.
+* **Harvest list** — active pre-orders aggregated into per-pickup-date totals of each product to have ready. Print it and take it to the field.
+* **Smart pickup dates** — pre-order dates are validated against the location's weekly schedule, season dates, and a per-location closed-dates list, so nobody orders for a day the stand is shut.
+
+= Print and search =
+
+* **Fresh Sheet** — a print-ready one-pager of today's availability with prices, hours, payment options, and a payment QR code. Print it each morning and tape it to the stand.
+* **Structured data** — products emit schema.org Product/Offer markup (price and live availability) and locations emit LocalBusiness (address, coordinates, opening hours, accepted payments), helping farms surface in local search.
+* **Get directions** — a one-tap directions link on the location card, built from the location's coordinates or address.
 
 = Stand status =
 
@@ -48,7 +56,7 @@ Farm Stand Manager gives small farms, farm stands, and market gardeners a comple
 
 * Ten blocks under a dedicated category, server-rendered with live front-end updates via the WordPress Interactivity API.
 * REST API endpoints for products, availability, locations, stand status, and events.
-* **Abilities API** — on WordPress 6.9+, thirteen operations (list products, get/update availability, toggle stand status, RSVP to an event, create and manage pre-orders, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
+* **Abilities API** — on WordPress 6.9+, fourteen operations (list products, get/update availability, toggle stand status, RSVP to an event, create and manage pre-orders, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
 * Modular architecture — disable feature modules you don't need with a single filter.
 
 == Installation ==
@@ -103,7 +111,8 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * Products, sources, locations, and events as custom post types.
 * Availability board, badge, stand status banner, location info, product card, event list, event card, stand hours, stand toggle, and pre-order form blocks.
 * Per-location payment methods (links + SNAP/EBT badges) with optional QR codes.
-* Pay-at-pickup pre-orders with an admin management screen and email notifications.
+* Pay-at-pickup pre-orders with harvest list, schedule-aware pickup dates, an admin management screen, and email notifications.
+* Printable Fresh Sheet and schema.org structured data for products and locations.
 * Availability quick entry, CSV product import/export, admin dashboard.
 * REST API and Abilities API coverage for all core operations.
 

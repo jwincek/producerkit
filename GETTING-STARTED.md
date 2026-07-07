@@ -18,7 +18,11 @@ The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked
 
 **QR code**: in the Location Info block's settings, turn on **Show payment QR code**. Visitors scan it to open your first payment link — and if you print the page, the code enlarges for stand signage.
 
-**Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **Farm Stand → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically.
+**Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **Farm Stand → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically. Pickup dates respect the location's weekly schedule and season, and you can block specific dates (holidays, closures) under **Schedule & Season → Closed Dates** when editing the location.
+
+**Harvest list**: on the Pre-Orders screen, click **Harvest List** for per-pickup-date totals of everything to have ready — print it and take it to the field.
+
+**Fresh Sheet**: under **Farm Stand → Fresh Sheet**, print a one-pager of today's availability with prices, your hours, payment options, and a payment QR code — the morning sign for the stand.
 
 ---
 
