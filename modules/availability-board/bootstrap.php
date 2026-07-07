@@ -18,4 +18,5 @@ $module_dir = __DIR__;
 
 require_once $module_dir . '/includes/rest-extensions.php';
 require_once $module_dir . '/includes/admin-quick-entry.php';
+require_once $module_dir . '/includes/fresh-sheet.php';
 require_once $module_dir . '/includes/abilities.php';

@@ -166,7 +166,7 @@ add_action('init', function (): void {
  * [data-lfuf-qr] container (e.g. location-info with showQR on).
  * ─────────────────────────────────────────────── */
 
-add_action('wp_enqueue_scripts', function (): void {
+function register_qr_scripts(): void {
     wp_register_script(
         'lfuf-qrcode-vendor',
         plugins_url('assets/js/vendor/qrcode.js', __FILE__),
@@ -181,7 +181,10 @@ add_action('wp_enqueue_scripts', function (): void {
         VERSION,
         true,
     );
-});
+}
+
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\register_qr_scripts');
+add_action('admin_enqueue_scripts', __NAMESPACE__ . '\\register_qr_scripts');
 
 /* ───────────────────────────────────────────────
  * Block category
