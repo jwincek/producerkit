@@ -136,6 +136,54 @@ add_action('wp_abilities_api_init', function (): void {
         ],
     ]);
 
+    wp_register_ability('farm-stand-manager/get-harvest-list', [
+        'label'       => __('Get Harvest List', 'farm-stand-manager'),
+        'description' => __('Aggregate active pre-orders (pending, confirmed, ready) into per-pickup-date totals of each product to have ready — the sheet a farmer takes to the field. Staff only.', 'farm-stand-manager'),
+        'category'    => 'farm-preorders',
+        'execute_callback' => function (array $input = []): array {
+            return Orders\get_harvest_list($input);
+        },
+        'input_schema' => [
+            'type'       => 'object',
+            'properties' => [
+                'date_from'   => ['type' => 'string',  'description' => 'Start date (YYYY-MM-DD, default today).'],
+                'date_to'     => ['type' => 'string',  'description' => 'End date (YYYY-MM-DD, default +30 days).'],
+                'location_id' => ['type' => 'integer', 'description' => 'Filter by pickup location (0 = all).'],
+            ],
+            'default' => [],
+        ],
+        'output_schema' => [
+            'type'  => 'array',
+            'items' => [
+                'type'       => 'object',
+                'properties' => [
+                    'pickup_date'   => ['type' => 'string'],
+                    'location_id'   => ['type' => 'integer'],
+                    'location_name' => ['type' => 'string'],
+                    'order_count'   => ['type' => 'integer'],
+                    'items'         => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'product_id'  => ['type' => 'integer'],
+                                'title'       => ['type' => 'string'],
+                                'unit'        => ['type' => 'string'],
+                                'total_qty'   => ['type' => 'integer'],
+                                'order_count' => ['type' => 'integer'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'permission_callback' => fn () => current_user_can('edit_posts'),
+        'meta' => [
+            'show_in_rest' => true,
+            'annotations'  => ['readonly' => true],
+        ],
+    ]);
+
     wp_register_ability('farm-stand-manager/update-preorder-status', [
         'label'       => __('Update Pre-Order Status', 'farm-stand-manager'),
         'description' => __('Move a pre-order through its lifecycle: pending → confirmed → ready → picked_up, or cancelled. Staff only.', 'farm-stand-manager'),

@@ -342,6 +342,85 @@ function update_status(int $id, string $status): bool|\WP_Error {
 }
 
 /**
+ * Aggregate active pre-orders into a harvest list: per pickup date (and
+ * location), the total quantity of each product to have ready. This is
+ * the sheet a farmer takes to the field.
+ *
+ * @param array{date_from?: string, date_to?: string, location_id?: int} $args
+ * @return array<int, array{
+ *     pickup_date: string,
+ *     location_id: int,
+ *     location_name: string,
+ *     order_count: int,
+ *     items: array<int, array{product_id: int, title: string, unit: string, total_qty: int, order_count: int}>,
+ * }>
+ */
+function get_harvest_list(array $args = []): array {
+    global $wpdb;
+
+    $table = table_name();
+    $today = current_time('Y-m-d');
+
+    $date_from = sanitize_text_field($args['date_from'] ?? $today);
+    $date_to   = sanitize_text_field($args['date_to'] ?? gmdate('Y-m-d', strtotime($today . ' +' . MAX_PICKUP_DAYS . ' days')));
+    if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_from) || ! preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_to)) {
+        return [];
+    }
+    $location_id = (int) ($args['location_id'] ?? 0);
+
+    // Only orders that still need fulfilling.
+    $where = $wpdb->prepare(
+        "pickup_date BETWEEN %s AND %s AND status IN ('pending', 'confirmed', 'ready')",
+        $date_from,
+        $date_to,
+    );
+    if ($location_id > 0) {
+        $where .= $wpdb->prepare(' AND location_id = %d', $location_id);
+    }
+
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared above.
+    $rows = $wpdb->get_results("SELECT pickup_date, location_id, items FROM {$table} WHERE {$where} ORDER BY pickup_date ASC");
+
+    // Group by date + location, summing per product (items are JSON per row).
+    $groups = [];
+    foreach ($rows ?: [] as $row) {
+        $key = $row->pickup_date . '|' . $row->location_id;
+        if (! isset($groups[$key])) {
+            $groups[$key] = [
+                'pickup_date'   => (string) $row->pickup_date,
+                'location_id'   => (int) $row->location_id,
+                'location_name' => $row->location_id ? (string) get_the_title((int) $row->location_id) : '',
+                'order_count'   => 0,
+                'items'         => [],
+            ];
+        }
+        $groups[$key]['order_count']++;
+
+        foreach (json_decode((string) $row->items, true) ?: [] as $item) {
+            $pid = (int) ($item['product_id'] ?? 0);
+            if (! isset($groups[$key]['items'][$pid])) {
+                $groups[$key]['items'][$pid] = [
+                    'product_id'  => $pid,
+                    'title'       => (string) ($item['title'] ?? ''),
+                    'unit'        => (string) ($item['unit'] ?? ''),
+                    'total_qty'   => 0,
+                    'order_count' => 0,
+                ];
+            }
+            $groups[$key]['items'][$pid]['total_qty'] += (int) ($item['qty'] ?? 0);
+            $groups[$key]['items'][$pid]['order_count']++;
+        }
+    }
+
+    // Stable output: items sorted by title, groups already date-ordered.
+    return array_values(array_map(function (array $group): array {
+        usort($group['items'], fn ($a, $b) => strcasecmp($a['title'], $b['title']));
+        $group['items'] = array_values($group['items']);
+        return $group;
+    }, $groups));
+}
+
+/**
  * List orders for the admin screen / ability.
  *
  * @param array{status?: string, limit?: int, offset?: int} $args

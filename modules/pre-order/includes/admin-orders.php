@@ -52,8 +52,97 @@ function status_label(string $status): string {
     };
 }
 
+/**
+ * Harvest List view: per pickup date, the total of each product to have
+ * ready, aggregated from active orders. Print-friendly.
+ */
+function render_harvest_view(): void {
+    $groups = Orders\get_harvest_list();
+    ?>
+    <div class="wrap lfuf-harvest">
+        <h1>
+            <?php esc_html_e('Harvest List', 'farm-stand-manager'); ?>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=farm-stand-preorders')); ?>" class="page-title-action lfuf-harvest__back">
+                <?php esc_html_e('All Pre-Orders', 'farm-stand-manager'); ?>
+            </a>
+            <button type="button" class="page-title-action lfuf-harvest__print" onclick="window.print()">
+                <?php esc_html_e('Print', 'farm-stand-manager'); ?>
+            </button>
+        </h1>
+        <p class="lfuf-harvest__meta">
+            <?php
+            printf(
+                /* translators: %s: today's date. */
+                esc_html__('Active pre-orders (pending, confirmed, ready) as of %s.', 'farm-stand-manager'),
+                esc_html(current_time('Y-m-d')),
+            );
+            ?>
+        </p>
+
+        <?php if (! $groups) : ?>
+            <p><?php esc_html_e('Nothing to harvest — no active pre-orders.', 'farm-stand-manager'); ?></p>
+        <?php endif; ?>
+
+        <?php foreach ($groups as $group) : ?>
+            <h2 class="lfuf-harvest__date">
+                <?php
+                echo esc_html(date_i18n(get_option('date_format'), strtotime($group['pickup_date'])));
+                if ($group['location_name']) {
+                    echo ' — ' . esc_html($group['location_name']);
+                }
+                ?>
+                <span class="lfuf-harvest__count">
+                    <?php
+                    printf(
+                        /* translators: %d: number of orders. */
+                        esc_html(_n('(%d order)', '(%d orders)', $group['order_count'], 'farm-stand-manager')),
+                        (int) $group['order_count'],
+                    );
+                    ?>
+                </span>
+            </h2>
+            <table class="widefat striped" style="max-width: 40em; margin-bottom: 1.5em;">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Product', 'farm-stand-manager'); ?></th>
+                        <th style="width: 8em;"><?php esc_html_e('Quantity', 'farm-stand-manager'); ?></th>
+                        <th style="width: 8em;"><?php esc_html_e('Orders', 'farm-stand-manager'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($group['items'] as $item) : ?>
+                        <tr>
+                            <td><?php echo esc_html($item['title']); ?></td>
+                            <td><strong><?php echo (int) $item['total_qty']; ?></strong><?php echo $item['unit'] ? esc_html(' ' . $item['unit']) : ''; ?></td>
+                            <td><?php echo (int) $item['order_count']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endforeach; ?>
+    </div>
+
+    <style>
+    @media print {
+        #adminmenumain, #wpadminbar, #wpfooter,
+        .lfuf-harvest__back, .lfuf-harvest__print, .notice { display: none !important; }
+        #wpcontent, #wpbody-content { margin: 0 !important; padding: 0 !important; }
+        .lfuf-harvest table { border: 1px solid #000; }
+    }
+    </style>
+    <?php
+}
+
 function render_page(): void {
     if (! current_user_can('edit_posts')) {
+        return;
+    }
+
+    // Read-only view switch; no state change happens on GET.
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $view = sanitize_key(wp_unslash($_GET['view'] ?? ''));
+    if ($view === 'harvest') {
+        render_harvest_view();
         return;
     }
 
@@ -74,7 +163,12 @@ function render_page(): void {
     $nonce     = wp_create_nonce('wp_rest');
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e('Pre-Orders', 'farm-stand-manager'); ?></h1>
+        <h1>
+            <?php esc_html_e('Pre-Orders', 'farm-stand-manager'); ?>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=farm-stand-preorders&view=harvest')); ?>" class="page-title-action">
+                <?php esc_html_e('Harvest List', 'farm-stand-manager'); ?>
+            </a>
+        </h1>
 
         <ul class="subsubsub">
             <li>

@@ -50,6 +50,17 @@ function register_routes(): void {
         ],
     ]);
 
+    register_rest_route($ns, '/preorders/harvest', [
+        'methods'             => \WP_REST_Server::READABLE,
+        'callback'            => __NAMESPACE__ . '\\harvest',
+        'permission_callback' => fn () => current_user_can('edit_posts'),
+        'args'                => [
+            'date_from'   => ['type' => 'string',  'default' => ''],
+            'date_to'     => ['type' => 'string',  'default' => ''],
+            'location_id' => ['type' => 'integer', 'default' => 0],
+        ],
+    ]);
+
     register_rest_route($ns, '/preorders/(?P<token>[a-zA-Z0-9]{20,64})', [
         [
             'methods'             => \WP_REST_Server::READABLE,
@@ -111,6 +122,17 @@ function cancel(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         return $result;
     }
     return new \WP_REST_Response(['message' => __('Pre-order cancelled.', 'farm-stand-manager')]);
+}
+
+function harvest(\WP_REST_Request $request): \WP_REST_Response {
+    $args = ['location_id' => (int) $request->get_param('location_id')];
+    if ($request->get_param('date_from')) {
+        $args['date_from'] = (string) $request->get_param('date_from');
+    }
+    if ($request->get_param('date_to')) {
+        $args['date_to'] = (string) $request->get_param('date_to');
+    }
+    return new \WP_REST_Response(Orders\get_harvest_list($args));
 }
 
 function index(\WP_REST_Request $request): \WP_REST_Response {
