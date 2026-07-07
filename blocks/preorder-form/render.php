@@ -65,6 +65,12 @@ $today    = current_time('Y-m-d');
 $max_date = gmdate('Y-m-d', strtotime($today . ' +' . \Leftfield\PreOrder\Orders\MAX_PICKUP_DAYS . ' days'));
 $form_id  = wp_unique_id('lfuf-preorder-');
 
+// Pickup constraints for the chosen location (open days, season, blackouts).
+$constraints  = \Leftfield\PreOrder\Orders\pickup_constraints($location_id);
+$days_label   = $constraints['allowed_days'] !== null
+    ? implode(', ', \Leftfield\PreOrder\Orders\weekday_names($constraints['allowed_days']))
+    : '';
+
 $context = [
     'restBase'   => esc_url_raw(rest_url('lfuf/v1')),
     'locationId' => $location_id,
@@ -73,6 +79,9 @@ $context = [
     'email'      => '',
     'phone'      => '',
     'pickupDate' => '',
+    'allowedDays'   => $constraints['allowed_days'],
+    'allowedLabel'  => $days_label,
+    'blackouts'     => $constraints['blackouts'],
     'note'       => '',
     '_hp'        => '',
     'submitting' => false,
@@ -146,6 +155,17 @@ $wrapper_attrs = get_block_wrapper_attributes([
                 <input type="date" id="<?php echo esc_attr($form_id); ?>-date" required
                        min="<?php echo esc_attr($today); ?>" max="<?php echo esc_attr($max_date); ?>"
                        data-field="pickupDate" data-wp-on--input="actions.updateField">
+                <?php if ($days_label) : ?>
+                    <span class="lfuf-preorder-form__date-hint">
+                        <?php
+                        printf(
+                            /* translators: %s: comma-separated list of weekday names. */
+                            esc_html__('Pickup days: %s.', 'farm-stand-manager'),
+                            esc_html($days_label),
+                        );
+                        ?>
+                    </span>
+                <?php endif; ?>
             </p>
             <p>
                 <label for="<?php echo esc_attr($form_id); ?>-note"><?php esc_html_e('Note (optional)', 'farm-stand-manager'); ?></label>

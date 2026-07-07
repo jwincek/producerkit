@@ -165,6 +165,96 @@ function validate_pickup_date(string $date): bool {
 }
 
 /**
+ * Pickup constraints for a location, derived from data other modules
+ * already store: the stand-status weekly schedule (allowed weekdays),
+ * season dates, and the location's pickup blackout dates.
+ *
+ * @return array{allowed_days: int[]|null, season_start: string, season_end: string, blackouts: string[]}
+ */
+function pickup_constraints(int $location_id): array {
+    $constraints = ['allowed_days' => null, 'season_start' => '', 'season_end' => '', 'blackouts' => []];
+    if ($location_id < 1) {
+        return $constraints;
+    }
+
+    $schedule = json_decode((string) get_post_meta($location_id, '_lfuf_ss_schedule', true), true);
+    if (is_array($schedule) && $schedule !== []) {
+        $days = array_values(array_unique(array_filter(
+            array_map(fn ($entry) => (int) ($entry['day'] ?? -1), $schedule),
+            fn ($day) => $day >= 0 && $day <= 6,
+        )));
+        if ($days) {
+            sort($days);
+            $constraints['allowed_days'] = $days;
+        }
+    }
+
+    $constraints['season_start'] = (string) get_post_meta($location_id, '_lfuf_ss_season_start', true);
+    $constraints['season_end']   = (string) get_post_meta($location_id, '_lfuf_ss_season_end', true);
+
+    $blackouts = json_decode((string) get_post_meta($location_id, '_lfuf_pickup_blackouts', true), true);
+    if (is_array($blackouts)) {
+        $constraints['blackouts'] = array_values(array_filter(
+            $blackouts,
+            fn ($date) => is_string($date) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date),
+        ));
+    }
+
+    return $constraints;
+}
+
+/**
+ * Weekday names for a list of 0-6 day numbers, localized.
+ *
+ * @param int[] $days
+ * @return string[]
+ */
+function weekday_names(array $days): array {
+    global $wp_locale;
+    return array_map(fn (int $day) => (string) $wp_locale->get_weekday($day), $days);
+}
+
+/**
+ * Full pickup date validation: window, then the location's open days,
+ * season, and blackout dates.
+ */
+function validate_pickup_date_for_location(string $date, int $location_id): true|\WP_Error {
+    if (! validate_pickup_date($date)) {
+        return new \WP_Error('invalid_pickup_date', __('Please choose a pickup date within the next month.', 'farm-stand-manager'));
+    }
+
+    $constraints = pickup_constraints($location_id);
+
+    if ($constraints['allowed_days'] !== null) {
+        $weekday = (int) gmdate('w', strtotime($date . ' 12:00:00'));
+        if (! in_array($weekday, $constraints['allowed_days'], true)) {
+            return new \WP_Error('pickup_day_closed', sprintf(
+                /* translators: %s: comma-separated list of weekday names. */
+                __('That day isn\'t a pickup day. Pickups are available on: %s.', 'farm-stand-manager'),
+                implode(', ', weekday_names($constraints['allowed_days'])),
+            ));
+        }
+    }
+
+    if ($constraints['season_start'] && $constraints['season_end']
+        && ($date < $constraints['season_start'] || $date > $constraints['season_end'])
+    ) {
+        return new \WP_Error('pickup_out_of_season', sprintf(
+            /* translators: 1: season start date, 2: season end date. */
+            __('That date is outside our season (%1$s – %2$s).', 'farm-stand-manager'),
+            $constraints['season_start'],
+            $constraints['season_end'],
+        ));
+    }
+
+    if (in_array($date, $constraints['blackouts'], true)) {
+        return new \WP_Error('pickup_blackout', __('We\'re closed that day — please choose another date.', 'farm-stand-manager'));
+    }
+
+    return true;
+}
+
+/**
  * Create a pre-order with full validation and rate limiting.
  *
  * @param array{
@@ -196,17 +286,18 @@ function create_order(array $data): array|\WP_Error {
         return new \WP_Error('name_required', __('Please provide your name.', 'farm-stand-manager'));
     }
 
-    $pickup_date = sanitize_text_field($data['pickup_date'] ?? '');
-    if (! validate_pickup_date($pickup_date)) {
-        return new \WP_Error('invalid_pickup_date', __('Please choose a pickup date within the next month.', 'farm-stand-manager'));
-    }
-
     $location_id = (int) ($data['location_id'] ?? 0);
     if ($location_id > 0) {
         $location = get_post($location_id);
         if (! $location || $location->post_type !== 'lfuf_location' || $location->post_status !== 'publish') {
             return new \WP_Error('invalid_location', __('Pickup location not found.', 'farm-stand-manager'));
         }
+    }
+
+    $pickup_date  = sanitize_text_field($data['pickup_date'] ?? '');
+    $pickup_valid = validate_pickup_date_for_location($pickup_date, $location_id);
+    if (is_wp_error($pickup_valid)) {
+        return $pickup_valid;
     }
 
     $items = normalize_items($data['items'] ?? []);

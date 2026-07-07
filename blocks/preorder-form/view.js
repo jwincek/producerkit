@@ -40,6 +40,17 @@ store( 'leftfield/preorder-form', {
 				ctx.error = 'Please choose a pickup date.';
 				return;
 			}
+			if ( Array.isArray( ctx.allowedDays ) && ctx.allowedDays.length ) {
+				const weekday = new Date( ctx.pickupDate + 'T12:00:00' ).getDay();
+				if ( ctx.allowedDays.indexOf( weekday ) === -1 ) {
+					ctx.error = "That day isn't a pickup day. Pickup days: " + ctx.allowedLabel + '.';
+					return;
+				}
+			}
+			if ( Array.isArray( ctx.blackouts ) && ctx.blackouts.indexOf( ctx.pickupDate ) !== -1 ) {
+				ctx.error = "We're closed that day — please choose another date.";
+				return;
+			}
 
 			ctx.submitting = true;
 			ctx.error = '';

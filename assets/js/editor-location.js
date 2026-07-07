@@ -209,6 +209,9 @@
         var seasonStart = meta._lfuf_ss_season_start || '';
         var seasonEnd   = meta._lfuf_ss_season_end || '';
 
+        // Pickup blackout dates (JSON array of YYYY-MM-DD in meta).
+        var blackouts = parseBlackouts();
+
         return el(
             PluginDocumentSettingPanel,
             {
@@ -315,8 +318,72 @@
                     onClick: addDay,
                     style: { marginTop: '4px' },
                 }, 'Add Day' )
-                : null
+                : null,
+
+            // Pickup blackout dates (holidays, closures).
+            el( 'p', { style: { fontWeight: 600, marginBottom: '4px', marginTop: '16px' } }, 'Closed Dates' ),
+            el( 'p', {
+                className: 'components-base-control__help',
+                style: { marginTop: 0, marginBottom: '8px' },
+            }, 'Specific dates with no pickups — holidays, closures. Pre-orders for these dates are refused.' ),
+
+            blackouts.map( function ( date, i ) {
+                return el( 'div', {
+                    key: 'b' + i,
+                    style: { display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '6px' },
+                },
+                    el( TextControl, {
+                        type: 'date',
+                        value: date,
+                        onChange: function ( val ) { updateBlackout( i, val ); },
+                        style: { flex: 1 },
+                        __nextHasNoMarginBottom: true,
+                    } ),
+                    el( Button, {
+                        isDestructive: true,
+                        isSmall: true,
+                        icon: 'no-alt',
+                        label: 'Remove',
+                        onClick: function () { removeBlackout( i ); },
+                    } )
+                );
+            } ),
+
+            el( Button, {
+                variant: 'secondary',
+                isSmall: true,
+                icon: 'plus-alt2',
+                onClick: addBlackout,
+                style: { marginTop: '4px' },
+            }, 'Add Closed Date' )
         );
+
+        function parseBlackouts() {
+            try {
+                var parsed = JSON.parse( meta._lfuf_pickup_blackouts || '[]' );
+                return Array.isArray( parsed ) ? parsed : [];
+            } catch ( e ) {
+                return [];
+            }
+        }
+
+        function saveBlackouts( next ) {
+            // Empty rows stay while editing; the server-side sanitizer
+            // drops anything that isn't a valid date on save.
+            updateMeta( '_lfuf_pickup_blackouts', JSON.stringify( next ) );
+        }
+
+        function addBlackout() {
+            saveBlackouts( blackouts.concat( [ '' ] ) );
+        }
+
+        function removeBlackout( index ) {
+            saveBlackouts( blackouts.filter( function ( _, i ) { return i !== index; } ) );
+        }
+
+        function updateBlackout( index, value ) {
+            saveBlackouts( blackouts.map( function ( d, i ) { return i === index ? value : d; } ) );
+        }
     }
 
     /* ─────────────────────────────────────────────

@@ -129,6 +129,12 @@ function register_location_meta(): void {
             'default'     => '',
             'sanitize'    => '\\Leftfield\\Core\\Payments\\sanitize_payment_methods',
         ],
+        '_lfuf_pickup_blackouts' => [
+            'type'        => 'string',
+            'description' => 'JSON array of dates (YYYY-MM-DD) when pickups are unavailable — holidays, closures.',
+            'default'     => '',
+            'sanitize'    => __NAMESPACE__ . '\\sanitize_date_json_array',
+        ],
         '_lfuf_hours' => [
             'type'        => 'string',
             'description' => 'Human-readable hours string.',
@@ -258,6 +264,30 @@ function sanitize_url_field(mixed $value): string {
         return '';
     }
     return esc_url_raw(trim($value), ['http', 'https']);
+}
+
+/**
+ * Sanitize a JSON array of YYYY-MM-DD dates (stored as a JSON string).
+ * Invalid entries are dropped; capped at 50 dates.
+ */
+function sanitize_date_json_array(mixed $value): string {
+    if (is_string($value)) {
+        $value = json_decode($value, true);
+    }
+    if (! is_array($value)) {
+        return '';
+    }
+
+    $dates = [];
+    foreach (array_slice($value, 0, 50) as $date) {
+        if (is_string($date) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            $dates[] = $date;
+        }
+    }
+    $dates = array_values(array_unique($dates));
+    sort($dates);
+
+    return $dates ? (string) wp_json_encode($dates) : '';
 }
 
 /**

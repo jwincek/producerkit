@@ -100,3 +100,10 @@
 .lfuf-preorder-form__pay-note {
     margin-bottom: 0;
 }
+
+.lfuf-preorder-form__date-hint {
+    display: block;
+    color: #6b7280;
+    font-size: 0.8125rem;
+    margin-top: 0.125rem;
+}
