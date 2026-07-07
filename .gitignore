@@ -22,3 +22,6 @@ wp-content/uploads/
 # Environment
 .env
 .env.local
+
+# Testing
+.phpunit.result.cache

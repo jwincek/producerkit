@@ -309,8 +309,16 @@ function create_order(array $data): array|\WP_Error {
     $ip_hashed = hash_ip(get_client_ip());
     $rate_key  = 'lfuf_preorder_rate_' . md5($ip_hashed);
 
+    /**
+     * Filters the max pre-orders per IP per hour. Raise for sites whose
+     * visitors share an address (school groups, market Wi-Fi, CGNAT).
+     *
+     * @param int $limit Default 3.
+     */
+    $rate_limit = (int) apply_filters('lfuf_preorder_rate_limit', RATE_LIMIT_PER_IP);
+
     $recent = (int) get_transient($rate_key);
-    if ($recent >= RATE_LIMIT_PER_IP) {
+    if ($recent >= $rate_limit) {
         return new \WP_Error('rate_limited', __('Too many pre-orders from this connection. Please try again later.', 'farm-stand-manager'));
     }
 

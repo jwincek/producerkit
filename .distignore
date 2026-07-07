@@ -8,5 +8,10 @@
 /.editorconfig
 /composer.json
 /composer.lock
+/vendor
+/tests
+/bin
+/phpunit.xml.dist
+/phpunit-integration.xml.dist
 /GETTING-STARTED.md
 /README.md
