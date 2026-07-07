@@ -59,9 +59,13 @@ function get_registered_modules(): array {
             'bootstrap' => PLUGIN_DIR . '/modules/notifications/bootstrap.php',
             'required'  => false,
         ],
+        'pre-order' => [
+            'label'     => __('Pre-Orders', 'farm-stand-manager'),
+            'bootstrap' => PLUGIN_DIR . '/modules/pre-order/bootstrap.php',
+            'required'  => false,
+        ],
         // Future modules:
-        // 'grain-stories'      => [ ... ],
-        // 'pre-order-builder'  => [ ... ],
+        // 'grain-stories' => [ ... ],
     ];
 }
 
@@ -232,6 +236,10 @@ function activate(): void {
     // Event manager RSVP table.
     require_once PLUGIN_DIR . '/modules/event-manager/includes/rsvp-table.php';
     \Leftfield\EventManager\RSVP\create_table();
+
+    // Pre-order table.
+    require_once PLUGIN_DIR . '/modules/pre-order/includes/orders-table.php';
+    \Leftfield\PreOrder\Orders\create_table();
 
     // Schedule daily availability cleanup.
     \Leftfield\Core\Availability\schedule_cleanup();

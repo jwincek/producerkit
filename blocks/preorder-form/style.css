@@ -1,0 +1,102 @@
+.lfuf-preorder-form {
+    max-width: 40rem;
+}
+
+.lfuf-preorder-form__products {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0 0 1rem;
+}
+
+.lfuf-preorder-form__products legend {
+    font-weight: 600;
+    padding: 0 0.375rem;
+}
+
+.lfuf-preorder-form__product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.375rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.lfuf-preorder-form__product:last-child {
+    border-bottom: none;
+}
+
+.lfuf-preorder-form__product-title {
+    font-weight: 500;
+}
+
+.lfuf-preorder-form__product-price {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+}
+
+.lfuf-preorder-form__product-status {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.75rem;
+}
+
+.lfuf-preorder-form__qty {
+    width: 4.25rem;
+    text-align: center;
+}
+
+.lfuf-preorder-form__fields label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.125rem;
+}
+
+.lfuf-preorder-form__fields input,
+.lfuf-preorder-form__fields textarea {
+    width: 100%;
+    max-width: 24rem;
+}
+
+/* Honeypot: hidden from humans, present for bots. */
+.lfuf-preorder-form__hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.lfuf-preorder-form__error {
+    color: #991b1b;
+    font-weight: 500;
+}
+
+.lfuf-preorder-form__disclaimer {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.lfuf-preorder-form__success {
+    border: 1px solid #a7f3d0;
+    background: #ecfdf5;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+}
+
+.lfuf-preorder-form__success code {
+    background: #d1fae5;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+}
+
+.lfuf-preorder-form__pay-note {
+    margin-bottom: 0;
+}
