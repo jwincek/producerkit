@@ -12,6 +12,16 @@ The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked
 
 ---
 
+## Payments, QR Codes, and Pre-Orders
+
+**Payment options**: edit a Location and open the **Payment Options** panel in the sidebar. Add links (Venmo, Cash App, PayPal, or a custom payment URL) and badges for other accepted payments (cash, check, SNAP/EBT, market vouchers). They appear in the Location Info block, the stand banner, and the location's page.
+
+**QR code**: in the Location Info block's settings, turn on **Show payment QR code**. Visitors scan it to open your first payment link — and if you print the page, the code enlarges for stand signage.
+
+**Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **Farm Stand → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically.
+
+---
+
 ## Step 1: Set Up Your Stand Location
 
 Your roadside stand needs to exist as a Location in WordPress before the stand status tools will work.
