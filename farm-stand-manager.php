@@ -32,35 +32,49 @@ const PREFIX     = 'lfuf';
  * 'lfuf_active_modules' filter.
  * ─────────────────────────────────────────────── */
 
+/**
+ * Human-readable module labels, translated on demand.
+ *
+ * Kept separate from get_registered_modules() so that boot() — which
+ * runs at plugins_loaded, before translations may load — never triggers
+ * WordPress 6.7's just-in-time textdomain notice.
+ *
+ * @return array<string, string>
+ */
+function get_module_labels(): array {
+    return [
+        'core'               => __('Core Data Layer', 'farm-stand-manager'),
+        'stand-status'       => __('Stand Status', 'farm-stand-manager'),
+        'availability-board' => __('Availability Board', 'farm-stand-manager'),
+        'event-manager'      => __('Event Manager', 'farm-stand-manager'),
+        'notifications'      => __('Notifications', 'farm-stand-manager'),
+        'pre-order'          => __('Pre-Orders', 'farm-stand-manager'),
+    ];
+}
+
 function get_registered_modules(): array {
     return [
         'core' => [
-            'label'     => __('Core Data Layer', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/core/bootstrap.php',
             'required'  => true,
         ],
         'stand-status' => [
-            'label'     => __('Stand Status', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/stand-status/bootstrap.php',
             'required'  => false,
         ],
         'availability-board' => [
-            'label'     => __('Availability Board', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/availability-board/bootstrap.php',
             'required'  => false,
         ],
         'event-manager' => [
-            'label'     => __('Event Manager', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/event-manager/bootstrap.php',
             'required'  => false,
         ],
         'notifications' => [
-            'label'     => __('Notifications', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/notifications/bootstrap.php',
             'required'  => false,
         ],
         'pre-order' => [
-            'label'     => __('Pre-Orders', 'farm-stand-manager'),
             'bootstrap' => PLUGIN_DIR . '/modules/pre-order/bootstrap.php',
             'required'  => false,
         ],

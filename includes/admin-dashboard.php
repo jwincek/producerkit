@@ -43,6 +43,7 @@ function enqueue_dashboard_styles(string $hook): void {
 
 function render_dashboard(): void {
     $registered = \Leftfield\get_registered_modules();
+    $labels     = \Leftfield\get_module_labels();
     $active     = \Leftfield\get_active_modules();
 
     // Content counts.
@@ -231,7 +232,7 @@ function render_dashboard(): void {
                     ?>
                         <tr>
                             <td>
-                                <strong><?php echo esc_html($config['label']); ?></strong>
+                                <strong><?php echo esc_html($labels[$slug] ?? $slug); ?></strong>
                                 <code class="lfuf-dashboard__module-slug"><?php echo esc_html($slug); ?></code>
                             </td>
                             <td>
