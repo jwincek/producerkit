@@ -21,6 +21,7 @@ require_once $module_dir . '/includes/payments.php';
 require_once $module_dir . '/includes/availability-table.php';
 require_once $module_dir . '/includes/rest-api.php';
 require_once $module_dir . '/includes/abilities.php';
+require_once $module_dir . '/includes/structured-data.php';
 require_once $module_dir . '/includes/single-content.php';
 require_once $module_dir . '/includes/single-styles.php';
 require_once $module_dir . '/includes/admin-columns.php';

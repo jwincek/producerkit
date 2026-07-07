@@ -83,6 +83,21 @@ $section_label = sprintf(
         <p class="lfuf-location-info__address">
             <span class="screen-reader-text"><?php esc_html_e('Address:', 'farm-stand-manager'); ?> </span>
             <?php echo esc_html($address); ?>
+            <?php
+            // Directions destination: coordinates when set, else the address.
+            $lat = (float) get_post_meta($location_id, '_lfuf_lat', true);
+            $lng = (float) get_post_meta($location_id, '_lfuf_lng', true);
+            $destination = ($lat !== 0.0 || $lng !== 0.0) ? $lat . ',' . $lng : $address;
+            ?>
+            <a
+                class="lfuf-location-info__directions"
+                href="<?php echo esc_url('https://www.google.com/maps/dir/?api=1&destination=' . rawurlencode($destination)); ?>"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <?php esc_html_e('Get directions', 'farm-stand-manager'); ?>
+                <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'farm-stand-manager'); ?></span>
+            </a>
         </p>
     <?php endif; ?>
 

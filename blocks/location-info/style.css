@@ -191,3 +191,9 @@
         width: 12rem;
     }
 }
+
+.lfuf-location-info__directions {
+    margin-left: 0.5rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+}
