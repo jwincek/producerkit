@@ -93,6 +93,7 @@ function send( string $subject, string $body, array $to = [] ): bool {
 	// and to improve deliverability with spam filters.
 	$plain_text   = to_plain_text( $body );
 	$set_alt_body = function ( \PHPMailer\PHPMailer\PHPMailer $phpmailer ) use ( $plain_text ): void {
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- PHPMailer's own public property.
 		$phpmailer->AltBody = $plain_text;
 	};
 

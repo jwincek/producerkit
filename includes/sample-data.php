@@ -35,8 +35,10 @@ add_action(
 			return;
 		}
 
-		if ( isset( $_GET['lfuf_sample_action'] ) && wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'lfuf_sample_action' ) ) {
-			$action = sanitize_text_field( $_GET['lfuf_sample_action'] );
+		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+		if ( isset( $_GET['lfuf_sample_action'] ) && wp_verify_nonce( $nonce, 'lfuf_sample_action' ) ) {
+			$action = sanitize_key( wp_unslash( $_GET['lfuf_sample_action'] ) );
 
 			if ( $action === 'load' && ! is_loaded() ) {
 				seed_all();
@@ -73,10 +75,15 @@ function get_dashboard_html(): string {
 		'lfuf_sample_action',
 	);
 
+	// Display-only flag, set by our own redirect after the nonce-checked
+	// action above already ran. Nothing here changes state.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$result = isset( $_GET['lfuf_sample'] ) ? sanitize_key( wp_unslash( $_GET['lfuf_sample'] ) ) : '';
+
 	$notice = '';
-	if ( isset( $_GET['lfuf_sample'] ) ) {
-		$type   = $_GET['lfuf_sample'] === 'loaded' ? 'success' : 'info';
-		$msg    = $_GET['lfuf_sample'] === 'loaded'
+	if ( $result ) {
+		$type   = $result === 'loaded' ? 'success' : 'info';
+		$msg    = $result === 'loaded'
 			? __( 'Sample data loaded! Check your Products, Locations, and Events.', 'farm-stand-manager' )
 			: __( 'Sample data removed.', 'farm-stand-manager' );
 		$notice = sprintf(
@@ -448,8 +455,10 @@ function remove_all(): void {
 	//  but we clean up orphans explicitly.)
 	global $wpdb;
 	$avail_table = $wpdb->prefix . 'lfuf_availability';
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '{$avail_table}'" ) === $avail_table ) {
 		$wpdb->query(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"DELETE a FROM {$avail_table} a
              LEFT JOIN {$wpdb->posts} p ON p.ID = a.product_id
              WHERE p.ID IS NULL"
@@ -458,8 +467,10 @@ function remove_all(): void {
 
 	// Remove sample RSVPs (orphaned by deleted events).
 	$rsvp_table = $wpdb->prefix . 'lfuf_rsvps';
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '{$rsvp_table}'" ) === $rsvp_table ) {
 		$wpdb->query(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"DELETE r FROM {$rsvp_table} r
              LEFT JOIN {$wpdb->posts} p ON p.ID = r.event_id
              WHERE p.ID IS NULL"

@@ -96,6 +96,7 @@ function upsert( array $data ): int|false {
 
 	$existing = $wpdb->get_var(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"SELECT id FROM {$table}
          WHERE product_id = %d AND location_id = %d AND effective_date = %s
          LIMIT 1",
@@ -148,6 +149,7 @@ function get_current( int $product_id, int $location_id = 0 ): array {
 		$where .= $wpdb->prepare( ' AND location_id = %d', $location_id );
 	}
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The interpolated fragment is itself $wpdb->prepare() output.
 	return $wpdb->get_results( "SELECT * FROM {$table} WHERE {$where} ORDER BY effective_date DESC" );
 }
 
@@ -162,6 +164,7 @@ function get_all_current(): array {
 	$table = table_name();
 	$today = current_time( 'Y-m-d' );
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized. Disabled rather than ignored because the interpolation sits inside a multi-line string.
 	return $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT a.*, p.post_title AS product_name
@@ -174,6 +177,7 @@ function get_all_current(): array {
 			$today,
 		)
 	);
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**
@@ -224,6 +228,7 @@ function purge_expired(): int {
 
 	$count = (int) $wpdb->query(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"DELETE FROM {$table} WHERE expires_date IS NOT NULL AND expires_date < %s",
 			$today,
 		)

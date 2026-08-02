@@ -300,6 +300,7 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 			'event'    => [
 				'id'              => $event->ID,
 				'title'           => $event->post_title,
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Applying core's own filter, which is how post content is meant to be rendered.
 				'content'         => apply_filters( 'the_content', $event->post_content ),
 				'start'           => get_post_meta( $event_id, '_lfuf_start_datetime', true ),
 				'end'             => get_post_meta( $event_id, '_lfuf_end_datetime', true ),

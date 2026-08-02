@@ -40,9 +40,11 @@ function register_page(): void {
  * ─────────────────────────────────────────────── */
 
 function handle_export(): void {
+	$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
 	if (
 		! isset( $_GET['lfuf_export_products'] )
-		|| ! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'lfuf_export_products' )
+		|| ! wp_verify_nonce( $nonce, 'lfuf_export_products' )
 		|| ! current_user_can( 'edit_posts' )
 	) {
 		return;
@@ -141,15 +143,27 @@ function handle_export(): void {
  * ─────────────────────────────────────────────── */
 
 function handle_import(): void {
+	$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+
 	if (
 		! isset( $_POST['lfuf_import_products'] )
-		|| ! wp_verify_nonce( $_POST['_wpnonce'] ?? '', 'lfuf_import_products' )
+		|| ! wp_verify_nonce( $nonce, 'lfuf_import_products' )
 		|| ! current_user_can( 'edit_posts' )
 	) {
 		return;
 	}
 
-	if ( empty( $_FILES['lfuf_csv']['tmp_name'] ) || $_FILES['lfuf_csv']['error'] !== UPLOAD_ERR_OK ) {
+	// Read every index defensively: a request can omit the file part
+	// altogether, in which case PHP populates none of these keys.
+	$upload = isset( $_FILES['lfuf_csv'] )
+		? array_map( 'sanitize_text_field', wp_unslash( (array) $_FILES['lfuf_csv'] ) )
+		: [];
+	$tmp    = (string) ( $upload['tmp_name'] ?? '' );
+	$error  = isset( $upload['error'] ) ? (int) $upload['error'] : UPLOAD_ERR_NO_FILE;
+
+	// is_uploaded_file() is what stops a crafted tmp_name from pointing the
+	// parser at an arbitrary path on disk.
+	if ( '' === $tmp || UPLOAD_ERR_OK !== $error || ! is_uploaded_file( $tmp ) ) {
 		add_action(
 			'admin_notices',
 			function () {
@@ -159,8 +173,7 @@ function handle_import(): void {
 		return;
 	}
 
-	$file = $_FILES['lfuf_csv']['tmp_name'];
-	$rows = parse_csv( $file );
+	$rows = parse_csv( $tmp );
 
 	if ( empty( $rows ) ) {
 		add_action(

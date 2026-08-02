@@ -428,6 +428,7 @@ function get_content_gaps(): array {
 
 	// Stale availability and unlisted products.
 	$avail_table = $wpdb->prefix . 'lfuf_availability';
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '{$avail_table}'" ) === $avail_table ) {
 		$today    = current_time( 'Y-m-d' );
 		$week_ago = gmdate( 'Y-m-d', strtotime( '-7 days', current_time( 'timestamp' ) ) );
@@ -435,6 +436,7 @@ function get_content_gaps(): array {
 		// Products with availability older than 7 days.
 		$stale_count = (int) $wpdb->get_var(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 				"SELECT COUNT(DISTINCT a.product_id) FROM {$avail_table} a
              INNER JOIN {$wpdb->posts} p ON p.ID = a.product_id AND p.post_status = 'publish'
              WHERE a.effective_date <= %s
@@ -463,13 +465,14 @@ function get_content_gaps(): array {
 		);
 		$listed_count   = (int) $wpdb->get_var(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 				"SELECT COUNT(DISTINCT product_id) FROM {$avail_table}
              WHERE effective_date <= %s AND (expires_date IS NULL OR expires_date >= %s)",
 				$today,
 				$today,
 			)
 		);
-		$unlisted       = $total_products - $listed_count;
+		$unlisted = $total_products - $listed_count;
 		if ( $unlisted > 0 && $total_products > 0 ) {
 			$gaps[] = [
 				'icon'     => '🫥',
@@ -492,12 +495,14 @@ function get_availability_summary(): array {
 	$table = $wpdb->prefix . 'lfuf_availability';
 
 	// Check if table exists.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '{$table}'" ) !== $table ) {
 		return [];
 	}
 
 	$today = current_time( 'Y-m-d' );
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized. Disabled rather than ignored because the interpolation sits inside a multi-line string.
 	$rows = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT status, COUNT(*) as cnt
@@ -510,6 +515,7 @@ function get_availability_summary(): array {
 			$today,
 		)
 	);
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	$summary = [];
 	foreach ( $rows as $row ) {

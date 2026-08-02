@@ -98,7 +98,8 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 		$valid    = \Leftfield\Core\Availability\valid_statuses();
 		$statuses = array_intersect( $statuses, $valid );
 		if ( $statuses ) {
-			$placeholders  = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+			$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated from a count, and the values are intersected against valid_statuses() before binding.
 			$where_parts[] = $wpdb->prepare( "a.status IN ({$placeholders})", ...$statuses );
 		}
 	}
@@ -254,6 +255,7 @@ function get_last_updated( \WP_REST_Request $request ): \WP_REST_Response {
 
 	$table = $wpdb->prefix . 'lfuf_availability';
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	$last = $wpdb->get_var( "SELECT MAX(updated_at) FROM {$table}" );
 
 	return new \WP_REST_Response(

@@ -90,7 +90,11 @@ function hash_ip( string $ip ): string {
  * Get the client IP (REMOTE_ADDR is sufficient for a small farm site).
  */
 function get_client_ip(): string {
-	return sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0' );
+	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
+		return '0.0.0.0';
+	}
+
+	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 }
 
 /**
@@ -406,7 +410,8 @@ function to_public( array|object $row ): array {
 function get_order_by_token( string $token ): ?array {
 	global $wpdb;
 	$table = table_name();
-	$row   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE token = %s LIMIT 1", $token ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE token = %s LIMIT 1", $token ) );
 	return $row ? to_public( $row ) : null;
 }
 
@@ -444,7 +449,8 @@ function update_status( int $id, string $status ): bool|\WP_Error {
 	}
 
 	$table = table_name();
-	$row   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1", $id ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1", $id ) );
 	if ( ! $row ) {
 		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ) );
 	}

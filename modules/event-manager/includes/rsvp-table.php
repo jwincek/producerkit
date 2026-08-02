@@ -77,10 +77,13 @@ function hash_ip( string $ip ): string {
  * Get the client IP (best effort behind proxies).
  */
 function get_client_ip(): string {
-	$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-	// Trust X-Forwarded-For only if behind a known proxy.
-	// For a small farm site, REMOTE_ADDR is sufficient.
-	return sanitize_text_field( $ip );
+	// X-Forwarded-For is deliberately ignored: it is client-controlled unless
+	// a known proxy is in front, and trusting it would defeat rate limiting.
+	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
+		return '0.0.0.0';
+	}
+
+	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 }
 
 /**
@@ -160,6 +163,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 
 	$existing = $wpdb->get_var(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"SELECT id FROM {$table}
          WHERE event_id = %d AND LOWER(TRIM(name)) = %s
          LIMIT 1",
@@ -182,6 +186,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 		$wpdb->query( 'START TRANSACTION' );
 
 		// Lock the rows for this event to prevent concurrent inserts.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized. Disabled rather than ignored because the interpolation sits inside a multi-line string.
 		$current_count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COALESCE(SUM(party_size), 0)
@@ -191,6 +196,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 				$event_id,
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		if ( $current_count + $party_size > $cap ) {
 			$wpdb->query( 'ROLLBACK' );
@@ -254,6 +260,7 @@ function cancel_rsvp( string $token ): bool {
 	$table = table_name();
 	$rsvp  = $wpdb->get_row(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"SELECT * FROM {$table} WHERE token = %s LIMIT 1",
 			$token,
 		)
@@ -280,6 +287,7 @@ function get_headcount( int $event_id ): int {
 	$table = table_name();
 	return (int) $wpdb->get_var(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"SELECT COALESCE(SUM(party_size), 0) FROM {$table} WHERE event_id = %d",
 			$event_id,
 		)
@@ -294,6 +302,7 @@ function get_rsvp_count( int $event_id ): int {
 	$table = table_name();
 	return (int) $wpdb->get_var(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 			"SELECT COUNT(*) FROM {$table} WHERE event_id = %d",
 			$event_id,
 		)
@@ -308,6 +317,7 @@ function get_rsvp_count( int $event_id ): int {
 function get_event_rsvps( int $event_id ): array {
 	global $wpdb;
 	$table = table_name();
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized. Disabled rather than ignored because the interpolation sits inside a multi-line string.
 	return $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT id, name, email, party_size, note, created_at
@@ -317,6 +327,7 @@ function get_event_rsvps( int $event_id ): array {
 			$event_id,
 		)
 	);
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**

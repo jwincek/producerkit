@@ -54,10 +54,12 @@ function render_page(): void {
 	);
 
 	// Read-only location picker; no state change happens on GET.
-    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$location_id = (int) ( $_GET['location_id'] ?? 0 );
-	if ( ! $location_id && $locations ) {
-		$location_id = $locations[0]->ID;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$location_id = isset( $_GET['location_id'] ) ? (int) sanitize_text_field( wp_unslash( $_GET['location_id'] ) ) : 0;
+
+	// Not absint(): that would turn a negative id into a real, unrelated post.
+	if ( $location_id < 1 ) {
+		$location_id = $locations ? (int) $locations[0]->ID : 0;
 	}
 
 	// Board data via the same code path the block and ability use.
