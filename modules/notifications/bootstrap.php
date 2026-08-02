@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Leftfield\Notifications;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 $module_dir = __DIR__;
 

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Leftfield\AvailabilityBoard;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 $module_dir = __DIR__;
 

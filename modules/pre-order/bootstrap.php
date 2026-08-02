@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Leftfield\PreOrder;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 $module_dir = __DIR__;
 
@@ -20,6 +20,6 @@ require_once $module_dir . '/includes/orders-table.php';
 require_once $module_dir . '/includes/rest-extensions.php';
 require_once $module_dir . '/includes/abilities.php';
 
-if (is_admin()) {
-    require_once $module_dir . '/includes/admin-orders.php';
+if ( is_admin() ) {
+	require_once $module_dir . '/includes/admin-orders.php';
 }

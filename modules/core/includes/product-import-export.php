@@ -18,21 +18,21 @@ declare(strict_types=1);
 
 namespace Leftfield\Core\ProductIO;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-add_action('admin_menu', __NAMESPACE__ . '\\register_page');
-add_action('admin_init', __NAMESPACE__ . '\\handle_export');
-add_action('admin_init', __NAMESPACE__ . '\\handle_import');
+add_action( 'admin_menu', __NAMESPACE__ . '\\register_page' );
+add_action( 'admin_init', __NAMESPACE__ . '\\handle_export' );
+add_action( 'admin_init', __NAMESPACE__ . '\\handle_import' );
 
 function register_page(): void {
-    add_submenu_page(
-        'farm-stand-dashboard',
-        __('Import / Export Products', 'farm-stand-manager'),
-        __('Product Import', 'farm-stand-manager'),
-        'edit_posts',
-        'farm-stand-product-io',
-        __NAMESPACE__ . '\\render_page',
-    );
+	add_submenu_page(
+		'farm-stand-dashboard',
+		__( 'Import / Export Products', 'farm-stand-manager' ),
+		__( 'Product Import', 'farm-stand-manager' ),
+		'edit_posts',
+		'farm-stand-product-io',
+		__NAMESPACE__ . '\\render_page',
+	);
 }
 
 /* ───────────────────────────────────────────────
@@ -40,92 +40,100 @@ function register_page(): void {
  * ─────────────────────────────────────────────── */
 
 function handle_export(): void {
-    if (
-        ! isset($_GET['lfuf_export_products'])
-        || ! wp_verify_nonce($_GET['_wpnonce'] ?? '', 'lfuf_export_products')
-        || ! current_user_can('edit_posts')
-    ) {
-        return;
-    }
+	if (
+		! isset( $_GET['lfuf_export_products'] )
+		|| ! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'lfuf_export_products' )
+		|| ! current_user_can( 'edit_posts' )
+	) {
+		return;
+	}
 
-    $products = get_posts([
-        'post_type'      => 'lfuf_product',
-        'post_status'    => ['publish', 'draft'],
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-    ]);
+	$products = get_posts(
+		[
+			'post_type'      => 'lfuf_product',
+			'post_status'    => [ 'publish', 'draft' ],
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		]
+	);
 
-    $filename = 'farm-stand-products-' . gmdate('Y-m-d') . '.csv';
+	$filename = 'farm-stand-products-' . gmdate( 'Y-m-d' ) . '.csv';
 
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Pragma: no-cache');
+	header( 'Content-Type: text/csv; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+	header( 'Pragma: no-cache' );
 
-    $out = fopen('php://output', 'w'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming CSV to the response; WP_Filesystem cannot write to php://output.
+	$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming CSV to the response; WP_Filesystem cannot write to php://output.
 
-    // BOM for Excel UTF-8 compatibility.
-    fwrite($out, "\xEF\xBB\xBF"); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- see fopen above.
+	// BOM for Excel UTF-8 compatibility.
+	fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- see fopen above.
 
-    // Header row.
-    fputcsv($out, [
-        'title',
-        'status',
-        'excerpt',
-        'price',
-        'unit',
-        'growing_notes',
-        'product_types',
-        'seasons',
-        'sources',
-        'featured_image_url',
-    ]);
+	// Header row.
+	fputcsv(
+		$out,
+		[
+			'title',
+			'status',
+			'excerpt',
+			'price',
+			'unit',
+			'growing_notes',
+			'product_types',
+			'seasons',
+			'sources',
+			'featured_image_url',
+		]
+	);
 
-    foreach ($products as $product) {
-        $pid = $product->ID;
+	foreach ( $products as $product ) {
+		$pid = $product->ID;
 
-        // Taxonomies.
-        $types   = get_the_terms($pid, 'lfuf_product_type');
-        $seasons = get_the_terms($pid, 'lfuf_season');
-        $type_str   = ($types && ! is_wp_error($types))
-            ? implode('|', wp_list_pluck($types, 'name'))
-            : '';
-        $season_str = ($seasons && ! is_wp_error($seasons))
-            ? implode('|', wp_list_pluck($seasons, 'name'))
-            : '';
+		// Taxonomies.
+		$types      = get_the_terms( $pid, 'lfuf_product_type' );
+		$seasons    = get_the_terms( $pid, 'lfuf_season' );
+		$type_str   = ( $types && ! is_wp_error( $types ) )
+			? implode( '|', wp_list_pluck( $types, 'name' ) )
+			: '';
+		$season_str = ( $seasons && ! is_wp_error( $seasons ) )
+			? implode( '|', wp_list_pluck( $seasons, 'name' ) )
+			: '';
 
-        // Sources.
-        $source_ids = get_post_meta($pid, '_lfuf_source_ids', true);
-        $source_names = [];
-        if (is_array($source_ids)) {
-            foreach ($source_ids as $sid) {
-                $source = get_post($sid);
-                if ($source) {
-                    $source_names[] = $source->post_title;
-                }
-            }
-        }
+		// Sources.
+		$source_ids   = get_post_meta( $pid, '_lfuf_source_ids', true );
+		$source_names = [];
+		if ( is_array( $source_ids ) ) {
+			foreach ( $source_ids as $sid ) {
+				$source = get_post( $sid );
+				if ( $source ) {
+					$source_names[] = $source->post_title;
+				}
+			}
+		}
 
-        // Featured image.
-        $thumb_id  = get_post_thumbnail_id($pid);
-        $thumb_url = $thumb_id ? wp_get_attachment_url($thumb_id) : '';
+		// Featured image.
+		$thumb_id  = get_post_thumbnail_id( $pid );
+		$thumb_url = $thumb_id ? wp_get_attachment_url( $thumb_id ) : '';
 
-        fputcsv($out, [
-            $product->post_title,
-            $product->post_status,
-            $product->post_excerpt,
-            get_post_meta($pid, '_lfuf_price', true),
-            get_post_meta($pid, '_lfuf_unit', true),
-            get_post_meta($pid, '_lfuf_growing_notes', true),
-            $type_str,
-            $season_str,
-            implode('|', $source_names),
-            $thumb_url,
-        ]);
-    }
+		fputcsv(
+			$out,
+			[
+				$product->post_title,
+				$product->post_status,
+				$product->post_excerpt,
+				get_post_meta( $pid, '_lfuf_price', true ),
+				get_post_meta( $pid, '_lfuf_unit', true ),
+				get_post_meta( $pid, '_lfuf_growing_notes', true ),
+				$type_str,
+				$season_str,
+				implode( '|', $source_names ),
+				$thumb_url,
+			]
+		);
+	}
 
-    fclose($out); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
-    exit;
+	fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
+	exit;
 }
 
 /* ───────────────────────────────────────────────
@@ -133,35 +141,41 @@ function handle_export(): void {
  * ─────────────────────────────────────────────── */
 
 function handle_import(): void {
-    if (
-        ! isset($_POST['lfuf_import_products'])
-        || ! wp_verify_nonce($_POST['_wpnonce'] ?? '', 'lfuf_import_products')
-        || ! current_user_can('edit_posts')
-    ) {
-        return;
-    }
+	if (
+		! isset( $_POST['lfuf_import_products'] )
+		|| ! wp_verify_nonce( $_POST['_wpnonce'] ?? '', 'lfuf_import_products' )
+		|| ! current_user_can( 'edit_posts' )
+	) {
+		return;
+	}
 
-    if (empty($_FILES['lfuf_csv']['tmp_name']) || $_FILES['lfuf_csv']['error'] !== UPLOAD_ERR_OK) {
-        add_action('admin_notices', function () {
-            echo '<div class="notice notice-error"><p>' . esc_html__('No file uploaded or upload error.', 'farm-stand-manager') . '</p></div>';
-        });
-        return;
-    }
+	if ( empty( $_FILES['lfuf_csv']['tmp_name'] ) || $_FILES['lfuf_csv']['error'] !== UPLOAD_ERR_OK ) {
+		add_action(
+			'admin_notices',
+			function () {
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'No file uploaded or upload error.', 'farm-stand-manager' ) . '</p></div>';
+			}
+		);
+		return;
+	}
 
-    $file = $_FILES['lfuf_csv']['tmp_name'];
-    $rows = parse_csv($file);
+	$file = $_FILES['lfuf_csv']['tmp_name'];
+	$rows = parse_csv( $file );
 
-    if (empty($rows)) {
-        add_action('admin_notices', function () {
-            echo '<div class="notice notice-error"><p>' . esc_html__('CSV file is empty or could not be parsed.', 'farm-stand-manager') . '</p></div>';
-        });
-        return;
-    }
+	if ( empty( $rows ) ) {
+		add_action(
+			'admin_notices',
+			function () {
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'CSV file is empty or could not be parsed.', 'farm-stand-manager' ) . '</p></div>';
+			}
+		);
+		return;
+	}
 
-    $results = import_rows($rows);
+	$results = import_rows( $rows );
 
-    // Store results in a transient for display.
-    set_transient('lfuf_import_results', $results, 60);
+	// Store results in a transient for display.
+	set_transient( 'lfuf_import_results', $results, 60 );
 }
 
 /**
@@ -169,40 +183,40 @@ function handle_import(): void {
  *
  * @return array<array<string,string>>
  */
-function parse_csv(string $filepath): array {
-    $handle = fopen($filepath, 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming row-by-row CSV parse of an uploaded file via fgetcsv(); WP_Filesystem has no CSV reader.
-    if (! $handle) {
-        return [];
-    }
+function parse_csv( string $filepath ): array {
+	$handle = fopen( $filepath, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming row-by-row CSV parse of an uploaded file via fgetcsv(); WP_Filesystem has no CSV reader.
+	if ( ! $handle ) {
+		return [];
+	}
 
-    // Skip BOM if present.
-    $bom = fread($handle, 3); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- see fopen above.
-    if ($bom !== "\xEF\xBB\xBF") {
-        rewind($handle);
-    }
+	// Skip BOM if present.
+	$bom = fread( $handle, 3 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- see fopen above.
+	if ( $bom !== "\xEF\xBB\xBF" ) {
+		rewind( $handle );
+	}
 
-    $headers = fgetcsv($handle);
-    if (! $headers) {
-        fclose($handle); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
-        return [];
-    }
+	$headers = fgetcsv( $handle );
+	if ( ! $headers ) {
+		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
+		return [];
+	}
 
-    // Normalize headers.
-    $headers = array_map(fn ($h) => strtolower(trim($h)), $headers);
+	// Normalize headers.
+	$headers = array_map( fn ( $h ) => strtolower( trim( $h ) ), $headers );
 
-    $rows = [];
-    while (($data = fgetcsv($handle)) !== false) {
-        if (count($data) !== count($headers)) {
-            continue; // Skip malformed rows.
-        }
-        $row = array_combine($headers, $data);
-        if ($row && ! empty(trim($row['title'] ?? ''))) {
-            $rows[] = $row;
-        }
-    }
+	$rows = [];
+	while ( ( $data = fgetcsv( $handle ) ) !== false ) {
+		if ( count( $data ) !== count( $headers ) ) {
+			continue; // Skip malformed rows.
+		}
+		$row = array_combine( $headers, $data );
+		if ( $row && ! empty( trim( $row['title'] ?? '' ) ) ) {
+			$rows[] = $row;
+		}
+	}
 
-    fclose($handle); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
-    return $rows;
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
+	return $rows;
 }
 
 /**
@@ -211,132 +225,136 @@ function parse_csv(string $filepath): array {
  * @param array<array<string,string>> $rows
  * @return array{created:int,updated:int,errors:string[]}
  */
-function import_rows(array $rows): array {
-    $created = 0;
-    $updated = 0;
-    $errors  = [];
+function import_rows( array $rows ): array {
+	$created = 0;
+	$updated = 0;
+	$errors  = [];
 
-    // Pre-fetch source posts for matching by title.
-    $sources = get_posts([
-        'post_type'      => 'lfuf_source',
-        'post_status'    => 'publish',
-        'posts_per_page' => -1,
-    ]);
-    $source_map = [];
-    foreach ($sources as $s) {
-        $source_map[strtolower(trim($s->post_title))] = $s->ID;
-    }
+	// Pre-fetch source posts for matching by title.
+	$sources    = get_posts(
+		[
+			'post_type'      => 'lfuf_source',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+		]
+	);
+	$source_map = [];
+	foreach ( $sources as $s ) {
+		$source_map[ strtolower( trim( $s->post_title ) ) ] = $s->ID;
+	}
 
-    foreach ($rows as $i => $row) {
-        $line  = $i + 2; // 1-indexed, +1 for header row.
-        $title = sanitize_text_field(trim($row['title'] ?? ''));
+	foreach ( $rows as $i => $row ) {
+		$line  = $i + 2; // 1-indexed, +1 for header row.
+		$title = sanitize_text_field( trim( $row['title'] ?? '' ) );
 
-        if (empty($title)) {
-            /* translators: %d: CSV row number. */
-            $errors[] = sprintf(__('Row %d: missing title, skipped.', 'farm-stand-manager'), $line);
-            continue;
-        }
+		if ( empty( $title ) ) {
+			/* translators: %d: CSV row number. */
+			$errors[] = sprintf( __( 'Row %d: missing title, skipped.', 'farm-stand-manager' ), $line );
+			continue;
+		}
 
-        // Check if product already exists by title.
-        // (get_page_by_title() is deprecated since WP 6.2.)
-        $title_query = new \WP_Query([
-            'post_type'              => 'lfuf_product',
-            'title'                  => $title,
-            'post_status'            => 'all',
-            'posts_per_page'         => 1,
-            'no_found_rows'          => true,
-            'update_post_term_cache' => false,
-            'update_post_meta_cache' => false,
-            'orderby'                => 'post_date ID',
-            'order'                  => 'ASC',
-        ]);
-        $existing = $title_query->posts[0] ?? null;
-        $post_status = sanitize_text_field($row['status'] ?? 'publish');
-        if (! in_array($post_status, ['publish', 'draft', 'pending'], true)) {
-            $post_status = 'publish';
-        }
+		// Check if product already exists by title.
+		// (get_page_by_title() is deprecated since WP 6.2.)
+		$title_query = new \WP_Query(
+			[
+				'post_type'              => 'lfuf_product',
+				'title'                  => $title,
+				'post_status'            => 'all',
+				'posts_per_page'         => 1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'orderby'                => 'post_date ID',
+				'order'                  => 'ASC',
+			]
+		);
+		$existing    = $title_query->posts[0] ?? null;
+		$post_status = sanitize_text_field( $row['status'] ?? 'publish' );
+		if ( ! in_array( $post_status, [ 'publish', 'draft', 'pending' ], true ) ) {
+			$post_status = 'publish';
+		}
 
-        $post_data = [
-            'post_title'   => $title,
-            'post_type'    => 'lfuf_product',
-            'post_status'  => $post_status,
-            'post_excerpt' => sanitize_textarea_field($row['excerpt'] ?? ''),
-        ];
+		$post_data = [
+			'post_title'   => $title,
+			'post_type'    => 'lfuf_product',
+			'post_status'  => $post_status,
+			'post_excerpt' => sanitize_textarea_field( $row['excerpt'] ?? '' ),
+		];
 
-        if ($existing) {
-            $post_data['ID'] = $existing->ID;
-            $pid = wp_update_post($post_data, true);
-            if (is_wp_error($pid)) {
-                /* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
-                $errors[] = sprintf(__('Row %1$d: failed to update "%2$s" — %3$s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
-                continue;
-            }
-            $updated++;
-        } else {
-            $pid = wp_insert_post($post_data, true);
-            if (is_wp_error($pid)) {
-                /* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
-                $errors[] = sprintf(__('Row %1$d: failed to create "%2$s" — %3$s', 'farm-stand-manager'), $line, $title, $pid->get_error_message());
-                continue;
-            }
-            $created++;
-        }
+		if ( $existing ) {
+			$post_data['ID'] = $existing->ID;
+			$pid             = wp_update_post( $post_data, true );
+			if ( is_wp_error( $pid ) ) {
+				/* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
+				$errors[] = sprintf( __( 'Row %1$d: failed to update "%2$s" — %3$s', 'farm-stand-manager' ), $line, $title, $pid->get_error_message() );
+				continue;
+			}
+			++$updated;
+		} else {
+			$pid = wp_insert_post( $post_data, true );
+			if ( is_wp_error( $pid ) ) {
+				/* translators: %1$d: CSV row number, %2$s: product title, %3$s: error message. */
+				$errors[] = sprintf( __( 'Row %1$d: failed to create "%2$s" — %3$s', 'farm-stand-manager' ), $line, $title, $pid->get_error_message() );
+				continue;
+			}
+			++$created;
+		}
 
-        // Meta fields.
-        if (isset($row['price'])) {
-            update_post_meta($pid, '_lfuf_price', sanitize_text_field($row['price']));
-        }
-        if (isset($row['unit'])) {
-            update_post_meta($pid, '_lfuf_unit', sanitize_text_field($row['unit']));
-        }
-        if (isset($row['growing_notes'])) {
-            update_post_meta($pid, '_lfuf_growing_notes', sanitize_text_field($row['growing_notes']));
-        }
+		// Meta fields.
+		if ( isset( $row['price'] ) ) {
+			update_post_meta( $pid, '_lfuf_price', sanitize_text_field( $row['price'] ) );
+		}
+		if ( isset( $row['unit'] ) ) {
+			update_post_meta( $pid, '_lfuf_unit', sanitize_text_field( $row['unit'] ) );
+		}
+		if ( isset( $row['growing_notes'] ) ) {
+			update_post_meta( $pid, '_lfuf_growing_notes', sanitize_text_field( $row['growing_notes'] ) );
+		}
 
-        // Taxonomies (pipe-separated).
-        if (! empty($row['product_types'])) {
-            $terms = array_map('trim', explode('|', $row['product_types']));
-            wp_set_object_terms($pid, $terms, 'lfuf_product_type');
-        }
-        if (! empty($row['seasons'])) {
-            $terms = array_map('trim', explode('|', $row['seasons']));
-            wp_set_object_terms($pid, $terms, 'lfuf_season');
-        }
+		// Taxonomies (pipe-separated).
+		if ( ! empty( $row['product_types'] ) ) {
+			$terms = array_map( 'trim', explode( '|', $row['product_types'] ) );
+			wp_set_object_terms( $pid, $terms, 'lfuf_product_type' );
+		}
+		if ( ! empty( $row['seasons'] ) ) {
+			$terms = array_map( 'trim', explode( '|', $row['seasons'] ) );
+			wp_set_object_terms( $pid, $terms, 'lfuf_season' );
+		}
 
-        // Source links (pipe-separated titles).
-        if (! empty($row['sources'])) {
-            $names    = array_map('trim', explode('|', $row['sources']));
-            $ids      = [];
-            foreach ($names as $name) {
-                $key = strtolower($name);
-                if (isset($source_map[$key])) {
-                    $ids[] = $source_map[$key];
-                }
-            }
-            update_post_meta($pid, '_lfuf_source_ids', $ids);
-        }
+		// Source links (pipe-separated titles).
+		if ( ! empty( $row['sources'] ) ) {
+			$names = array_map( 'trim', explode( '|', $row['sources'] ) );
+			$ids   = [];
+			foreach ( $names as $name ) {
+				$key = strtolower( $name );
+				if ( isset( $source_map[ $key ] ) ) {
+					$ids[] = $source_map[ $key ];
+				}
+			}
+			update_post_meta( $pid, '_lfuf_source_ids', $ids );
+		}
 
-        // Featured image (sideload from URL).
-        if (! empty($row['featured_image_url'])) {
-            $image_url = esc_url_raw(trim($row['featured_image_url']));
-            if (filter_var($image_url, FILTER_VALIDATE_URL)) {
-                $thumb_id = get_post_thumbnail_id($pid);
-                // Only sideload if no thumbnail or URL changed.
-                $current_url = $thumb_id ? wp_get_attachment_url($thumb_id) : '';
-                if ($image_url !== $current_url) {
-                    require_once ABSPATH . 'wp-admin/includes/media.php';
-                    require_once ABSPATH . 'wp-admin/includes/file.php';
-                    require_once ABSPATH . 'wp-admin/includes/image.php';
-                    $new_id = media_sideload_image($image_url, $pid, $title, 'id');
-                    if (! is_wp_error($new_id)) {
-                        set_post_thumbnail($pid, $new_id);
-                    }
-                }
-            }
-        }
-    }
+		// Featured image (sideload from URL).
+		if ( ! empty( $row['featured_image_url'] ) ) {
+			$image_url = esc_url_raw( trim( $row['featured_image_url'] ) );
+			if ( filter_var( $image_url, FILTER_VALIDATE_URL ) ) {
+				$thumb_id = get_post_thumbnail_id( $pid );
+				// Only sideload if no thumbnail or URL changed.
+				$current_url = $thumb_id ? wp_get_attachment_url( $thumb_id ) : '';
+				if ( $image_url !== $current_url ) {
+					require_once ABSPATH . 'wp-admin/includes/media.php';
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+					$new_id = media_sideload_image( $image_url, $pid, $title, 'id' );
+					if ( ! is_wp_error( $new_id ) ) {
+						set_post_thumbnail( $pid, $new_id );
+					}
+				}
+			}
+		}
+	}
 
-    return compact('created', 'updated', 'errors');
+	return compact( 'created', 'updated', 'errors' );
 }
 
 /* ───────────────────────────────────────────────
@@ -344,137 +362,141 @@ function import_rows(array $rows): array {
  * ─────────────────────────────────────────────── */
 
 function render_page(): void {
-    $results  = get_transient('lfuf_import_results');
-    if ($results) {
-        delete_transient('lfuf_import_results');
-    }
+	$results = get_transient( 'lfuf_import_results' );
+	if ( $results ) {
+		delete_transient( 'lfuf_import_results' );
+	}
 
-    $product_count = (int) wp_count_posts('lfuf_product')->publish;
-    ?>
-    <div class="wrap lfuf-product-io">
-        <h1><?php esc_html_e('Product Import / Export', 'farm-stand-manager'); ?></h1>
+	$product_count = (int) wp_count_posts( 'lfuf_product' )->publish;
+	?>
+	<div class="wrap lfuf-product-io">
+		<h1><?php esc_html_e( 'Product Import / Export', 'farm-stand-manager' ); ?></h1>
 
-        <?php if ($results) : ?>
-            <div class="notice notice-success is-dismissible">
-                <p>
-                    <?php
-                    $parts = [];
-                    if ($results['created'] > 0) {
-                        /* translators: %d: number of products created. */
-                        $parts[] = sprintf(_n('%d product created', '%d products created', $results['created'], 'farm-stand-manager'), $results['created']);
-                    }
-                    if ($results['updated'] > 0) {
-                        /* translators: %d: number of products updated. */
-                        $parts[] = sprintf(_n('%d product updated', '%d products updated', $results['updated'], 'farm-stand-manager'), $results['updated']);
-                    }
-                    echo esc_html(implode(', ', $parts) ?: __('No changes made.', 'farm-stand-manager'));
-                    ?>
-                </p>
-            </div>
-            <?php if (! empty($results['errors'])) : ?>
-                <div class="notice notice-warning">
-                    <p><strong><?php esc_html_e('Some rows had issues:', 'farm-stand-manager'); ?></strong></p>
-                    <ul style="list-style:disc;padding-left:20px;">
-                        <?php foreach ($results['errors'] as $error) : ?>
-                            <li><?php echo esc_html($error); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
+		<?php if ( $results ) : ?>
+			<div class="notice notice-success is-dismissible">
+				<p>
+					<?php
+					$parts = [];
+					if ( $results['created'] > 0 ) {
+						/* translators: %d: number of products created. */
+						$parts[] = sprintf( _n( '%d product created', '%d products created', $results['created'], 'farm-stand-manager' ), $results['created'] );
+					}
+					if ( $results['updated'] > 0 ) {
+						/* translators: %d: number of products updated. */
+						$parts[] = sprintf( _n( '%d product updated', '%d products updated', $results['updated'], 'farm-stand-manager' ), $results['updated'] );
+					}
+					echo esc_html( implode( ', ', $parts ) ?: __( 'No changes made.', 'farm-stand-manager' ) );
+					?>
+				</p>
+			</div>
+			<?php if ( ! empty( $results['errors'] ) ) : ?>
+				<div class="notice notice-warning">
+					<p><strong><?php esc_html_e( 'Some rows had issues:', 'farm-stand-manager' ); ?></strong></p>
+					<ul style="list-style:disc;padding-left:20px;">
+						<?php foreach ( $results['errors'] as $error ) : ?>
+							<li><?php echo esc_html( $error ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
+		<?php endif; ?>
 
-        <div class="lfuf-product-io__panels">
-            <!-- ── Export ── -->
-            <div class="lfuf-product-io__panel">
-                <h2><?php esc_html_e('Export', 'farm-stand-manager'); ?></h2>
-                <p><?php printf(
-                    /* translators: %d: number of published products. */
-                    esc_html__('Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits.', 'farm-stand-manager'),
-                    (int) $product_count,
-                ); ?></p>
-                <a
-                    href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=farm-stand-product-io&lfuf_export_products=1'), 'lfuf_export_products')); ?>"
-                    class="button button-primary"
-                    <?php disabled($product_count, 0); ?>
-                >
-                    <?php esc_html_e('Download CSV', 'farm-stand-manager'); ?>
-                </a>
-            </div>
+		<div class="lfuf-product-io__panels">
+			<!-- ── Export ── -->
+			<div class="lfuf-product-io__panel">
+				<h2><?php esc_html_e( 'Export', 'farm-stand-manager' ); ?></h2>
+				<p>
+				<?php
+				printf(
+					/* translators: %d: number of published products. */
+					esc_html__( 'Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits.', 'farm-stand-manager' ),
+					(int) $product_count,
+				);
+				?>
+				</p>
+				<a
+					href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=farm-stand-product-io&lfuf_export_products=1' ), 'lfuf_export_products' ) ); ?>"
+					class="button button-primary"
+					<?php disabled( $product_count, 0 ); ?>
+				>
+					<?php esc_html_e( 'Download CSV', 'farm-stand-manager' ); ?>
+				</a>
+			</div>
 
-            <!-- ── Import ── -->
-            <div class="lfuf-product-io__panel">
-                <h2><?php esc_html_e('Import', 'farm-stand-manager'); ?></h2>
-                <p><?php esc_html_e('Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated.', 'farm-stand-manager'); ?></p>
+			<!-- ── Import ── -->
+			<div class="lfuf-product-io__panel">
+				<h2><?php esc_html_e( 'Import', 'farm-stand-manager' ); ?></h2>
+				<p><?php esc_html_e( 'Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated.', 'farm-stand-manager' ); ?></p>
 
-                <form method="post" enctype="multipart/form-data">
-                    <?php wp_nonce_field('lfuf_import_products'); ?>
-                    <input type="hidden" name="lfuf_import_products" value="1">
+				<form method="post" enctype="multipart/form-data">
+					<?php wp_nonce_field( 'lfuf_import_products' ); ?>
+					<input type="hidden" name="lfuf_import_products" value="1">
 
-                    <p>
-                        <input type="file" name="lfuf_csv" accept=".csv,text/csv" required>
-                    </p>
+					<p>
+						<input type="file" name="lfuf_csv" accept=".csv,text/csv" required>
+					</p>
 
-                    <p>
-                        <button type="submit" class="button button-primary">
-                            <?php esc_html_e('Upload & Import', 'farm-stand-manager'); ?>
-                        </button>
-                    </p>
-                </form>
+					<p>
+						<button type="submit" class="button button-primary">
+							<?php esc_html_e( 'Upload & Import', 'farm-stand-manager' ); ?>
+						</button>
+					</p>
+				</form>
 
-                <details style="margin-top:16px;">
-                    <summary style="cursor:pointer;font-weight:600;font-size:13px;">
-                        <?php esc_html_e('CSV format reference', 'farm-stand-manager'); ?>
-                    </summary>
-                    <div style="margin-top:8px;padding:12px;background:#f9fafb;border-radius:4px;font-size:13px;">
-                        <p><?php esc_html_e('The CSV should have these columns (in any order):', 'farm-stand-manager'); ?></p>
-                        <table class="widefat" style="max-width:600px;">
-                            <thead>
-                                <tr>
-                                    <th><?php esc_html_e('Column', 'farm-stand-manager'); ?></th>
-                                    <th><?php esc_html_e('Required', 'farm-stand-manager'); ?></th>
-                                    <th><?php esc_html_e('Example', 'farm-stand-manager'); ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><code>title</code></td><td><?php esc_html_e('Yes', 'farm-stand-manager'); ?></td><td>Arugula</td></tr>
-                                <tr><td><code>status</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>publish</td></tr>
-                                <tr><td><code>excerpt</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Peppery and fresh</td></tr>
-                                <tr><td><code>price</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>$4</td></tr>
-                                <tr><td><code>unit</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>bunch</td></tr>
-                                <tr><td><code>growing_notes</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>No-till, heirloom variety</td></tr>
-                                <tr><td><code>product_types</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Produce</td></tr>
-                                <tr><td><code>seasons</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Spring|Fall</td></tr>
-                                <tr><td><code>sources</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>Anson Mills|Boulted Bread</td></tr>
-                                <tr><td><code>featured_image_url</code></td><td><?php esc_html_e('No', 'farm-stand-manager'); ?></td><td>https://example.com/arugula.jpg</td></tr>
-                            </tbody>
-                        </table>
-                        <p style="margin-top:8px;">
-                            <?php esc_html_e('Use pipes (|) to separate multiple values in product_types, seasons, and sources.', 'farm-stand-manager'); ?>
-                        </p>
-                        <p><?php esc_html_e('Tip: export your existing products first to see the format, then edit the CSV and re-import.', 'farm-stand-manager'); ?></p>
-                    </div>
-                </details>
-            </div>
-        </div>
-    </div>
+				<details style="margin-top:16px;">
+					<summary style="cursor:pointer;font-weight:600;font-size:13px;">
+						<?php esc_html_e( 'CSV format reference', 'farm-stand-manager' ); ?>
+					</summary>
+					<div style="margin-top:8px;padding:12px;background:#f9fafb;border-radius:4px;font-size:13px;">
+						<p><?php esc_html_e( 'The CSV should have these columns (in any order):', 'farm-stand-manager' ); ?></p>
+						<table class="widefat" style="max-width:600px;">
+							<thead>
+								<tr>
+									<th><?php esc_html_e( 'Column', 'farm-stand-manager' ); ?></th>
+									<th><?php esc_html_e( 'Required', 'farm-stand-manager' ); ?></th>
+									<th><?php esc_html_e( 'Example', 'farm-stand-manager' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><td><code>title</code></td><td><?php esc_html_e( 'Yes', 'farm-stand-manager' ); ?></td><td>Arugula</td></tr>
+								<tr><td><code>status</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>publish</td></tr>
+								<tr><td><code>excerpt</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>Peppery and fresh</td></tr>
+								<tr><td><code>price</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>$4</td></tr>
+								<tr><td><code>unit</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>bunch</td></tr>
+								<tr><td><code>growing_notes</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>No-till, heirloom variety</td></tr>
+								<tr><td><code>product_types</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>Produce</td></tr>
+								<tr><td><code>seasons</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>Spring|Fall</td></tr>
+								<tr><td><code>sources</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>Anson Mills|Boulted Bread</td></tr>
+								<tr><td><code>featured_image_url</code></td><td><?php esc_html_e( 'No', 'farm-stand-manager' ); ?></td><td>https://example.com/arugula.jpg</td></tr>
+							</tbody>
+						</table>
+						<p style="margin-top:8px;">
+							<?php esc_html_e( 'Use pipes (|) to separate multiple values in product_types, seasons, and sources.', 'farm-stand-manager' ); ?>
+						</p>
+						<p><?php esc_html_e( 'Tip: export your existing products first to see the format, then edit the CSV and re-import.', 'farm-stand-manager' ); ?></p>
+					</div>
+				</details>
+			</div>
+		</div>
+	</div>
 
-    <style>
-        .lfuf-product-io__panels {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-        .lfuf-product-io__panel {
-            background: #fff;
-            border: 1px solid #dcdcde;
-            border-radius: 0.375rem;
-            padding: 1.25rem 1.5rem;
-        }
-        .lfuf-product-io__panel h2 {
-            margin-top: 0;
-            font-size: 1.1rem;
-        }
-    </style>
-    <?php
+	<style>
+		.lfuf-product-io__panels {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+			gap: 1.5rem;
+			margin-top: 1rem;
+		}
+		.lfuf-product-io__panel {
+			background: #fff;
+			border: 1px solid #dcdcde;
+			border-radius: 0.375rem;
+			padding: 1.25rem 1.5rem;
+		}
+		.lfuf-product-io__panel h2 {
+			margin-top: 0;
+			font-size: 1.1rem;
+		}
+	</style>
+	<?php
 }
