@@ -3,7 +3,7 @@
  * Plugin Name:       Farm Stand Manager
  * Plugin URI:        https://github.com/jwincek/farm-stand-manager
  * Description:       Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
- * Version:           1.0.2
+ * Version:           1.1.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            Jerome Wincek
@@ -19,7 +19,7 @@ namespace Leftfield;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION    = '1.0.2';
+const VERSION    = '1.1.0';
 const PLUGIN_DIR = __DIR__;
 const PREFIX     = 'lfuf';
 

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-hidden="true" focusable="false">
+  <rect width="240" height="240" fill="#F6F2E3"/>
+  <g transform="translate(120,120)" fill="#A79445" opacity="0.5">
+    <!-- Lid -->
+    <rect x="-34" y="-70" width="68" height="20" rx="6"/>
+    <!-- Neck -->
+    <rect x="-28" y="-52" width="56" height="10"/>
+    <!-- Body with shoulders -->
+    <path d="M -28 -44
+             C -28 -30 -50 -26 -50 -6
+             L -50 56
+             C -50 64 -44 68 -36 68
+             L 36 68
+             C 44 68 50 64 50 56
+             L 50 -6
+             C 50 -26 28 -30 28 -44 Z"/>
+    <!-- Contents line, so it reads as a full jar. -->
+    <rect x="-40" y="8" width="80" height="6" rx="3" fill="#F6F2E3" opacity="0.9"/>
+  </g>
+</svg>

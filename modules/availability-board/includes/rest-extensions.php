@@ -177,8 +177,10 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 			: [];
 
 		// Thumbnail.
-		$thumb_id  = get_post_thumbnail_id( $pid );
-		$thumb_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'thumbnail' ) : '';
+		// Featured image if the product has one, otherwise the placeholder for
+		// its product type. Resolved here rather than in the block so the
+		// server render, the editor preview and any REST consumer all agree.
+		$thumb_url = \Leftfield\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
 
 		$items[] = [
 			'availability_id' => (int) $row->availability_id,

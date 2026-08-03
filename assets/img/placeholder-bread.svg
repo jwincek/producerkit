@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-hidden="true" focusable="false">
+  <rect width="240" height="240" fill="#F7F1E6"/>
+  <g transform="translate(120,120)" opacity="0.5">
+    <!-- Boule: flat base, domed top. -->
+    <path d="M -78 34
+             C -78 -18 -46 -50 0 -50
+             C 46 -50 78 -18 78 34
+             C 78 42 72 46 62 46
+             L -62 46
+             C -72 46 -78 42 -78 34 Z"
+          fill="#B08E5E"/>
+    <!-- Scoring slashes. -->
+    <g stroke="#F7F1E6" stroke-width="9" stroke-linecap="round">
+      <line x1="-34" y1="-6" x2="-10" y2="-30"/>
+      <line x1="-6"  y1="6"  x2="18"  y2="-18"/>
+      <line x1="22"  y1="18" x2="46"  y2="-6"/>
+    </g>
+  </g>
+</svg>

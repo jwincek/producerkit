@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-hidden="true" focusable="false">
+  <rect width="240" height="240" fill="#EDF6EF"/>
+  <g transform="translate(120,120)" opacity="0.5">
+    <!-- Sprout: two cotyledons on a slim stem. -->
+    <g fill="#63A077">
+      <path d="M -5 12 C -50 8 -70 -18 -62 -52 C -24 -46 -5 -18 -5 6 Z"/>
+      <path d="M  5 12 C  50 8  70 -18  62 -52 C  24 -46  5 -18  5 6 Z"/>
+      <path d="M -4 20 C -4 -6 -2 -34 0 -56 C 2 -34 4 -6 4 20 Z"/>
+    </g>
+    <!-- Soil mound, so it reads as planted rather than cut. -->
+    <path d="M -66 30
+             C -66 22 -50 18 0 18
+             C 50 18 66 22 66 30
+             L 66 44
+             C 66 54 58 60 46 60
+             L -46 60
+             C -58 60 -66 54 -66 44 Z"
+          fill="#8A7A62"/>
+  </g>
+</svg>

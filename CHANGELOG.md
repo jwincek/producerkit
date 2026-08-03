@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-03
+
+### Added
+- Products with no featured image now fall back to a muted illustration chosen
+  by their product type, so the availability board and product cards stay
+  visually even on a site that has not uploaded photos yet. Art ships for the
+  five types the plugin seeds by default; a product whose type has no art
+  renders no image, exactly as before.
+- `lfuf_product_placeholder_url` filters the chosen placeholder. Return `''`
+  to switch the feature off entirely.
+
 ## [1.0.2] - 2026-08-03
 
 ### Fixed
@@ -27,7 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   did. Sites whose activation failed under strict mode get their table without
   needing a manual deactivate/reactivate. `lfuf_availability_db_version` was
   previously written but never read.
-
 ## [1.0.1] - 2026-08-02
 
 ### Fixed
@@ -90,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `lfuf_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.1.0
 [1.0.2]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.2
 [1.0.1]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.0
