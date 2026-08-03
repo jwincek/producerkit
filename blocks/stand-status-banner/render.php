@@ -72,7 +72,12 @@ $time_ago = '';
 if ( $last_toggled ) {
 	$toggled_ts = strtotime( $last_toggled );
 	if ( $toggled_ts ) {
-		$time_ago = human_time_diff( $toggled_ts, current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'farm-stand-manager' );
+		// time(), not current_time( 'timestamp' ): _lfuf_ss_last_toggled is
+		// stored with an offset, so strtotime() yields a true UTC epoch, while
+		// current_time( 'timestamp' ) yields epoch + gmt_offset. Comparing the
+		// two made a stand toggled seconds ago read "4 hours ago" on a UTC-4
+		// site — off by exactly the site's offset, in whichever direction.
+		$time_ago = human_time_diff( $toggled_ts, time() ) . ' ' . __( 'ago', 'farm-stand-manager' );
 	}
 }
 

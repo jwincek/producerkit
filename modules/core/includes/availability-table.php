@@ -249,8 +249,15 @@ add_action( 'lfuf_availability_cleanup', __NAMESPACE__ . '\\purge_expired' );
  */
 function schedule_cleanup(): void {
 	if ( ! wp_next_scheduled( 'lfuf_availability_cleanup' ) ) {
+		// wp_schedule_event() wants a true UTC epoch. Basing the calculation on
+		// current_time( 'timestamp' ) produced a local-wall-clock epoch instead,
+		// so the "03:00" cleanup actually ran gmt_offset hours away from 3am.
+		// Resolving 'tomorrow 03:00' inside wp_timezone() and taking the real
+		// timestamp gets 3am site-local, correctly expressed in UTC.
+		$next_run = new \DateTimeImmutable( 'tomorrow 03:00', wp_timezone() );
+
 		wp_schedule_event(
-			strtotime( 'tomorrow 03:00', current_time( 'timestamp' ) ),
+			$next_run->getTimestamp(),
 			'daily',
 			'lfuf_availability_cleanup',
 		);

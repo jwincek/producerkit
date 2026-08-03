@@ -146,7 +146,11 @@ function render_dashboard(): void {
 				<div class="lfuf-dashboard__stand-meta">
 					<?php
 					if ( $stand_data['last_toggled'] ) :
-						$ago = human_time_diff( strtotime( $stand_data['last_toggled'] ), current_time( 'timestamp' ) );
+						// time(), not current_time( 'timestamp' ) — see the note in
+						// blocks/stand-status-banner/render.php. strtotime() returns a
+						// true epoch; current_time( 'timestamp' ) returns epoch plus
+						// gmt_offset, so mixing them skews by exactly that offset.
+						$ago = human_time_diff( strtotime( $stand_data['last_toggled'] ), time() );
 						?>
 						<span>
 						<?php

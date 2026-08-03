@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: farm stand, farmers market, availability, products, events
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,10 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed relative times ("Updated N ago") on the stand status banner and the admin dashboard, which were off by the site's UTC offset.
+* Fixed the daily availability cleanup running at the wrong hour on any site not set to UTC.
+
 = 1.0.0 =
 * Initial public release.
 * Products, sources, locations, and events as custom post types.
@@ -117,6 +121,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Fixes relative timestamps and the daily cleanup schedule on sites not set to UTC.
 
 = 1.0.0 =
 Initial public release.

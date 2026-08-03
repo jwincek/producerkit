@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-08-02
+
+### Fixed
+- Relative times on the stand status banner and the admin dashboard were off
+  by the site's UTC offset — a stand toggled seconds ago read "4 hours ago" on
+  a UTC-4 site. `strtotime()` returns a true epoch while
+  `current_time( 'timestamp' )` returns epoch plus the offset, and the two were
+  being compared directly.
+- The daily availability cleanup was scheduled from that same local-wall-clock
+  value, but `wp_schedule_event()` expects a real epoch, so the "03:00" job
+  actually ran `gmt_offset` hours away from 3am — only correct on UTC sites.
+  Now resolved through `wp_timezone()` and covered by a regression test across
+  four timezones.
+
 ## [1.0.0] - 2026-08-02
 
 ### Added
@@ -55,5 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `lfuf_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.0

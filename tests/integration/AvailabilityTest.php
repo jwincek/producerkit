@@ -172,4 +172,35 @@ final class AvailabilityTest extends WP_UnitTestCase {
 		wp_delete_post( $location, true );
 		$this->assertSame( 1, $this->count_rows_for( $product ), 'location_id=0 ("all locations") rows must survive' );
 	}
+
+	/**
+	 * The cleanup cron must fire at 03:00 *site-local*, on any timezone.
+	 *
+	 * Regression: the schedule was computed from current_time( 'timestamp' ),
+	 * which is epoch + gmt_offset rather than a real epoch. wp_schedule_event()
+	 * wants a real epoch, so the job ran gmt_offset hours away from 3am — four
+	 * hours off on a UTC-4 site, and silently correct only on UTC.
+	 */
+	public function test_cleanup_cron_is_scheduled_for_three_am_site_local(): void {
+		foreach ( [ 'UTC', 'America/New_York', 'Asia/Kolkata', 'Pacific/Auckland' ] as $tz ) {
+			update_option( 'timezone_string', $tz );
+			wp_clear_scheduled_hook( 'lfuf_availability_cleanup' );
+
+			\Leftfield\Core\Availability\schedule_cleanup();
+
+			$ts = wp_next_scheduled( 'lfuf_availability_cleanup' );
+			$this->assertNotFalse( $ts, "cleanup was not scheduled under $tz" );
+
+			// Render the scheduled instant in the site's own timezone.
+			$local = ( new DateTimeImmutable( '@' . $ts ) )->setTimezone( wp_timezone() );
+
+			$this->assertSame(
+				'03:00',
+				$local->format( 'H:i' ),
+				"cleanup should run at 03:00 local under $tz, got {$local->format( 'H:i' )}"
+			);
+		}
+
+		wp_clear_scheduled_hook( 'lfuf_availability_cleanup' );
+	}
 }
