@@ -1,0 +1,174 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php-lint:
+    name: PHP Coding Standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPCS
+        run: composer lint
+
+  tests:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          extensions: mysqli
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # The unit suite loads no WordPress, so it can run before the test
+      # library exists and fails fast on pure-logic regressions.
+      - name: Unit suite
+        run: composer test:unit
+
+      # An explicit version, not "latest": the test library comes from the
+      # wordpress-develop repository, where "latest" is not a tag.
+      - name: Install the WordPress test library
+        run: bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:3306 7.0.2
+
+      - name: Integration suite
+        run: composer test:integration
+
+  validate-config:
+    name: Contract Validator
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      # Cross-checks the declarations scattered across the plugin: text domain
+      # against slug, the module registry against the filesystem, block.json
+      # asset references, ability categories, REST permission callbacks, and
+      # version consistency. That last one matters most at release time — a
+      # Stable tag that doesn't match the tagged release makes WordPress.org
+      # serve the wrong code.
+      - name: Validate contracts
+        run: php bin/validate-config.php
+
+  js-lint:
+    name: JS & CSS Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint JavaScript
+        run: npm run lint:js
+
+      - name: Lint CSS
+        run: npm run lint:css
+
+  build:
+    name: Build distribution zip
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # The script fails if a dev file leaks into the build or a runtime file
+      # goes missing, so this job is a release-packaging regression test and
+      # not merely an artifact producer.
+      - name: Build distribution
+        id: build
+        run: |
+          # pipefail matters: the runner's default shell sets -e but not
+          # pipefail, so without it a failing build would be masked by tail's
+          # exit 0 and this job would report green on a broken package.
+          set -euo pipefail
+          VERSION="$(./bin/build-dist.sh --zip | tail -1)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Upload zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: farm-stand-manager-${{ steps.build.outputs.version }}
+          path: build/*.zip
+          if-no-files-found: error
+
+  plugin-check:
+    name: Plugin Check (WordPress.org review suite)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # Checked against the BUILT output, not the repo. The repo carries dev
+      # files (bin/, phpcs.xml.dist, dotfiles) that never ship; running the
+      # checks there reports errors users would never hit while missing
+      # whatever the packaging step actually produces.
+      - name: Build distribution
+        run: ./bin/build-dist.sh
+
+      - name: Run Plugin Check
+        uses: WordPress/plugin-check-action@v1
+        with:
+          build-dir: ./build/farm-stand-manager
+          # Warnings are dominated by PHPCS treating block render.php
+          # template-scope variables as globals — WordPress includes those
+          # files inside a function scope, so they are not. phpcs.xml.dist
+          # already excludes /blocks/* for that sniff; Plugin Check runs its
+          # own ruleset and cannot see that config.
+          ignore-warnings: true

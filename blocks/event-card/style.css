@@ -281,6 +281,7 @@
 /* ── Responsive ────────────────────────────────── */
 
 @media (max-width: 480px) {
+
     .lfuf-event-card {
         flex-direction: column;
     }
@@ -344,7 +345,7 @@
 .lfuf-event-card__donate-link:focus-visible,
 .lfuf-event-card__rsvp-btn:focus-visible,
 .lfuf-event-card__rsvp-cancel-btn:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
@@ -357,6 +358,7 @@
 /* ── Reduced motion ────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-event-card,
     .lfuf-event-card__rsvp-btn,
     .lfuf-event-card__donate-link {
@@ -367,6 +369,7 @@
 /* ── High contrast mode ────────────────────────── */
 
 @media (forced-colors: active) {
+
     .lfuf-event-card {
         border-color: CanvasText;
     }

@@ -15,9 +15,7 @@ declare(strict_types=1);
 
 namespace Leftfield\Notifications;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-$module_dir = __DIR__;
-
-require_once $module_dir . '/includes/email-notifications.php';
-require_once $module_dir . '/includes/preorder-notifications.php';
+require_once __DIR__ . '/includes/email-notifications.php';
+require_once __DIR__ . '/includes/preorder-notifications.php';

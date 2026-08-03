@@ -72,12 +72,12 @@
 
 .lfuf-avail-board__filter-btn--active {
     opacity: 1;
-    border-color: currentColor;
+    border-color: currentcolor;
     transform: scale(1.05);
 }
 
 .lfuf-avail-board__filter-btn:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
@@ -219,7 +219,7 @@
 }
 
 .lfuf-avail-board__item-name:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
     border-radius: 2px;
 }
@@ -273,9 +273,13 @@
 }
 
 .lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+
 .lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+
 .lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+
 .lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+
 .lfuf-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
 
 /* ── Footer ────────────────────────────────────── */
@@ -313,6 +317,7 @@
 /* ── Responsive ────────────────────────────────── */
 
 @media (max-width: 480px) {
+
     .lfuf-avail-board__items--grid {
         grid-template-columns: 1fr;
     }
@@ -336,6 +341,7 @@
 /* ── Reduced motion ────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-avail-board--grid .lfuf-avail-board__item,
     .lfuf-avail-board--list .lfuf-avail-board__item,
     .lfuf-avail-board__filter-btn {
@@ -350,6 +356,7 @@
 /* ── High contrast mode ────────────────────────── */
 
 @media (forced-colors: active) {
+
     .lfuf-avail-board--grid .lfuf-avail-board__item {
         border-color: CanvasText;
     }

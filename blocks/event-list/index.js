@@ -1,22 +1,26 @@
 /**
  * Event List — editor block (no-build IIFE).
+ * @param blocks
+ * @param element
+ * @param blockEditor
+ * @param components
  */
 ( function ( blocks, element, blockEditor, components ) {
 	'use strict';
 
-	var el = element.createElement;
-	var Fragment = element.Fragment;
-	var useState = element.useState;
-	var useEffect = element.useEffect;
-	var registerBlockType = blocks.registerBlockType;
-	var InspectorControls = blockEditor.InspectorControls;
-	var useBlockProps = blockEditor.useBlockProps;
-	var PanelBody = components.PanelBody;
-	var ToggleControl = components.ToggleControl;
-	var RangeControl = components.RangeControl;
-	var TextControl = components.TextControl;
-	var Placeholder = components.Placeholder;
-	var Spinner = components.Spinner;
+	const el = element.createElement;
+	const Fragment = element.Fragment;
+	const useState = element.useState;
+	const useEffect = element.useEffect;
+	const registerBlockType = blocks.registerBlockType;
+	const InspectorControls = blockEditor.InspectorControls;
+	const useBlockProps = blockEditor.useBlockProps;
+	const PanelBody = components.PanelBody;
+	const ToggleControl = components.ToggleControl;
+	const RangeControl = components.RangeControl;
+	const TextControl = components.TextControl;
+	const Placeholder = components.Placeholder;
+	const Spinner = components.Spinner;
 
 	function getRestBase() {
 		return ( window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
@@ -24,23 +28,35 @@
 
 	/**
 	 * Format an ISO datetime as "Saturday, April 12" / "2:00 PM – 5:00 PM".
+	 * @param start
+	 * @param end
 	 */
 	function formatEventDate( start, end ) {
-		if ( ! start ) return {};
-		var s = new Date( start );
-		if ( isNaN( s ) ) return {};
-		var dateStr = s.toLocaleDateString( undefined, {
-			weekday: 'long', month: 'long', day: 'numeric',
+		if ( ! start ) {
+			return {};
+		}
+		const s = new Date( start );
+		if ( isNaN( s ) ) {
+			return {};
+		}
+		const dateStr = s.toLocaleDateString( undefined, {
+			weekday: 'long',
+			month: 'long',
+			day: 'numeric',
 		} );
-		var timeStr = s.toLocaleTimeString( undefined, {
-			hour: 'numeric', minute: '2-digit',
+		let timeStr = s.toLocaleTimeString( undefined, {
+			hour: 'numeric',
+			minute: '2-digit',
 		} );
 		if ( end ) {
-			var e = new Date( end );
+			const e = new Date( end );
 			if ( ! isNaN( e ) ) {
-				timeStr += ' \u2013 ' + e.toLocaleTimeString( undefined, {
-					hour: 'numeric', minute: '2-digit',
-				} );
+				timeStr +=
+					' \u2013 ' +
+					e.toLocaleTimeString( undefined, {
+						hour: 'numeric',
+						minute: '2-digit',
+					} );
 			}
 		}
 		return { date: dateStr, time: timeStr };
@@ -48,75 +64,97 @@
 
 	registerBlockType( 'lfuf/event-list', {
 		edit: function EditEventList( props ) {
-			var attributes = props.attributes;
-			var setAttributes = props.setAttributes;
-			var showPastEvents = attributes.showPastEvents;
-			var perPage = attributes.perPage;
-			var showImages = attributes.showImages;
-			var showRsvp = attributes.showRsvp;
-			var showLocation = attributes.showLocation;
-			var showTypeFilters = attributes.showTypeFilters;
+			const attributes = props.attributes;
+			const setAttributes = props.setAttributes;
+			const showPastEvents = attributes.showPastEvents;
+			const perPage = attributes.perPage;
+			const showImages = attributes.showImages;
+			const showRsvp = attributes.showRsvp;
+			const showLocation = attributes.showLocation;
+			const showTypeFilters = attributes.showTypeFilters;
 
 			// Event data from REST.
-			var _upcoming = useState( null );
-			var upcoming = _upcoming[0];
-			var setUpcoming = _upcoming[1];
+			const _upcoming = useState( null );
+			const upcoming = _upcoming[ 0 ];
+			const setUpcoming = _upcoming[ 1 ];
 
-			var _past = useState( null );
-			var past = _past[0];
-			var setPast = _past[1];
+			const _past = useState( null );
+			const past = _past[ 0 ];
+			const setPast = _past[ 1 ];
 
-			var _loading = useState( false );
-			var loading = _loading[0];
-			var setLoading = _loading[1];
+			const _loading = useState( false );
+			const loading = _loading[ 0 ];
+			const setLoading = _loading[ 1 ];
 
-			var _error = useState( '' );
-			var error = _error[0];
-			var setError = _error[1];
+			const _error = useState( '' );
+			const error = _error[ 0 ];
+			const setError = _error[ 1 ];
 
 			// Fetch upcoming events (and past if enabled).
-			useEffect( function () {
-				setLoading( true );
-				setError( '' );
-				var fetches = [
-					fetch( getRestBase() + '/events/upcoming?per_page=' + perPage )
-						.then( function ( r ) {
-							if ( ! r.ok ) throw new Error( r.status );
+			useEffect(
+				function () {
+					setLoading( true );
+					setError( '' );
+					const fetches = [
+						fetch(
+							getRestBase() +
+								'/events/upcoming?per_page=' +
+								perPage
+						).then( function ( r ) {
+							if ( ! r.ok ) {
+								throw new Error( r.status );
+							}
 							return r.json();
 						} ),
-				];
-				if ( showPastEvents ) {
-					fetches.push(
-						fetch( getRestBase() + '/events/past?per_page=' + perPage )
-							.then( function ( r ) {
-								if ( ! r.ok ) throw new Error( r.status );
+					];
+					if ( showPastEvents ) {
+						fetches.push(
+							fetch(
+								getRestBase() +
+									'/events/past?per_page=' +
+									perPage
+							).then( function ( r ) {
+								if ( ! r.ok ) {
+									throw new Error( r.status );
+								}
 								return r.json();
 							} )
-					);
-				}
-				Promise.all( fetches )
-					.then( function ( results ) {
-						setUpcoming( results[0] || [] );
-						setPast( results[1] || [] );
-						setLoading( false );
-					} )
-					.catch( function () {
-						setError( 'Could not load event data.' );
-						setUpcoming( [] );
-						setPast( [] );
-						setLoading( false );
-					} );
-			}, [ perPage, showPastEvents ] );
+						);
+					}
+					Promise.all( fetches )
+						.then( function ( results ) {
+							setUpcoming( results[ 0 ] || [] );
+							setPast( results[ 1 ] || [] );
+							setLoading( false );
+						} )
+						.catch( function () {
+							setError( 'Could not load event data.' );
+							setUpcoming( [] );
+							setPast( [] );
+							setLoading( false );
+						} );
+				},
+				[ perPage, showPastEvents ]
+			);
 
-			var blockProps = useBlockProps( { className: 'lfuf-event-list' } );
+			const blockProps = useBlockProps( {
+				className: 'lfuf-event-list',
+			} );
 
 			// Loading.
 			if ( loading ) {
-				return el( Fragment, null,
+				return el(
+					Fragment,
+					null,
 					renderInspector(),
-					el( 'div', blockProps,
-						el( 'div', { className: 'lfuf-event-list__loading' },
-							el( Spinner ), ' Loading events\u2026'
+					el(
+						'div',
+						blockProps,
+						el(
+							'div',
+							{ className: 'lfuf-event-list__loading' },
+							el( Spinner ),
+							' Loading events\u2026'
 						)
 					)
 				);
@@ -124,9 +162,13 @@
 
 			// Error.
 			if ( error ) {
-				return el( Fragment, null,
+				return el(
+					Fragment,
+					null,
 					renderInspector(),
-					el( 'div', blockProps,
+					el(
+						'div',
+						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
 							label: 'Event List',
@@ -136,14 +178,22 @@
 				);
 			}
 
-			var hasEvents = ( upcoming && upcoming.length > 0 ) || ( past && past.length > 0 );
+			const hasEvents =
+				( upcoming && upcoming.length > 0 ) ||
+				( past && past.length > 0 );
 
 			// Empty.
 			if ( ! hasEvents ) {
-				return el( Fragment, null,
+				return el(
+					Fragment,
+					null,
 					renderInspector(),
-					el( 'div', blockProps,
-						el( 'p', { className: 'lfuf-event-list__empty' },
+					el(
+						'div',
+						blockProps,
+						el(
+							'p',
+							{ className: 'lfuf-event-list__empty' },
 							attributes.emptyMessage
 						)
 					)
@@ -151,41 +201,62 @@
 			}
 
 			// Collect unique event types for the filter toolbar preview.
-			var typeMap = {};
+			const typeMap = {};
 			( upcoming || [] ).concat( past || [] ).forEach( function ( ev ) {
-				if ( ev.event_types && ev.event_types[0] && ev.event_slugs && ev.event_slugs[0] ) {
-					typeMap[ ev.event_slugs[0] ] = ev.event_types[0];
+				if (
+					ev.event_types &&
+					ev.event_types[ 0 ] &&
+					ev.event_slugs &&
+					ev.event_slugs[ 0 ]
+				) {
+					typeMap[ ev.event_slugs[ 0 ] ] = ev.event_types[ 0 ];
 				}
 			} );
-			var typeEntries = Object.keys( typeMap );
+			const typeEntries = Object.keys( typeMap );
 
 			// Live preview.
-			return el( Fragment, null,
+			return el(
+				Fragment,
+				null,
 				renderInspector(),
-				el( 'div', blockProps,
+				el(
+					'div',
+					blockProps,
 
 					// Type filter toolbar.
-					( showTypeFilters && typeEntries.length > 1 )
-						? el( 'div', { className: 'lfuf-event-list__filters' },
-							el( 'span', {
-								className: 'lfuf-event-list__filter-btn lfuf-event-list__filter-btn--active',
-							}, 'All Events' ),
-							typeEntries.map( function ( slug ) {
-								return el( 'span', {
-									key: slug,
-									className: 'lfuf-event-list__filter-btn',
-								}, typeMap[ slug ] );
-							} )
-						)
+					showTypeFilters && typeEntries.length > 1
+						? el(
+								'div',
+								{ className: 'lfuf-event-list__filters' },
+								el(
+									'span',
+									{
+										className:
+											'lfuf-event-list__filter-btn lfuf-event-list__filter-btn--active',
+									},
+									'All Events'
+								),
+								typeEntries.map( function ( slug ) {
+									return el(
+										'span',
+										{
+											key: slug,
+											className:
+												'lfuf-event-list__filter-btn',
+										},
+										typeMap[ slug ]
+									);
+								} )
+						  )
 						: null,
 
 					// Upcoming section.
-					( upcoming && upcoming.length > 0 )
+					upcoming && upcoming.length > 0
 						? renderSection( 'Upcoming', upcoming, false )
 						: null,
 
 					// Past section.
-					( showPastEvents && past && past.length > 0 )
+					showPastEvents && past && past.length > 0
 						? renderSection( 'Past Events', past, true )
 						: null
 				)
@@ -193,12 +264,23 @@
 
 			/**
 			 * Render a section of event cards.
+			 * @param title
+			 * @param events
+			 * @param isPast
 			 */
 			function renderSection( title, events, isPast ) {
-				return el( 'div', {
-					className: 'lfuf-event-list__section' + ( isPast ? ' lfuf-event-list__section--past' : '' ),
-				},
-					el( 'h3', { className: 'lfuf-event-list__section-title' }, title ),
+				return el(
+					'div',
+					{
+						className:
+							'lfuf-event-list__section' +
+							( isPast ? ' lfuf-event-list__section--past' : '' ),
+					},
+					el(
+						'h3',
+						{ className: 'lfuf-event-list__section-title' },
+						title
+					),
 					events.map( function ( ev ) {
 						return renderEventCard( ev, isPast );
 					} )
@@ -207,121 +289,228 @@
 
 			/**
 			 * Render a single event card preview.
+			 * @param ev
+			 * @param isPast
 			 */
 			function renderEventCard( ev, isPast ) {
-				var dt = formatEventDate( ev.start, ev.end );
-				var rsvp = ev.rsvp;
+				const dt = formatEventDate( ev.start, ev.end );
+				const rsvp = ev.rsvp;
 
-				return el( 'article', {
-					key: ev.id,
-					className: 'lfuf-event-card' + ( ev.cancelled ? ' lfuf-event-card--cancelled' : '' ),
-				},
+				return el(
+					'article',
+					{
+						key: ev.id,
+						className:
+							'lfuf-event-card' +
+							( ev.cancelled
+								? ' lfuf-event-card--cancelled'
+								: '' ),
+					},
 					// Image.
-					( showImages && ev.thumbnail_url )
-						? el( 'div', { className: 'lfuf-event-card__image' },
-							el( 'img', {
-								src: ev.thumbnail_url,
-								alt: '',
-								loading: 'lazy',
-							} )
-						)
+					showImages && ev.thumbnail_url
+						? el(
+								'div',
+								{ className: 'lfuf-event-card__image' },
+								el( 'img', {
+									src: ev.thumbnail_url,
+									alt: '',
+									loading: 'lazy',
+								} )
+						  )
 						: null,
 
 					// Body.
-					el( 'div', { className: 'lfuf-event-card__body' },
+					el(
+						'div',
+						{ className: 'lfuf-event-card__body' },
 
 						// Header (type badge + cancelled badge).
-						el( 'div', { className: 'lfuf-event-card__header' },
-							( ev.event_types && ev.event_types[0] )
-								? el( 'span', { className: 'lfuf-event-card__type-badge' },
-									ev.event_types[0]
-								)
+						el(
+							'div',
+							{ className: 'lfuf-event-card__header' },
+							ev.event_types && ev.event_types[ 0 ]
+								? el(
+										'span',
+										{
+											className:
+												'lfuf-event-card__type-badge',
+										},
+										ev.event_types[ 0 ]
+								  )
 								: null,
 							ev.cancelled
-								? el( 'span', { className: 'lfuf-event-card__cancelled-badge' }, 'Cancelled' )
+								? el(
+										'span',
+										{
+											className:
+												'lfuf-event-card__cancelled-badge',
+										},
+										'Cancelled'
+								  )
 								: null
 						),
 
 						// Title.
-						el( 'h3', { className: 'lfuf-event-card__title' },
+						el(
+							'h3',
+							{ className: 'lfuf-event-card__title' },
 							el( 'span', null, ev.title )
 						),
 
 						// Date & time.
 						dt.date
-							? el( 'p', { className: 'lfuf-event-card__datetime' },
-								el( 'span', { className: 'lfuf-event-card__date' }, dt.date ),
-								dt.time
-									? el( 'span', { className: 'lfuf-event-card__time' }, dt.time )
-									: null
-							)
+							? el(
+									'p',
+									{ className: 'lfuf-event-card__datetime' },
+									el(
+										'span',
+										{ className: 'lfuf-event-card__date' },
+										dt.date
+									),
+									dt.time
+										? el(
+												'span',
+												{
+													className:
+														'lfuf-event-card__time',
+												},
+												dt.time
+										  )
+										: null
+							  )
 							: null,
 
 						// Location.
-						( showLocation && ev.location )
-							? el( 'p', { className: 'lfuf-event-card__location' },
-								'\uD83D\uDCCD ',
-								ev.location.title,
-								ev.location.address
-									? el( 'span', { className: 'lfuf-event-card__address' },
-										' \u2014 ' + ev.location.address
-									)
-									: null
-							)
+						showLocation && ev.location
+							? el(
+									'p',
+									{ className: 'lfuf-event-card__location' },
+									'\uD83D\uDCCD ',
+									ev.location.title,
+									ev.location.address
+										? el(
+												'span',
+												{
+													className:
+														'lfuf-event-card__address',
+												},
+												' \u2014 ' + ev.location.address
+										  )
+										: null
+							  )
 							: null,
 
 						// Excerpt.
 						ev.excerpt
-							? el( 'p', { className: 'lfuf-event-card__excerpt' }, ev.excerpt )
+							? el(
+									'p',
+									{ className: 'lfuf-event-card__excerpt' },
+									ev.excerpt
+							  )
 							: null,
 
 						// Details (cost, bring).
-						( ev.cost_note || ev.what_to_bring )
-							? el( 'div', { className: 'lfuf-event-card__details' },
-								ev.cost_note
-									? el( 'span', { className: 'lfuf-event-card__cost' },
-										'\uD83D\uDCB8 ' + ev.cost_note
-									)
-									: null,
-								ev.what_to_bring
-									? el( 'span', { className: 'lfuf-event-card__bring' },
-										'\uD83E\uDDFA ' + ev.what_to_bring
-									)
-									: null
-							)
+						ev.cost_note || ev.what_to_bring
+							? el(
+									'div',
+									{ className: 'lfuf-event-card__details' },
+									ev.cost_note
+										? el(
+												'span',
+												{
+													className:
+														'lfuf-event-card__cost',
+												},
+												'\uD83D\uDCB8 ' + ev.cost_note
+										  )
+										: null,
+									ev.what_to_bring
+										? el(
+												'span',
+												{
+													className:
+														'lfuf-event-card__bring',
+												},
+												'\uD83E\uDDFA ' +
+													ev.what_to_bring
+										  )
+										: null
+							  )
 							: null,
 
 						// RSVP summary (preview only — no form in editor).
-						( showRsvp && ! isPast && rsvp && rsvp.enabled && ! ev.cancelled )
-							? el( 'div', { className: 'lfuf-event-card__rsvp' },
-								el( 'div', { className: 'lfuf-event-card__rsvp-summary' },
-									rsvp.headcount + ' people coming' +
-									( rsvp.spots_left !== null ? ' \u00b7 ' + rsvp.spots_left + ' spots left' : '' )
-								),
-								rsvp.is_full
-									? el( 'p', { className: 'lfuf-event-card__rsvp-full' }, 'This event is full!' )
-									: rsvp.closed
-										? el( 'p', { className: 'lfuf-event-card__rsvp-closed' }, 'RSVPs are closed.' )
-										: el( 'div', { className: 'lfuf-event-card__rsvp-form' },
-											el( 'input', {
-												type: 'text',
-												className: 'lfuf-event-card__rsvp-input',
-												placeholder: 'Your name',
-												disabled: true,
-											} ),
-											el( 'input', {
-												type: 'number',
-												className: 'lfuf-event-card__rsvp-size',
-												value: 1,
-												disabled: true,
-											} ),
-											el( 'button', {
-												type: 'button',
-												className: 'lfuf-event-card__rsvp-btn',
-												disabled: true,
-											}, "I'm coming!" )
-										)
-							)
+						showRsvp &&
+							! isPast &&
+							rsvp &&
+							rsvp.enabled &&
+							! ev.cancelled
+							? el(
+									'div',
+									{ className: 'lfuf-event-card__rsvp' },
+									el(
+										'div',
+										{
+											className:
+												'lfuf-event-card__rsvp-summary',
+										},
+										rsvp.headcount +
+											' people coming' +
+											( rsvp.spots_left !== null
+												? ' \u00b7 ' +
+												  rsvp.spots_left +
+												  ' spots left'
+												: '' )
+									),
+									rsvp.is_full
+										? el(
+												'p',
+												{
+													className:
+														'lfuf-event-card__rsvp-full',
+												},
+												'This event is full!'
+										  )
+										: rsvp.closed
+										? el(
+												'p',
+												{
+													className:
+														'lfuf-event-card__rsvp-closed',
+												},
+												'RSVPs are closed.'
+										  )
+										: el(
+												'div',
+												{
+													className:
+														'lfuf-event-card__rsvp-form',
+												},
+												el( 'input', {
+													type: 'text',
+													className:
+														'lfuf-event-card__rsvp-input',
+													placeholder: 'Your name',
+													disabled: true,
+												} ),
+												el( 'input', {
+													type: 'number',
+													className:
+														'lfuf-event-card__rsvp-size',
+													value: 1,
+													disabled: true,
+												} ),
+												el(
+													'button',
+													{
+														type: 'button',
+														className:
+															'lfuf-event-card__rsvp-btn',
+														disabled: true,
+													},
+													"I'm coming!"
+												)
+										  )
+							  )
 							: null
 					)
 				);
@@ -340,24 +529,32 @@
 						el( RangeControl, {
 							label: 'Events to show',
 							value: perPage,
-							onChange: function ( val ) { setAttributes( { perPage: val } ); },
+							onChange( val ) {
+								setAttributes( { perPage: val } );
+							},
 							min: 1,
 							max: 50,
 						} ),
 						el( ToggleControl, {
 							label: 'Show past events',
 							checked: showPastEvents,
-							onChange: function ( val ) { setAttributes( { showPastEvents: val } ); },
+							onChange( val ) {
+								setAttributes( { showPastEvents: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show event type filters',
 							checked: showTypeFilters,
-							onChange: function ( val ) { setAttributes( { showTypeFilters: val } ); },
+							onChange( val ) {
+								setAttributes( { showTypeFilters: val } );
+							},
 						} ),
 						el( TextControl, {
 							label: 'Empty state message',
 							value: attributes.emptyMessage,
-							onChange: function ( val ) { setAttributes( { emptyMessage: val } ); },
+							onChange( val ) {
+								setAttributes( { emptyMessage: val } );
+							},
 						} )
 					),
 					el(
@@ -366,17 +563,23 @@
 						el( ToggleControl, {
 							label: 'Show event images',
 							checked: showImages,
-							onChange: function ( val ) { setAttributes( { showImages: val } ); },
+							onChange( val ) {
+								setAttributes( { showImages: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show RSVP forms',
 							checked: showRsvp,
-							onChange: function ( val ) { setAttributes( { showRsvp: val } ); },
+							onChange( val ) {
+								setAttributes( { showRsvp: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show location details',
 							checked: showLocation,
-							onChange: function ( val ) { setAttributes( { showLocation: val } ); },
+							onChange( val ) {
+								setAttributes( { showLocation: val } );
+							},
 						} )
 					)
 				);

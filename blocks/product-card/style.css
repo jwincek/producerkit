@@ -107,9 +107,13 @@
 }
 
 .lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+
 .lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+
 .lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+
 .lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+
 .lfuf-availability-badge--unavailable { background: #f3f4f6; color: #4b5563; }
 
 .lfuf-product-card__quantity-note {
@@ -132,9 +136,11 @@
 }
 
 @media (max-width: 480px) {
+
     .lfuf-product-card {
         flex-direction: column;
     }
+
     .lfuf-product-card__image {
         flex: none;
     }
@@ -151,22 +157,28 @@
 
 .lfuf-product-card__title a:focus-visible,
 .lfuf-product-card__source a:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-product-card { transition: none; }
 }
 
 @media (forced-colors: active) {
+
     .lfuf-product-card { border-color: CanvasText; }
+
     .lfuf-product-card__title a { color: LinkText; }
+
     .lfuf-product-card__source a { color: LinkText; }
+
     .lfuf-availability-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
+
     .lfuf-product-card__season-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;

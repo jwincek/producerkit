@@ -14,14 +14,16 @@
 		if ( typeof window.qrcode !== 'function' ) {
 			return;
 		}
-		var nodes = document.querySelectorAll( '[data-lfuf-qr]:not([data-lfuf-qr-done])' );
+		const nodes = document.querySelectorAll(
+			'[data-lfuf-qr]:not([data-lfuf-qr-done])'
+		);
 		Array.prototype.forEach.call( nodes, function ( node ) {
-			var text = node.getAttribute( 'data-lfuf-qr' );
+			const text = node.getAttribute( 'data-lfuf-qr' );
 			if ( ! text ) {
 				return;
 			}
 			try {
-				var qr = window.qrcode( 0, 'M' ); // Type 0 = auto-size for the data.
+				const qr = window.qrcode( 0, 'M' ); // Type 0 = auto-size for the data.
 				qr.addData( text );
 				qr.make();
 				node.innerHTML = qr.createSvgTag( {

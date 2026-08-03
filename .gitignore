@@ -15,6 +15,9 @@ Thumbs.db
 # Build artifacts
 *.zip
 
+# Generated distribution build (bin/build-dist.sh).
+/build/
+
 # WordPress
 wp-config.php
 wp-content/uploads/

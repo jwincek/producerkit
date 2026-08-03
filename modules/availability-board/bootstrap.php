@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Leftfield\AvailabilityBoard;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-$module_dir = __DIR__;
-
-require_once $module_dir . '/includes/rest-extensions.php';
-require_once $module_dir . '/includes/admin-quick-entry.php';
-require_once $module_dir . '/includes/fresh-sheet.php';
-require_once $module_dir . '/includes/abilities.php';
+require_once __DIR__ . '/includes/rest-extensions.php';
+require_once __DIR__ . '/includes/admin-quick-entry.php';
+require_once __DIR__ . '/includes/fresh-sheet.php';
+require_once __DIR__ . '/includes/abilities.php';

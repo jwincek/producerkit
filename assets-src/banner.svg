@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250" width="772" height="250" role="img" aria-label="Farm Stand Manager">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3E8E41"/>
+      <stop offset="55%" stop-color="#2A6E31"/>
+      <stop offset="100%" stop-color="#174A21"/>
+    </linearGradient>
+    <linearGradient id="root" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFA83F"/>
+      <stop offset="100%" stop-color="#E05F07"/>
+    </linearGradient>
+
+    <!-- The icon mark, reused so the banner and the icon cannot drift apart. -->
+    <g id="carrot">
+      <path d="M -34 -34 a 34 34 0 0 1 68 0 L 7 82 a 8 8 0 0 1 -14 0 Z" fill="url(#root)"/>
+      <g stroke="#B94D06" stroke-width="6" stroke-linecap="round" opacity="0.5">
+        <line x1="-15" y1="4"  x2="15" y2="-6"/>
+        <line x1="-10" y1="40" x2="10" y2="32"/>
+      </g>
+      <g fill="#A5DC52">
+        <path d="M -7 -36 C -44 -50 -58 -80 -54 -100 C -30 -92 -12 -66 -7 -42 Z"/>
+        <path d="M  7 -36 C  44 -50  58 -80  54 -100 C  30 -92  12 -66  7 -42 Z"/>
+        <path d="M -11 -38 C -14 -74 -6 -104 0 -116 C 6 -104 14 -74 11 -38 Z"/>
+      </g>
+    </g>
+  </defs>
+
+  <rect width="772" height="250" fill="url(#bg)"/>
+
+  <!-- Oversized carrots as faint background texture, clipped by the edges. -->
+  <g opacity="0.06">
+    <use href="#carrot" transform="translate(690,70) rotate(24) scale(1.5)"/>
+    <use href="#carrot" transform="translate(560,205) rotate(-16) scale(0.9)"/>
+  </g>
+
+  <!-- Icon mark, matching the 256px icon's proportions. -->
+  <g transform="translate(112,132) scale(0.86) rotate(-10)">
+    <use href="#carrot"/>
+  </g>
+
+  <!-- Live text, not outlines: this depends on the rendering machine having
+       Helvetica or Arial. Check the output if you regenerate elsewhere — a
+       fallback face changes the line widths, and the tagline is sized to
+       just fit inside 772px. -->
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" fill="#FFFFFF">
+    <text x="212" y="118" font-size="52" font-weight="700" letter-spacing="-0.6">Farm Stand Manager</text>
+    <text x="214" y="156" font-size="20" font-weight="400" opacity="0.88">Availability, stand status, pre-orders and events</text>
+    <text x="214" y="182" font-size="20" font-weight="400" opacity="0.88">for small farms and farm stands.</text>
+  </g>
+
+  <!-- Status chips: the plugin's own availability vocabulary, in the same
+       colours the board block uses. -->
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="600">
+    <g transform="translate(214,202)">
+      <rect width="86" height="26" rx="13" fill="#8BC34A"/>
+      <text x="43" y="18" text-anchor="middle" fill="#173D08">Abundant</text>
+    </g>
+    <g transform="translate(308,202)">
+      <rect width="78" height="26" rx="13" fill="#FFC24D"/>
+      <text x="39" y="18" text-anchor="middle" fill="#4A3000">Limited</text>
+    </g>
+    <g transform="translate(394,202)">
+      <rect width="84" height="26" rx="13" fill="#FFFFFF" opacity="0.22"/>
+      <text x="42" y="18" text-anchor="middle" fill="#FFFFFF">Sold out</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+# Revisions to skip when running `git blame`.
+#
+# GitHub honours this file automatically. Locally, enable it once with:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Reformat to WordPress-Coding-Standards (phpcbf). 17,401 mechanical fixes
+# across 62 files, 8,108 of them space-indent to tabs. Verified semantically
+# inert by diffing PHP token streams before and after.
+504fea718c9e655fde34316ef18d2dc2f8255825

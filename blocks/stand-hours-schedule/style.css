@@ -52,7 +52,7 @@
 .lfuf-stand-schedule__day-hours {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
-    font-weight: normal;
+    font-weight: 400;
     text-align: left;
 }
 
@@ -108,13 +108,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-stand-schedule__day { transition: none; }
 }
 
 @media (forced-colors: active) {
+
     .lfuf-stand-schedule__table { border-color: CanvasText; }
+
     .lfuf-stand-schedule__day { border-bottom-color: CanvasText; }
+
     .lfuf-stand-schedule__day--today { background: Highlight; color: HighlightText; }
+
     .lfuf-stand-schedule__today-badge {
         forced-color-adjust: none;
         border: 1px solid HighlightText;
@@ -125,6 +130,7 @@
 /* ── Responsive ────────────────────────────────── */
 
 @media (max-width: 480px) {
+
     .lfuf-stand-schedule__day-label,
     .lfuf-stand-schedule__day-hours {
         display: block;

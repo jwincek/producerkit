@@ -1,29 +1,40 @@
 /**
  * Availability Board — editor block (no-build IIFE).
+ * @param blocks
+ * @param element
+ * @param blockEditor
+ * @param components
+ * @param data
  */
 ( function ( blocks, element, blockEditor, components, data ) {
 	'use strict';
 
-	var el = element.createElement;
-	var Fragment = element.Fragment;
-	var useState = element.useState;
-	var useEffect = element.useEffect;
-	var registerBlockType = blocks.registerBlockType;
-	var InspectorControls = blockEditor.InspectorControls;
-	var useBlockProps = blockEditor.useBlockProps;
-	var PanelBody = components.PanelBody;
-	var ToggleControl = components.ToggleControl;
-	var CheckboxControl = components.CheckboxControl;
-	var SelectControl = components.SelectControl;
-	var TextControl = components.TextControl;
-	var ComboboxControl = components.ComboboxControl;
-	var Placeholder = components.Placeholder;
-	var Spinner = components.Spinner;
-	var useSelect = data.useSelect;
+	const el = element.createElement;
+	const Fragment = element.Fragment;
+	const useState = element.useState;
+	const useEffect = element.useEffect;
+	const registerBlockType = blocks.registerBlockType;
+	const InspectorControls = blockEditor.InspectorControls;
+	const useBlockProps = blockEditor.useBlockProps;
+	const PanelBody = components.PanelBody;
+	const ToggleControl = components.ToggleControl;
+	const CheckboxControl = components.CheckboxControl;
+	const SelectControl = components.SelectControl;
+	const TextControl = components.TextControl;
+	const ComboboxControl = components.ComboboxControl;
+	const Placeholder = components.Placeholder;
+	const Spinner = components.Spinner;
+	const useSelect = data.useSelect;
 
-	var ALL_STATUSES = [ 'abundant', 'available', 'limited', 'sold_out', 'unavailable' ];
+	const ALL_STATUSES = [
+		'abundant',
+		'available',
+		'limited',
+		'sold_out',
+		'unavailable',
+	];
 
-	var STATUS_LABELS = {
+	const STATUS_LABELS = {
 		abundant: 'Abundant',
 		available: 'Available',
 		limited: 'Limited',
@@ -41,75 +52,99 @@
 
 	/**
 	 * Parse the comma-separated defaultStatusFilter into an array.
+	 * @param str
 	 */
 	function parseActiveStatuses( str ) {
-		return ( str || '' ).split( ',' ).map( function ( s ) { return s.trim(); } ).filter( Boolean );
+		return ( str || '' )
+			.split( ',' )
+			.map( function ( s ) {
+				return s.trim();
+			} )
+			.filter( Boolean );
 	}
 
 	registerBlockType( 'lfuf/availability-board', {
 		edit: function EditBoard( props ) {
-			var attributes = props.attributes;
-			var setAttributes = props.setAttributes;
-			var layout = attributes.layout;
-			var showFilters = attributes.showFilters;
-			var showImages = attributes.showImages;
-			var showPrices = attributes.showPrices;
-			var showQuantityNotes = attributes.showQuantityNotes;
-			var locationId = attributes.locationId;
+			const attributes = props.attributes;
+			const setAttributes = props.setAttributes;
+			const layout = attributes.layout;
+			const showFilters = attributes.showFilters;
+			const showImages = attributes.showImages;
+			const showPrices = attributes.showPrices;
+			const showQuantityNotes = attributes.showQuantityNotes;
+			const locationId = attributes.locationId;
 
 			// Board data from REST.
-			var _board = useState( null );
-			var board = _board[0];
-			var setBoard = _board[1];
+			const _board = useState( null );
+			const board = _board[ 0 ];
+			const setBoard = _board[ 1 ];
 
-			var _loading = useState( false );
-			var loading = _loading[0];
-			var setLoading = _loading[1];
+			const _loading = useState( false );
+			const loading = _loading[ 0 ];
+			const setLoading = _loading[ 1 ];
 
-			var _error = useState( '' );
-			var error = _error[0];
-			var setError = _error[1];
+			const _error = useState( '' );
+			const error = _error[ 0 ];
+			const setError = _error[ 1 ];
 
 			// Fetch board data when locationId changes.
-			useEffect( function () {
-				setLoading( true );
-				setError( '' );
-				var url = getRestBase() + '/board';
-				if ( locationId ) {
-					url += '?location=' + locationId;
-				}
-				fetch( url )
-					.then( function ( r ) {
-						if ( ! r.ok ) throw new Error( r.status + ' ' + r.statusText );
-						return r.json();
-					} )
-					.then( function ( data ) {
-						setBoard( data );
-						setLoading( false );
-					} )
-					.catch( function () {
-						setError( 'Could not load board data.' );
-						setBoard( null );
-						setLoading( false );
-					} );
-			}, [ locationId ] );
+			useEffect(
+				function () {
+					setLoading( true );
+					setError( '' );
+					let url = getRestBase() + '/board';
+					if ( locationId ) {
+						url += '?location=' + locationId;
+					}
+					fetch( url )
+						.then( function ( r ) {
+							if ( ! r.ok ) {
+								throw new Error(
+									r.status + ' ' + r.statusText
+								);
+							}
+							return r.json();
+						} )
+						.then( function ( payload ) {
+							setBoard( payload );
+							setLoading( false );
+						} )
+						.catch( function () {
+							setError( 'Could not load board data.' );
+							setBoard( null );
+							setLoading( false );
+						} );
+				},
+				[ locationId ]
+			);
 
 			// Location list for the picker.
-			var locations = useSelect( function ( select ) {
-				return select( 'core' ).getEntityRecords( 'postType', 'lfuf_location', {
-					per_page: 50,
-					status: 'publish',
-					_fields: 'id,title',
-				} ) || [];
+			const locations = useSelect( function ( select ) {
+				return (
+					select( 'core' ).getEntityRecords(
+						'postType',
+						'lfuf_location',
+						{
+							per_page: 50,
+							status: 'publish',
+							_fields: 'id,title',
+						}
+					) || []
+				);
 			}, [] );
 
-			var locationOptions = [
+			const locationOptions = [
 				{ value: 0, label: '\u2014 All locations \u2014' },
-			].concat( locations.map( function ( l ) {
-				return { value: l.id, label: l.title?.rendered || '(untitled)' };
-			} ) );
+			].concat(
+				locations.map( function ( l ) {
+					return {
+						value: l.id,
+						label: l.title?.rendered || '(untitled)',
+					};
+				} )
+			);
 
-			var blockProps = useBlockProps( {
+			const blockProps = useBlockProps( {
 				className: 'lfuf-avail-board lfuf-avail-board--' + layout,
 			} );
 
@@ -119,8 +154,12 @@
 					Fragment,
 					null,
 					renderInspector(),
-					el( 'div', blockProps,
-						el( 'div', { className: 'lfuf-avail-board__loading' },
+					el(
+						'div',
+						blockProps,
+						el(
+							'div',
+							{ className: 'lfuf-avail-board__loading' },
 							el( Spinner ),
 							' Loading availability data\u2026'
 						)
@@ -134,7 +173,9 @@
 					Fragment,
 					null,
 					renderInspector(),
-					el( 'div', blockProps,
+					el(
+						'div',
+						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
 							label: 'Availability Board',
@@ -145,16 +186,20 @@
 			}
 
 			// Empty board.
-			var groups = board.groups || [];
-			var total = board.total_items || 0;
+			const groups = board.groups || [];
+			const total = board.total_items || 0;
 
 			if ( total === 0 ) {
 				return el(
 					Fragment,
 					null,
 					renderInspector(),
-					el( 'section', blockProps,
-						el( 'p', { className: 'lfuf-avail-board__empty' },
+					el(
+						'section',
+						blockProps,
+						el(
+							'p',
+							{ className: 'lfuf-avail-board__empty' },
 							attributes.emptyMessage
 						)
 					)
@@ -166,103 +211,232 @@
 				Fragment,
 				null,
 				renderInspector(),
-				el( 'section', blockProps,
+				el(
+					'section',
+					blockProps,
 
 					// Filter toolbar preview.
 					showFilters
-						? el( 'div', { className: 'lfuf-avail-board__filters' },
-							el( 'div', { className: 'lfuf-avail-board__filter-group', role: 'toolbar' },
-								el( 'span', { className: 'lfuf-avail-board__filter-label' }, 'Show:' ),
-								( board.statuses || [] ).map( function ( s ) {
-									var isActive = parseActiveStatuses( attributes.defaultStatusFilter ).indexOf( s ) !== -1;
-									return el( 'span', {
-										key: s,
-										className: 'lfuf-avail-board__filter-btn lfuf-availability-badge lfuf-availability-badge--' + s +
-											( isActive ? ' lfuf-avail-board__filter-btn--active' : '' ),
-									}, statusLabel( s ) );
-								} )
-							),
-							( board.filter_types || [] ).length > 1
-								? el( 'div', { className: 'lfuf-avail-board__filter-group', role: 'toolbar' },
-									el( 'span', { className: 'lfuf-avail-board__filter-label' }, 'Type:' ),
-									el( 'span', {
-										className: 'lfuf-avail-board__filter-btn lfuf-avail-board__filter-btn--active',
-									}, 'All' ),
-									( board.filter_types || [] ).map( function ( ft ) {
-										return el( 'span', {
-											key: ft.slug,
-											className: 'lfuf-avail-board__filter-btn',
-										}, ft.label );
-									} )
-								)
-								: null
-						)
+						? el(
+								'div',
+								{ className: 'lfuf-avail-board__filters' },
+								el(
+									'div',
+									{
+										className:
+											'lfuf-avail-board__filter-group',
+										role: 'toolbar',
+									},
+									el(
+										'span',
+										{
+											className:
+												'lfuf-avail-board__filter-label',
+										},
+										'Show:'
+									),
+									( board.statuses || [] ).map(
+										function ( s ) {
+											const isActive =
+												parseActiveStatuses(
+													attributes.defaultStatusFilter
+												).indexOf( s ) !== -1;
+											return el(
+												'span',
+												{
+													key: s,
+													className:
+														'lfuf-avail-board__filter-btn lfuf-availability-badge lfuf-availability-badge--' +
+														s +
+														( isActive
+															? ' lfuf-avail-board__filter-btn--active'
+															: '' ),
+												},
+												statusLabel( s )
+											);
+										}
+									)
+								),
+								( board.filter_types || [] ).length > 1
+									? el(
+											'div',
+											{
+												className:
+													'lfuf-avail-board__filter-group',
+												role: 'toolbar',
+											},
+											el(
+												'span',
+												{
+													className:
+														'lfuf-avail-board__filter-label',
+												},
+												'Type:'
+											),
+											el(
+												'span',
+												{
+													className:
+														'lfuf-avail-board__filter-btn lfuf-avail-board__filter-btn--active',
+												},
+												'All'
+											),
+											( board.filter_types || [] ).map(
+												function ( ft ) {
+													return el(
+														'span',
+														{
+															key: ft.slug,
+															className:
+																'lfuf-avail-board__filter-btn',
+														},
+														ft.label
+													);
+												}
+											)
+									  )
+									: null
+						  )
 						: null,
 
 					// Groups.
 					groups.map( function ( group ) {
-						return el( 'div', {
-							key: group.slug,
-							className: 'lfuf-avail-board__group',
-						},
-							el( 'h3', { className: 'lfuf-avail-board__group-title' },
+						return el(
+							'div',
+							{
+								key: group.slug,
+								className: 'lfuf-avail-board__group',
+							},
+							el(
+								'h3',
+								{ className: 'lfuf-avail-board__group-title' },
 								group.label,
-								el( 'span', { className: 'lfuf-avail-board__group-count' },
+								el(
+									'span',
+									{
+										className:
+											'lfuf-avail-board__group-count',
+									},
 									group.items.length
 								)
 							),
-							el( 'div', {
-								className: 'lfuf-avail-board__items lfuf-avail-board__items--' + layout,
-							},
+							el(
+								'div',
+								{
+									className:
+										'lfuf-avail-board__items lfuf-avail-board__items--' +
+										layout,
+								},
 								group.items.map( function ( item ) {
-									return el( 'article', {
-										key: item.availability_id || item.product_id,
-										className: 'lfuf-avail-board__item',
-									},
+									return el(
+										'article',
+										{
+											key:
+												item.availability_id ||
+												item.product_id,
+											className: 'lfuf-avail-board__item',
+										},
 										// Thumbnail.
-										( showImages && item.thumbnail_url )
-											? el( 'div', { className: 'lfuf-avail-board__item-image' },
-												el( 'img', {
-													src: item.thumbnail_url,
-													alt: '',
-													loading: 'lazy',
-													width: 80,
-													height: 80,
-												} )
-											)
+										showImages && item.thumbnail_url
+											? el(
+													'div',
+													{
+														className:
+															'lfuf-avail-board__item-image',
+													},
+													el( 'img', {
+														src: item.thumbnail_url,
+														alt: '',
+														loading: 'lazy',
+														width: 80,
+														height: 80,
+													} )
+											  )
 											: null,
 										// Body.
-										el( 'div', { className: 'lfuf-avail-board__item-body' },
-											el( 'div', { className: 'lfuf-avail-board__item-header' },
-												el( 'span', { className: 'lfuf-avail-board__item-name' },
+										el(
+											'div',
+											{
+												className:
+													'lfuf-avail-board__item-body',
+											},
+											el(
+												'div',
+												{
+													className:
+														'lfuf-avail-board__item-header',
+												},
+												el(
+													'span',
+													{
+														className:
+															'lfuf-avail-board__item-name',
+													},
 													item.product_name
 												),
-												el( 'span', {
-													className: 'lfuf-availability-badge lfuf-availability-badge--' + item.status,
-												}, statusLabel( item.status ) )
+												el(
+													'span',
+													{
+														className:
+															'lfuf-availability-badge lfuf-availability-badge--' +
+															item.status,
+													},
+													statusLabel( item.status )
+												)
 											),
-											( showPrices && item.price )
-												? el( 'span', { className: 'lfuf-avail-board__item-price' },
-													item.price,
-													item.unit
-														? el( 'span', { className: 'lfuf-avail-board__item-unit' }, ' / ' + item.unit )
-														: null
-												)
+											showPrices && item.price
+												? el(
+														'span',
+														{
+															className:
+																'lfuf-avail-board__item-price',
+														},
+														item.price,
+														item.unit
+															? el(
+																	'span',
+																	{
+																		className:
+																			'lfuf-avail-board__item-unit',
+																	},
+																	' / ' +
+																		item.unit
+															  )
+															: null
+												  )
 												: null,
-											( showQuantityNotes && item.quantity_note )
-												? el( 'span', { className: 'lfuf-avail-board__item-note' },
-													item.quantity_note
-												)
+											showQuantityNotes &&
+												item.quantity_note
+												? el(
+														'span',
+														{
+															className:
+																'lfuf-avail-board__item-note',
+														},
+														item.quantity_note
+												  )
 												: null,
 											item.seasons && item.seasons.length
-												? el( 'div', { className: 'lfuf-avail-board__item-seasons' },
-													item.seasons.map( function ( s ) {
-														return el( 'span', {
-															key: s,
-															className: 'lfuf-avail-board__season-tag',
-														}, s );
-													} )
-												)
+												? el(
+														'div',
+														{
+															className:
+																'lfuf-avail-board__item-seasons',
+														},
+														item.seasons.map(
+															function ( s ) {
+																return el(
+																	'span',
+																	{
+																		key: s,
+																		className:
+																			'lfuf-avail-board__season-tag',
+																	},
+																	s
+																);
+															}
+														)
+												  )
 												: null
 										)
 									);
@@ -272,14 +446,26 @@
 					} ),
 
 					// Footer.
-					el( 'p', { className: 'lfuf-avail-board__footer' },
+					el(
+						'p',
+						{ className: 'lfuf-avail-board__footer' },
 						'Showing ' + total + ' items',
 						board.generated_at
-							? el( 'span', { className: 'lfuf-avail-board__timestamp' },
-								new Date( board.generated_at ).toLocaleString( undefined, {
-									month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-								} )
-							)
+							? el(
+									'span',
+									{
+										className:
+											'lfuf-avail-board__timestamp',
+									},
+									new Date(
+										board.generated_at
+									).toLocaleString( undefined, {
+										month: 'short',
+										day: 'numeric',
+										hour: 'numeric',
+										minute: '2-digit',
+									} )
+							  )
 							: null
 					)
 				)
@@ -289,7 +475,9 @@
 			 * Sidebar inspector — shared across all render branches.
 			 */
 			function renderInspector() {
-				var activeDefaults = parseActiveStatuses( attributes.defaultStatusFilter );
+				const activeDefaults = parseActiveStatuses(
+					attributes.defaultStatusFilter
+				);
 
 				return el(
 					InspectorControls,
@@ -304,20 +492,26 @@
 								{ label: 'Grid', value: 'grid' },
 								{ label: 'List', value: 'list' },
 							],
-							onChange: function ( val ) { setAttributes( { layout: val } ); },
+							onChange( val ) {
+								setAttributes( { layout: val } );
+							},
 						} ),
 						el( ComboboxControl, {
 							label: 'Location filter',
 							value: locationId || '',
 							options: locationOptions,
-							onChange: function ( val ) {
-								setAttributes( { locationId: val ? Number( val ) : 0 } );
+							onChange( val ) {
+								setAttributes( {
+									locationId: val ? Number( val ) : 0,
+								} );
 							},
 						} ),
 						el( TextControl, {
 							label: 'Empty state message',
 							value: attributes.emptyMessage,
-							onChange: function ( val ) { setAttributes( { emptyMessage: val } ); },
+							onChange( val ) {
+								setAttributes( { emptyMessage: val } );
+							},
 						} )
 					),
 					el(
@@ -327,15 +521,24 @@
 							return el( CheckboxControl, {
 								key: status,
 								label: statusLabel( status ),
-								checked: activeDefaults.indexOf( status ) !== -1,
-								onChange: function ( checked ) {
-									var list = parseActiveStatuses( attributes.defaultStatusFilter );
+								checked:
+									activeDefaults.indexOf( status ) !== -1,
+								onChange( checked ) {
+									let list = parseActiveStatuses(
+										attributes.defaultStatusFilter
+									);
 									if ( checked ) {
-										if ( list.indexOf( status ) === -1 ) list.push( status );
+										if ( list.indexOf( status ) === -1 ) {
+											list.push( status );
+										}
 									} else {
-										list = list.filter( function ( s ) { return s !== status; } );
+										list = list.filter( function ( s ) {
+											return s !== status;
+										} );
 									}
-									setAttributes( { defaultStatusFilter: list.join( ',' ) } );
+									setAttributes( {
+										defaultStatusFilter: list.join( ',' ),
+									} );
 								},
 							} );
 						} )
@@ -346,22 +549,30 @@
 						el( ToggleControl, {
 							label: 'Show filter controls',
 							checked: showFilters,
-							onChange: function ( val ) { setAttributes( { showFilters: val } ); },
+							onChange( val ) {
+								setAttributes( { showFilters: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show product images',
 							checked: showImages,
-							onChange: function ( val ) { setAttributes( { showImages: val } ); },
+							onChange( val ) {
+								setAttributes( { showImages: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show prices',
 							checked: showPrices,
-							onChange: function ( val ) { setAttributes( { showPrices: val } ); },
+							onChange( val ) {
+								setAttributes( { showPrices: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show quantity notes',
 							checked: showQuantityNotes,
-							onChange: function ( val ) { setAttributes( { showQuantityNotes: val } ); },
+							onChange( val ) {
+								setAttributes( { showQuantityNotes: val } );
+							},
 						} )
 					)
 				);
