@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-hidden="true" focusable="false">
+  <rect width="240" height="240" fill="#F9F1E7"/>
+  <g transform="translate(120,120)" opacity="0.5">
+    <!-- Cookie: a circle with a slightly irregular edge reads as baked
+         rather than as a generic dot. -->
+    <path d="M 0 -64
+             C 30 -64 46 -52 56 -34
+             C 66 -16 68 6 58 28
+             C 48 50 26 64 0 64
+             C -28 64 -50 50 -60 26
+             C -68 4 -64 -18 -54 -36
+             C -44 -54 -28 -64 0 -64 Z"
+          fill="#C09468"/>
+    <g fill="#F9F1E7">
+      <circle cx="-24" cy="-20" r="8"/>
+      <circle cx="16"  cy="-30" r="7"/>
+      <circle cx="30"  cy="8"   r="8"/>
+      <circle cx="-10" cy="18"  r="7"/>
+      <circle cx="-34" cy="28"  r="6"/>
+    </g>
+  </g>
+</svg>

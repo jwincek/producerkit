@@ -28,6 +28,10 @@ $price         = get_post_meta( $product_id, '_lfuf_price', true );
 $unit          = get_post_meta( $product_id, '_lfuf_unit', true );
 $growing_notes = get_post_meta( $product_id, '_lfuf_growing_notes', true );
 $thumbnail     = get_the_post_thumbnail( $product_id, 'medium', [ 'alt' => '' ] );
+
+// No featured image: fall back to the product type's placeholder. Still empty
+// when the type has no bundled art, in which case no image renders at all.
+$placeholder = $thumbnail ? '' : \Leftfield\Core\Product_Images\placeholder_url( $product_id );
 $types         = get_the_terms( $product_id, 'lfuf_product_type' );
 $seasons       = get_the_terms( $product_id, 'lfuf_season' );
 
@@ -71,6 +75,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 	<?php if ( $thumbnail ) : ?>
 		<div class="lfuf-product-card__image">
 			<?php echo $thumbnail; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core get_the_post_thumbnail() output. ?>
+		</div>
+	<?php elseif ( $placeholder ) : ?>
+		<div class="lfuf-product-card__image lfuf-product-card__image--placeholder">
+			<img src="<?php echo esc_url( $placeholder ); ?>" alt="" loading="lazy" width="400" height="400">
 		</div>
 	<?php endif; ?>
 

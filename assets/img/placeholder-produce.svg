@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-hidden="true" focusable="false">
+  <rect width="240" height="240" fill="#EFF6EA"/>
+  <g transform="translate(120,126)" fill="#6E9E62" opacity="0.5">
+    <path d="M -5 34 C -60 28 -86 -10 -76 -54 C -30 -48 -5 -12 -5 26 Z"/>
+    <path d="M  5 34 C  60 28  86 -10  76 -54 C  30 -48  5 -12  5 26 Z"/>
+    <path d="M -4 40 C -4 8 -2 -26 0 -52 C 2 -26 4 8 4 40 Z"/>
+  </g>
+</svg>

@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: farm stand, farmers market, availability, products, events
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 1.1.0 =
+* Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `lfuf_product_placeholder_url` to override or disable.
+
 = 1.0.2 =
 * Fixed the availability table not being created at all on MySQL servers using STRICT_TRANS_TABLES (the default since MySQL 5.7), which left the availability board, quick entry, Fresh Sheet and REST endpoints with no data.
 * The availability table now repairs its own schema on load, so sites affected by the above do not need to deactivate and reactivate.
@@ -125,6 +128,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Products without a photo now show a type-based placeholder image. Filter `lfuf_product_placeholder_url` and return an empty string to keep the previous behaviour.
 
 = 1.0.2 =
 Important if your host runs MySQL in strict mode: the availability table was never created. This release fixes the schema and repairs existing sites automatically.

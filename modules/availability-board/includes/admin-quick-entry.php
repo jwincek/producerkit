@@ -128,7 +128,7 @@ function render_page(): void {
 					$type_str = ( $types && ! is_wp_error( $types ) )
 						? implode( ', ', wp_list_pluck( $types, 'name' ) )
 						: '—';
-					$thumb    = get_the_post_thumbnail_url( $pid, 'thumbnail' );
+					$thumb    = \Leftfield\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
 					?>
 					<tr class="lfuf-qe-row" data-product-id="<?php echo (int) $pid; ?>">
 						<td class="lfuf-qe-col-thumb">
