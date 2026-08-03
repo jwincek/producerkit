@@ -504,7 +504,7 @@ function get_harvest_list( array $args = [] ): array {
 		$where .= $wpdb->prepare( ' AND location_id = %d', $location_id );
 	}
 
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared above.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared above.
 	$rows = $wpdb->get_results( "SELECT pickup_date, location_id, items FROM {$table} WHERE {$where} ORDER BY pickup_date ASC" );
 
 	// Group by date + location, summing per product (items are JSON per row).
@@ -571,7 +571,7 @@ function get_orders( array $args = [] ): array {
 		$where = '';
 	}
 
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared above; identifiers are internal.
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared above; identifiers are internal.
 	$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} {$where}" );
 	$rows  = $wpdb->get_results(
 		$wpdb->prepare(
@@ -580,7 +580,7 @@ function get_orders( array $args = [] ): array {
 			$offset,
 		)
 	);
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	return [
 		'orders' => array_map( __NAMESPACE__ . '\\to_public', $rows ?: [] ),

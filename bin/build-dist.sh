@@ -81,7 +81,7 @@ LEAKED=()
 for f in .git .github bin vendor node_modules composer.json composer.lock \
          package.json package-lock.json phpcs.xml.dist .wp-env.json \
          .eslintrc.json .stylelintrc.json .distignore .gitignore \
-         .wordpress-org build tests phpunit.xml.dist \
+         .wordpress-org assets-src build tests phpunit.xml.dist \
          phpunit-integration.xml.dist .phpunit.result.cache \
          README.md CHANGELOG.md GETTING-STARTED.md; do
 	[[ -e "$DEST/$f" ]] && LEAKED+=("$f")
