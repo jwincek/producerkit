@@ -453,6 +453,89 @@ foreach ( glob( $root . '/blocks/*/render.php' ) ?: [] as $render ) {
 	}
 }
 
+// ── Check 10: no type syntax newer than the declared "Requires PHP" ──────────
+// This exists because a developer machine is rarely running the minimum PHP.
+// `true` as a type is 8.2+, and on 8.1 it is not a type error but a *parse*
+// error, so the whole file dies at include time — the plugin simply does not
+// run on the version its own header promises. PHPCompatibility does not flag
+// it, and every PHP newer than 8.1 accepts it silently.
+$requires_php = null;
+if ( null !== $main_file && preg_match( '/^[ \t]*\*?[ \t]*Requires PHP:[ \t]*(\S+)/mi', $main_head, $rp ) ) {
+	$requires_php = $rp[1];
+}
+
+if ( null !== $requires_php && version_compare( $requires_php, '8.2', '<' ) ) {
+	$scan = array_merge(
+		$php_files_in( 'modules' ),
+		$php_files_in( 'includes' ),
+		$php_files_in( 'blocks' ),
+		null !== $main_file ? [ $main_file ] : []
+	);
+
+	foreach ( $scan as $path ) {
+		$rel    = str_replace( $root . '/', '', $path );
+		$tokens = @token_get_all( (string) file_get_contents( $path ) );
+		if ( ! is_array( $tokens ) ) {
+			continue;
+		}
+
+		$count = count( $tokens );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( ! is_array( $tokens[ $i ] ) || T_FUNCTION !== $tokens[ $i ][0] ) {
+				continue;
+			}
+
+			// Walk the parameter list to its closing paren, then read the
+			// return type (if any) up to the body or the statement end.
+			$depth = 0;
+			$j     = $i;
+			for ( ; $j < $count; $j++ ) {
+				$t = $tokens[ $j ];
+				if ( '(' === $t ) {
+					$depth++;
+				} elseif ( ')' === $t ) {
+					$depth--;
+					if ( 0 === $depth ) {
+						break;
+					}
+				}
+			}
+
+			$type = '';
+			$line = is_array( $tokens[ $i ] ) ? $tokens[ $i ][2] : 0;
+			for ( $k = $j + 1; $k < $count; $k++ ) {
+				$t = $tokens[ $k ];
+				if ( '{' === $t || ';' === $t ) {
+					break;
+				}
+				$type .= is_array( $t ) ? $t[1] : $t;
+			}
+
+			$type = trim( ltrim( trim( $type ), ':' ) );
+			if ( '' === $type ) {
+				continue;
+			}
+
+			$parts = array_map( 'trim', explode( '|', $type ) );
+			$lower = array_map( 'strtolower', $parts );
+
+			// `true` needs 8.2 anywhere it appears. Standalone `false`/`null`
+			// need 8.2 too; inside a union both have been legal since 8.0.
+			$offenders = [];
+			if ( in_array( 'true', $lower, true ) ) {
+				$offenders[] = 'true';
+			}
+			if ( 1 === count( $lower ) && in_array( $lower[0], [ 'false', 'null' ], true ) ) {
+				$offenders[] = $lower[0];
+			}
+
+			foreach ( array_unique( $offenders ) as $offender ) {
+				$add( 'error', 'php-version', "$rel:$line declares the return type '$type', but '$offender' as a type requires PHP 8.2 and the plugin header says Requires PHP: $requires_php — on $requires_php this is a parse error, not a type error." );
+			}
+		}
+	}
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 $errors   = array_filter( $issues, static fn( $i ) => $i['level'] === 'error' );
 $warnings = array_filter( $issues, static fn( $i ) => $i['level'] === 'warning' );

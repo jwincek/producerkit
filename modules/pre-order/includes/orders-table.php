@@ -236,8 +236,14 @@ function weekday_names( array $days ): array {
 /**
  * Full pickup date validation: window, then the location's open days,
  * season, and blackout dates.
+ *
+ * Declared bool rather than the more precise `true` because a standalone
+ * `true` type needs PHP 8.2, and this plugin supports 8.1 — on 8.1 it is not
+ * a type error but a parse error, which takes the whole file down.
+ *
+ * @return true|\WP_Error True when the date is bookable, WP_Error explaining why not.
  */
-function validate_pickup_date_for_location( string $date, int $location_id ): true|\WP_Error {
+function validate_pickup_date_for_location( string $date, int $location_id ): bool|\WP_Error {
 	if ( ! validate_pickup_date( $date ) ) {
 		return new \WP_Error( 'invalid_pickup_date', __( 'Please choose a pickup date within the next month.', 'farm-stand-manager' ) );
 	}
