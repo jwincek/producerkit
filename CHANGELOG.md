@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-08-03
+
+### Fixed
+- The availability table was never created on MySQL servers running with
+  `STRICT_TRANS_TABLES` — the default since MySQL 5.7. Its `notes` column was
+  declared `TEXT NOT NULL DEFAULT ''`, and MySQL forbids defaults on BLOB/TEXT
+  columns: a permissive server drops the default with a warning, but a strict
+  one rejects the `CREATE TABLE` outright. Every feature that reads
+  availability — the board, the badge, quick entry, the Fresh Sheet, the REST
+  endpoints and the abilities — silently had no table to read. The column
+  needed no default in the first place, since `upsert()` is its only writer and
+  always supplies a value.
+- On permissive servers the same declaration made `dbDelta()` retry an
+  impossible `ALTER … SET DEFAULT` on every run, logging a database error each
+  time.
+- The availability table now self-heals on `plugins_loaded` when its stored
+  schema version is behind, matching what the RSVP and pre-order tables already
+  did. Sites whose activation failed under strict mode get their table without
+  needing a manual deactivate/reactivate. `lfuf_availability_db_version` was
+  previously written but never read.
+
 ## [1.0.1] - 2026-08-02
 
 ### Fixed
@@ -69,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `lfuf_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.2
 [1.0.1]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.0

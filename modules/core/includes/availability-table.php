@@ -15,6 +15,28 @@ namespace Leftfield\Core\Availability;
 
 defined( 'ABSPATH' ) || exit;
 
+/** Bumped whenever the schema changes, to trigger the self-heal below. */
+const DB_VERSION = '1.0.1';
+
+/**
+ * Re-run the schema when the stored version is behind.
+ *
+ * The RSVP and pre-order tables already self-heal this way. Availability did
+ * not: it was created on activation only, and wrote lfuf_availability_db_version
+ * without anything ever reading it. That mattered once the schema was found to
+ * be rejected outright by strict-mode MySQL — those sites have no table at all,
+ * and without this they would need a manual deactivate/reactivate to get one.
+ */
+add_action(
+	'plugins_loaded',
+	function (): void {
+		if ( get_option( 'lfuf_availability_db_version' ) !== DB_VERSION ) {
+			create_table();
+		}
+	},
+	20
+);
+
 /**
  * Return the full table name with WP prefix.
  */
@@ -24,15 +46,25 @@ function table_name(): string {
 }
 
 /**
- * Create or update the table schema. Safe to call on every activation.
+ * Schema for the availability table.
+ *
+ * Separated from create_table() so the schema can be exercised against a
+ * throwaway table name in tests without touching the live one.
+ *
+ * Note there is no DEFAULT on `notes`. MySQL forbids defaults on BLOB/TEXT
+ * columns: on a non-strict server it drops the default with a warning, but
+ * under STRICT_TRANS_TABLES — the default since MySQL 5.7 — the CREATE fails
+ * outright and the table is never created. `notes` needs no default anyway,
+ * since upsert() is the only writer and always supplies a value.
+ *
+ * @param string $table Fully-qualified table name.
  */
-function create_table(): void {
+function schema_sql( string $table ): string {
 	global $wpdb;
 
-	$table   = table_name();
 	$charset = $wpdb->get_charset_collate();
 
-	$sql = "CREATE TABLE {$table} (
+	return "CREATE TABLE {$table} (
         id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         product_id      BIGINT UNSIGNED NOT NULL,
         location_id     BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -40,7 +72,7 @@ function create_table(): void {
         quantity_note   VARCHAR(255)    NOT NULL DEFAULT '',
         effective_date  DATE            NOT NULL,
         expires_date    DATE            DEFAULT NULL,
-        notes           TEXT            NOT NULL DEFAULT '',
+        notes           TEXT            NOT NULL,
         created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
@@ -48,11 +80,13 @@ function create_table(): void {
         KEY idx_effective (effective_date),
         KEY idx_status (status)
     ) {$charset};";
+}
 
+function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	dbDelta( $sql );
+	dbDelta( schema_sql( table_name() ) );
 
-	update_option( 'lfuf_availability_db_version', '1.0.0' );
+	update_option( 'lfuf_availability_db_version', DB_VERSION );
 }
 
 /**

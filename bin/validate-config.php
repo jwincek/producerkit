@@ -536,6 +536,34 @@ if ( null !== $requires_php && version_compare( $requires_php, '8.2', '<' ) ) {
 	}
 }
 
+// ── Check 11: no DEFAULT on a BLOB/TEXT/JSON/GEOMETRY column ────────────────
+// MySQL forbids it. A non-strict server drops the default with a warning and
+// dbDelta then retries the impossible ALTER on every run; a server with
+// STRICT_TRANS_TABLES — the default since MySQL 5.7 — rejects the CREATE
+// outright, so the table is never created and every feature reading it fails.
+// Cheap to get wrong, invisible on a permissive dev database.
+foreach ( $php_files_in( 'modules' ) as $path ) {
+	$src = (string) file_get_contents( $path );
+	$rel = str_replace( $root . '/', '', $path );
+
+	if ( ! str_contains( $src, 'CREATE TABLE' ) ) {
+		continue;
+	}
+
+	foreach ( explode( "\n", $src ) as $n => $line ) {
+		if ( ! preg_match( '/^\s*(\w+)\s+(TINYTEXT|TEXT|MEDIUMTEXT|LONGTEXT|TINYBLOB|BLOB|MEDIUMBLOB|LONGBLOB|JSON|GEOMETRY)\b.*\bDEFAULT\b/i', $line, $m ) ) {
+			continue;
+		}
+
+		// `DEFAULT NULL` is the one form MySQL accepts on these types.
+		if ( preg_match( '/\bDEFAULT\s+NULL\b/i', $line ) ) {
+			continue;
+		}
+
+		$add( 'error', 'schema', "$rel:" . ( $n + 1 ) . " declares column '{$m[1]}' as {$m[2]} with a DEFAULT — MySQL forbids defaults on those types, and under STRICT_TRANS_TABLES the CREATE TABLE fails outright." );
+	}
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 $errors   = array_filter( $issues, static fn( $i ) => $i['level'] === 'error' );
 $warnings = array_filter( $issues, static fn( $i ) => $i['level'] === 'warning' );

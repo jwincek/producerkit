@@ -174,6 +174,80 @@ final class AvailabilityTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The schema must survive STRICT_TRANS_TABLES, the MySQL default since 5.7.
+	 *
+	 * Regression: `notes` was declared TEXT NOT NULL DEFAULT ''. MySQL forbids
+	 * defaults on BLOB/TEXT columns — non-strict servers drop the default with
+	 * a warning (and dbDelta then retries the impossible ALTER on every run),
+	 * but a strict server rejects the CREATE outright, so the availability
+	 * table was never created and every feature reading it silently failed.
+	 *
+	 * Runs against a throwaway table so the live one is untouched.
+	 */
+	public function test_schema_is_accepted_under_strict_sql_mode(): void {
+		global $wpdb;
+
+		$probe    = $wpdb->prefix . 'lfuf_schema_probe';
+		$previous = (string) $wpdb->get_var( 'SELECT @@SESSION.sql_mode' );
+
+		$wpdb->query( $wpdb->prepare( 'SET SESSION sql_mode = %s', 'STRICT_TRANS_TABLES' ) );
+
+		// phpcs:disable WordPress.DB.PreparedSQL -- $probe is a $wpdb->prefix identifier built in this method, and schema_sql() returns a complete DDL statement. Neither can be parameterized.
+		$wpdb->query( "DROP TABLE IF EXISTS `$probe`" );
+
+		$wpdb->suppress_errors( true );
+		$created = $wpdb->query( \Leftfield\Core\Availability\schema_sql( $probe ) );
+		$error   = $wpdb->last_error;
+		$wpdb->suppress_errors( false );
+
+		$wpdb->query( "DROP TABLE IF EXISTS `$probe`" );
+		// phpcs:enable WordPress.DB.PreparedSQL
+
+		$wpdb->query( $wpdb->prepare( 'SET SESSION sql_mode = %s', $previous ) );
+
+		$this->assertNotFalse( $created, "schema rejected under strict mode: $error" );
+		$this->assertSame( '', $error, 'schema produced a database error under strict mode' );
+	}
+
+	/**
+	 * upsert() must not depend on a column default that the schema cannot
+	 * carry — under strict mode an omitted NOT NULL column is a hard error.
+	 */
+	public function test_upsert_supplies_notes_so_no_column_default_is_needed(): void {
+		global $wpdb;
+
+		$product  = $this->make_product();
+		$previous = (string) $wpdb->get_var( 'SELECT @@SESSION.sql_mode' );
+
+		$wpdb->query( $wpdb->prepare( 'SET SESSION sql_mode = %s', 'STRICT_TRANS_TABLES' ) );
+
+		$id = upsert(
+			[
+				'product_id'     => $product,
+				'status'         => 'available',
+				'effective_date' => current_time( 'Y-m-d' ),
+			]
+		);
+
+		$error = $wpdb->last_error;
+		$wpdb->query( $wpdb->prepare( 'SET SESSION sql_mode = %s', $previous ) );
+
+		$this->assertNotFalse( $id, "insert failed under strict mode: $error" );
+
+		// get_row(), not get_var(): wpdb::get_var() returns null for an empty
+		// string — its guard is `'' !== $values[ $column_offset ]` — so it
+		// cannot tell "no row" from "empty column", and neither can get_col(),
+		// which calls it. '' is exactly the value under test here.
+		$row = $wpdb->get_row(
+			$wpdb->prepare( "SELECT notes FROM {$wpdb->prefix}lfuf_availability WHERE id = %d", $id ),
+			ARRAY_A
+		);
+
+		$this->assertIsArray( $row, 'the inserted row was not found' );
+		$this->assertSame( '', $row['notes'] );
+	}
+
+	/**
 	 * The cleanup cron must fire at 03:00 *site-local*, on any timezone.
 	 *
 	 * Regression: the schedule was computed from current_time( 'timestamp' ),
