@@ -3,118 +3,160 @@
  *
  * Renders a toggle switch + message input that hit the REST API
  * directly from the editor. Renders nothing on the front end.
+ * @param blocks
+ * @param element
+ * @param blockEditor
+ * @param components
+ * @param data
  */
 ( function ( blocks, element, blockEditor, components, data ) {
 	'use strict';
 
-	var el = element.createElement;
-	var useState = element.useState;
-	var useEffect = element.useEffect;
-	var useCallback = element.useCallback;
-	var Fragment = element.Fragment;
-	var registerBlockType = blocks.registerBlockType;
-	var InspectorControls = blockEditor.InspectorControls;
-	var useBlockProps = blockEditor.useBlockProps;
-	var PanelBody = components.PanelBody;
-	var ComboboxControl = components.ComboboxControl;
-	var ToggleControl = components.ToggleControl;
-	var TextControl = components.TextControl;
-	var Button = components.Button;
-	var Spinner = components.Spinner;
-	var Notice = components.Notice;
-	var useSelect = data.useSelect;
+	const el = element.createElement;
+	const useState = element.useState;
+	const useEffect = element.useEffect;
+	const useCallback = element.useCallback;
+	const Fragment = element.Fragment;
+	const registerBlockType = blocks.registerBlockType;
+	const InspectorControls = blockEditor.InspectorControls;
+	const useBlockProps = blockEditor.useBlockProps;
+	const PanelBody = components.PanelBody;
+	const ComboboxControl = components.ComboboxControl;
+	const ToggleControl = components.ToggleControl;
+	const TextControl = components.TextControl;
+	const Button = components.Button;
+	const Spinner = components.Spinner;
+	const Notice = components.Notice;
+	const useSelect = data.useSelect;
 
 	function getRestBase() {
-		return ( window.lfufStandSettings || window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
+		return (
+			( window.lfufStandSettings || window.lfufSettings || {} )
+				.restBase || '/wp-json/lfuf/v1'
+		);
 	}
 
 	function getNonce() {
-		return ( window.lfufStandSettings || window.lfufSettings || {} ).nonce || '';
+		return (
+			( window.lfufStandSettings || window.lfufSettings || {} ).nonce ||
+			''
+		);
 	}
 
 	registerBlockType( 'lfuf/stand-toggle', {
 		edit: function EditStandToggle( props ) {
-			var attributes = props.attributes;
-			var setAttributes = props.setAttributes;
-			var locationId = attributes.locationId;
-			var blockProps = useBlockProps( { className: 'lfuf-stand-toggle' } );
+			const attributes = props.attributes;
+			const setAttributes = props.setAttributes;
+			const locationId = attributes.locationId;
+			const blockProps = useBlockProps( {
+				className: 'lfuf-stand-toggle',
+			} );
 
-			var _state = useState( false );
-			var isOpen = _state[0];
-			var setIsOpen = _state[1];
+			const _state = useState( false );
+			const isOpen = _state[ 0 ];
+			const setIsOpen = _state[ 1 ];
 
-			var _msg = useState( '' );
-			var message = _msg[0];
-			var setMessage = _msg[1];
+			const _msg = useState( '' );
+			const message = _msg[ 0 ];
+			const setMessage = _msg[ 1 ];
 
-			var _saving = useState( false );
-			var saving = _saving[0];
-			var setSaving = _saving[1];
+			const _saving = useState( false );
+			const saving = _saving[ 0 ];
+			const setSaving = _saving[ 1 ];
 
-			var _notice = useState( '' );
-			var notice = _notice[0];
-			var setNotice = _notice[1];
+			const _notice = useState( '' );
+			const notice = _notice[ 0 ];
+			const setNotice = _notice[ 1 ];
 
-			var _loaded = useState( false );
-			var loaded = _loaded[0];
-			var setLoaded = _loaded[1];
+			const _loaded = useState( false );
+			const loaded = _loaded[ 0 ];
+			const setLoaded = _loaded[ 1 ];
 
 			// Fetch locations for selector.
-			var locations = useSelect( function ( select ) {
-				return select( 'core' ).getEntityRecords( 'postType', 'lfuf_location', {
-					per_page: 50,
-					status: 'publish',
-					_fields: 'id,title',
-				} ) || [];
+			const locations = useSelect( function ( select ) {
+				return (
+					select( 'core' ).getEntityRecords(
+						'postType',
+						'lfuf_location',
+						{
+							per_page: 50,
+							status: 'publish',
+							_fields: 'id,title',
+						}
+					) || []
+				);
 			}, [] );
 
-			var options = locations.map( function ( l ) {
-				return { value: l.id, label: l.title?.rendered || '(untitled)' };
+			const options = locations.map( function ( l ) {
+				return {
+					value: l.id,
+					label: l.title?.rendered || '(untitled)',
+				};
 			} );
 
 			// Load current state from REST.
-			useEffect( function () {
-				if ( ! locationId ) return;
-				setLoaded( false );
-				fetch( getRestBase() + '/stand/' + locationId + '/info' )
-					.then( function ( r ) { return r.json(); } )
-					.then( function ( data ) {
-						setIsOpen( !! data.is_open );
-						setMessage( data.status_message || '' );
-						setLoaded( true );
-					} )
-					.catch( function () {
-						setLoaded( true );
-					} );
-			}, [ locationId ] );
+			useEffect(
+				function () {
+					if ( ! locationId ) {
+						return;
+					}
+					setLoaded( false );
+					fetch( getRestBase() + '/stand/' + locationId + '/info' )
+						.then( function ( r ) {
+							return r.json();
+						} )
+						.then( function ( payload ) {
+							setIsOpen( !! payload.is_open );
+							setMessage( payload.status_message || '' );
+							setLoaded( true );
+						} )
+						.catch( function () {
+							setLoaded( true );
+						} );
+				},
+				[ locationId ]
+			);
 
 			// Save handler.
-			var save = useCallback( function () {
-				if ( ! locationId ) return;
-				setSaving( true );
-				setNotice( '' );
-				fetch( getRestBase() + '/stand/' + locationId + '/status', {
-					method: 'PATCH',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-WP-Nonce': getNonce(),
-					},
-					body: JSON.stringify( {
-						is_open: isOpen,
-						status_message: message,
-					} ),
-				} )
-					.then( function ( r ) { return r.json(); } )
-					.then( function ( data ) {
-						setSaving( false );
-						setNotice( 'Stand is now ' + ( data.is_open ? 'OPEN' : 'CLOSED' ) + '.' );
-						setTimeout( function () { setNotice( '' ); }, 4000 );
+			const save = useCallback(
+				function () {
+					if ( ! locationId ) {
+						return;
+					}
+					setSaving( true );
+					setNotice( '' );
+					fetch( getRestBase() + '/stand/' + locationId + '/status', {
+						method: 'PATCH',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-WP-Nonce': getNonce(),
+						},
+						body: JSON.stringify( {
+							is_open: isOpen,
+							status_message: message,
+						} ),
 					} )
-					.catch( function () {
-						setSaving( false );
-						setNotice( 'Error updating stand status.' );
-					} );
-			}, [ locationId, isOpen, message ] );
+						.then( function ( r ) {
+							return r.json();
+						} )
+						.then( function ( payload ) {
+							setSaving( false );
+							setNotice(
+								'Stand is now ' +
+									( payload.is_open ? 'OPEN' : 'CLOSED' ) +
+									'.'
+							);
+							setTimeout( function () {
+								setNotice( '' );
+							}, 4000 );
+						} )
+						.catch( function () {
+							setSaving( false );
+							setNotice( 'Error updating stand status.' );
+						} );
+				},
+				[ locationId, isOpen, message ]
+			);
 
 			return el(
 				Fragment,
@@ -128,9 +170,11 @@
 						el( ComboboxControl, {
 							label: 'Location',
 							value: locationId || '',
-							options: options,
-							onChange: function ( val ) {
-								setAttributes( { locationId: val ? Number( val ) : 0 } );
+							options,
+							onChange( val ) {
+								setAttributes( {
+									locationId: val ? Number( val ) : 0,
+								} );
 							},
 						} )
 					)
@@ -140,56 +184,87 @@
 					blockProps,
 					! locationId
 						? el( components.Placeholder, {
-							icon: 'controls-repeat',
-							label: 'Stand Quick Toggle',
-							instructions: 'Select a location in the sidebar.',
-						} )
+								icon: 'controls-repeat',
+								label: 'Stand Quick Toggle',
+								instructions:
+									'Select a location in the sidebar.',
+						  } )
 						: ! loaded
-							? el( 'div', { className: 'lfuf-stand-toggle__loading' },
+						? el(
+								'div',
+								{ className: 'lfuf-stand-toggle__loading' },
 								el( Spinner ),
 								' Loading stand status…'
-							)
-							: el(
+						  )
+						: el(
 								'div',
 								{ className: 'lfuf-stand-toggle__panel' },
 								el(
 									'div',
 									{ className: 'lfuf-stand-toggle__header' },
 									el( 'span', {
-										className: 'lfuf-stand-toggle__dot lfuf-stand-toggle__dot--' +
+										className:
+											'lfuf-stand-toggle__dot lfuf-stand-toggle__dot--' +
 											( isOpen ? 'open' : 'closed' ),
 									} ),
-									el( 'strong', null, isOpen ? 'Stand is OPEN' : 'Stand is CLOSED' )
+									el(
+										'strong',
+										null,
+										isOpen
+											? 'Stand is OPEN'
+											: 'Stand is CLOSED'
+									)
 								),
 								el( ToggleControl, {
 									label: isOpen ? 'Open' : 'Closed',
 									checked: isOpen,
-									onChange: function ( val ) { setIsOpen( val ); },
+									onChange( val ) {
+										setIsOpen( val );
+									},
 								} ),
 								el( TextControl, {
 									label: 'Status message (optional)',
 									value: message,
-									onChange: function ( val ) { setMessage( val ); },
-									placeholder: 'e.g. "Back at 2 PM" or "Sold out for today"',
+									onChange( val ) {
+										setMessage( val );
+									},
+									placeholder:
+										'e.g. "Back at 2 PM" or "Sold out for today"',
 								} ),
 								el(
 									'div',
 									{ className: 'lfuf-stand-toggle__actions' },
-									el( Button, {
-										variant: 'primary',
-										onClick: save,
-										isBusy: saving,
-										disabled: saving,
-									}, saving ? 'Saving…' : 'Update Stand Status' )
+									el(
+										Button,
+										{
+											variant: 'primary',
+											onClick: save,
+											isBusy: saving,
+											disabled: saving,
+										},
+										saving
+											? 'Saving…'
+											: 'Update Stand Status'
+									)
 								),
 								notice
-									? el( Notice, {
-										status: notice.includes( 'Error' ) ? 'error' : 'success',
-										isDismissible: true,
-										onDismiss: function () { setNotice( '' ); },
-									}, notice )
+									? el(
+											Notice,
+											{
+												status: notice.includes(
+													'Error'
+												)
+													? 'error'
+													: 'success',
+												isDismissible: true,
+												onDismiss() {
+													setNotice( '' );
+												},
+											},
+											notice
+									  )
 									: null
-							)
+						  )
 				)
 			);
 		},

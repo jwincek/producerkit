@@ -51,7 +51,9 @@
 }
 
 @keyframes lfuf-pulse {
+
     0%, 100% { box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); }
+
     50%      { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.08); }
 }
 
@@ -197,6 +199,7 @@
 }
 
 @media (max-width: 600px) {
+
     .lfuf-stand-banner--banner {
         flex-direction: column;
     }
@@ -294,6 +297,7 @@
 /* ── Reduced motion ────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-stand-banner__indicator--open {
         animation: none;
     }
@@ -306,11 +310,12 @@
 /* ── Focus styles ──────────────────────────────── */
 
 .lfuf-stand-banner__venmo-link:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 /* ── Screen reader text ────────────────────────── */
+
 /* WordPress themes usually include this class, but
    we define a fallback in case the theme doesn't. */
 
@@ -330,6 +335,7 @@
 /* ── High contrast mode ────────────────────────── */
 
 @media (forced-colors: active) {
+
     .lfuf-stand-banner__indicator {
         forced-color-adjust: none;
         border: 2px solid LinkText;

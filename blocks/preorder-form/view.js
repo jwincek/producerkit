@@ -9,7 +9,10 @@ store( 'leftfield/preorder-form', {
 		updateQty( event ) {
 			const ctx = getContext();
 			const productId = event.target.dataset.productId;
-			const qty = Math.max( 0, Math.min( 99, parseInt( event.target.value, 10 ) || 0 ) );
+			const qty = Math.max(
+				0,
+				Math.min( 99, parseInt( event.target.value, 10 ) || 0 )
+			);
 			if ( qty > 0 ) {
 				ctx.items[ productId ] = qty;
 			} else {
@@ -41,14 +44,23 @@ store( 'leftfield/preorder-form', {
 				return;
 			}
 			if ( Array.isArray( ctx.allowedDays ) && ctx.allowedDays.length ) {
-				const weekday = new Date( ctx.pickupDate + 'T12:00:00' ).getDay();
+				const weekday = new Date(
+					ctx.pickupDate + 'T12:00:00'
+				).getDay();
 				if ( ctx.allowedDays.indexOf( weekday ) === -1 ) {
-					ctx.error = "That day isn't a pickup day. Pickup days: " + ctx.allowedLabel + '.';
+					ctx.error =
+						"That day isn't a pickup day. Pickup days: " +
+						ctx.allowedLabel +
+						'.';
 					return;
 				}
 			}
-			if ( Array.isArray( ctx.blackouts ) && ctx.blackouts.indexOf( ctx.pickupDate ) !== -1 ) {
-				ctx.error = "We're closed that day — please choose another date.";
+			if (
+				Array.isArray( ctx.blackouts ) &&
+				ctx.blackouts.indexOf( ctx.pickupDate ) !== -1
+			) {
+				ctx.error =
+					"We're closed that day — please choose another date.";
 				return;
 			}
 
@@ -71,7 +83,9 @@ store( 'leftfield/preorder-form', {
 				} );
 				const data = yield response.json();
 				if ( ! response.ok ) {
-					ctx.error = data.message || 'Something went wrong. Please try again.';
+					ctx.error =
+						data.message ||
+						'Something went wrong. Please try again.';
 					ctx.submitting = false;
 					return;
 				}

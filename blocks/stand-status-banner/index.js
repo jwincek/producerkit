@@ -1,135 +1,186 @@
 /**
  * Stand Status Banner — editor block (no-build IIFE).
+ * @param blocks
+ * @param element
+ * @param blockEditor
+ * @param components
+ * @param data
  */
 ( function ( blocks, element, blockEditor, components, data ) {
 	'use strict';
 
-	var el = element.createElement;
-	var Fragment = element.Fragment;
-	var useState = element.useState;
-	var useEffect = element.useEffect;
-	var registerBlockType = blocks.registerBlockType;
-	var InspectorControls = blockEditor.InspectorControls;
-	var useBlockProps = blockEditor.useBlockProps;
-	var PanelBody = components.PanelBody;
-	var ToggleControl = components.ToggleControl;
-	var SelectControl = components.SelectControl;
-	var ComboboxControl = components.ComboboxControl;
-	var Placeholder = components.Placeholder;
-	var Spinner = components.Spinner;
-	var useSelect = data.useSelect;
+	const el = element.createElement;
+	const Fragment = element.Fragment;
+	const useState = element.useState;
+	const useEffect = element.useEffect;
+	const registerBlockType = blocks.registerBlockType;
+	const InspectorControls = blockEditor.InspectorControls;
+	const useBlockProps = blockEditor.useBlockProps;
+	const PanelBody = components.PanelBody;
+	const ToggleControl = components.ToggleControl;
+	const SelectControl = components.SelectControl;
+	const ComboboxControl = components.ComboboxControl;
+	const Placeholder = components.Placeholder;
+	const Spinner = components.Spinner;
+	const useSelect = data.useSelect;
 
 	function getRestBase() {
-		return ( window.lfufStandSettings || window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
+		return (
+			( window.lfufStandSettings || window.lfufSettings || {} )
+				.restBase || '/wp-json/lfuf/v1'
+		);
 	}
 
 	/**
 	 * Format an ISO 8601 timestamp as relative time, matching view.js logic.
+	 * @param isoString
 	 */
 	function formatTimeAgo( isoString ) {
-		if ( ! isoString ) return '';
-		var then = new Date( isoString );
-		var now = new Date();
-		var diff = Math.floor( ( now - then ) / 1000 );
+		if ( ! isoString ) {
+			return '';
+		}
+		const then = new Date( isoString );
+		const now = new Date();
+		const diff = Math.floor( ( now - then ) / 1000 );
 
-		if ( diff < 60 ) return 'just now';
+		if ( diff < 60 ) {
+			return 'just now';
+		}
 		if ( diff < 3600 ) {
-			var mins = Math.floor( diff / 60 );
+			const mins = Math.floor( diff / 60 );
 			return mins + ' minute' + ( mins === 1 ? '' : 's' ) + ' ago';
 		}
 		if ( diff < 86400 ) {
-			var hrs = Math.floor( diff / 3600 );
+			const hrs = Math.floor( diff / 3600 );
 			return hrs + ' hour' + ( hrs === 1 ? '' : 's' ) + ' ago';
 		}
-		var days = Math.floor( diff / 86400 );
+		const days = Math.floor( diff / 86400 );
 		return days + ' day' + ( days === 1 ? '' : 's' ) + ' ago';
 	}
 
 	/**
 	 * Format a YYYY-MM-DD date string for display.
 	 * short = "Apr 15", long = "April 15".
+	 * @param dateStr
+	 * @param style
 	 */
 	function formatDate( dateStr, style ) {
-		if ( ! dateStr ) return '';
-		var d = new Date( dateStr + 'T00:00:00' );
-		if ( isNaN( d ) ) return dateStr;
-		var month = style === 'short' ? 'short' : 'long';
-		return d.toLocaleDateString( undefined, { month: month, day: 'numeric' } );
+		if ( ! dateStr ) {
+			return '';
+		}
+		const d = new Date( dateStr + 'T00:00:00' );
+		if ( isNaN( d ) ) {
+			return dateStr;
+		}
+		const month = style === 'short' ? 'short' : 'long';
+		return d.toLocaleDateString( undefined, {
+			month,
+			day: 'numeric',
+		} );
 	}
 
 	registerBlockType( 'lfuf/stand-status-banner', {
 		edit: function EditBanner( props ) {
-			var attributes = props.attributes;
-			var setAttributes = props.setAttributes;
-			var locationId = attributes.locationId;
-			var showAddress = attributes.showAddress;
-			var showHours = attributes.showHours;
-			var showVenmo = attributes.showVenmo;
-			var showSeasonDates = attributes.showSeasonDates;
-			var layout = attributes.layout;
-			var pollingEnabled = attributes.pollingEnabled;
+			const attributes = props.attributes;
+			const setAttributes = props.setAttributes;
+			const locationId = attributes.locationId;
+			const showAddress = attributes.showAddress;
+			const showHours = attributes.showHours;
+			const showVenmo = attributes.showVenmo;
+			const showSeasonDates = attributes.showSeasonDates;
+			const layout = attributes.layout;
+			const pollingEnabled = attributes.pollingEnabled;
 
 			// Stand data from REST.
-			var _stand = useState( null );
-			var stand = _stand[0];
-			var setStand = _stand[1];
+			const _stand = useState( null );
+			const stand = _stand[ 0 ];
+			const setStand = _stand[ 1 ];
 
-			var _loading = useState( false );
-			var loading = _loading[0];
-			var setLoading = _loading[1];
+			const _loading = useState( false );
+			const loading = _loading[ 0 ];
+			const setLoading = _loading[ 1 ];
 
-			var _error = useState( '' );
-			var error = _error[0];
-			var setError = _error[1];
+			const _error = useState( '' );
+			const error = _error[ 0 ];
+			const setError = _error[ 1 ];
 
 			// Fetch stand info when locationId changes.
-			useEffect( function () {
-				if ( ! locationId ) {
-					setStand( null );
-					return;
-				}
-				setLoading( true );
-				setError( '' );
-				fetch( getRestBase() + '/stand/' + locationId + '/info' )
-					.then( function ( r ) {
-						if ( ! r.ok ) throw new Error( r.status + ' ' + r.statusText );
-						return r.json();
-					} )
-					.then( function ( data ) {
-						setStand( data );
-						setLoading( false );
-					} )
-					.catch( function ( err ) {
-						setError( 'Could not load stand data.' );
+			useEffect(
+				function () {
+					if ( ! locationId ) {
 						setStand( null );
-						setLoading( false );
-					} );
-			}, [ locationId ] );
+						return;
+					}
+					setLoading( true );
+					setError( '' );
+					fetch( getRestBase() + '/stand/' + locationId + '/info' )
+						.then( function ( r ) {
+							if ( ! r.ok ) {
+								throw new Error(
+									r.status + ' ' + r.statusText
+								);
+							}
+							return r.json();
+						} )
+						.then( function ( payload ) {
+							setStand( payload );
+							setLoading( false );
+						} )
+						.catch( function () {
+							setError( 'Could not load stand data.' );
+							setStand( null );
+							setLoading( false );
+						} );
+				},
+				[ locationId ]
+			);
 
 			// Location list for the picker.
-			var locations = useSelect( function ( select ) {
-				return select( 'core' ).getEntityRecords( 'postType', 'lfuf_location', {
-					per_page: 50,
-					status: 'publish',
-					_fields: 'id,title',
-				} ) || [];
+			const locations = useSelect( function ( select ) {
+				return (
+					select( 'core' ).getEntityRecords(
+						'postType',
+						'lfuf_location',
+						{
+							per_page: 50,
+							status: 'publish',
+							_fields: 'id,title',
+						}
+					) || []
+				);
 			}, [] );
 
-			var options = locations.map( function ( l ) {
-				return { value: l.id, label: l.title?.rendered || '(untitled)' };
+			const options = locations.map( function ( l ) {
+				return {
+					value: l.id,
+					label: l.title?.rendered || '(untitled)',
+				};
 			} );
 
 			// Derive display values from stand data.
-			var statusSlug = stand ? ( stand.is_open ? 'open' : 'closed' ) : 'closed';
-			var statusLabel = stand ? ( stand.is_open ? 'Open Now' : 'Closed' ) : '';
-			var timeAgo = stand ? formatTimeAgo( stand.last_toggled ) : '';
-			var venmoUrl = ( stand && stand.venmo_handle )
-				? 'https://venmo.com/' + stand.venmo_handle.replace( /^@/, '' )
+			const statusSlug = stand
+				? stand.is_open
+					? 'open'
+					: 'closed'
+				: 'closed';
+			const statusLabel = stand
+				? stand.is_open
+					? 'Open Now'
+					: 'Closed'
 				: '';
-			var hasSeasonDates = stand && stand.season_start && stand.season_end;
+			const timeAgo = stand ? formatTimeAgo( stand.last_toggled ) : '';
+			const venmoUrl =
+				stand && stand.venmo_handle
+					? 'https://venmo.com/' +
+					  stand.venmo_handle.replace( /^@/, '' )
+					: '';
+			const hasSeasonDates =
+				stand && stand.season_start && stand.season_end;
 
-			var blockProps = useBlockProps( {
-				className: 'lfuf-stand-banner lfuf-stand-banner--' + layout +
+			const blockProps = useBlockProps( {
+				className:
+					'lfuf-stand-banner lfuf-stand-banner--' +
+					layout +
 					( stand ? ' lfuf-stand-banner--' + statusSlug : '' ),
 			} );
 
@@ -150,9 +201,11 @@
 							el( ComboboxControl, {
 								label: 'Select a location',
 								value: '',
-								options: options,
-								onChange: function ( val ) {
-									setAttributes( { locationId: val ? Number( val ) : 0 } );
+								options,
+								onChange( val ) {
+									setAttributes( {
+										locationId: val ? Number( val ) : 0,
+									} );
 								},
 							} )
 						)
@@ -169,7 +222,9 @@
 					el(
 						'div',
 						blockProps,
-						el( 'div', { className: 'lfuf-stand-banner__loading' },
+						el(
+							'div',
+							{ className: 'lfuf-stand-banner__loading' },
 							el( Spinner ),
 							' Loading stand status…'
 						)
@@ -189,7 +244,9 @@
 						el( Placeholder, {
 							icon: 'warning',
 							label: 'Stand Status Banner',
-							instructions: error || 'Stand data unavailable. Check that this location is still published.',
+							instructions:
+								error ||
+								'Stand data unavailable. Check that this location is still published.',
 						} )
 					)
 				);
@@ -205,61 +262,151 @@
 					blockProps,
 
 					// Main status area.
-					el( 'div', { className: 'lfuf-stand-banner__main' },
-						el( 'div', { className: 'lfuf-stand-banner__status-row' },
+					el(
+						'div',
+						{ className: 'lfuf-stand-banner__main' },
+						el(
+							'div',
+							{ className: 'lfuf-stand-banner__status-row' },
 							el( 'span', {
-								className: 'lfuf-stand-banner__indicator lfuf-stand-banner__indicator--' + statusSlug,
+								className:
+									'lfuf-stand-banner__indicator lfuf-stand-banner__indicator--' +
+									statusSlug,
 							} ),
-							el( 'span', { className: 'lfuf-stand-banner__status-label' }, statusLabel )
+							el(
+								'span',
+								{
+									className:
+										'lfuf-stand-banner__status-label',
+								},
+								statusLabel
+							)
 						),
-						el( 'h2', { className: 'lfuf-stand-banner__name' }, stand.name ),
+						el(
+							'h2',
+							{ className: 'lfuf-stand-banner__name' },
+							stand.name
+						),
 						stand.status_message
-							? el( 'p', { className: 'lfuf-stand-banner__message' }, stand.status_message )
+							? el(
+									'p',
+									{ className: 'lfuf-stand-banner__message' },
+									stand.status_message
+							  )
 							: null,
-						( ! stand.is_open && stand.next_open )
-							? el( 'p', { className: 'lfuf-stand-banner__next-open' }, 'Next open: ' + stand.next_open )
+						! stand.is_open && stand.next_open
+							? el(
+									'p',
+									{
+										className:
+											'lfuf-stand-banner__next-open',
+									},
+									'Next open: ' + stand.next_open
+							  )
 							: null,
 						timeAgo
-							? el( 'span', { className: 'lfuf-stand-banner__updated' }, 'Updated ' + timeAgo )
+							? el(
+									'span',
+									{ className: 'lfuf-stand-banner__updated' },
+									'Updated ' + timeAgo
+							  )
 							: null
 					),
 
 					// Details area.
-					el( 'div', { className: 'lfuf-stand-banner__details' },
+					el(
+						'div',
+						{ className: 'lfuf-stand-banner__details' },
 						// Off-season notice.
-						( ! stand.in_season && showSeasonDates && hasSeasonDates )
-							? el( 'p', { className: 'lfuf-stand-banner__off-season' },
-								'Our season runs ' + formatDate( stand.season_start, 'long' ) +
-								' – ' + formatDate( stand.season_end, 'long' ) + '. See you then!'
-							)
+						! stand.in_season && showSeasonDates && hasSeasonDates
+							? el(
+									'p',
+									{
+										className:
+											'lfuf-stand-banner__off-season',
+									},
+									'Our season runs ' +
+										formatDate(
+											stand.season_start,
+											'long'
+										) +
+										' – ' +
+										formatDate( stand.season_end, 'long' ) +
+										'. See you then!'
+							  )
 							: null,
 						// In-season note.
-						( stand.in_season && showSeasonDates && hasSeasonDates )
-							? el( 'p', { className: 'lfuf-stand-banner__season-note' },
-								'Season: ' + formatDate( stand.season_start, 'short' ) +
-								' – ' + formatDate( stand.season_end, 'short' )
-							)
+						stand.in_season && showSeasonDates && hasSeasonDates
+							? el(
+									'p',
+									{
+										className:
+											'lfuf-stand-banner__season-note',
+									},
+									'Season: ' +
+										formatDate(
+											stand.season_start,
+											'short'
+										) +
+										' – ' +
+										formatDate( stand.season_end, 'short' )
+							  )
 							: null,
 						// Address.
-						( showAddress && stand.address )
-							? el( 'p', { className: 'lfuf-stand-banner__address' },
-								el( 'span', { className: 'lfuf-stand-banner__icon', 'aria-hidden': 'true' }, '\uD83D\uDCCD' ),
-								stand.address
-							)
+						showAddress && stand.address
+							? el(
+									'p',
+									{ className: 'lfuf-stand-banner__address' },
+									el(
+										'span',
+										{
+											className:
+												'lfuf-stand-banner__icon',
+											'aria-hidden': 'true',
+										},
+										'\uD83D\uDCCD'
+									),
+									stand.address
+							  )
 							: null,
 						// Hours.
-						( showHours && stand.hours )
-							? el( 'p', { className: 'lfuf-stand-banner__hours' },
-								el( 'span', { className: 'lfuf-stand-banner__icon', 'aria-hidden': 'true' }, '\uD83D\uDD50' ),
-								stand.hours
-							)
+						showHours && stand.hours
+							? el(
+									'p',
+									{ className: 'lfuf-stand-banner__hours' },
+									el(
+										'span',
+										{
+											className:
+												'lfuf-stand-banner__icon',
+											'aria-hidden': 'true',
+										},
+										'\uD83D\uDD50'
+									),
+									stand.hours
+							  )
 							: null,
 						// Venmo.
-						( showVenmo && venmoUrl )
-							? el( 'span', { className: 'lfuf-stand-banner__venmo-link' },
-								el( 'span', { className: 'lfuf-stand-banner__icon', 'aria-hidden': 'true' }, '\uD83D\uDCB8' ),
-								'Pay with Venmo (@' + stand.venmo_handle.replace( /^@/, '' ) + ')'
-							)
+						showVenmo && venmoUrl
+							? el(
+									'span',
+									{
+										className:
+											'lfuf-stand-banner__venmo-link',
+									},
+									el(
+										'span',
+										{
+											className:
+												'lfuf-stand-banner__icon',
+											'aria-hidden': 'true',
+										},
+										'\uD83D\uDCB8'
+									),
+									'Pay with Venmo (@' +
+										stand.venmo_handle.replace( /^@/, '' ) +
+										')'
+							  )
 							: null
 					)
 				)
@@ -278,9 +425,11 @@
 						el( ComboboxControl, {
 							label: 'Location',
 							value: locationId || '',
-							options: options,
-							onChange: function ( val ) {
-								setAttributes( { locationId: val ? Number( val ) : 0 } );
+							options,
+							onChange( val ) {
+								setAttributes( {
+									locationId: val ? Number( val ) : 0,
+								} );
 							},
 						} )
 					),
@@ -295,29 +444,37 @@
 								{ label: 'Compact Strip', value: 'compact' },
 								{ label: 'Card', value: 'card' },
 							],
-							onChange: function ( val ) {
+							onChange( val ) {
 								setAttributes( { layout: val } );
 							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show address',
 							checked: showAddress,
-							onChange: function ( val ) { setAttributes( { showAddress: val } ); },
+							onChange( val ) {
+								setAttributes( { showAddress: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show hours',
 							checked: showHours,
-							onChange: function ( val ) { setAttributes( { showHours: val } ); },
+							onChange( val ) {
+								setAttributes( { showHours: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show Venmo link',
 							checked: showVenmo,
-							onChange: function ( val ) { setAttributes( { showVenmo: val } ); },
+							onChange( val ) {
+								setAttributes( { showVenmo: val } );
+							},
 						} ),
 						el( ToggleControl, {
 							label: 'Show season dates',
 							checked: showSeasonDates,
-							onChange: function ( val ) { setAttributes( { showSeasonDates: val } ); },
+							onChange( val ) {
+								setAttributes( { showSeasonDates: val } );
+							},
 						} )
 					),
 					el(
@@ -326,7 +483,9 @@
 						el( ToggleControl, {
 							label: 'Auto-refresh status (polls every 60s)',
 							checked: pollingEnabled,
-							onChange: function ( val ) { setAttributes( { pollingEnabled: val } ); },
+							onChange( val ) {
+								setAttributes( { pollingEnabled: val } );
+							},
 						} )
 					)
 				);

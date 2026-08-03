@@ -1,0 +1,23 @@
+{
+	"name": "farm-stand-manager",
+	"version": "1.0.0",
+	"description": "Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.",
+	"private": true,
+	"scripts": {
+		"wp-env": "wp-env",
+		"start": "wp-env start",
+		"stop": "wp-env stop",
+		"lint:js": "wp-scripts lint-js assets/js/ blocks/",
+		"lint:css": "wp-scripts lint-style 'blocks/**/*.css'"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^10.0.0",
+		"@wordpress/scripts": "^30.0.0"
+	},
+	"overrides": {
+		"typescript": "^6.0.0"
+	},
+	"engines": {
+		"node": ">=20"
+	}
+}

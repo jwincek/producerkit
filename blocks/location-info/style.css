@@ -97,22 +97,27 @@
 }
 
 .lfuf-location-info__venmo:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .lfuf-location-info__venmo { transition: none; }
 }
 
 @media (forced-colors: active) {
+
     .lfuf-location-info { border-color: CanvasText; }
+
     .lfuf-location-info__venmo { border-color: LinkText; color: LinkText; }
+
     .lfuf-location-info__status {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
 }
+
 /* ── Payment options ── */
 .lfuf-location-info__payments {
     margin-top: 0.75rem;
@@ -187,6 +192,7 @@
 }
 
 @media print {
+
     .lfuf-location-info__qr-code {
         width: 12rem;
     }
