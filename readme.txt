@@ -1,6 +1,6 @@
-=== Farm Stand Manager ===
+=== ProducerKit ===
 Contributors: jeromewincek
-Tags: farm stand, farmers market, availability, products, events
+Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.0
 Stable tag: 1.1.0
@@ -8,11 +8,11 @@ Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.
+Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers.
 
 == Description ==
 
-Farm Stand Manager gives small farms, farm stands, and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and donation-friendly farm events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
+ProducerKit gives small farms, farm stands, and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and donation-friendly farm events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
 
 = Products and sources =
 
@@ -61,7 +61,7 @@ Farm Stand Manager gives small farms, farm stands, and market gardeners a comple
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/farm-stand-manager`, or install through the WordPress plugins screen.
+1. Upload the plugin files to `/wp-content/plugins/producerkit`, or install through the WordPress plugins screen.
 2. Activate the plugin.
 3. Go to **Farm Stand** in the admin sidebar and click **Load Sample Data** to explore the blocks with realistic content (remove it any time with one click).
 4. Create your real **Locations** and **Products**, then add the blocks to your pages.
@@ -82,7 +82,7 @@ Yes. Feature modules (stand status, availability board, event manager, notificat
 
 = What are Abilities? =
 
-The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. Farm Stand Manager registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`.
+The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`.
 
 = Does the RSVP feature store personal data? =
 

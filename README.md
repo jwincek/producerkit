@@ -1,4 +1,4 @@
-# Farm Stand Manager
+# ProducerKit
 
 Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
 
@@ -8,7 +8,7 @@ Single plugin, modular architecture. No build step required.
 
 1. Clone into `wp-content/plugins/`:
    ```
-   git clone https://github.com/jwincek/farm-stand-manager.git
+   git clone https://github.com/jwincek/producerkit.git
    ```
 2. Activate in WordPress admin.
 3. Go to **🥕 Farm Stand** in the sidebar.
@@ -23,8 +23,8 @@ Single plugin, modular architecture. No build step required.
 ## Architecture
 
 ```
-farm-stand-manager/
-├── farm-stand-manager.php                 # Bootstrap, module loader, block registration
+producerkit/
+├── producerkit.php                 # Bootstrap, module loader, block registration
 ├── includes/
 │   ├── admin-dashboard.php            # Admin dashboard with module status
 │   ├── sample-data.php                # Load/remove sample data toggle

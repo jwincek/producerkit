@@ -29,8 +29,8 @@ add_filter(
 			$new[ $key ] = $label;
 			// Insert after title.
 			if ( $key === 'title' ) {
-				$new['lfuf_price']        = __( 'Price', 'farm-stand-manager' );
-				$new['lfuf_availability'] = __( 'Availability', 'farm-stand-manager' );
+				$new['lfuf_price']        = __( 'Price', 'producerkit' );
+				$new['lfuf_availability'] = __( 'Availability', 'producerkit' );
 			}
 		}
 		// Remove the default date column — not useful for products.
@@ -130,9 +130,9 @@ add_filter(
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( $key === 'title' ) {
-				$new['lfuf_event_date']     = __( 'Event Date', 'farm-stand-manager' );
-				$new['lfuf_event_location'] = __( 'Location', 'farm-stand-manager' );
-				$new['lfuf_event_rsvp']     = __( 'RSVPs', 'farm-stand-manager' );
+				$new['lfuf_event_date']     = __( 'Event Date', 'producerkit' );
+				$new['lfuf_event_location'] = __( 'Location', 'producerkit' );
+				$new['lfuf_event_rsvp']     = __( 'RSVPs', 'producerkit' );
 			}
 		}
 		unset( $new['date'] );
@@ -273,9 +273,9 @@ add_filter(
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( $key === 'title' ) {
-				$new['lfuf_loc_type']    = __( 'Type', 'farm-stand-manager' );
-				$new['lfuf_loc_status']  = __( 'Status', 'farm-stand-manager' );
-				$new['lfuf_loc_address'] = __( 'Address', 'farm-stand-manager' );
+				$new['lfuf_loc_type']    = __( 'Type', 'producerkit' );
+				$new['lfuf_loc_status']  = __( 'Status', 'producerkit' );
+				$new['lfuf_loc_address'] = __( 'Address', 'producerkit' );
 			}
 		}
 		unset( $new['date'] );

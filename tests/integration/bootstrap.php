@@ -38,7 +38,7 @@ require_once $_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'muplugins_loaded',
 	function (): void {
-		require dirname( __DIR__, 2 ) . '/farm-stand-manager.php';
+		require dirname( __DIR__, 2 ) . '/producerkit.php';
 	}
 );
 

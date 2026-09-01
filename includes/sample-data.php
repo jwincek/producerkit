@@ -1,6 +1,6 @@
 <?php
 /**
- * Sample Data seeder for Farm Stand Manager.
+ * Sample Data seeder for ProducerKit.
  *
  * Provides a "Load Sample Data" / "Remove Sample Data" toggle
  * on the admin dashboard. Creates realistic products, locations,
@@ -64,11 +64,11 @@ function get_dashboard_html(): string {
 	$loaded      = is_loaded();
 	$action      = $loaded ? 'remove' : 'load';
 	$label       = $loaded
-		? __( 'Remove Sample Data', 'farm-stand-manager' )
-		: __( 'Load Sample Data', 'farm-stand-manager' );
+		? __( 'Remove Sample Data', 'producerkit' )
+		: __( 'Load Sample Data', 'producerkit' );
 	$description = $loaded
-		? __( 'Remove all sample products, locations, events, and availability entries.', 'farm-stand-manager' )
-		: __( 'Load example products, a stand location, events, and availability entries so you can see how the blocks look with content.', 'farm-stand-manager' );
+		? __( 'Remove all sample products, locations, events, and availability entries.', 'producerkit' )
+		: __( 'Load example products, a stand location, events, and availability entries so you can see how the blocks look with content.', 'producerkit' );
 
 	$url = wp_nonce_url(
 		admin_url( 'admin.php?page=farm-stand-dashboard&lfuf_sample_action=' . $action ),
@@ -84,8 +84,8 @@ function get_dashboard_html(): string {
 	if ( $result ) {
 		$type   = $result === 'loaded' ? 'success' : 'info';
 		$msg    = $result === 'loaded'
-			? __( 'Sample data loaded! Check your Products, Locations, and Events.', 'farm-stand-manager' )
-			: __( 'Sample data removed.', 'farm-stand-manager' );
+			? __( 'Sample data loaded! Check your Products, Locations, and Events.', 'producerkit' )
+			: __( 'Sample data removed.', 'producerkit' );
 		$notice = sprintf(
 			'<div class="notice notice-%s inline" style="margin-bottom:0.75rem;"><p>%s</p></div>',
 			esc_attr( $type ),
@@ -105,7 +105,7 @@ function get_dashboard_html(): string {
             <p class="description">%s</p>
             <a href="%s" class="%s" onclick=\'%s\'>%s</a>
         </div>',
-		esc_html__( 'Sample Data', 'farm-stand-manager' ),
+		esc_html__( 'Sample Data', 'producerkit' ),
 		$notice,
 		esc_html( $description ),
 		esc_url( $url ),

@@ -20,10 +20,10 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/get-board',
+			'producerkit/get-board',
 			[
-				'label'               => __( 'Get Availability Board', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'farm-stand-manager' ),
+				'label'               => __( 'Get Availability Board', 'producerkit' ),
+				'description'         => __( 'Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'producerkit' ),
 				'category'            => 'farm-availability',
 				'execute_callback'    => function ( array $input = [] ): array {
 					// Reuse the REST callback by constructing a mock request.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Farm Stand Manager admin dashboard.
+ * ProducerKit admin dashboard.
  *
  * A single admin page that shows:
  *  - Active/registered modules with status indicators
@@ -23,8 +23,8 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_dashboard_styles
 
 function register_dashboard_page(): void {
 	add_menu_page(
-		__( 'Farm Stand Manager', 'farm-stand-manager' ),
-		__( 'Farm Stand', 'farm-stand-manager' ),
+		__( 'ProducerKit', 'producerkit' ),
+		__( 'Farm Stand', 'producerkit' ),
 		'edit_posts',
 		'farm-stand-dashboard',
 		__NAMESPACE__ . '\\render_dashboard',
@@ -50,19 +50,19 @@ function render_dashboard(): void {
 	$cpt_counts = [];
 	$cpt_map    = [
 		'lfuf_product'  => [
-			'label' => __( 'Products', 'farm-stand-manager' ),
+			'label' => __( 'Products', 'producerkit' ),
 			'icon'  => '🥬',
 		],
 		'lfuf_source'   => [
-			'label' => __( 'Sources', 'farm-stand-manager' ),
+			'label' => __( 'Sources', 'producerkit' ),
 			'icon'  => '🌾',
 		],
 		'lfuf_location' => [
-			'label' => __( 'Locations', 'farm-stand-manager' ),
+			'label' => __( 'Locations', 'producerkit' ),
 			'icon'  => '📍',
 		],
 		'lfuf_event'    => [
-			'label' => __( 'Events', 'farm-stand-manager' ),
+			'label' => __( 'Events', 'producerkit' ),
 			'icon'  => '📅',
 		],
 	];
@@ -119,7 +119,7 @@ function render_dashboard(): void {
 	?>
 	<div class="wrap lfuf-dashboard">
 		<h1 class="lfuf-dashboard__title">
-			<?php esc_html_e( 'Farm Stand Manager', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'ProducerKit', 'producerkit' ); ?>
 			<span class="lfuf-dashboard__version">v<?php echo esc_html( \Leftfield\VERSION ); ?></span>
 		</h1>
 
@@ -133,8 +133,8 @@ function render_dashboard(): void {
 						— 
 						<?php
 						echo $stand_data['is_open']
-							? esc_html__( 'Open', 'farm-stand-manager' )
-							: esc_html__( 'Closed', 'farm-stand-manager' );
+							? esc_html__( 'Open', 'producerkit' )
+							: esc_html__( 'Closed', 'producerkit' );
 						?>
 					</strong>
 				</div>
@@ -155,7 +155,7 @@ function render_dashboard(): void {
 						<span>
 						<?php
 							/* translators: %s: human-readable time since the last update (e.g. "5 mins"). */
-							printf( esc_html__( 'Updated %s ago', 'farm-stand-manager' ), esc_html( $ago ) );
+							printf( esc_html__( 'Updated %s ago', 'producerkit' ), esc_html( $ago ) );
 						?>
 						</span>
 					<?php endif; ?>
@@ -164,7 +164,7 @@ function render_dashboard(): void {
 							<?php
 							printf(
 								/* translators: %1$s: season start date, %2$s: season end date. */
-								esc_html__( 'Season: %1$s – %2$s', 'farm-stand-manager' ),
+								esc_html__( 'Season: %1$s – %2$s', 'producerkit' ),
 								esc_html( date_i18n( 'M j', strtotime( $stand_data['season_start'] ) ) ),
 								esc_html( date_i18n( 'M j', strtotime( $stand_data['season_end'] ) ) ),
 							);
@@ -173,14 +173,14 @@ function render_dashboard(): void {
 					<?php endif; ?>
 				</div>
 				<a href="<?php echo esc_url( $stand_data['edit_url'] ); ?>" class="button">
-					<?php esc_html_e( 'Edit Stand', 'farm-stand-manager' ); ?>
+					<?php esc_html_e( 'Edit Stand', 'producerkit' ); ?>
 				</a>
 			</div>
 		<?php endif; ?>
 
 		<!-- ── Content Overview ── -->
 		<div class="lfuf-dashboard__section">
-			<h2><?php esc_html_e( 'Content', 'farm-stand-manager' ); ?></h2>
+			<h2><?php esc_html_e( 'Content', 'producerkit' ); ?></h2>
 			<div class="lfuf-dashboard__cards">
 				<?php foreach ( $cpt_counts as $post_type => $data ) : ?>
 					<div class="lfuf-dashboard__card">
@@ -190,13 +190,13 @@ function render_dashboard(): void {
 							<span class="lfuf-dashboard__card-label"><?php echo esc_html( $data['label'] ); ?></span>
 							<?php if ( $data['draft'] > 0 ) : ?>
 								<span class="lfuf-dashboard__card-draft">
-									+<?php echo (int) $data['draft']; ?> <?php esc_html_e( 'drafts', 'farm-stand-manager' ); ?>
+									+<?php echo (int) $data['draft']; ?> <?php esc_html_e( 'drafts', 'producerkit' ); ?>
 								</span>
 							<?php endif; ?>
 						</div>
 						<div class="lfuf-dashboard__card-actions">
-							<a href="<?php echo esc_url( $data['edit_url'] ); ?>"><?php esc_html_e( 'View', 'farm-stand-manager' ); ?></a>
-							<a href="<?php echo esc_url( $data['add_url'] ); ?>"><?php esc_html_e( 'Add New', 'farm-stand-manager' ); ?></a>
+							<a href="<?php echo esc_url( $data['edit_url'] ); ?>"><?php esc_html_e( 'View', 'producerkit' ); ?></a>
+							<a href="<?php echo esc_url( $data['add_url'] ); ?>"><?php esc_html_e( 'Add New', 'producerkit' ); ?></a>
 						</div>
 					</div>
 				<?php endforeach; ?>
@@ -206,7 +206,7 @@ function render_dashboard(): void {
 		<!-- ── Availability Summary ── -->
 		<?php if ( $availability_summary ) : ?>
 			<div class="lfuf-dashboard__section">
-				<h2><?php esc_html_e( 'Availability', 'farm-stand-manager' ); ?></h2>
+				<h2><?php esc_html_e( 'Availability', 'producerkit' ); ?></h2>
 				<div class="lfuf-dashboard__availability-bar">
 					<?php foreach ( $availability_summary as $status => $count ) : ?>
 						<span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $status ); ?>">
@@ -224,7 +224,7 @@ function render_dashboard(): void {
 		if ( ! empty( $gaps ) ) :
 			?>
 			<div class="lfuf-dashboard__section">
-				<h2><?php esc_html_e( 'Needs Attention', 'farm-stand-manager' ); ?></h2>
+				<h2><?php esc_html_e( 'Needs Attention', 'producerkit' ); ?></h2>
 				<div class="lfuf-dashboard__gaps">
 					<?php foreach ( $gaps as $gap ) : ?>
 						<div class="lfuf-dashboard__gap lfuf-dashboard__gap--<?php echo esc_attr( $gap['severity'] ); ?>">
@@ -246,13 +246,13 @@ function render_dashboard(): void {
 
 		<!-- ── Modules ── -->
 		<div class="lfuf-dashboard__section">
-			<h2><?php esc_html_e( 'Modules', 'farm-stand-manager' ); ?></h2>
+			<h2><?php esc_html_e( 'Modules', 'producerkit' ); ?></h2>
 			<table class="widefat lfuf-dashboard__modules-table">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Module', 'farm-stand-manager' ); ?></th>
-						<th><?php esc_html_e( 'Status', 'farm-stand-manager' ); ?></th>
-						<th><?php esc_html_e( 'Type', 'farm-stand-manager' ); ?></th>
+						<th><?php esc_html_e( 'Module', 'producerkit' ); ?></th>
+						<th><?php esc_html_e( 'Status', 'producerkit' ); ?></th>
+						<th><?php esc_html_e( 'Type', 'producerkit' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -269,16 +269,16 @@ function render_dashboard(): void {
 								<span class="lfuf-dashboard__module-status lfuf-dashboard__module-status--<?php echo $is_active ? 'active' : 'inactive'; ?>">
 									<?php
 									echo $is_active
-										? esc_html__( 'Active', 'farm-stand-manager' )
-										: esc_html__( 'Inactive', 'farm-stand-manager' );
+										? esc_html__( 'Active', 'producerkit' )
+										: esc_html__( 'Inactive', 'producerkit' );
 									?>
 								</span>
 							</td>
 							<td>
 								<?php
 								echo $config['required']
-									? esc_html__( 'Required', 'farm-stand-manager' )
-									: esc_html__( 'Optional', 'farm-stand-manager' );
+									? esc_html__( 'Required', 'producerkit' )
+									: esc_html__( 'Optional', 'producerkit' );
 								?>
 							</td>
 						</tr>
@@ -289,33 +289,33 @@ function render_dashboard(): void {
 
 		<!-- ── Platform Info ── -->
 		<div class="lfuf-dashboard__section">
-			<h2><?php esc_html_e( 'Platform', 'farm-stand-manager' ); ?></h2>
+			<h2><?php esc_html_e( 'Platform', 'producerkit' ); ?></h2>
 			<ul class="lfuf-dashboard__platform-list">
 				<li>
 					<?php
 					/* translators: %s: WordPress version number. */
-					printf( esc_html__( 'WordPress %s', 'farm-stand-manager' ), esc_html( get_bloginfo( 'version' ) ) );
+					printf( esc_html__( 'WordPress %s', 'producerkit' ), esc_html( get_bloginfo( 'version' ) ) );
 					?>
 				</li>
 				<li>
 					<?php
 					/* translators: %s: PHP version number. */
-					printf( esc_html__( 'PHP %s', 'farm-stand-manager' ), esc_html( PHP_VERSION ) );
+					printf( esc_html__( 'PHP %s', 'producerkit' ), esc_html( PHP_VERSION ) );
 					?>
 				</li>
 				<li>
-					<?php esc_html_e( 'Interactivity API:', 'farm-stand-manager' ); ?>
+					<?php esc_html_e( 'Interactivity API:', 'producerkit' ); ?>
 					<span class="lfuf-dashboard__check lfuf-dashboard__check--yes">
-						<?php esc_html_e( 'Available', 'farm-stand-manager' ); ?>
+						<?php esc_html_e( 'Available', 'producerkit' ); ?>
 					</span>
 				</li>
 				<li>
-					<?php esc_html_e( 'Abilities API:', 'farm-stand-manager' ); ?>
+					<?php esc_html_e( 'Abilities API:', 'producerkit' ); ?>
 					<span class="lfuf-dashboard__check lfuf-dashboard__check--<?php echo $abilities_available ? 'yes' : 'no'; ?>">
 						<?php
 						echo $abilities_available
-							? esc_html__( 'Available', 'farm-stand-manager' )
-							: esc_html__( 'Not available (requires WP 6.9+)', 'farm-stand-manager' );
+							? esc_html__( 'Available', 'producerkit' )
+							: esc_html__( 'Not available (requires WP 6.9+)', 'producerkit' );
 						?>
 					</span>
 				</li>
@@ -365,11 +365,11 @@ function get_content_gaps(): array {
 		$gaps[] = [
 			'icon'     => '📷',
 			/* translators: %d: number of products without a featured photo. */
-			'label'    => sprintf( _n( '%d product without a photo', '%d products without photos', $no_thumb_count, 'farm-stand-manager' ), $no_thumb_count ),
-			'detail'   => __( 'Products look better on the availability board with images.', 'farm-stand-manager' ),
+			'label'    => sprintf( _n( '%d product without a photo', '%d products without photos', $no_thumb_count, 'producerkit' ), $no_thumb_count ),
+			'detail'   => __( 'Products look better on the availability board with images.', 'producerkit' ),
 			'severity' => 'info',
 			'url'      => admin_url( 'edit.php?post_type=lfuf_product' ),
-			'action'   => __( 'View Products', 'farm-stand-manager' ),
+			'action'   => __( 'View Products', 'producerkit' ),
 		];
 	}
 
@@ -384,11 +384,11 @@ function get_content_gaps(): array {
 		$gaps[] = [
 			'icon'     => '💲',
 			/* translators: %d: number of products without a price. */
-			'label'    => sprintf( _n( '%d product without a price', '%d products without prices', $no_price_count, 'farm-stand-manager' ), $no_price_count ),
-			'detail'   => __( 'Visitors see the price on the availability board and product pages.', 'farm-stand-manager' ),
+			'label'    => sprintf( _n( '%d product without a price', '%d products without prices', $no_price_count, 'producerkit' ), $no_price_count ),
+			'detail'   => __( 'Visitors see the price on the availability board and product pages.', 'producerkit' ),
 			'severity' => 'warning',
 			'url'      => admin_url( 'edit.php?post_type=lfuf_product' ),
-			'action'   => __( 'View Products', 'farm-stand-manager' ),
+			'action'   => __( 'View Products', 'producerkit' ),
 		];
 	}
 
@@ -403,11 +403,11 @@ function get_content_gaps(): array {
 		$gaps[] = [
 			'icon'     => '📅',
 			/* translators: %d: number of events without a start date. */
-			'label'    => sprintf( _n( '%d event without a start date', '%d events without start dates', $no_date_count, 'farm-stand-manager' ), $no_date_count ),
-			'detail'   => __( 'Events need a start date to appear in the event list.', 'farm-stand-manager' ),
+			'label'    => sprintf( _n( '%d event without a start date', '%d events without start dates', $no_date_count, 'producerkit' ), $no_date_count ),
+			'detail'   => __( 'Events need a start date to appear in the event list.', 'producerkit' ),
 			'severity' => 'warning',
 			'url'      => admin_url( 'edit.php?post_type=lfuf_event' ),
-			'action'   => __( 'View Events', 'farm-stand-manager' ),
+			'action'   => __( 'View Events', 'producerkit' ),
 		];
 	}
 
@@ -422,11 +422,11 @@ function get_content_gaps(): array {
 		$gaps[] = [
 			'icon'     => '📍',
 			/* translators: %d: number of locations without an address. */
-			'label'    => sprintf( _n( '%d location without an address', '%d locations without addresses', $no_addr_count, 'farm-stand-manager' ), $no_addr_count ),
-			'detail'   => __( 'The address shows on location cards and the stand banner.', 'farm-stand-manager' ),
+			'label'    => sprintf( _n( '%d location without an address', '%d locations without addresses', $no_addr_count, 'producerkit' ), $no_addr_count ),
+			'detail'   => __( 'The address shows on location cards and the stand banner.', 'producerkit' ),
 			'severity' => 'warning',
 			'url'      => admin_url( 'edit.php?post_type=lfuf_location' ),
-			'action'   => __( 'View Locations', 'farm-stand-manager' ),
+			'action'   => __( 'View Locations', 'producerkit' ),
 		];
 	}
 
@@ -455,11 +455,11 @@ function get_content_gaps(): array {
 			$gaps[] = [
 				'icon'     => '🕐',
 				/* translators: %d: number of products with availability over a week old. */
-				'label'    => sprintf( _n( '%d product with availability over a week old', '%d products with availability over a week old', $stale_count, 'farm-stand-manager' ), $stale_count ),
-				'detail'   => __( 'Consider refreshing the availability board.', 'farm-stand-manager' ),
+				'label'    => sprintf( _n( '%d product with availability over a week old', '%d products with availability over a week old', $stale_count, 'producerkit' ), $stale_count ),
+				'detail'   => __( 'Consider refreshing the availability board.', 'producerkit' ),
 				'severity' => 'info',
 				'url'      => admin_url( 'admin.php?page=farm-stand-availability' ),
-				'action'   => __( 'Update Availability', 'farm-stand-manager' ),
+				'action'   => __( 'Update Availability', 'producerkit' ),
 			];
 		}
 
@@ -481,11 +481,11 @@ function get_content_gaps(): array {
 			$gaps[] = [
 				'icon'     => '🫥',
 				/* translators: %d: number of products not on the availability board. */
-				'label'    => sprintf( _n( '%d product not on the availability board', '%d products not on the availability board', $unlisted, 'farm-stand-manager' ), $unlisted ),
-				'detail'   => __( 'These products won\'t show up for visitors until you set their status.', 'farm-stand-manager' ),
+				'label'    => sprintf( _n( '%d product not on the availability board', '%d products not on the availability board', $unlisted, 'producerkit' ), $unlisted ),
+				'detail'   => __( 'These products won\'t show up for visitors until you set their status.', 'producerkit' ),
 				'severity' => 'info',
 				'url'      => admin_url( 'admin.php?page=farm-stand-availability' ),
-				'action'   => __( 'Update Availability', 'farm-stand-manager' ),
+				'action'   => __( 'Update Availability', 'producerkit' ),
 			];
 		}
 	}

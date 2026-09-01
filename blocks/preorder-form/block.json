@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "cart",
     "description": "Let visitors pre-order products for pickup — pay at the stand. Requires the Pre-Orders module.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "locationId": {
             "type": "number",

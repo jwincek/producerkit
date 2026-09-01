@@ -117,7 +117,7 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 		$top_title = sprintf(
 			'<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s%s',
 			$d['is_open'] ? 'open' : 'closed',
-			$d['is_open'] ? __( 'Stand Open', 'farm-stand-manager' ) : __( 'Stand Closed', 'farm-stand-manager' ),
+			$d['is_open'] ? __( 'Stand Open', 'producerkit' ) : __( 'Stand Closed', 'producerkit' ),
 			$d['message'] ? ' &mdash; <span class="lfuf-ab-msg">' . esc_html( $d['message'] ) . '</span>' : '',
 		);
 	} else {
@@ -125,7 +125,7 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 			'<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s',
 			$open_count > 0 ? 'open' : 'closed',
 			/* translators: %1$d: number of open stands, %2$d: total number of stands. */
-			sprintf( __( 'Stands (%1$d/%2$d open)', 'farm-stand-manager' ), $open_count, $total ),
+			sprintf( __( 'Stands (%1$d/%2$d open)', 'producerkit' ), $open_count, $total ),
 		);
 	}
 
@@ -171,8 +171,8 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 				'id'     => 'lfuf-stand-' . $sid . '-toggle',
 				'parent' => $parent,
 				'title'  => $is_open
-					? __( 'Close the Stand', 'farm-stand-manager' )
-					: __( 'Open the Stand', 'farm-stand-manager' ),
+					? __( 'Close the Stand', 'producerkit' )
+					: __( 'Open the Stand', 'producerkit' ),
 				'href'   => '#',
 				'meta'   => [
 					'class'         => 'lfuf-stand-toggle-action',
@@ -188,10 +188,10 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 			. ' placeholder="%3$s" value="%4$s" data-stand-id="%1$d" />'
 			. '<button type="button" class="lfuf-ab-msg-save" data-stand-id="%1$d">%5$s</button>',
 			$sid,
-			esc_attr__( 'Status message', 'farm-stand-manager' ),
-			esc_attr__( "Status message\u{2026}", 'farm-stand-manager' ),
+			esc_attr__( 'Status message', 'producerkit' ),
+			esc_attr__( "Status message\u{2026}", 'producerkit' ),
 			esc_attr( $message ),
-			esc_html__( 'Save', 'farm-stand-manager' ),
+			esc_html__( 'Save', 'producerkit' ),
 		);
 
 		$bar->add_node(
@@ -209,7 +209,7 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 			[
 				'id'     => 'lfuf-stand-' . $sid . '-edit',
 				'parent' => $parent,
-				'title'  => __( 'Edit Stand Settings', 'farm-stand-manager' ),
+				'title'  => __( 'Edit Stand Settings', 'producerkit' ),
 				'href'   => get_edit_post_link( $sid, 'raw' ),
 			]
 		);

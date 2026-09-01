@@ -64,8 +64,8 @@ if ( $season_start && $season_end ) {
 
 $status_slug  = $is_open ? 'open' : 'closed';
 $status_label = $is_open
-	? __( 'Open Now', 'farm-stand-manager' )
-	: __( 'Closed', 'farm-stand-manager' );
+	? __( 'Open Now', 'producerkit' )
+	: __( 'Closed', 'producerkit' );
 
 // Format "last updated" as relative time.
 $time_ago = '';
@@ -77,7 +77,7 @@ if ( $last_toggled ) {
 		// current_time( 'timestamp' ) yields epoch + gmt_offset. Comparing the
 		// two made a stand toggled seconds ago read "4 hours ago" on a UTC-4
 		// site — off by exactly the site's offset, in whichever direction.
-		$time_ago = human_time_diff( $toggled_ts, time() ) . ' ' . __( 'ago', 'farm-stand-manager' );
+		$time_ago = human_time_diff( $toggled_ts, time() ) . ' ' . __( 'ago', 'producerkit' );
 	}
 }
 
@@ -100,7 +100,7 @@ foreach ( $pay_methods as $m ) {
 $season_range_full = ( $season_start && $season_end )
 	? sprintf(
 		/* translators: %1$s: season start date, %2$s: season end date. */
-		__( 'Our season runs %1$s – %2$s. See you then!', 'farm-stand-manager' ),
+		__( 'Our season runs %1$s – %2$s. See you then!', 'producerkit' ),
 		date_i18n( 'F j', strtotime( $season_start ) ),
 		date_i18n( 'F j', strtotime( $season_end ) ),
 	)
@@ -109,7 +109,7 @@ $season_range_full = ( $season_start && $season_end )
 $season_range_short = ( $season_start && $season_end )
 	? sprintf(
 		/* translators: %1$s: season start date, %2$s: season end date. */
-		__( 'Season: %1$s – %2$s', 'farm-stand-manager' ),
+		__( 'Season: %1$s – %2$s', 'producerkit' ),
 		date_i18n( 'M j', strtotime( $season_start ) ),
 		date_i18n( 'M j', strtotime( $season_end ) ),
 	)
@@ -137,7 +137,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 // Aria label for the section landmark.
 $section_label = sprintf(
 	/* translators: %s = stand name */
-	__( '%s — Farm Stand Status', 'farm-stand-manager' ),
+	__( '%s — Farm Stand Status', 'producerkit' ),
 	$post->post_title,
 );
 ?>
@@ -189,7 +189,7 @@ $section_label = sprintf(
 		<?php
 		if ( ! $is_open && $next_open ) {
 			/* translators: %s: date and time the stand next opens. */
-			printf( esc_html__( 'Next open: %s', 'farm-stand-manager' ), esc_html( $next_open ) );
+			printf( esc_html__( 'Next open: %s', 'producerkit' ), esc_html( $next_open ) );
 		}
 		?>
 		</p>
@@ -201,7 +201,7 @@ $section_label = sprintf(
 			>
 			<?php
 				/* translators: %s: human-readable time since the last status update (e.g. "5 mins ago"). */
-				printf( esc_html__( 'Updated %s', 'farm-stand-manager' ), esc_html( $time_ago ) );
+				printf( esc_html__( 'Updated %s', 'producerkit' ), esc_html( $time_ago ) );
 			?>
 			</span>
 		<?php endif; ?>
@@ -223,7 +223,7 @@ $section_label = sprintf(
 		<?php if ( $show_address && $address ) : ?>
 			<p class="lfuf-stand-banner__address">
 				<span class="lfuf-stand-banner__icon" aria-hidden="true">📍</span>
-				<span class="screen-reader-text"><?php esc_html_e( 'Address:', 'farm-stand-manager' ); ?> </span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Address:', 'producerkit' ); ?> </span>
 				<?php echo esc_html( $address ); ?>
 			</p>
 		<?php endif; ?>
@@ -231,7 +231,7 @@ $section_label = sprintf(
 		<?php if ( $show_hours && $hours ) : ?>
 			<p class="lfuf-stand-banner__hours">
 				<span class="lfuf-stand-banner__icon" aria-hidden="true">🕐</span>
-				<span class="screen-reader-text"><?php esc_html_e( 'Hours:', 'farm-stand-manager' ); ?> </span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Hours:', 'producerkit' ); ?> </span>
 				<?php echo esc_html( $hours ); ?>
 			</p>
 		<?php endif; ?>
@@ -246,19 +246,19 @@ $section_label = sprintf(
 				if ( in_array( $pay_link['type'], [ 'venmo', 'cashapp', 'paypal' ], true ) ) {
 					printf(
 						/* translators: 1: payment service name, 2: account handle. */
-						esc_html__( 'Pay with %1$s (@%2$s)', 'farm-stand-manager' ),
+						esc_html__( 'Pay with %1$s (@%2$s)', 'producerkit' ),
 						esc_html( $pay_link['label'] ),
 						esc_html( $pay_link['value'] ),
 					);
 				} else {
 					printf(
 						/* translators: %s: payment method label. */
-						esc_html__( 'Pay online: %s', 'farm-stand-manager' ),
+						esc_html__( 'Pay online: %s', 'producerkit' ),
 						esc_html( $pay_link['label'] ),
 					);
 				}
 				?>
-				<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'farm-stand-manager' ); ?></span>
+				<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'producerkit' ); ?></span>
 			</a>
 		<?php endif; ?>
 	</div>

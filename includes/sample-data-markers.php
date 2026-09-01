@@ -86,10 +86,10 @@ add_action(
 	<div class="lfuf-sample-banner">
 		<span class="lfuf-sample-banner__icon">🧪</span>
 		<span class="lfuf-sample-banner__text">
-			<?php esc_html_e( 'Sample data is active. Content marked "Sample" is test data.', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'Sample data is active. Content marked "Sample" is test data.', 'producerkit' ); ?>
 		</span>
 		<a href="<?php echo esc_url( $remove_url ); ?>" class="lfuf-sample-banner__link">
-			<?php esc_html_e( 'Remove sample data →', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'Remove sample data →', 'producerkit' ); ?>
 		</a>
 	</div>
 		<?php
@@ -191,9 +191,9 @@ add_action(
 
 		printf(
 			'<div class="notice notice-warning"><p>🧪 %s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Farm Stand Manager sample data is loaded. Remember to remove it before going live.', 'farm-stand-manager' ),
+			esc_html__( 'ProducerKit sample data is loaded. Remember to remove it before going live.', 'producerkit' ),
 			esc_url( $remove_url ),
-			esc_html__( 'Remove sample data →', 'farm-stand-manager' ),
+			esc_html__( 'Remove sample data →', 'producerkit' ),
 		);
 	}
 );

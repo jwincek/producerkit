@@ -294,7 +294,7 @@ function submit_rsvp( \WP_REST_Request $request ): \WP_REST_Response {
 				'token'      => $result['token'],
 			],
 			'summary' => $summary,
-			'message' => __( 'You\'re on the list! See you there.', 'farm-stand-manager' ),
+			'message' => __( 'You\'re on the list! See you there.', 'producerkit' ),
 		],
 		201
 	);
@@ -310,7 +310,7 @@ function cancel_rsvp( \WP_REST_Request $request ): \WP_REST_Response {
 
 	if ( ! $deleted ) {
 		return new \WP_REST_Response(
-			[ 'message' => __( 'RSVP not found or already cancelled.', 'farm-stand-manager' ) ],
+			[ 'message' => __( 'RSVP not found or already cancelled.', 'producerkit' ) ],
 			404,
 		);
 	}
@@ -318,7 +318,7 @@ function cancel_rsvp( \WP_REST_Request $request ): \WP_REST_Response {
 	return new \WP_REST_Response(
 		[
 			'deleted' => true,
-			'message' => __( 'Your RSVP has been cancelled.', 'farm-stand-manager' ),
+			'message' => __( 'Your RSVP has been cancelled.', 'producerkit' ),
 		],
 		200
 	);

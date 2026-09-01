@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "calendar",
     "description": "Display a single farm event with date, location, RSVP, and donation link. Useful for featuring a specific event on any page.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "eventId": {
             "type": "number",

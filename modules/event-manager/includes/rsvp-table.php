@@ -118,27 +118,27 @@ function add_rsvp( array $data ): array|\WP_Error {
 	$event    = get_post( $event_id );
 
 	if ( ! $event || $event->post_type !== 'lfuf_event' || $event->post_status !== 'publish' ) {
-		return new \WP_Error( 'invalid_event', __( 'Event not found.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'invalid_event', __( 'Event not found.', 'producerkit' ) );
 	}
 
 	// Check if cancelled.
 	if ( (bool) get_post_meta( $event_id, '_lfuf_em_cancelled', true ) ) {
-		return new \WP_Error( 'event_cancelled', __( 'This event has been cancelled.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'event_cancelled', __( 'This event has been cancelled.', 'producerkit' ) );
 	}
 
 	// Check if RSVPs are enabled.
 	if ( ! (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_enabled', true ) ) {
-		return new \WP_Error( 'rsvp_disabled', __( 'RSVPs are not enabled for this event.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'rsvp_disabled', __( 'RSVPs are not enabled for this event.', 'producerkit' ) );
 	}
 
 	// Check if manually closed.
 	if ( (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_closed', true ) ) {
-		return new \WP_Error( 'rsvp_closed', __( 'RSVPs are closed for this event.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'rsvp_closed', __( 'RSVPs are closed for this event.', 'producerkit' ) );
 	}
 
 	$name = sanitize_text_field( $data['name'] ?? '' );
 	if ( empty( $name ) ) {
-		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'producerkit' ) );
 	}
 
 	// ── Server-side party size cap ──
@@ -153,7 +153,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 	if ( $recent_count >= RATE_LIMIT_PER_IP ) {
 		return new \WP_Error(
 			'rate_limited',
-			__( 'Too many RSVPs from this connection. Please try again later.', 'farm-stand-manager' ),
+			__( 'Too many RSVPs from this connection. Please try again later.', 'producerkit' ),
 		);
 	}
 
@@ -175,7 +175,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 	if ( $existing ) {
 		return new \WP_Error(
 			'duplicate_rsvp',
-			__( 'It looks like you\'ve already RSVP\'d to this event!', 'farm-stand-manager' ),
+			__( 'It looks like you\'ve already RSVP\'d to this event!', 'producerkit' ),
 		);
 	}
 
@@ -202,7 +202,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 			$wpdb->query( 'ROLLBACK' );
 			return new \WP_Error(
 				'rsvp_full',
-				__( 'Sorry, this event is at capacity.', 'farm-stand-manager' ),
+				__( 'Sorry, this event is at capacity.', 'producerkit' ),
 			);
 		}
 	}
@@ -227,12 +227,12 @@ function add_rsvp( array $data ): array|\WP_Error {
 			$wpdb->query( 'COMMIT' );
 		} else {
 			$wpdb->query( 'ROLLBACK' );
-			return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'farm-stand-manager' ) );
+			return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'producerkit' ) );
 		}
 	}
 
 	if ( ! $wpdb->insert_id ) {
-		return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'producerkit' ) );
 	}
 
 	// Increment rate limit counter.

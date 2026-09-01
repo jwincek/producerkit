@@ -120,10 +120,10 @@ function normalize_items( mixed $items ): array|\WP_Error {
 		$items = json_decode( $items, true );
 	}
 	if ( ! is_array( $items ) || $items === [] ) {
-		return new \WP_Error( 'items_required', __( 'Please choose at least one product.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'items_required', __( 'Please choose at least one product.', 'producerkit' ) );
 	}
 	if ( count( $items ) > MAX_LINES ) {
-		return new \WP_Error( 'too_many_items', __( 'Too many product lines in one order.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'too_many_items', __( 'Too many product lines in one order.', 'producerkit' ) );
 	}
 
 	$normalized = [];
@@ -136,7 +136,7 @@ function normalize_items( mixed $items ): array|\WP_Error {
 
 		$product = get_post( $product_id );
 		if ( ! $product || $product->post_type !== 'lfuf_product' || $product->post_status !== 'publish' ) {
-			return new \WP_Error( 'invalid_product', __( 'One of the selected products is unavailable.', 'farm-stand-manager' ) );
+			return new \WP_Error( 'invalid_product', __( 'One of the selected products is unavailable.', 'producerkit' ) );
 		}
 
 		// Merge duplicate lines for the same product.
@@ -156,7 +156,7 @@ function normalize_items( mixed $items ): array|\WP_Error {
 
 	return $normalized ? array_values( $normalized ) : new \WP_Error(
 		'items_required',
-		__( 'Please choose at least one product.', 'farm-stand-manager' ),
+		__( 'Please choose at least one product.', 'producerkit' ),
 	);
 }
 
@@ -245,7 +245,7 @@ function weekday_names( array $days ): array {
  */
 function validate_pickup_date_for_location( string $date, int $location_id ): bool|\WP_Error {
 	if ( ! validate_pickup_date( $date ) ) {
-		return new \WP_Error( 'invalid_pickup_date', __( 'Please choose a pickup date within the next month.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'invalid_pickup_date', __( 'Please choose a pickup date within the next month.', 'producerkit' ) );
 	}
 
 	$constraints = pickup_constraints( $location_id );
@@ -257,7 +257,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 				'pickup_day_closed',
 				sprintf(
 				/* translators: %s: comma-separated list of weekday names. */
-					__( 'That day isn\'t a pickup day. Pickups are available on: %s.', 'farm-stand-manager' ),
+					__( 'That day isn\'t a pickup day. Pickups are available on: %s.', 'producerkit' ),
 					implode( ', ', weekday_names( $constraints['allowed_days'] ) ),
 				)
 			);
@@ -271,7 +271,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 			'pickup_out_of_season',
 			sprintf(
 			/* translators: 1: season start date, 2: season end date. */
-				__( 'That date is outside our season (%1$s – %2$s).', 'farm-stand-manager' ),
+				__( 'That date is outside our season (%1$s – %2$s).', 'producerkit' ),
 				$constraints['season_start'],
 				$constraints['season_end'],
 			)
@@ -279,7 +279,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 	}
 
 	if ( in_array( $date, $constraints['blackouts'], true ) ) {
-		return new \WP_Error( 'pickup_blackout', __( 'We\'re closed that day — please choose another date.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'pickup_blackout', __( 'We\'re closed that day — please choose another date.', 'producerkit' ) );
 	}
 
 	return true;
@@ -314,14 +314,14 @@ function create_order( array $data ): array|\WP_Error {
 
 	$name = sanitize_text_field( $data['name'] ?? '' );
 	if ( $name === '' ) {
-		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'producerkit' ) );
 	}
 
 	$location_id = (int) ( $data['location_id'] ?? 0 );
 	if ( $location_id > 0 ) {
 		$location = get_post( $location_id );
 		if ( ! $location || $location->post_type !== 'lfuf_location' || $location->post_status !== 'publish' ) {
-			return new \WP_Error( 'invalid_location', __( 'Pickup location not found.', 'farm-stand-manager' ) );
+			return new \WP_Error( 'invalid_location', __( 'Pickup location not found.', 'producerkit' ) );
 		}
 	}
 
@@ -350,7 +350,7 @@ function create_order( array $data ): array|\WP_Error {
 
 	$recent = (int) get_transient( $rate_key );
 	if ( $recent >= $rate_limit ) {
-		return new \WP_Error( 'rate_limited', __( 'Too many pre-orders from this connection. Please try again later.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'rate_limited', __( 'Too many pre-orders from this connection. Please try again later.', 'producerkit' ) );
 	}
 
 	$token = wp_generate_password( 32, false );
@@ -372,7 +372,7 @@ function create_order( array $data ): array|\WP_Error {
 	// would overwrite $wpdb->insert_id.
 	$order_id = (int) $wpdb->insert_id;
 	if ( ! $inserted || ! $order_id ) {
-		return new \WP_Error( 'db_error', __( 'Could not save the pre-order.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'db_error', __( 'Could not save the pre-order.', 'producerkit' ) );
 	}
 
 	set_transient( $rate_key, $recent + 1, HOUR_IN_SECONDS );
@@ -430,10 +430,10 @@ function cancel_order_by_token( string $token ): bool|\WP_Error {
 
 	$order = get_order_by_token( $token );
 	if ( ! $order ) {
-		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'producerkit' ) );
 	}
 	if ( ! in_array( $order['status'], [ 'pending', 'confirmed' ], true ) ) {
-		return new \WP_Error( 'not_cancellable', __( 'This pre-order can no longer be cancelled online.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_cancellable', __( 'This pre-order can no longer be cancelled online.', 'producerkit' ) );
 	}
 
 	$updated = (bool) $wpdb->update( table_name(), [ 'status' => 'cancelled' ], [ 'token' => $token ], [ '%s' ], [ '%s' ] );
@@ -451,14 +451,14 @@ function update_status( int $id, string $status ): bool|\WP_Error {
 	global $wpdb;
 
 	if ( ! in_array( $status, valid_statuses(), true ) ) {
-		return new \WP_Error( 'invalid_status', __( 'Unknown pre-order status.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'invalid_status', __( 'Unknown pre-order status.', 'producerkit' ) );
 	}
 
 	$table = table_name();
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1", $id ) );
 	if ( ! $row ) {
-		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'producerkit' ) );
 	}
 
 	$old = (string) $row->status;

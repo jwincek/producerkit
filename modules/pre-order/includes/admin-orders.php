@@ -20,8 +20,8 @@ add_action(
 	function (): void {
 		add_submenu_page(
 			'farm-stand-dashboard',
-			__( 'Pre-Orders', 'farm-stand-manager' ),
-			__( 'Pre-Orders', 'farm-stand-manager' ),
+			__( 'Pre-Orders', 'producerkit' ),
+			__( 'Pre-Orders', 'producerkit' ),
 			'edit_posts',
 			'farm-stand-preorders',
 			__NAMESPACE__ . '\\render_page',
@@ -46,11 +46,11 @@ function next_actions(): array {
 
 function status_label( string $status ): string {
 	return match ( $status ) {
-		'pending'   => __( 'Pending', 'farm-stand-manager' ),
-		'confirmed' => __( 'Confirmed', 'farm-stand-manager' ),
-		'ready'     => __( 'Ready for pickup', 'farm-stand-manager' ),
-		'picked_up' => __( 'Picked up', 'farm-stand-manager' ),
-		'cancelled' => __( 'Cancelled', 'farm-stand-manager' ),
+		'pending'   => __( 'Pending', 'producerkit' ),
+		'confirmed' => __( 'Confirmed', 'producerkit' ),
+		'ready'     => __( 'Ready for pickup', 'producerkit' ),
+		'picked_up' => __( 'Picked up', 'producerkit' ),
+		'cancelled' => __( 'Cancelled', 'producerkit' ),
 		default     => $status,
 	};
 }
@@ -64,26 +64,26 @@ function render_harvest_view(): void {
 	?>
 	<div class="wrap lfuf-harvest">
 		<h1>
-			<?php esc_html_e( 'Harvest List', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'Harvest List', 'producerkit' ); ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders' ) ); ?>" class="page-title-action lfuf-harvest__back">
-				<?php esc_html_e( 'All Pre-Orders', 'farm-stand-manager' ); ?>
+				<?php esc_html_e( 'All Pre-Orders', 'producerkit' ); ?>
 			</a>
 			<button type="button" class="page-title-action lfuf-harvest__print" onclick="window.print()">
-				<?php esc_html_e( 'Print', 'farm-stand-manager' ); ?>
+				<?php esc_html_e( 'Print', 'producerkit' ); ?>
 			</button>
 		</h1>
 		<p class="lfuf-harvest__meta">
 			<?php
 			printf(
 				/* translators: %s: today's date. */
-				esc_html__( 'Active pre-orders (pending, confirmed, ready) as of %s.', 'farm-stand-manager' ),
+				esc_html__( 'Active pre-orders (pending, confirmed, ready) as of %s.', 'producerkit' ),
 				esc_html( current_time( 'Y-m-d' ) ),
 			);
 			?>
 		</p>
 
 		<?php if ( ! $groups ) : ?>
-			<p><?php esc_html_e( 'Nothing to harvest — no active pre-orders.', 'farm-stand-manager' ); ?></p>
+			<p><?php esc_html_e( 'Nothing to harvest — no active pre-orders.', 'producerkit' ); ?></p>
 		<?php endif; ?>
 
 		<?php foreach ( $groups as $group ) : ?>
@@ -98,7 +98,7 @@ function render_harvest_view(): void {
 					<?php
 					printf(
 						/* translators: %d: number of orders. */
-						esc_html( _n( '(%d order)', '(%d orders)', $group['order_count'], 'farm-stand-manager' ) ),
+						esc_html( _n( '(%d order)', '(%d orders)', $group['order_count'], 'producerkit' ) ),
 						(int) $group['order_count'],
 					);
 					?>
@@ -107,9 +107,9 @@ function render_harvest_view(): void {
 			<table class="widefat striped" style="max-width: 40em; margin-bottom: 1.5em;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Product', 'farm-stand-manager' ); ?></th>
-						<th style="width: 8em;"><?php esc_html_e( 'Quantity', 'farm-stand-manager' ); ?></th>
-						<th style="width: 8em;"><?php esc_html_e( 'Orders', 'farm-stand-manager' ); ?></th>
+						<th><?php esc_html_e( 'Product', 'producerkit' ); ?></th>
+						<th style="width: 8em;"><?php esc_html_e( 'Quantity', 'producerkit' ); ?></th>
+						<th style="width: 8em;"><?php esc_html_e( 'Orders', 'producerkit' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -177,9 +177,9 @@ function render_page(): void {
 	?>
 	<div class="wrap">
 		<h1>
-			<?php esc_html_e( 'Pre-Orders', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'Pre-Orders', 'producerkit' ); ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders&view=harvest' ) ); ?>" class="page-title-action">
-				<?php esc_html_e( 'Harvest List', 'farm-stand-manager' ); ?>
+				<?php esc_html_e( 'Harvest List', 'producerkit' ); ?>
 			</a>
 		</h1>
 
@@ -187,7 +187,7 @@ function render_page(): void {
 			<li>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders' ) ); ?>"
 					<?php echo $status_filter === '' ? 'class="current"' : ''; ?>>
-					<?php esc_html_e( 'All', 'farm-stand-manager' ); ?>
+					<?php esc_html_e( 'All', 'producerkit' ); ?>
 				</a> |
 			</li>
 			<?php
@@ -208,17 +208,17 @@ function render_page(): void {
 		<table class="widefat striped" style="margin-top: 2.5em;">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Pickup', 'farm-stand-manager' ); ?></th>
-					<th><?php esc_html_e( 'Customer', 'farm-stand-manager' ); ?></th>
-					<th><?php esc_html_e( 'Items', 'farm-stand-manager' ); ?></th>
-					<th><?php esc_html_e( 'Location', 'farm-stand-manager' ); ?></th>
-					<th><?php esc_html_e( 'Status', 'farm-stand-manager' ); ?></th>
-					<th><?php esc_html_e( 'Actions', 'farm-stand-manager' ); ?></th>
+					<th><?php esc_html_e( 'Pickup', 'producerkit' ); ?></th>
+					<th><?php esc_html_e( 'Customer', 'producerkit' ); ?></th>
+					<th><?php esc_html_e( 'Items', 'producerkit' ); ?></th>
+					<th><?php esc_html_e( 'Location', 'producerkit' ); ?></th>
+					<th><?php esc_html_e( 'Status', 'producerkit' ); ?></th>
+					<th><?php esc_html_e( 'Actions', 'producerkit' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if ( ! $result['orders'] ) : ?>
-					<tr><td colspan="6"><?php esc_html_e( 'No pre-orders yet.', 'farm-stand-manager' ); ?></td></tr>
+					<tr><td colspan="6"><?php esc_html_e( 'No pre-orders yet.', 'producerkit' ); ?></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $result['orders'] as $order ) : ?>
 					<tr data-lfuf-order="<?php echo (int) $order['id']; ?>">
@@ -237,7 +237,7 @@ function render_page(): void {
 								<?php
 								printf(
 									/* translators: 1: quantity, 2: product title, 3: unit. */
-									esc_html__( '%1$d × %2$s %3$s', 'farm-stand-manager' ),
+									esc_html__( '%1$d × %2$s %3$s', 'producerkit' ),
 									(int) $item['qty'],
 									esc_html( $item['title'] ),
 									$item['unit'] ? esc_html( '(' . $item['unit'] . ')' ) : '',

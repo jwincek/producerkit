@@ -97,7 +97,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 		<?php if ( $price ) : ?>
 			<span class="lfuf-product-card__price">
-				<span class="screen-reader-text"><?php esc_html_e( 'Price:', 'farm-stand-manager' ); ?> </span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Price:', 'producerkit' ); ?> </span>
 				<?php echo esc_html( $price ); ?>
 				<?php if ( $unit ) : ?>
 					<span class="lfuf-product-card__unit"> / <?php echo esc_html( $unit ); ?></span>
@@ -106,7 +106,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 		<?php endif; ?>
 
 		<?php if ( $seasons && ! is_wp_error( $seasons ) ) : ?>
-			<div class="lfuf-product-card__seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'farm-stand-manager' ); ?>">
+			<div class="lfuf-product-card__seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'producerkit' ); ?>">
 				<?php foreach ( $seasons as $season ) : ?>
 					<span class="lfuf-product-card__season-badge"><?php echo esc_html( $season->name ); ?></span>
 				<?php endforeach; ?>
@@ -118,7 +118,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 		<?php endif; ?>
 
 		<?php if ( $show_availability && ! empty( $availability_rows ) ) : ?>
-			<div class="lfuf-product-card__availability" aria-label="<?php esc_attr_e( 'Current availability', 'farm-stand-manager' ); ?>">
+			<div class="lfuf-product-card__availability" aria-label="<?php esc_attr_e( 'Current availability', 'producerkit' ); ?>">
 				<?php foreach ( $availability_rows as $row ) : ?>
 					<span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $row->status ); ?>">
 						<?php echo esc_html( ucfirst( str_replace( '_', ' ', $row->status ) ) ); ?>
@@ -132,7 +132,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 		<?php if ( $show_source && ! empty( $sources ) ) : ?>
 			<div class="lfuf-product-card__sources">
-				<strong><?php esc_html_e( 'Sourced from:', 'farm-stand-manager' ); ?></strong>
+				<strong><?php esc_html_e( 'Sourced from:', 'producerkit' ); ?></strong>
 				<?php foreach ( $sources as $source ) : ?>
 					<div class="lfuf-product-card__source">
 						<a href="<?php echo esc_url( get_permalink( $source->ID ) ); ?>">

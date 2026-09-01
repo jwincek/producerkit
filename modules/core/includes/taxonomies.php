@@ -24,17 +24,17 @@ function register(): void {
  * ─────────────────────────────────────────────── */
 function register_product_type(): void {
 	$labels = [
-		'name'              => __( 'Product Types', 'farm-stand-manager' ),
-		'singular_name'     => __( 'Product Type', 'farm-stand-manager' ),
-		'search_items'      => __( 'Search Product Types', 'farm-stand-manager' ),
-		'all_items'         => __( 'All Product Types', 'farm-stand-manager' ),
-		'parent_item'       => __( 'Parent Product Type', 'farm-stand-manager' ),
-		'parent_item_colon' => __( 'Parent Product Type:', 'farm-stand-manager' ),
-		'edit_item'         => __( 'Edit Product Type', 'farm-stand-manager' ),
-		'update_item'       => __( 'Update Product Type', 'farm-stand-manager' ),
-		'add_new_item'      => __( 'Add New Product Type', 'farm-stand-manager' ),
-		'new_item_name'     => __( 'New Product Type Name', 'farm-stand-manager' ),
-		'menu_name'         => __( 'Product Types', 'farm-stand-manager' ),
+		'name'              => __( 'Product Types', 'producerkit' ),
+		'singular_name'     => __( 'Product Type', 'producerkit' ),
+		'search_items'      => __( 'Search Product Types', 'producerkit' ),
+		'all_items'         => __( 'All Product Types', 'producerkit' ),
+		'parent_item'       => __( 'Parent Product Type', 'producerkit' ),
+		'parent_item_colon' => __( 'Parent Product Type:', 'producerkit' ),
+		'edit_item'         => __( 'Edit Product Type', 'producerkit' ),
+		'update_item'       => __( 'Update Product Type', 'producerkit' ),
+		'add_new_item'      => __( 'Add New Product Type', 'producerkit' ),
+		'new_item_name'     => __( 'New Product Type Name', 'producerkit' ),
+		'menu_name'         => __( 'Product Types', 'producerkit' ),
 	];
 
 	register_taxonomy(
@@ -71,15 +71,15 @@ function register_product_type(): void {
  * ─────────────────────────────────────────────── */
 function register_season(): void {
 	$labels = [
-		'name'          => __( 'Seasons', 'farm-stand-manager' ),
-		'singular_name' => __( 'Season', 'farm-stand-manager' ),
-		'search_items'  => __( 'Search Seasons', 'farm-stand-manager' ),
-		'all_items'     => __( 'All Seasons', 'farm-stand-manager' ),
-		'edit_item'     => __( 'Edit Season', 'farm-stand-manager' ),
-		'update_item'   => __( 'Update Season', 'farm-stand-manager' ),
-		'add_new_item'  => __( 'Add New Season', 'farm-stand-manager' ),
-		'new_item_name' => __( 'New Season Name', 'farm-stand-manager' ),
-		'menu_name'     => __( 'Seasons', 'farm-stand-manager' ),
+		'name'          => __( 'Seasons', 'producerkit' ),
+		'singular_name' => __( 'Season', 'producerkit' ),
+		'search_items'  => __( 'Search Seasons', 'producerkit' ),
+		'all_items'     => __( 'All Seasons', 'producerkit' ),
+		'edit_item'     => __( 'Edit Season', 'producerkit' ),
+		'update_item'   => __( 'Update Season', 'producerkit' ),
+		'add_new_item'  => __( 'Add New Season', 'producerkit' ),
+		'new_item_name' => __( 'New Season Name', 'producerkit' ),
+		'menu_name'     => __( 'Seasons', 'producerkit' ),
 	];
 
 	register_taxonomy(
@@ -115,15 +115,15 @@ function register_season(): void {
  * ─────────────────────────────────────────────── */
 function register_event_type(): void {
 	$labels = [
-		'name'          => __( 'Event Types', 'farm-stand-manager' ),
-		'singular_name' => __( 'Event Type', 'farm-stand-manager' ),
-		'search_items'  => __( 'Search Event Types', 'farm-stand-manager' ),
-		'all_items'     => __( 'All Event Types', 'farm-stand-manager' ),
-		'edit_item'     => __( 'Edit Event Type', 'farm-stand-manager' ),
-		'update_item'   => __( 'Update Event Type', 'farm-stand-manager' ),
-		'add_new_item'  => __( 'Add New Event Type', 'farm-stand-manager' ),
-		'new_item_name' => __( 'New Event Type Name', 'farm-stand-manager' ),
-		'menu_name'     => __( 'Event Types', 'farm-stand-manager' ),
+		'name'          => __( 'Event Types', 'producerkit' ),
+		'singular_name' => __( 'Event Type', 'producerkit' ),
+		'search_items'  => __( 'Search Event Types', 'producerkit' ),
+		'all_items'     => __( 'All Event Types', 'producerkit' ),
+		'edit_item'     => __( 'Edit Event Type', 'producerkit' ),
+		'update_item'   => __( 'Update Event Type', 'producerkit' ),
+		'add_new_item'  => __( 'Add New Event Type', 'producerkit' ),
+		'new_item_name' => __( 'New Event Type Name', 'producerkit' ),
+		'menu_name'     => __( 'Event Types', 'producerkit' ),
 	];
 
 	register_taxonomy(

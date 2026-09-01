@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "carrot",
     "description": "Display a single Leftfield product with its availability status and source info.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "productId": {
             "type": "number",

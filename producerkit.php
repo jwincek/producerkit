@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Farm Stand Manager
- * Plugin URI:        https://github.com/jwincek/farm-stand-manager
- * Description:       Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
+ * Plugin Name:       ProducerKit
+ * Plugin URI:        https://github.com/jwincek/producerkit
+ * Description:       Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support.
  * Version:           1.1.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
@@ -10,7 +10,7 @@
  * Author URI:        https://github.com/jwincek
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       farm-stand-manager
+ * Text Domain:       producerkit
  */
 
 declare(strict_types=1);
@@ -43,12 +43,12 @@ const PREFIX     = 'lfuf';
  */
 function get_module_labels(): array {
 	return [
-		'core'               => __( 'Core Data Layer', 'farm-stand-manager' ),
-		'stand-status'       => __( 'Stand Status', 'farm-stand-manager' ),
-		'availability-board' => __( 'Availability Board', 'farm-stand-manager' ),
-		'event-manager'      => __( 'Event Manager', 'farm-stand-manager' ),
-		'notifications'      => __( 'Notifications', 'farm-stand-manager' ),
-		'pre-order'          => __( 'Pre-Orders', 'farm-stand-manager' ),
+		'core'               => __( 'Core Data Layer', 'producerkit' ),
+		'stand-status'       => __( 'Stand Status', 'producerkit' ),
+		'availability-board' => __( 'Availability Board', 'producerkit' ),
+		'event-manager'      => __( 'Event Manager', 'producerkit' ),
+		'notifications'      => __( 'Notifications', 'producerkit' ),
+		'pre-order'          => __( 'Pre-Orders', 'producerkit' ),
 	];
 }
 
@@ -200,7 +200,7 @@ add_filter(
 			$categories,
 			[
 				'slug'  => 'leftfield',
-				'title' => __( 'Farm Stand Manager', 'farm-stand-manager' ),
+				'title' => __( 'ProducerKit', 'producerkit' ),
 				'icon'  => 'carrot',
 			]
 		);

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Farm Stand Manager">
-	<description>WordPress coding standards for the Farm Stand Manager plugin.</description>
+<ruleset name="ProducerKit">
+	<description>WordPress coding standards for the ProducerKit plugin.</description>
 
 	<!-- What to scan: PHP only — JS and CSS are covered by
 	     @wordpress/scripts (eslint / stylelint). -->
@@ -54,7 +54,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="farm-stand-manager"/>
+				<element value="producerkit"/>
 			</property>
 		</properties>
 	</rule>

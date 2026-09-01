@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "visibility",
     "description": "Show a compact availability status badge for a product. Reads from the shared availability table.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "productId": {
             "type": "number",

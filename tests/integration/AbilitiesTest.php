@@ -13,36 +13,36 @@ declare(strict_types=1);
 final class AbilitiesTest extends WP_UnitTestCase {
 
 	private const EXPECTED = [
-		'farm-stand-manager/list-products',
-		'farm-stand-manager/get-product-sources',
-		'farm-stand-manager/get-availability',
-		'farm-stand-manager/update-availability',
-		'farm-stand-manager/list-locations',
-		'farm-stand-manager/toggle-stand-status',
-		'farm-stand-manager/get-stand-info',
-		'farm-stand-manager/get-board',
-		'farm-stand-manager/list-upcoming-events',
-		'farm-stand-manager/rsvp-to-event',
-		'farm-stand-manager/create-preorder',
-		'farm-stand-manager/list-preorders',
-		'farm-stand-manager/update-preorder-status',
-		'farm-stand-manager/get-harvest-list',
+		'producerkit/list-products',
+		'producerkit/get-product-sources',
+		'producerkit/get-availability',
+		'producerkit/update-availability',
+		'producerkit/list-locations',
+		'producerkit/toggle-stand-status',
+		'producerkit/get-stand-info',
+		'producerkit/get-board',
+		'producerkit/list-upcoming-events',
+		'producerkit/rsvp-to-event',
+		'producerkit/create-preorder',
+		'producerkit/list-preorders',
+		'producerkit/update-preorder-status',
+		'producerkit/get-harvest-list',
 	];
 
 	/** Staff-only abilities that must refuse anonymous callers. */
 	private const STAFF_ONLY = [
-		'farm-stand-manager/update-availability',
-		'farm-stand-manager/toggle-stand-status',
-		'farm-stand-manager/list-preorders',
-		'farm-stand-manager/update-preorder-status',
-		'farm-stand-manager/get-harvest-list',
+		'producerkit/update-availability',
+		'producerkit/toggle-stand-status',
+		'producerkit/list-preorders',
+		'producerkit/update-preorder-status',
+		'producerkit/get-harvest-list',
 	];
 
 	public function test_all_abilities_register(): void {
 		$registered = array_keys(
 			array_filter(
 				wp_get_abilities(),
-				fn ( $ability ) => str_starts_with( $ability->get_name(), 'farm-stand-manager/' ),
+				fn ( $ability ) => str_starts_with( $ability->get_name(), 'producerkit/' ),
 			)
 		);
 		sort( $registered );
@@ -78,10 +78,10 @@ final class AbilitiesTest extends WP_UnitTestCase {
 		// execute() validates output against each declared schema, so a pass
 		// here covers schema conformance too.
 		foreach ( [ 'list-products', 'get-availability', 'list-locations', 'get-board', 'list-upcoming-events' ] as $short ) {
-			$result = wp_get_ability( "farm-stand-manager/{$short}" )->execute();
+			$result = wp_get_ability( "producerkit/{$short}" )->execute();
 			$this->assertNotWPError(
 				$result,
-				"farm-stand-manager/{$short} failed: "
+				"producerkit/{$short} failed: "
 				. ( is_wp_error( $result ) ? $result->get_error_message() : '' )
 			);
 		}

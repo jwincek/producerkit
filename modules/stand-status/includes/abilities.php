@@ -22,10 +22,10 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/toggle-stand-status',
+			'producerkit/toggle-stand-status',
 			[
-				'label'               => __( 'Toggle Stand Status', 'farm-stand-manager' ),
-				'description'         => __( 'Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'farm-stand-manager' ),
+				'label'               => __( 'Toggle Stand Status', 'producerkit' ),
+				'description'         => __( 'Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'producerkit' ),
 				'category'            => 'farm-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$location_id    = (int) $input['location_id'];
@@ -90,10 +90,10 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/get-stand-info',
+			'producerkit/get-stand-info',
 			[
-				'label'               => __( 'Get Stand Info', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'farm-stand-manager' ),
+				'label'               => __( 'Get Stand Info', 'producerkit' ),
+				'description'         => __( 'Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'producerkit' ),
 				'category'            => 'farm-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$post = get_post( (int) $input['location_id'] );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Version bumper for Farm Stand Manager.
+ * Version bumper for ProducerKit.
  *
  * The plugin version is declared in a lot of places — the header, the VERSION
  * constant, readme.txt's Stable tag, package.json, and one per block.json.

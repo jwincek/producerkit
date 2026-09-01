@@ -268,13 +268,13 @@ function compute_next_open( string $schedule_json ): string {
 	$time  = $now->format( 'H:i' );
 
 	$day_names = [
-		0 => __( 'Sunday', 'farm-stand-manager' ),
-		1 => __( 'Monday', 'farm-stand-manager' ),
-		2 => __( 'Tuesday', 'farm-stand-manager' ),
-		3 => __( 'Wednesday', 'farm-stand-manager' ),
-		4 => __( 'Thursday', 'farm-stand-manager' ),
-		5 => __( 'Friday', 'farm-stand-manager' ),
-		6 => __( 'Saturday', 'farm-stand-manager' ),
+		0 => __( 'Sunday', 'producerkit' ),
+		1 => __( 'Monday', 'producerkit' ),
+		2 => __( 'Tuesday', 'producerkit' ),
+		3 => __( 'Wednesday', 'producerkit' ),
+		4 => __( 'Thursday', 'producerkit' ),
+		5 => __( 'Friday', 'producerkit' ),
+		6 => __( 'Saturday', 'producerkit' ),
 	];
 
 	$candidates = [];
@@ -311,11 +311,11 @@ function compute_next_open( string $schedule_json ): string {
 
 	if ( $next['delta'] === 0 ) {
 		/* translators: %s: opening time (e.g. "9:00 AM"). */
-		return sprintf( __( 'Today at %s', 'farm-stand-manager' ), $formatted_time );
+		return sprintf( __( 'Today at %s', 'producerkit' ), $formatted_time );
 	}
 	if ( $next['delta'] === 1 ) {
 		/* translators: %s: opening time (e.g. "9:00 AM"). */
-		return sprintf( __( 'Tomorrow at %s', 'farm-stand-manager' ), $formatted_time );
+		return sprintf( __( 'Tomorrow at %s', 'producerkit' ), $formatted_time );
 	}
 
 	return sprintf( '%s at %s', $day_names[ $next['day'] ], $formatted_time );

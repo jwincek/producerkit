@@ -205,7 +205,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 	$grouped = [];
 	foreach ( $items as $item ) {
 		$group_key   = $item['product_slugs'][0] ?? 'other';
-		$group_label = $item['product_types'][0] ?? __( 'Other', 'farm-stand-manager' );
+		$group_label = $item['product_types'][0] ?? __( 'Other', 'producerkit' );
 
 		if ( ! isset( $grouped[ $group_key ] ) ) {
 			$grouped[ $group_key ] = [

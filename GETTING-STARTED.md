@@ -1,4 +1,4 @@
-# Getting Started with Farm Stand Manager
+# Getting Started with ProducerKit
 
 Welcome! This guide walks you through setting up your website's farm tools — the stand status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.
 
@@ -92,7 +92,7 @@ That's it — the availability board on your website updates immediately.
 
 ## Step 4: Place Blocks on Your Pages
 
-Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **Farm Stand Manager** category:
+Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **ProducerKit** category:
 
 ### Homepage (recommended blocks)
 

@@ -54,7 +54,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 $section_label = sprintf(
 	/* translators: %s = location name */
-	__( '%s — Location Details', 'farm-stand-manager' ),
+	__( '%s — Location Details', 'producerkit' ),
 	$location->post_title,
 );
 ?>
@@ -70,7 +70,7 @@ $section_label = sprintf(
 				class="lfuf-location-info__status lfuf-location-info__status--<?php echo $is_open ? 'open' : 'closed'; ?>"
 				role="status"
 			>
-				<?php echo $is_open ? esc_html__( 'Open Now', 'farm-stand-manager' ) : esc_html__( 'Closed', 'farm-stand-manager' ); ?>
+				<?php echo $is_open ? esc_html__( 'Open Now', 'producerkit' ) : esc_html__( 'Closed', 'producerkit' ); ?>
 			</span>
 		<?php endif; ?>
 	</div>
@@ -83,7 +83,7 @@ $section_label = sprintf(
 
 	<?php if ( $address ) : ?>
 		<p class="lfuf-location-info__address">
-			<span class="screen-reader-text"><?php esc_html_e( 'Address:', 'farm-stand-manager' ); ?> </span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Address:', 'producerkit' ); ?> </span>
 			<?php echo esc_html( $address ); ?>
 			<?php
 			// Directions destination: coordinates when set, else the address.
@@ -97,15 +97,15 @@ $section_label = sprintf(
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				<?php esc_html_e( 'Get directions', 'farm-stand-manager' ); ?>
-				<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'farm-stand-manager' ); ?></span>
+				<?php esc_html_e( 'Get directions', 'producerkit' ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'producerkit' ); ?></span>
 			</a>
 		</p>
 	<?php endif; ?>
 
 	<?php if ( $hours ) : ?>
 		<p class="lfuf-location-info__hours">
-			<span class="screen-reader-text"><?php esc_html_e( 'Hours:', 'farm-stand-manager' ); ?> </span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Hours:', 'producerkit' ); ?> </span>
 			<?php echo esc_html( $hours ); ?>
 		</p>
 	<?php endif; ?>
@@ -113,7 +113,7 @@ $section_label = sprintf(
 	<?php // showVenmo is the stored attribute key (pre-payment-methods content); it now means "show payment options". ?>
 	<?php if ( $show_venmo && $payment_methods ) : ?>
 		<div class="lfuf-location-info__payments">
-			<span class="lfuf-location-info__payments-label"><?php esc_html_e( 'Payment options:', 'farm-stand-manager' ); ?></span>
+			<span class="lfuf-location-info__payments-label"><?php esc_html_e( 'Payment options:', 'producerkit' ); ?></span>
 			<ul class="lfuf-location-info__payments-list">
 				<?php foreach ( $payment_methods as $method ) : ?>
 					<li class="lfuf-location-info__payment lfuf-location-info__payment--<?php echo esc_attr( $method['type'] ); ?>">
@@ -128,7 +128,7 @@ $section_label = sprintf(
 								if ( in_array( $method['type'], [ 'venmo', 'cashapp', 'paypal' ], true ) ) {
 									printf(
 										/* translators: 1: payment service name, 2: account handle. */
-										esc_html__( '%1$s (@%2$s)', 'farm-stand-manager' ),
+										esc_html__( '%1$s (@%2$s)', 'producerkit' ),
 										esc_html( $method['label'] ),
 										esc_html( $method['value'] ),
 									);
@@ -136,7 +136,7 @@ $section_label = sprintf(
 									echo esc_html( $method['label'] );
 								}
 								?>
-								<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'farm-stand-manager' ); ?></span>
+								<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'producerkit' ); ?></span>
 							</a>
 						<?php else : ?>
 							<span class="lfuf-location-info__payment-badge"><?php echo esc_html( $method['label'] ); ?></span>
@@ -167,7 +167,7 @@ $section_label = sprintf(
 						<?php
 							printf(
 								/* translators: %s: payment method label. */
-								esc_attr__( 'QR code: pay with %s', 'farm-stand-manager' ),
+								esc_attr__( 'QR code: pay with %s', 'producerkit' ),
 								esc_attr( $qr_link['label'] ),
 							);
 						?>
@@ -177,7 +177,7 @@ $section_label = sprintf(
 						<?php
 						printf(
 							/* translators: %s: payment method label. */
-							esc_html__( 'Scan to pay with %s', 'farm-stand-manager' ),
+							esc_html__( 'Scan to pay with %s', 'producerkit' ),
 							esc_html( $qr_link['label'] ),
 						);
 						?>

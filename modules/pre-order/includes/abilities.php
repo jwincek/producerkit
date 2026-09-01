@@ -53,8 +53,8 @@ add_action(
 		wp_register_ability_category(
 			'farm-preorders',
 			[
-				'label'       => __( 'Farm Pre-Orders', 'farm-stand-manager' ),
-				'description' => __( 'Abilities for creating and managing pay-at-pickup pre-orders.', 'farm-stand-manager' ),
+				'label'       => __( 'Farm Pre-Orders', 'producerkit' ),
+				'description' => __( 'Abilities for creating and managing pay-at-pickup pre-orders.', 'producerkit' ),
 			]
 		);
 	}
@@ -68,10 +68,10 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/create-preorder',
+			'producerkit/create-preorder',
 			[
-				'label'               => __( 'Create Pre-Order', 'farm-stand-manager' ),
-				'description'         => __( 'Place a pay-at-pickup pre-order for farm products: product lines with quantities, a pickup date within the next month, and contact details. Returns a cancellation token.', 'farm-stand-manager' ),
+				'label'               => __( 'Create Pre-Order', 'producerkit' ),
+				'description'         => __( 'Place a pay-at-pickup pre-order for farm products: product lines with quantities, a pickup date within the next month, and contact details. Returns a cancellation token.', 'producerkit' ),
 				'category'            => 'farm-preorders',
 				'execute_callback'    => function ( array $input ): array {
 					$result = Orders\create_order( $input );
@@ -149,10 +149,10 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/list-preorders',
+			'producerkit/list-preorders',
 			[
-				'label'               => __( 'List Pre-Orders', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve pre-orders, optionally filtered by status (pending, confirmed, ready, picked_up, cancelled). Staff only.', 'farm-stand-manager' ),
+				'label'               => __( 'List Pre-Orders', 'producerkit' ),
+				'description'         => __( 'Retrieve pre-orders, optionally filtered by status (pending, confirmed, ready, picked_up, cancelled). Staff only.', 'producerkit' ),
 				'category'            => 'farm-preorders',
 				'execute_callback'    => function ( array $input = [] ): array {
 					return Orders\get_orders( $input );
@@ -195,10 +195,10 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/get-harvest-list',
+			'producerkit/get-harvest-list',
 			[
-				'label'               => __( 'Get Harvest List', 'farm-stand-manager' ),
-				'description'         => __( 'Aggregate active pre-orders (pending, confirmed, ready) into per-pickup-date totals of each product to have ready — the sheet a farmer takes to the field. Staff only.', 'farm-stand-manager' ),
+				'label'               => __( 'Get Harvest List', 'producerkit' ),
+				'description'         => __( 'Aggregate active pre-orders (pending, confirmed, ready) into per-pickup-date totals of each product to have ready — the sheet a farmer takes to the field. Staff only.', 'producerkit' ),
 				'category'            => 'farm-preorders',
 				'execute_callback'    => function ( array $input = [] ): array {
 					return Orders\get_harvest_list( $input );
@@ -255,10 +255,10 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/update-preorder-status',
+			'producerkit/update-preorder-status',
 			[
-				'label'               => __( 'Update Pre-Order Status', 'farm-stand-manager' ),
-				'description'         => __( 'Move a pre-order through its lifecycle: pending → confirmed → ready → picked_up, or cancelled. Staff only.', 'farm-stand-manager' ),
+				'label'               => __( 'Update Pre-Order Status', 'producerkit' ),
+				'description'         => __( 'Move a pre-order through its lifecycle: pending → confirmed → ready → picked_up, or cancelled. Staff only.', 'producerkit' ),
 				'category'            => 'farm-preorders',
 				'execute_callback'    => function ( array $input ): array {
 					$result = Orders\update_status( (int) $input['id'], (string) $input['status'] );

@@ -7,7 +7,7 @@
     "category": "leftfield",
     "icon": "controls-repeat",
     "description": "A quick-toggle control panel that renders in the editor for switching stand status. Shows a live toggle + message field. Renders nothing on the front end (admin tool only).",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "locationId": {
             "type": "number",

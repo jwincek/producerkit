@@ -40,9 +40,9 @@ $wrapper_attrs = get_block_wrapper_attributes(
 		<?php
 		if ( $product_name ) {
 			/* translators: %s: product name. */
-			printf( esc_html__( '%s availability:', 'farm-stand-manager' ), esc_html( $product_name ) );
+			printf( esc_html__( '%s availability:', 'producerkit' ), esc_html( $product_name ) );
 		} else {
-			esc_html_e( 'Availability:', 'farm-stand-manager' );
+			esc_html_e( 'Availability:', 'producerkit' );
 		}
 		?>
 	</span>

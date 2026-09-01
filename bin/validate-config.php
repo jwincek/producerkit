@@ -1,6 +1,6 @@
 <?php
 /**
- * Contract validator for Farm Stand Manager.
+ * Contract validator for ProducerKit.
  *
  * Static analysis — no WordPress, no Composer dependencies. It cross-checks the
  * declarations that are spread across the plugin against the code that consumes

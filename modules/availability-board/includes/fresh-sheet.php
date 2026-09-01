@@ -18,8 +18,8 @@ add_action(
 	function (): void {
 		add_submenu_page(
 			'farm-stand-dashboard',
-			__( 'Fresh Sheet', 'farm-stand-manager' ),
-			__( 'Fresh Sheet', 'farm-stand-manager' ),
+			__( 'Fresh Sheet', 'producerkit' ),
+			__( 'Fresh Sheet', 'producerkit' ),
 			'edit_posts',
 			'farm-stand-fresh-sheet',
 			__NAMESPACE__ . '\\render_page',
@@ -29,11 +29,11 @@ add_action(
 
 function status_label( string $status ): string {
 	return match ( $status ) {
-		'abundant'    => __( 'Abundant', 'farm-stand-manager' ),
-		'available'   => __( 'Available', 'farm-stand-manager' ),
-		'limited'     => __( 'Limited', 'farm-stand-manager' ),
-		'sold_out'    => __( 'Sold out', 'farm-stand-manager' ),
-		'unavailable' => __( 'Unavailable', 'farm-stand-manager' ),
+		'abundant'    => __( 'Abundant', 'producerkit' ),
+		'available'   => __( 'Available', 'producerkit' ),
+		'limited'     => __( 'Limited', 'producerkit' ),
+		'sold_out'    => __( 'Sold out', 'producerkit' ),
+		'unavailable' => __( 'Unavailable', 'producerkit' ),
 		default       => $status,
 	};
 }
@@ -85,16 +85,16 @@ function render_page(): void {
 	?>
 	<div class="wrap lfuf-fresh-sheet-admin">
 		<h1>
-			<?php esc_html_e( 'Fresh Sheet', 'farm-stand-manager' ); ?>
+			<?php esc_html_e( 'Fresh Sheet', 'producerkit' ); ?>
 			<button type="button" class="page-title-action lfuf-fresh-sheet__print" onclick="window.print()">
-				<?php esc_html_e( 'Print', 'farm-stand-manager' ); ?>
+				<?php esc_html_e( 'Print', 'producerkit' ); ?>
 			</button>
 		</h1>
 
 		<?php if ( count( $locations ) > 1 ) : ?>
 			<form method="get" class="lfuf-fresh-sheet__picker">
 				<input type="hidden" name="page" value="farm-stand-fresh-sheet">
-				<label for="lfuf-fs-location"><?php esc_html_e( 'Location:', 'farm-stand-manager' ); ?></label>
+				<label for="lfuf-fs-location"><?php esc_html_e( 'Location:', 'producerkit' ); ?></label>
 				<select name="location_id" id="lfuf-fs-location" onchange="this.form.submit()">
 					<?php foreach ( $locations as $location ) : ?>
 						<option value="<?php echo (int) $location->ID; ?>" <?php selected( $location_id, $location->ID ); ?>>
@@ -123,7 +123,7 @@ function render_page(): void {
 			</header>
 
 			<?php if ( empty( $board['groups'] ) ) : ?>
-				<p><?php esc_html_e( 'Nothing is marked available right now — update availability first (Farm Stand → Availability).', 'farm-stand-manager' ); ?></p>
+				<p><?php esc_html_e( 'Nothing is marked available right now — update availability first (Farm Stand → Availability).', 'producerkit' ); ?></p>
 			<?php endif; ?>
 
 			<?php foreach ( $board['groups'] ?? [] as $group ) : ?>
@@ -155,7 +155,7 @@ function render_page(): void {
 			<?php if ( $payment_methods ) : ?>
 				<footer class="lfuf-fresh-sheet__footer">
 					<div class="lfuf-fresh-sheet__payments">
-						<h3><?php esc_html_e( 'We accept', 'farm-stand-manager' ); ?></h3>
+						<h3><?php esc_html_e( 'We accept', 'producerkit' ); ?></h3>
 						<p>
 							<?php echo esc_html( implode( ' · ', array_column( $payment_methods, 'label' ) ) ); ?>
 						</p>
@@ -169,7 +169,7 @@ function render_page(): void {
 								<?php
 									printf(
 										/* translators: %s: payment method label. */
-										esc_attr__( 'QR code: pay with %s', 'farm-stand-manager' ),
+										esc_attr__( 'QR code: pay with %s', 'producerkit' ),
 										esc_attr( $qr_link['label'] ),
 									);
 								?>
@@ -179,7 +179,7 @@ function render_page(): void {
 								<?php
 								printf(
 									/* translators: %s: payment method label. */
-									esc_html__( 'Scan to pay with %s', 'farm-stand-manager' ),
+									esc_html__( 'Scan to pay with %s', 'producerkit' ),
 									esc_html( $qr_link['label'] ),
 								);
 								?>

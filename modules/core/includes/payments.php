@@ -36,38 +36,38 @@ const MAX_METHODS = 10;
 function method_types(): array {
 	$types = [
 		'venmo'          => [
-			'label' => __( 'Venmo', 'farm-stand-manager' ),
+			'label' => __( 'Venmo', 'producerkit' ),
 			'kind'  => 'handle',
 			'url'   => 'https://venmo.com/%s',
 		],
 		'cashapp'        => [
-			'label' => __( 'Cash App', 'farm-stand-manager' ),
+			'label' => __( 'Cash App', 'producerkit' ),
 			'kind'  => 'handle',
 			'url'   => 'https://cash.app/$%s',
 		],
 		'paypal'         => [
-			'label' => __( 'PayPal', 'farm-stand-manager' ),
+			'label' => __( 'PayPal', 'producerkit' ),
 			'kind'  => 'handle',
 			'url'   => 'https://paypal.me/%s',
 		],
 		'link'           => [
-			'label' => __( 'Payment Link', 'farm-stand-manager' ),
+			'label' => __( 'Payment Link', 'producerkit' ),
 			'kind'  => 'url',
 		],
 		'cash'           => [
-			'label' => __( 'Cash', 'farm-stand-manager' ),
+			'label' => __( 'Cash', 'producerkit' ),
 			'kind'  => 'badge',
 		],
 		'check'          => [
-			'label' => __( 'Check', 'farm-stand-manager' ),
+			'label' => __( 'Check', 'producerkit' ),
 			'kind'  => 'badge',
 		],
 		'snap_ebt'       => [
-			'label' => __( 'SNAP/EBT', 'farm-stand-manager' ),
+			'label' => __( 'SNAP/EBT', 'producerkit' ),
 			'kind'  => 'badge',
 		],
 		'market_voucher' => [
-			'label' => __( 'Market Vouchers (WIC/Senior FMNP)', 'farm-stand-manager' ),
+			'label' => __( 'Market Vouchers (WIC/Senior FMNP)', 'producerkit' ),
 			'kind'  => 'badge',
 		],
 	];

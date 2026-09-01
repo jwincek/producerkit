@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250" width="772" height="250" role="img" aria-label="Farm Stand Manager">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250" width="772" height="250" role="img" aria-label="ProducerKit">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#3E8E41"/>
@@ -43,9 +43,9 @@
        fallback face changes the line widths, and the tagline is sized to
        just fit inside 772px. -->
   <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" fill="#FFFFFF">
-    <text x="212" y="118" font-size="52" font-weight="700" letter-spacing="-0.6">Farm Stand Manager</text>
+    <text x="212" y="118" font-size="52" font-weight="700" letter-spacing="-0.6">ProducerKit</text>
     <text x="214" y="156" font-size="20" font-weight="400" opacity="0.88">Availability, stand status, pre-orders and events</text>
-    <text x="214" y="182" font-size="20" font-weight="400" opacity="0.88">for small farms and farm stands.</text>
+    <text x="214" y="182" font-size="20" font-weight="400" opacity="0.88">for farms, makers and beekeepers.</text>
   </g>
 
   <!-- Status chips: the plugin's own availability vocabulary, in the same

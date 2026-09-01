@@ -12,9 +12,9 @@
 blank_issues_enabled: true
 contact_links:
   - name: Support & how-to questions
-    url: https://wordpress.org/support/plugin/farm-stand-manager/
+    url: https://wordpress.org/support/plugin/producerkit/
     about: Installation help, configuring locations and availability, or "how do I …" — the WordPress.org forum is the fastest channel and other users can find the answer later.
 
   - name: Payments and pre-orders
-    url: https://wordpress.org/support/plugin/farm-stand-manager/
+    url: https://wordpress.org/support/plugin/producerkit/
     about: This plugin never processes a payment. Pre-orders are reservations paid at pickup, and payment links just point at your own Venmo/Cash App/PayPal — questions about those accounts belong to those services.

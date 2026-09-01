@@ -1,5 +1,5 @@
 {
-    "name": "jwincek/farm-stand-manager",
+    "name": "jwincek/producerkit",
     "description": "Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",

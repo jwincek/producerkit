@@ -100,8 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `lfuf_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/farm-stand-manager/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.1.0
-[1.0.2]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.2
-[1.0.1]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.1
-[1.0.0]: https://github.com/jwincek/farm-stand-manager/releases/tag/v1.0.0
+[Unreleased]: https://github.com/jwincek/producerkit/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/jwincek/producerkit/releases/tag/v1.1.0
+[1.0.2]: https://github.com/jwincek/producerkit/releases/tag/v1.0.2
+[1.0.1]: https://github.com/jwincek/producerkit/releases/tag/v1.0.1
+[1.0.0]: https://github.com/jwincek/producerkit/releases/tag/v1.0.0

@@ -22,7 +22,7 @@ $show_quantity_notes = (bool) ( $attributes['showQuantityNotes'] ?? true );
 $default_status      = $attributes['defaultStatusFilter'] ?? 'abundant,available,limited';
 $location_id         = (int) ( $attributes['locationId'] ?? 0 );
 $layout              = $attributes['layout'] ?? 'grid';
-$empty_message       = $attributes['emptyMessage'] ?? __( 'Check back soon — we\'re updating what\'s available this week!', 'farm-stand-manager' );
+$empty_message       = $attributes['emptyMessage'] ?? __( 'Check back soon — we\'re updating what\'s available this week!', 'producerkit' );
 
 $request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
 $request->set_param( 'location', $location_id );
@@ -77,7 +77,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
-	aria-label="<?php esc_attr_e( 'Product Availability', 'farm-stand-manager' ); ?>"
+	aria-label="<?php esc_attr_e( 'Product Availability', 'producerkit' ); ?>"
 	data-wp-interactive="leftfield/availability-board"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
@@ -92,10 +92,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<div
 					class="lfuf-avail-board__filter-group"
 					role="toolbar"
-					aria-label="<?php esc_attr_e( 'Filter by availability status', 'farm-stand-manager' ); ?>"
+					aria-label="<?php esc_attr_e( 'Filter by availability status', 'producerkit' ); ?>"
 				>
 					<span class="lfuf-avail-board__filter-label">
-						<?php esc_html_e( 'Show:', 'farm-stand-manager' ); ?>
+						<?php esc_html_e( 'Show:', 'producerkit' ); ?>
 					</span>
 					<?php
 					foreach ( $statuses as $status ) :
@@ -118,10 +118,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 					<div
 						class="lfuf-avail-board__filter-group"
 						role="toolbar"
-						aria-label="<?php esc_attr_e( 'Filter by product type', 'farm-stand-manager' ); ?>"
+						aria-label="<?php esc_attr_e( 'Filter by product type', 'producerkit' ); ?>"
 					>
 						<span class="lfuf-avail-board__filter-label">
-							<?php esc_html_e( 'Type:', 'farm-stand-manager' ); ?>
+							<?php esc_html_e( 'Type:', 'producerkit' ); ?>
 						</span>
 						<button
 							type="button"
@@ -132,7 +132,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 							data-wp-bind--aria-pressed="state.isCurrentTypeActive"
 							data-type-slug=""
 							aria-pressed="true"
-						><?php esc_html_e( 'All', 'farm-stand-manager' ); ?></button>
+						><?php esc_html_e( 'All', 'producerkit' ); ?></button>
 						<?php foreach ( $filter_types as $ft ) : ?>
 							<button
 								type="button"
@@ -240,7 +240,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 								<?php if ( $show_prices && $item['price'] ) : ?>
 									<span class="lfuf-avail-board__item-price">
-										<span class="screen-reader-text"><?php esc_html_e( 'Price:', 'farm-stand-manager' ); ?> </span>
+										<span class="screen-reader-text"><?php esc_html_e( 'Price:', 'producerkit' ); ?> </span>
 										<?php echo esc_html( $item['price'] ); ?>
 										<?php if ( $item['unit'] ) : ?>
 											<span class="lfuf-avail-board__item-unit">/ <?php echo esc_html( $item['unit'] ); ?></span>
@@ -255,7 +255,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 								<?php endif; ?>
 
 								<?php if ( $item['seasons'] ) : ?>
-									<div class="lfuf-avail-board__item-seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'farm-stand-manager' ); ?>">
+									<div class="lfuf-avail-board__item-seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'producerkit' ); ?>">
 										<?php foreach ( $item['seasons'] as $season ) : ?>
 											<span class="lfuf-avail-board__season-tag"><?php echo esc_html( $season ); ?></span>
 										<?php endforeach; ?>
@@ -273,14 +273,14 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<?php
 				printf(
 					/* translators: %d: number of items shown on the availability board. */
-					esc_html__( 'Showing %d items', 'farm-stand-manager' ),
+					esc_html__( 'Showing %d items', 'producerkit' ),
 					(int) $total,
 				);
 				?>
 			</span>
 			<?php if ( $board['generated_at'] ?? false ) : ?>
 				<span class="lfuf-avail-board__timestamp">
-					<span class="screen-reader-text"><?php esc_html_e( 'Last updated:', 'farm-stand-manager' ); ?> </span>
+					<span class="screen-reader-text"><?php esc_html_e( 'Last updated:', 'producerkit' ); ?> </span>
 					<?php echo esc_html( date_i18n( 'M j, g:i A', strtotime( $board['generated_at'] ) ) ); ?>
 				</span>
 			<?php endif; ?>
