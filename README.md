@@ -209,7 +209,7 @@ All blocks follow WCAG 2.1 AA:
 
 ## REST API Endpoints
 
-All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
+All under `lfuf/v1`. 23 custom endpoints plus standard WP REST for each CPT.
 
 ### Core
 | Method | Endpoint | Auth | Purpose |
@@ -222,16 +222,17 @@ All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
 | PATCH | `/locations/{id}/toggle` | Editor+ | Toggle open/closed |
 
 ### Commissions
+| Method | Endpoint | Auth | Purpose |
+|--------|----------|------|---------|
+| POST | `/commissions` | Public | Submit a request |
+| GET | `/commissions` | Editor+ | List, optionally by status |
+| GET | `/commissions/token/{token}` | Token | The customer's own view |
+| POST | `/commissions/quote/{token}/accept` | Token | Accept a quote |
+| POST | `/commissions/quote/{token}/decline` | Token | Decline a quote |
+| POST | `/commissions/{id}/quote` | Editor+ | Send a quote |
+| POST | `/commissions/{id}/status` | Editor+ | Move the status on |
 
-Made-to-order requests, for makers who take custom work. A customer describes something that does not exist yet; the maker quotes a price and an estimated date; the customer accepts or declines from a link in their email.
-
-Kept as its own table rather than folded into pre-orders, because at submission a commission has no pickup date and no product — the point is that the maker will make one — while `lfuf_preorders` requires both.
-
-- **Enforced transitions.** `new → quoted → accepted → in_progress → complete`, with `declined` and `cancelled` as terminal branches. Illegal moves are refused, so a stale admin tab cannot revive a decision the customer already made.
-- **Two tokens.** A long-lived one lets the customer see their own request; a short-lived quote token (30 days) spends itself on accept or decline, so the emailed link cannot be replayed.
-- **Guests, not accounts.** Accept and decline authenticate with the quote token alone, over POST rather than GET, so a link preview or mail-client prefetch cannot accept on the customer's behalf.
-
-No WooCommerce required. Without it, an accepted commission is one the maker arranges payment for directly.
+The token routes are POST rather than GET so a link preview or a mail client prefetching the URL cannot accept a quote on the customer's behalf.
 
 ### Stand Status
 | Method | Endpoint | Auth | Purpose |
