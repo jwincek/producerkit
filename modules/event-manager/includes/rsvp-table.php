@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace ProducerKit\EventManager\RSVP;
 
+use ProducerKit\Core\Requests;
+
 defined( 'ABSPATH' ) || exit;
 
 /** Max RSVPs from one IP per event per hour. */
@@ -69,21 +71,14 @@ function create_table(): void {
  * Hash an IP address for storage (privacy-preserving).
  */
 function hash_ip( string $ip ): string {
-	// Salted hash so the IP can't be reversed from the DB alone.
-	return hash( 'sha256', $ip . wp_salt( 'auth' ) );
+	return Requests\hash_ip( $ip );
 }
 
 /**
- * Get the client IP (best effort behind proxies).
+ * Get the client IP.
  */
 function get_client_ip(): string {
-	// X-Forwarded-For is deliberately ignored: it is client-controlled unless
-	// a known proxy is in front, and trusting it would defeat rate limiting.
-	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
-		return '0.0.0.0';
-	}
-
-	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+	return Requests\get_client_ip();
 }
 
 /**

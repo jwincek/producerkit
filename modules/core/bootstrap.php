@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/includes/post-types.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/meta-fields.php';
+require_once __DIR__ . '/includes/requests.php';
 require_once __DIR__ . '/includes/payments.php';
 require_once __DIR__ . '/includes/product-images.php';
 require_once __DIR__ . '/includes/availability-table.php';

@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace ProducerKit\PreOrder\Orders;
 
+use ProducerKit\Core\Requests;
+
 defined( 'ABSPATH' ) || exit;
 
 /** Max pre-orders from one IP per hour. */
@@ -80,21 +82,20 @@ function create_table(): void {
 
 /**
  * Hash an IP address for storage (privacy-preserving, salted).
- * Local copy so this module stands alone when event-manager is disabled.
+ *
+ * Was a local copy so this module stood alone when event-manager was
+ * disabled; core is always loaded, so it now delegates. Kept as a named
+ * function because callers and tests reference it.
  */
 function hash_ip( string $ip ): string {
-	return hash( 'sha256', $ip . wp_salt( 'auth' ) );
+	return Requests\hash_ip( $ip );
 }
 
 /**
- * Get the client IP (REMOTE_ADDR is sufficient for a small farm site).
+ * Get the client IP.
  */
 function get_client_ip(): string {
-	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
-		return '0.0.0.0';
-	}
-
-	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+	return Requests\get_client_ip();
 }
 
 /**
