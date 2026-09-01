@@ -75,18 +75,34 @@ function honeypot_tripped( mixed $value ): bool {
 }
 
 /**
+ * The hidden field names Onsite Spam Guard looks for.
+ *
+ * Its public contract, not our choice of names. It falls back to reading
+ * these from $_POST, which is empty for a JSON REST body — so a REST caller
+ * has to forward them explicitly or the guard evaluates a blank submission.
+ *
+ * @return string[]
+ */
+function spam_guard_fields(): array {
+	return [
+		'simple_spam_shield_website_url',
+		'simple_spam_shield_form_loaded',
+		'simple_spam_shield_behavioral_data',
+	];
+}
+
+/**
  * Ask Onsite Spam Guard about a submission, if it is installed.
  *
  * Degrades to "allow" when the plugin is absent — the honeypot and the rate
  * limiter still apply, and failing closed would take the form offline on any
  * site that has not installed it.
  *
- * Skipped when the honeypot has already tripped, so obvious bots take the
- * silent-accept path the callers implement rather than being told they were
- * caught.
- *
- * @param array<string, mixed> $fields  Submitted values, for content checks.
- * @param string               $context A label for the form, e.g. 'preorder'.
+ * @param array<string, mixed> $fields  Submitted values. Should carry the
+ *                                      semantic keys the guard scores
+ *                                      (content, author, email) plus the
+ *                                      hidden fields from spam_guard_fields().
+ * @param string               $context A label for the form, e.g. 'commission'.
  * @return true|\WP_Error
  */
 function check_spam( array $fields, string $context ): bool|\WP_Error {
@@ -94,26 +110,11 @@ function check_spam( array $fields, string $context ): bool|\WP_Error {
 		return true;
 	}
 
-	$result = simple_spam_shield_check(
-		[
-			'context' => $context,
-			'fields'  => $fields,
-		]
-	);
+	// Signature is ( array $fields, string $context ) and it answers with
+	// true or a WP_Error — never false.
+	$result = simple_spam_shield_check( $fields, $context );
 
-	if ( is_wp_error( $result ) ) {
-		return $result;
-	}
-
-	// The plugin may answer with a plain boolean.
-	if ( false === $result ) {
-		return new \WP_Error(
-			'spam_rejected',
-			__( 'That submission looked automated. Please try again.', 'producerkit' )
-		);
-	}
-
-	return true;
+	return is_wp_error( $result ) ? $result : true;
 }
 
 /**

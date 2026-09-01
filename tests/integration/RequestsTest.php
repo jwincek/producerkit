@@ -123,4 +123,36 @@ final class RequestsTest extends WP_UnitTestCase {
 
 		$this->assertTrue( Requests\check_spam( [ 'name' => 'A Person' ], 'preorder' ) );
 	}
+
+	/**
+	 * These three names are Onsite Spam Guard's published contract, not ours.
+	 * It falls back to reading them from $_POST, which is empty for a JSON
+	 * REST body — so a REST caller that does not forward them has the guard
+	 * score a blank submission. Getting these wrong fails silently, which is
+	 * why they are pinned here.
+	 *
+	 * @see simple_spam_shield_check() in onsite-spam-guard/includes/api.php
+	 */
+	public function test_the_spam_guard_field_names_match_its_published_contract(): void {
+		$this->assertSame(
+			[
+				'simple_spam_shield_website_url',
+				'simple_spam_shield_form_loaded',
+				'simple_spam_shield_behavioral_data',
+			],
+			Requests\spam_guard_fields()
+		);
+	}
+
+	/**
+	 * The commission route has to declare those fields, or WP_REST_Request
+	 * drops them before the handler ever sees them.
+	 */
+	public function test_the_commission_route_accepts_the_spam_guard_fields(): void {
+		$declared = array_keys( \ProducerKit\Commissions\REST\create_args() );
+
+		foreach ( Requests\spam_guard_fields() as $field ) {
+			$this->assertContains( $field, $declared, "REST would silently drop '{$field}'." );
+		}
+	}
 }

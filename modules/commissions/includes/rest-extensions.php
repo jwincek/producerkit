@@ -115,7 +115,13 @@ function create_args(): array {
 		'deadline'     => [ 'type' => 'string' ],
 		// Honeypot. Named for what a bot expects to see, not what it does.
 		'website'      => [ 'type' => 'string' ],
-	];
+	] + array_fill_keys(
+		// Onsite Spam Guard's hidden fields. Declared so they survive into the
+		// handler: the guard falls back to $_POST, which is empty for a JSON
+		// body, so a REST submission has to carry them itself.
+		\ProducerKit\Core\Requests\spam_guard_fields(),
+		[ 'type' => 'string' ]
+	);
 }
 
 function error_status( \WP_Error $error ): int {
@@ -129,19 +135,26 @@ function error_status( \WP_Error $error ): int {
 }
 
 function create( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-	$result = Store\create(
-		[
-			'name'         => (string) $request->get_param( 'name' ),
-			'email'        => (string) $request->get_param( 'email' ),
-			'description'  => (string) $request->get_param( 'description' ),
-			'phone'        => (string) $request->get_param( 'phone' ),
-			'product_type' => (string) $request->get_param( 'product_type' ),
-			'material'     => (string) $request->get_param( 'material' ),
-			'budget_range' => (string) $request->get_param( 'budget_range' ),
-			'deadline'     => (string) $request->get_param( 'deadline' ),
-			'honeypot'     => (string) $request->get_param( 'website' ),
-		]
-	);
+	$data = [
+		'name'         => (string) $request->get_param( 'name' ),
+		'email'        => (string) $request->get_param( 'email' ),
+		'description'  => (string) $request->get_param( 'description' ),
+		'phone'        => (string) $request->get_param( 'phone' ),
+		'product_type' => (string) $request->get_param( 'product_type' ),
+		'material'     => (string) $request->get_param( 'material' ),
+		'budget_range' => (string) $request->get_param( 'budget_range' ),
+		'deadline'     => (string) $request->get_param( 'deadline' ),
+		'honeypot'     => (string) $request->get_param( 'website' ),
+	];
+
+	foreach ( \ProducerKit\Core\Requests\spam_guard_fields() as $field ) {
+		$value = $request->get_param( $field );
+		if ( null !== $value ) {
+			$data[ $field ] = (string) $value;
+		}
+	}
+
+	$result = Store\create( $data );
 
 	if ( is_wp_error( $result ) ) {
 		$result->add_data( [ 'status' => error_status( $result ) ] );

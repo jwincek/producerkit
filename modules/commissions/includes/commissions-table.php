@@ -186,7 +186,20 @@ function budget_ranges(): array {
 function create( array $data ): array|\WP_Error {
 	global $wpdb;
 
-	$guard = Requests\guard( $data, 'commission', $data['honeypot'] ?? '' );
+	// The guard scores content/author/email, and needs its own hidden fields
+	// forwarded because $_POST is empty for a JSON REST body.
+	$guard_fields = [
+		'content' => trim( (string) ( $data['description'] ?? '' ) ),
+		'author'  => (string) ( $data['name'] ?? '' ),
+		'email'   => (string) ( $data['email'] ?? '' ),
+	];
+	foreach ( Requests\spam_guard_fields() as $field ) {
+		if ( isset( $data[ $field ] ) ) {
+			$guard_fields[ $field ] = (string) $data[ $field ];
+		}
+	}
+
+	$guard = Requests\guard( $guard_fields, 'commission', $data['honeypot'] ?? '' );
 
 	// False means the honeypot tripped: hand back a plausible receipt so the
 	// bot does not learn which field caught it.
