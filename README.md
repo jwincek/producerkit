@@ -1,6 +1,6 @@
 # ProducerKit
 
-Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
+Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support.
 
 Single plugin, modular architecture. No build step required.
 
@@ -11,7 +11,7 @@ Single plugin, modular architecture. No build step required.
    git clone https://github.com/jwincek/producerkit.git
    ```
 2. Activate in WordPress admin.
-3. Go to **🥕 Farm Stand** in the sidebar.
+3. Go to **ProducerKit** in the sidebar.
 4. Click **Load Sample Data** to see the blocks in action with realistic test content.
 5. Read [`GETTING-STARTED.md`](GETTING-STARTED.md) for the full walkthrough.
 
@@ -234,7 +234,7 @@ All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
 
 ### Needs Attention Dashboard
 
-The 🥕 Farm Stand dashboard shows a "Needs Attention" section that flags content gaps: products without photos or prices, events without start dates, locations without addresses, products with stale availability (over a week old), and products not listed on the board at all. Each item links directly to the relevant admin page. The section disappears when everything is filled in.
+The ProducerKit dashboard shows a "Needs Attention" section that flags content gaps: products without photos or prices, events without start dates, locations without addresses, products with stale availability (over a week old), and products not listed on the board at all. Each item links directly to the relevant admin page. The section disappears when everything is filled in.
 
 ### Availability Quick-Entry
 
@@ -242,7 +242,7 @@ The weekly availability update page shows product thumbnails, prices, and a "Cop
 
 ### Product Import / Export
 
-CSV import and export under **🥕 Farm Stand → Product Import**. Export downloads all products with every field. Import creates or updates products matched by title, handles pipe-separated taxonomy terms, resolves source links by title, and optionally sideloads featured images from URLs. A collapsible format reference documents every column.
+CSV import and export under **ProducerKit → Product Import**. Export downloads all products with every field. Import creates or updates products matched by title, handles pipe-separated taxonomy terms, resolves source links by title, and optionally sideloads featured images from URLs. A collapsible format reference documents every column.
 
 ## Automation
 

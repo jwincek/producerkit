@@ -12,7 +12,7 @@ Catalog, sales locations, live availability, pickup pre-orders and events for sm
 
 == Description ==
 
-ProducerKit gives small farms, farm stands, and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and donation-friendly farm events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
+ProducerKit gives small farms, makers, beekeepers and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
 
 = Products and sources =
 
@@ -63,7 +63,7 @@ ProducerKit gives small farms, farm stands, and market gardeners a complete tool
 
 1. Upload the plugin files to `/wp-content/plugins/producerkit`, or install through the WordPress plugins screen.
 2. Activate the plugin.
-3. Go to **Farm Stand** in the admin sidebar and click **Load Sample Data** to explore the blocks with realistic content (remove it any time with one click).
+3. Go to **ProducerKit** in the admin sidebar and click **Load Sample Data** to explore the blocks with realistic content (remove it any time with one click).
 4. Create your real **Locations** and **Products**, then add the blocks to your pages.
 
 == Frequently Asked Questions ==
