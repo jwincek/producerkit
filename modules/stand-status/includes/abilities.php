@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\Abilities;
+namespace ProducerKit\StandStatus\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -100,7 +100,7 @@ add_action(
 					if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish' ) {
 						return [ 'error' => 'Stand not found.' ];
 					}
-					return \Leftfield\StandStatus\REST\build_stand_data( $post );
+					return \ProducerKit\StandStatus\REST\build_stand_data( $post );
 				},
 				'input_schema'        => [
 					'type'       => 'object',

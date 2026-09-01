@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\SampleData\Markers;
+namespace ProducerKit\SampleData\Markers;
 
 defined( 'ABSPATH' ) || exit;
 

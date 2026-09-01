@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-use function Leftfield\Core\Product_Images\placeholder_url;
-use function Leftfield\Core\Product_Images\thumbnail_url;
-use function Leftfield\Core\Product_Images\type_slug;
+use function ProducerKit\Core\Product_Images\placeholder_url;
+use function ProducerKit\Core\Product_Images\thumbnail_url;
+use function ProducerKit\Core\Product_Images\type_slug;
 
 final class ProductImagesTest extends WP_UnitTestCase {
 
@@ -35,7 +35,7 @@ final class ProductImagesTest extends WP_UnitTestCase {
 	 * @dataProvider default_type_provider
 	 */
 	public function test_every_default_product_type_has_a_placeholder( string $slug ): void {
-		$file = \Leftfield\PLUGIN_DIR . '/assets/img/placeholder-' . $slug . '.svg';
+		$file = \ProducerKit\PLUGIN_DIR . '/assets/img/placeholder-' . $slug . '.svg';
 		$this->assertFileExists( $file, "no placeholder art for the default type '$slug'" );
 
 		$product = $this->make_product( $slug );

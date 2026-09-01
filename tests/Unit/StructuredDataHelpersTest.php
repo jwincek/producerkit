@@ -6,8 +6,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use function Leftfield\Core\StructuredData\availability_url;
-use function Leftfield\Core\StructuredData\parse_price;
+use function ProducerKit\Core\StructuredData\availability_url;
+use function ProducerKit\Core\StructuredData\parse_price;
 
 final class StructuredDataHelpersTest extends TestCase {
 

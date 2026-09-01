@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Post_Types;
+namespace ProducerKit\Core\Post_Types;
 
 defined( 'ABSPATH' ) || exit;
 

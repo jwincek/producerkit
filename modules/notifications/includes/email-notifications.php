@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Notifications\Email;
+namespace ProducerKit\Notifications\Email;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -130,8 +130,8 @@ add_action(
 		// Get current headcount.
 		$headcount = 0;
 		$cap       = 0;
-		if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-			$headcount = \Leftfield\EventManager\RSVP\get_headcount( $event_id );
+		if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+			$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $event_id );
 			$cap       = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
 		}
 
@@ -196,8 +196,8 @@ add_action(
 
 		$headcount = 0;
 		$cap       = 0;
-		if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-			$headcount = \Leftfield\EventManager\RSVP\get_headcount( $event_id );
+		if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+			$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $event_id );
 			$cap       = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
 		}
 

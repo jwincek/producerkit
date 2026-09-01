@@ -41,7 +41,7 @@ if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== '
 $is_open        = (bool) get_post_meta( $location_id, '_lfuf_is_open', true );
 $address        = get_post_meta( $location_id, '_lfuf_address', true );
 $hours          = get_post_meta( $location_id, '_lfuf_hours', true );
-$pay_methods    = \Leftfield\Core\Payments\get_payment_methods( $location_id );
+$pay_methods    = \ProducerKit\Core\Payments\get_payment_methods( $location_id );
 $status_message = get_post_meta( $location_id, '_lfuf_ss_status_message', true );
 $last_toggled   = get_post_meta( $location_id, '_lfuf_ss_last_toggled', true );
 $season_start   = get_post_meta( $location_id, '_lfuf_ss_season_start', true );
@@ -51,10 +51,10 @@ $schedule       = get_post_meta( $location_id, '_lfuf_ss_schedule', true );
 
 // Compute effective status.
 if ( $auto_toggle && $schedule ) {
-	$is_open = \Leftfield\StandStatus\REST\compute_schedule_status( $schedule );
+	$is_open = \ProducerKit\StandStatus\REST\compute_schedule_status( $schedule );
 }
 if ( $season_start && $season_end ) {
-	$in_season = \Leftfield\StandStatus\REST\is_in_season( $season_start, $season_end );
+	$in_season = \ProducerKit\StandStatus\REST\is_in_season( $season_start, $season_end );
 	if ( ! $in_season ) {
 		$is_open = false;
 	}
@@ -84,7 +84,7 @@ if ( $last_toggled ) {
 // Next scheduled opening.
 $next_open = '';
 if ( ! $is_open && $schedule ) {
-	$next_open = \Leftfield\StandStatus\REST\compute_next_open( $schedule );
+	$next_open = \ProducerKit\StandStatus\REST\compute_next_open( $schedule );
 }
 
 // Primary payment link: the first link-kind method (legacy Venmo merges in first).

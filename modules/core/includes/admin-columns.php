@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\AdminColumns;
+namespace ProducerKit\Core\AdminColumns;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,7 +57,7 @@ add_action(
 				break;
 
 			case 'lfuf_availability':
-				$rows = \Leftfield\Core\Availability\get_current( $post_id );
+				$rows = \ProducerKit\Core\Availability\get_current( $post_id );
 				if ( ! empty( $rows ) ) {
 					$row         = $rows[0];
 					$status_text = ucfirst( str_replace( '_', ' ', $row->status ) );
@@ -197,8 +197,8 @@ add_action(
 					break;
 				}
 
-				if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-					$headcount = \Leftfield\EventManager\RSVP\get_headcount( $post_id );
+				if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+					$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $post_id );
 					$cap       = (int) get_post_meta( $post_id, '_lfuf_rsvp_cap', true );
 					$closed    = (bool) get_post_meta( $post_id, '_lfuf_em_rsvp_closed', true );
 

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\AdminBar;
+namespace ProducerKit\StandStatus\AdminBar;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -58,14 +58,14 @@ function get_effective_status( int $id ): bool {
 
 	$auto_toggle = (bool) get_post_meta( $id, '_lfuf_ss_auto_toggle', true );
 	$schedule    = get_post_meta( $id, '_lfuf_ss_schedule', true );
-	if ( $auto_toggle && $schedule && function_exists( '\\Leftfield\\StandStatus\\REST\\compute_schedule_status' ) ) {
-		$is_open = \Leftfield\StandStatus\REST\compute_schedule_status( $schedule );
+	if ( $auto_toggle && $schedule && function_exists( '\\ProducerKit\\StandStatus\\REST\\compute_schedule_status' ) ) {
+		$is_open = \ProducerKit\StandStatus\REST\compute_schedule_status( $schedule );
 	}
 
 	$season_start = get_post_meta( $id, '_lfuf_ss_season_start', true );
 	$season_end   = get_post_meta( $id, '_lfuf_ss_season_end', true );
-	if ( $season_start && $season_end && function_exists( '\\Leftfield\\StandStatus\\REST\\is_in_season' ) ) {
-		if ( ! \Leftfield\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
+	if ( $season_start && $season_end && function_exists( '\\ProducerKit\\StandStatus\\REST\\is_in_season' ) ) {
+		if ( ! \ProducerKit\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
 			$is_open = false;
 		}
 	}

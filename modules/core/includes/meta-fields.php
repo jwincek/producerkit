@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Meta_Fields;
+namespace ProducerKit\Core\Meta_Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -140,7 +140,7 @@ function register_location_meta(): void {
 			'type'        => 'string',
 			'description' => 'JSON array of payment methods: [{type, value, label}].',
 			'default'     => '',
-			'sanitize'    => '\\Leftfield\\Core\\Payments\\sanitize_payment_methods',
+			'sanitize'    => '\\ProducerKit\\Core\\Payments\\sanitize_payment_methods',
 		],
 		'_lfuf_pickup_blackouts' => [
 			'type'        => 'string',

@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\Render;
+namespace ProducerKit\EventManager\Render;
 
 defined( 'ABSPATH' ) || exit;
 

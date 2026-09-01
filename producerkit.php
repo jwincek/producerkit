@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield;
+namespace ProducerKit;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -260,27 +260,27 @@ add_action(
 function activate(): void {
 	// Core module handles table creation.
 	require_once PLUGIN_DIR . '/modules/core/bootstrap.php';
-	\Leftfield\Core\Availability\create_table();
-	\Leftfield\Core\Post_Types\register();
-	\Leftfield\Core\Taxonomies\register();
+	\ProducerKit\Core\Availability\create_table();
+	\ProducerKit\Core\Post_Types\register();
+	\ProducerKit\Core\Taxonomies\register();
 
 	// Event manager RSVP table.
 	require_once PLUGIN_DIR . '/modules/event-manager/includes/rsvp-table.php';
-	\Leftfield\EventManager\RSVP\create_table();
+	\ProducerKit\EventManager\RSVP\create_table();
 
 	// Pre-order table.
 	require_once PLUGIN_DIR . '/modules/pre-order/includes/orders-table.php';
-	\Leftfield\PreOrder\Orders\create_table();
+	\ProducerKit\PreOrder\Orders\create_table();
 
 	// Schedule daily availability cleanup.
-	\Leftfield\Core\Availability\schedule_cleanup();
+	\ProducerKit\Core\Availability\schedule_cleanup();
 
 	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, __NAMESPACE__ . '\\activate' );
 
 function deactivate(): void {
-	\Leftfield\Core\Availability\unschedule_cleanup();
+	\ProducerKit\Core\Availability\unschedule_cleanup();
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\deactivate' );

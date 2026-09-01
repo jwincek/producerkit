@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Notifications\PreOrder;
+namespace ProducerKit\Notifications\PreOrder;
 
-use function Leftfield\Notifications\Email\send;
+use function ProducerKit\Notifications\Email\send;
 
 defined( 'ABSPATH' ) || exit;
 

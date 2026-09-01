@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Abilities;
+namespace ProducerKit\Core\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -251,9 +251,9 @@ function register_availability_abilities(): void {
 				$location_id = (int) ( $input['location_id'] ?? 0 );
 
 				if ( $product_id > 0 ) {
-					$rows = \Leftfield\Core\Availability\get_current( $product_id, $location_id );
+					$rows = \ProducerKit\Core\Availability\get_current( $product_id, $location_id );
 				} else {
-					$rows = \Leftfield\Core\Availability\get_all_current();
+					$rows = \ProducerKit\Core\Availability\get_all_current();
 				}
 
 				// wpdb returns every column as a string; cast to match the output schema.
@@ -313,7 +313,7 @@ function register_availability_abilities(): void {
 			'description'         => __( 'Set the availability status of a product at a location for a given date.', 'producerkit' ),
 			'category'            => 'farm-availability',
 			'execute_callback'    => function ( array $input ): array {
-				$id = \Leftfield\Core\Availability\upsert( $input );
+				$id = \ProducerKit\Core\Availability\upsert( $input );
 				if ( $id === false ) {
 					return [
 						'success' => false,
@@ -405,7 +405,7 @@ function register_location_abilities(): void {
 						'hours'           => get_post_meta( $p->ID, '_lfuf_hours', true ),
 						'is_open'         => (bool) get_post_meta( $p->ID, '_lfuf_is_open', true ),
 						'venmo'           => get_post_meta( $p->ID, '_lfuf_venmo_handle', true ),
-						'payment_methods' => \Leftfield\Core\Payments\get_payment_methods( $p->ID ),
+						'payment_methods' => \ProducerKit\Core\Payments\get_payment_methods( $p->ID ),
 					],
 					$locations
 				);

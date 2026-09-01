@@ -6,8 +6,8 @@
 
 declare(strict_types=1);
 
-use function Leftfield\PreOrder\Orders\create_order;
-use function Leftfield\PreOrder\Orders\pickup_constraints;
+use function ProducerKit\PreOrder\Orders\create_order;
+use function ProducerKit\PreOrder\Orders\pickup_constraints;
 
 final class PickupDatesTest extends WP_UnitTestCase {
 

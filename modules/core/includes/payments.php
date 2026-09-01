@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Payments;
+namespace ProducerKit\Core\Payments;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -97,8 +97,8 @@ function sanitize_method_value( string $type, mixed $value ): ?string {
 
 	return match ( $kind ) {
 		'badge'  => '',
-		'handle' => \Leftfield\Core\Meta_Fields\sanitize_payment_handle( $value ) ?: null,
-		'url'    => \Leftfield\Core\Meta_Fields\sanitize_url_field( $value ) ?: null,
+		'handle' => \ProducerKit\Core\Meta_Fields\sanitize_payment_handle( $value ) ?: null,
+		'url'    => \ProducerKit\Core\Meta_Fields\sanitize_url_field( $value ) ?: null,
 		default  => null,
 	};
 }

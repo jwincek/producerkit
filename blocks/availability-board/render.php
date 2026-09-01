@@ -26,7 +26,7 @@ $empty_message       = $attributes['emptyMessage'] ?? __( 'Check back soon — w
 
 $request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
 $request->set_param( 'location', $location_id );
-$response = \Leftfield\AvailabilityBoard\REST\get_board( $request );
+$response = \ProducerKit\AvailabilityBoard\REST\get_board( $request );
 $board    = $response->get_data();
 
 $groups       = $board['groups'] ?? [];

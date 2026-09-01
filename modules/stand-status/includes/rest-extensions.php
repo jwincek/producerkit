@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\REST;
+namespace ProducerKit\StandStatus\REST;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -200,7 +200,7 @@ function build_stand_data( \WP_Post $post ): array {
 		'season_start'    => $season_start,
 		'season_end'      => $season_end,
 		'venmo_handle'    => get_post_meta( $id, '_lfuf_venmo_handle', true ),
-		'payment_methods' => \Leftfield\Core\Payments\get_payment_methods( $id ),
+		'payment_methods' => \ProducerKit\Core\Payments\get_payment_methods( $id ),
 		'lat'             => (float) get_post_meta( $id, '_lfuf_lat', true ),
 		'lng'             => (float) get_post_meta( $id, '_lfuf_lng', true ),
 	];

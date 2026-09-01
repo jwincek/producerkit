@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard\REST;
+namespace ProducerKit\AvailabilityBoard\REST;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -95,7 +95,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 	$status_filter = $request->get_param( 'status' );
 	if ( $status_filter ) {
 		$statuses = array_filter( array_map( 'sanitize_text_field', explode( ',', $status_filter ) ) );
-		$valid    = \Leftfield\Core\Availability\valid_statuses();
+		$valid    = \ProducerKit\Core\Availability\valid_statuses();
 		$statuses = array_intersect( $statuses, $valid );
 		if ( $statuses ) {
 			$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
@@ -180,7 +180,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 		// Featured image if the product has one, otherwise the placeholder for
 		// its product type. Resolved here rather than in the block so the
 		// server render, the editor preview and any REST consumer all agree.
-		$thumb_url = \Leftfield\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
+		$thumb_url = \ProducerKit\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
 
 		$items[] = [
 			'availability_id' => (int) $row->availability_id,
@@ -241,7 +241,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 			'groups'       => array_values( $grouped ),
 			'total_items'  => count( $items ),
 			'filter_types' => $filter_types,
-			'statuses'     => \Leftfield\Core\Availability\valid_statuses(),
+			'statuses'     => \ProducerKit\Core\Availability\valid_statuses(),
 			'generated_at' => current_time( 'c' ),
 		],
 		200

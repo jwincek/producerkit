@@ -6,7 +6,7 @@
     "title": "Product Card",
     "category": "leftfield",
     "icon": "carrot",
-    "description": "Display a single Leftfield product with its availability status and source info.",
+    "description": "Display a single product with its availability status and source info.",
     "textdomain": "producerkit",
     "attributes": {
         "productId": {

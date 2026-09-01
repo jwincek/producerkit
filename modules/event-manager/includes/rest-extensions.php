@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\REST;
+namespace ProducerKit\EventManager\REST;
 
-use Leftfield\EventManager\RSVP;
+use ProducerKit\EventManager\RSVP;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -508,7 +508,7 @@
 	 * Panel 3: Payment Options
 	 * ───────────────────────────────────────────── */
 
-	// Mirrors Leftfield\Core\Payments\method_types(). kind: handle | url | badge.
+	// Mirrors ProducerKit\Core\Payments\method_types(). kind: handle | url | badge.
 	const PAYMENT_TYPES = [
 		{ value: 'venmo', label: 'Venmo', kind: 'handle' },
 		{ value: 'cashapp', label: 'Cash App', kind: 'handle' },

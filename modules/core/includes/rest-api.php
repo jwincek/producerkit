@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\REST;
+namespace ProducerKit\Core\REST;
 
-use Leftfield\Core\Availability;
+use ProducerKit\Core\Availability;
 
 defined( 'ABSPATH' ) || exit;
 

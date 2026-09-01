@@ -48,9 +48,9 @@ tests_add_filter(
 tests_add_filter(
 	'plugins_loaded',
 	function (): void {
-		\Leftfield\Core\Availability\create_table();
-		\Leftfield\EventManager\RSVP\create_table();
-		\Leftfield\PreOrder\Orders\create_table();
+		\ProducerKit\Core\Availability\create_table();
+		\ProducerKit\EventManager\RSVP\create_table();
+		\ProducerKit\PreOrder\Orders\create_table();
 	},
 	25
 );

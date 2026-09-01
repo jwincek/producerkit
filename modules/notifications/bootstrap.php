@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Notifications;
+namespace ProducerKit\Notifications;
 
 defined( 'ABSPATH' ) || exit;
 

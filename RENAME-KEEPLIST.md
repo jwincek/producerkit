@@ -41,5 +41,5 @@ Public identity only, plus the namespace (separate commit):
   basename)
 - `block.json` `textdomain` field (not persisted — safe)
 - 14 ability names `farm-stand-manager/*` → `producerkit/*` (not persisted)
-- Namespace `Leftfield` → `ProducerKit` — "Leftfield" names one specific
+- Namespace `ProducerKit` → `ProducerKit` — "ProducerKit" names one specific
   farm and is actively misleading for a plugin serving makers and beekeepers

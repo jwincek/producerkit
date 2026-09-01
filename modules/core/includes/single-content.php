@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\SingleContent;
+namespace ProducerKit\Core\SingleContent;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -62,7 +62,7 @@ function render_product_details( \WP_Post $post ): string {
 	$seasons       = get_the_terms( $id, 'lfuf_season' );
 
 	// Availability.
-	$availability = \Leftfield\Core\Availability\get_current( $id );
+	$availability = \ProducerKit\Core\Availability\get_current( $id );
 
 	// Sources.
 	$source_ids = get_post_meta( $id, '_lfuf_source_ids', true );
@@ -244,7 +244,7 @@ function render_location_details( \WP_Post $post ): string {
 	$address         = get_post_meta( $id, '_lfuf_address', true );
 	$location_type   = get_post_meta( $id, '_lfuf_location_type', true );
 	$hours           = get_post_meta( $id, '_lfuf_hours', true );
-	$payment_methods = \Leftfield\Core\Payments\get_payment_methods( $id );
+	$payment_methods = \ProducerKit\Core\Payments\get_payment_methods( $id );
 	$is_open         = (bool) get_post_meta( $id, '_lfuf_is_open', true );
 
 	ob_start();
@@ -342,8 +342,8 @@ function render_event_details( \WP_Post $post ): string {
 	// RSVP.
 	$rsvp_enabled = (bool) get_post_meta( $id, '_lfuf_em_rsvp_enabled', true );
 	$rsvp_summary = null;
-	if ( $rsvp_enabled && function_exists( 'Leftfield\\EventManager\\RSVP\\get_event_rsvp_summary' ) ) {
-		$rsvp_summary = \Leftfield\EventManager\RSVP\get_event_rsvp_summary( $id );
+	if ( $rsvp_enabled && function_exists( 'ProducerKit\\EventManager\\RSVP\\get_event_rsvp_summary' ) ) {
+		$rsvp_summary = \ProducerKit\EventManager\RSVP\get_event_rsvp_summary( $id );
 	}
 
 	$start_ts = $start ? strtotime( $start ) : 0;

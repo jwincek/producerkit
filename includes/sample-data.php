@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\SampleData;
+namespace ProducerKit\SampleData;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -328,7 +328,7 @@ function seed_availability( array $product_ids, int $location_id ): void {
 		$status = $statuses[ $i ] ?? 'available';
 		$note   = $notes[ $i ] ?? '';
 
-		\Leftfield\Core\Availability\upsert(
+		\ProducerKit\Core\Availability\upsert(
 			[
 				'product_id'     => $pid,
 				'location_id'    => $location_id,

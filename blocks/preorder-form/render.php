@@ -13,7 +13,7 @@ declare(strict_types=1);
 defined( 'ABSPATH' ) || exit;
 
 // The block is registered even when the module is toggled off; bail quietly.
-if ( ! function_exists( 'Leftfield\\PreOrder\\Orders\\create_order' ) ) {
+if ( ! function_exists( 'ProducerKit\\PreOrder\\Orders\\create_order' ) ) {
 	return;
 }
 
@@ -33,7 +33,7 @@ $products = get_posts(
 
 // Current availability status per product (0 = any location).
 $status_by_product = [];
-foreach ( \Leftfield\Core\Availability\get_all_current() as $row ) {
+foreach ( \ProducerKit\Core\Availability\get_all_current() as $row ) {
 	$pid = (int) $row->product_id;
 	if ( ! isset( $status_by_product[ $pid ] ) ) {
 		$status_by_product[ $pid ] = (string) $row->status;
@@ -60,17 +60,17 @@ if ( ! $orderable ) {
 }
 
 $payment_methods = $location_id
-	? \Leftfield\Core\Payments\get_payment_methods( $location_id )
+	? \ProducerKit\Core\Payments\get_payment_methods( $location_id )
 	: [];
 
 $today    = current_time( 'Y-m-d' );
-$max_date = gmdate( 'Y-m-d', strtotime( $today . ' +' . \Leftfield\PreOrder\Orders\MAX_PICKUP_DAYS . ' days' ) );
+$max_date = gmdate( 'Y-m-d', strtotime( $today . ' +' . \ProducerKit\PreOrder\Orders\MAX_PICKUP_DAYS . ' days' ) );
 $form_id  = wp_unique_id( 'lfuf-preorder-' );
 
 // Pickup constraints for the chosen location (open days, season, blackouts).
-$constraints = \Leftfield\PreOrder\Orders\pickup_constraints( $location_id );
+$constraints = \ProducerKit\PreOrder\Orders\pickup_constraints( $location_id );
 $days_label  = $constraints['allowed_days'] !== null
-	? implode( ', ', \Leftfield\PreOrder\Orders\weekday_names( $constraints['allowed_days'] ) )
+	? implode( ', ', \ProducerKit\PreOrder\Orders\weekday_names( $constraints['allowed_days'] ) )
 	: '';
 
 $context = [

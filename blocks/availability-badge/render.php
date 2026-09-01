@@ -17,7 +17,7 @@ if ( $product_id < 1 ) {
 	return;
 }
 
-$rows = \Leftfield\Core\Availability\get_current( $product_id, $location_id );
+$rows = \ProducerKit\Core\Availability\get_current( $product_id, $location_id );
 
 if ( empty( $rows ) ) {
 	return;

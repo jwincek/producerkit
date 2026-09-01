@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-use function Leftfield\Core\Availability\get_all_current;
-use function Leftfield\Core\Availability\get_current;
-use function Leftfield\Core\Availability\purge_expired;
-use function Leftfield\Core\Availability\table_name;
-use function Leftfield\Core\Availability\upsert;
+use function ProducerKit\Core\Availability\get_all_current;
+use function ProducerKit\Core\Availability\get_current;
+use function ProducerKit\Core\Availability\purge_expired;
+use function ProducerKit\Core\Availability\table_name;
+use function ProducerKit\Core\Availability\upsert;
 
 final class AvailabilityTest extends WP_UnitTestCase {
 
@@ -196,7 +196,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 		$wpdb->query( "DROP TABLE IF EXISTS `$probe`" );
 
 		$wpdb->suppress_errors( true );
-		$created = $wpdb->query( \Leftfield\Core\Availability\schema_sql( $probe ) );
+		$created = $wpdb->query( \ProducerKit\Core\Availability\schema_sql( $probe ) );
 		$error   = $wpdb->last_error;
 		$wpdb->suppress_errors( false );
 
@@ -260,7 +260,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 			update_option( 'timezone_string', $tz );
 			wp_clear_scheduled_hook( 'lfuf_availability_cleanup' );
 
-			\Leftfield\Core\Availability\schedule_cleanup();
+			\ProducerKit\Core\Availability\schedule_cleanup();
 
 			$ts = wp_next_scheduled( 'lfuf_availability_cleanup' );
 			$this->assertNotFalse( $ts, "cleanup was not scheduled under $tz" );

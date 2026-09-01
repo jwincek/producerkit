@@ -31,13 +31,13 @@ $thumbnail     = get_the_post_thumbnail( $product_id, 'medium', [ 'alt' => '' ] 
 
 // No featured image: fall back to the product type's placeholder. Still empty
 // when the type has no bundled art, in which case no image renders at all.
-$placeholder = $thumbnail ? '' : \Leftfield\Core\Product_Images\placeholder_url( $product_id );
+$placeholder = $thumbnail ? '' : \ProducerKit\Core\Product_Images\placeholder_url( $product_id );
 $types         = get_the_terms( $product_id, 'lfuf_product_type' );
 $seasons       = get_the_terms( $product_id, 'lfuf_season' );
 
 $availability_rows = [];
 if ( $show_availability ) {
-	$availability_rows = \Leftfield\Core\Availability\get_current( $product_id );
+	$availability_rows = \ProducerKit\Core\Availability\get_current( $product_id );
 }
 
 $sources = [];

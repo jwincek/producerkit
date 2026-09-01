@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard\Admin;
+namespace ProducerKit\AvailabilityBoard\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +42,7 @@ function render_page(): void {
 	);
 
 	// Get current availability.
-	$current    = \Leftfield\Core\Availability\get_all_current();
+	$current    = \ProducerKit\Core\Availability\get_all_current();
 	$by_product = [];
 	foreach ( $current as $row ) {
 		$by_product[ (int) $row->product_id ] = $row;
@@ -59,7 +59,7 @@ function render_page(): void {
 		]
 	);
 
-	$statuses  = \Leftfield\Core\Availability\valid_statuses();
+	$statuses  = \ProducerKit\Core\Availability\valid_statuses();
 	$today     = current_time( 'Y-m-d' );
 	$rest_base = esc_url_raw( rest_url( 'lfuf/v1' ) );
 	$nonce     = wp_create_nonce( 'wp_rest' );
@@ -128,7 +128,7 @@ function render_page(): void {
 					$type_str = ( $types && ! is_wp_error( $types ) )
 						? implode( ', ', wp_list_pluck( $types, 'name' ) )
 						: '—';
-					$thumb    = \Leftfield\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
+					$thumb    = \ProducerKit\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
 					?>
 					<tr class="lfuf-qe-row" data-product-id="<?php echo (int) $pid; ?>">
 						<td class="lfuf-qe-col-thumb">

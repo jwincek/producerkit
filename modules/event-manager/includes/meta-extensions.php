@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\Meta;
+namespace ProducerKit\EventManager\Meta;
 
 defined( 'ABSPATH' ) || exit;
 

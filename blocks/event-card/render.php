@@ -29,7 +29,7 @@ if ( ! $event_post || $event_post->post_type !== 'lfuf_event' || $event_post->po
 }
 
 // Build event data using the REST helper.
-$event_data = \Leftfield\EventManager\REST\build_event_data( $event_post );
+$event_data = \ProducerKit\EventManager\REST\build_event_data( $event_post );
 
 $context = [
 	'restBase' => esc_url_raw( rest_url( 'lfuf/v1' ) ),
@@ -47,5 +47,5 @@ $wrapper_attrs = get_block_wrapper_attributes(
 	data-wp-interactive="leftfield/event-list"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
-	<?php echo \Leftfield\EventManager\Render\render_event_card( $event_data, $show_image, $show_rsvp, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally. ?>
+	<?php echo \ProducerKit\EventManager\Render\render_event_card( $event_data, $show_image, $show_rsvp, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally. ?>
 </div>

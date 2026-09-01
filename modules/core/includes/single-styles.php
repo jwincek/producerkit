@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\SingleStyles;
+namespace ProducerKit\Core\SingleStyles;
 
 defined( 'ABSPATH' ) || exit;
 

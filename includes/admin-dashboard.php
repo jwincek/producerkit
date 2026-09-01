@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Admin;
+namespace ProducerKit\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,9 +42,9 @@ function enqueue_dashboard_styles( string $hook ): void {
 }
 
 function render_dashboard(): void {
-	$registered = \Leftfield\get_registered_modules();
-	$labels     = \Leftfield\get_module_labels();
-	$active     = \Leftfield\get_active_modules();
+	$registered = \ProducerKit\get_registered_modules();
+	$labels     = \ProducerKit\get_module_labels();
+	$active     = \ProducerKit\get_active_modules();
 
 	// Content counts.
 	$cpt_counts = [];
@@ -81,7 +81,7 @@ function render_dashboard(): void {
 
 	// Stand status (if module active).
 	$stand_data = null;
-	if ( \Leftfield\is_module_active( 'stand-status' ) ) {
+	if ( \ProducerKit\is_module_active( 'stand-status' ) ) {
 		$stands = get_posts(
 			[
 				'post_type'   => 'lfuf_location',
@@ -120,7 +120,7 @@ function render_dashboard(): void {
 	<div class="wrap lfuf-dashboard">
 		<h1 class="lfuf-dashboard__title">
 			<?php esc_html_e( 'ProducerKit', 'producerkit' ); ?>
-			<span class="lfuf-dashboard__version">v<?php echo esc_html( \Leftfield\VERSION ); ?></span>
+			<span class="lfuf-dashboard__version">v<?php echo esc_html( \ProducerKit\VERSION ); ?></span>
 		</h1>
 
 		<!-- ── Stand Status (prominent if module active) ── -->
@@ -324,8 +324,8 @@ function render_dashboard(): void {
 
 		<!-- ── Sample Data ── -->
 		<?php
-		if ( function_exists( 'Leftfield\\SampleData\\get_dashboard_html' ) ) {
-			echo \Leftfield\SampleData\get_dashboard_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_dashboard_html() escapes all output internally.
+		if ( function_exists( 'ProducerKit\\SampleData\\get_dashboard_html' ) ) {
+			echo \ProducerKit\SampleData\get_dashboard_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_dashboard_html() escapes all output internally.
 		}
 		?>
 	</div>

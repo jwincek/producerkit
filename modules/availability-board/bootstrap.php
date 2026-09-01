@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard;
+namespace ProducerKit\AvailabilityBoard;
 
 defined( 'ABSPATH' ) || exit;
 

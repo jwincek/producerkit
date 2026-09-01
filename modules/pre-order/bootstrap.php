@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder;
+namespace ProducerKit\PreOrder;
 
 defined( 'ABSPATH' ) || exit;
 

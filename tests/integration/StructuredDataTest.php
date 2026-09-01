@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-use function Leftfield\Core\Availability\upsert;
-use function Leftfield\Core\StructuredData\location_data;
-use function Leftfield\Core\StructuredData\print_json_ld;
-use function Leftfield\Core\StructuredData\product_data;
+use function ProducerKit\Core\Availability\upsert;
+use function ProducerKit\Core\StructuredData\location_data;
+use function ProducerKit\Core\StructuredData\print_json_ld;
+use function ProducerKit\Core\StructuredData\product_data;
 
 final class StructuredDataTest extends WP_UnitTestCase {
 

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard\FreshSheet;
+namespace ProducerKit\AvailabilityBoard\FreshSheet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,11 +66,11 @@ function render_page(): void {
 	$request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
 	$request->set_param( 'status', 'abundant,available,limited' );
 	$request->set_param( 'location', $location_id );
-	$board = \Leftfield\AvailabilityBoard\REST\get_board( $request )->get_data();
+	$board = \ProducerKit\AvailabilityBoard\REST\get_board( $request )->get_data();
 
 	$hours           = $location_id ? (string) get_post_meta( $location_id, '_lfuf_hours', true ) : '';
 	$address         = $location_id ? (string) get_post_meta( $location_id, '_lfuf_address', true ) : '';
-	$payment_methods = $location_id ? \Leftfield\Core\Payments\get_payment_methods( $location_id ) : [];
+	$payment_methods = $location_id ? \ProducerKit\Core\Payments\get_payment_methods( $location_id ) : [];
 
 	$qr_link = null;
 	foreach ( $payment_methods as $method ) {

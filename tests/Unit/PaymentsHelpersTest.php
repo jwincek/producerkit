@@ -10,8 +10,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use function Leftfield\Core\Payments\method_types;
-use function Leftfield\Core\Payments\method_url;
+use function ProducerKit\Core\Payments\method_types;
+use function ProducerKit\Core\Payments\method_url;
 
 final class PaymentsHelpersTest extends TestCase {
 

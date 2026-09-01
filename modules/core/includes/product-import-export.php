@@ -16,7 +16,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\ProductIO;
+namespace ProducerKit\Core\ProductIO;
 
 defined( 'ABSPATH' ) || exit;
 

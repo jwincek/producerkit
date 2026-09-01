@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\RSVP;
+namespace ProducerKit\EventManager\RSVP;
 
 defined( 'ABSPATH' ) || exit;
 

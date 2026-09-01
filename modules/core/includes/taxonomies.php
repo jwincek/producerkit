@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Taxonomies;
+namespace ProducerKit\Core\Taxonomies;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Availability;
+namespace ProducerKit\Core\Availability;
 
 defined( 'ABSPATH' ) || exit;
 

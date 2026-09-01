@@ -27,7 +27,7 @@ if ( ! $location || $location->post_type !== 'lfuf_location' || $location->post_
 
 $address         = get_post_meta( $location_id, '_lfuf_address', true );
 $location_type   = get_post_meta( $location_id, '_lfuf_location_type', true );
-$payment_methods = \Leftfield\Core\Payments\get_payment_methods( $location_id );
+$payment_methods = \ProducerKit\Core\Payments\get_payment_methods( $location_id );
 $hours           = get_post_meta( $location_id, '_lfuf_hours', true );
 $is_open         = (bool) get_post_meta( $location_id, '_lfuf_is_open', true );
 
@@ -37,11 +37,11 @@ $schedule     = get_post_meta( $location_id, '_lfuf_ss_schedule', true );
 $season_start = get_post_meta( $location_id, '_lfuf_ss_season_start', true );
 $season_end   = get_post_meta( $location_id, '_lfuf_ss_season_end', true );
 
-if ( $auto_toggle && $schedule && function_exists( '\\Leftfield\\StandStatus\\REST\\compute_schedule_status' ) ) {
-	$is_open = \Leftfield\StandStatus\REST\compute_schedule_status( $schedule );
+if ( $auto_toggle && $schedule && function_exists( '\\ProducerKit\\StandStatus\\REST\\compute_schedule_status' ) ) {
+	$is_open = \ProducerKit\StandStatus\REST\compute_schedule_status( $schedule );
 }
-if ( $season_start && $season_end && function_exists( '\\Leftfield\\StandStatus\\REST\\is_in_season' ) ) {
-	if ( ! \Leftfield\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
+if ( $season_start && $season_end && function_exists( '\\ProducerKit\\StandStatus\\REST\\is_in_season' ) ) {
+	if ( ! \ProducerKit\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
 		$is_open = false;
 	}
 }

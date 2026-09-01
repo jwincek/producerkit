@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\Admin;
+namespace ProducerKit\PreOrder\Admin;
 
-use Leftfield\PreOrder\Orders;
+use ProducerKit\PreOrder\Orders;
 
 defined( 'ABSPATH' ) || exit;
 

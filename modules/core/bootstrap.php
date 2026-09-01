@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core;
+namespace ProducerKit\Core;
 
 defined( 'ABSPATH' ) || exit;
 

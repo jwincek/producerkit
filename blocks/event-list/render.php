@@ -25,7 +25,7 @@ $empty_message     = $attributes['emptyMessage'] ?? __( 'No upcoming events righ
 // Fetch upcoming events.
 $request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/upcoming' );
 $request->set_param( 'per_page', $per_page );
-$response = \Leftfield\EventManager\REST\get_upcoming_events( $request );
+$response = \ProducerKit\EventManager\REST\get_upcoming_events( $request );
 $upcoming = $response->get_data();
 
 // Fetch past events if enabled.
@@ -33,7 +33,7 @@ $past = [];
 if ( $show_past ) {
 	$past_request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/past' );
 	$past_request->set_param( 'per_page', $per_page );
-	$past_response = \Leftfield\EventManager\REST\get_past_events( $past_request );
+	$past_response = \ProducerKit\EventManager\REST\get_past_events( $past_request );
 	$past          = $past_response->get_data();
 }
 
@@ -117,7 +117,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<h3 class="lfuf-event-list__section-title"><?php esc_html_e( 'Upcoming', 'producerkit' ); ?></h3>
 				<?php
 				foreach ( $upcoming as $event ) :
-					echo \Leftfield\EventManager\Render\render_event_card( $event, $show_images, $show_rsvp, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
+					echo \ProducerKit\EventManager\Render\render_event_card( $event, $show_images, $show_rsvp, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
 				endforeach;
 				?>
 			</div>
@@ -129,7 +129,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<h3 class="lfuf-event-list__section-title"><?php esc_html_e( 'Past Events', 'producerkit' ); ?></h3>
 				<?php
 				foreach ( $past as $event ) :
-					echo \Leftfield\EventManager\Render\render_event_card( $event, $show_images, false, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
+					echo \ProducerKit\EventManager\Render\render_event_card( $event, $show_images, false, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
 				endforeach;
 				?>
 			</div>

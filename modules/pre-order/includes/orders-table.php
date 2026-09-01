@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\Orders;
+namespace ProducerKit\PreOrder\Orders;
 
 defined( 'ABSPATH' ) || exit;
 

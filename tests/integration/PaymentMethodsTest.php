@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-use function Leftfield\Core\Payments\get_payment_methods;
+use function ProducerKit\Core\Payments\get_payment_methods;
 
 final class PaymentMethodsTest extends WP_UnitTestCase {
 

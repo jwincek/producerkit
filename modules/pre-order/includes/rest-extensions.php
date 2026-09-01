@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\REST;
+namespace ProducerKit\PreOrder\REST;
 
-use Leftfield\PreOrder\Orders;
+use ProducerKit\PreOrder\Orders;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -16,7 +16,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Product_Images;
+namespace ProducerKit\Core\Product_Images;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * the repository).
  */
 function assets_url(): string {
-	return plugin_dir_url( \Leftfield\PLUGIN_DIR . '/.' ) . 'assets/img/';
+	return plugin_dir_url( \ProducerKit\PLUGIN_DIR . '/.' ) . 'assets/img/';
 }
 
 /**
@@ -64,7 +64,7 @@ function placeholder_url( int $product_id ): string {
 	if ( $slug ) {
 		$file = 'assets/img/placeholder-' . $slug . '.svg';
 
-		if ( is_file( \Leftfield\PLUGIN_DIR . '/' . $file ) ) {
+		if ( is_file( \ProducerKit\PLUGIN_DIR . '/' . $file ) ) {
 			$url = assets_url() . 'placeholder-' . $slug . '.svg';
 		}
 	}

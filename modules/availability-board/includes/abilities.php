@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard\Abilities;
+namespace ProducerKit\AvailabilityBoard\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ add_action(
 					$request->set_param( 'product_type', $input['product_type'] ?? '' );
 					$request->set_param( 'location', (int) ( $input['location_id'] ?? 0 ) );
 
-					$response = \Leftfield\AvailabilityBoard\REST\get_board( $request );
+					$response = \ProducerKit\AvailabilityBoard\REST\get_board( $request );
 					return $response->get_data();
 				},
 				'input_schema'        => [

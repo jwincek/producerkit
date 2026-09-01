@@ -5,9 +5,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\Abilities;
+namespace ProducerKit\PreOrder\Abilities;
 
-use Leftfield\PreOrder\Orders;
+use ProducerKit\PreOrder\Orders;
 
 defined( 'ABSPATH' ) || exit;
 

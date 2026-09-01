@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\StructuredData;
+namespace ProducerKit\Core\StructuredData;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -110,7 +110,7 @@ function product_data( \WP_Post $post ): array {
 			'url'           => get_permalink( $post ),
 		];
 
-		$rows = \Leftfield\Core\Availability\get_current( $post->ID );
+		$rows = \ProducerKit\Core\Availability\get_current( $post->ID );
 		if ( $rows ) {
 			$availability = availability_url( (string) $rows[0]->status );
 			if ( $availability ) {
@@ -163,7 +163,7 @@ function location_data( \WP_Post $post ): array {
 		}
 	}
 
-	$methods = \Leftfield\Core\Payments\get_payment_methods( $post->ID );
+	$methods = \ProducerKit\Core\Payments\get_payment_methods( $post->ID );
 	if ( $methods ) {
 		$data['paymentAccepted'] = implode( ', ', array_column( $methods, 'label' ) );
 	}

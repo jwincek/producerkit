@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-use function Leftfield\PreOrder\Orders\cancel_order_by_token;
-use function Leftfield\PreOrder\Orders\create_order;
-use function Leftfield\PreOrder\Orders\get_order_by_token;
-use function Leftfield\PreOrder\Orders\get_orders;
-use function Leftfield\PreOrder\Orders\update_status;
+use function ProducerKit\PreOrder\Orders\cancel_order_by_token;
+use function ProducerKit\PreOrder\Orders\create_order;
+use function ProducerKit\PreOrder\Orders\get_order_by_token;
+use function ProducerKit\PreOrder\Orders\get_orders;
+use function ProducerKit\PreOrder\Orders\update_status;
 
 final class PreOrdersTest extends WP_UnitTestCase {
 

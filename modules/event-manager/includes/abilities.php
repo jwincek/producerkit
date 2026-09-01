@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\Abilities;
+namespace ProducerKit\EventManager\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -44,7 +44,7 @@ add_action(
 					$request->set_param( 'per_page', (int) ( $input['per_page'] ?? 10 ) );
 					$request->set_param( 'event_type', $input['event_type'] ?? '' );
 
-					$response = \Leftfield\EventManager\REST\get_upcoming_events( $request );
+					$response = \ProducerKit\EventManager\REST\get_upcoming_events( $request );
 					return $response->get_data();
 				},
 				'input_schema'        => [
@@ -90,7 +90,7 @@ add_action(
 				'description'         => __( 'Submit an RSVP to a farm event. Returns a cancellation token.', 'producerkit' ),
 				'category'            => 'farm-events',
 				'execute_callback'    => function ( array $input ): array {
-					$result = \Leftfield\EventManager\RSVP\add_rsvp( $input );
+					$result = \ProducerKit\EventManager\RSVP\add_rsvp( $input );
 					if ( is_wp_error( $result ) ) {
 						return [
 							'success' => false,
