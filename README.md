@@ -53,7 +53,7 @@ producerkit/
 │   │   │   ├── profiles.php           # Registry, lazy per-file loading
 │   │   │   ├── taxonomies.php         # Optional material/finish/component
 │   │   │   └── admin-settings.php     # Profile picker
-│   │   └── profiles/                  # 9 profiles, one file each
+│   │   └── profiles/                  # 10 profiles, one file each
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -104,7 +104,7 @@ The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_s
 
 ### Producer Profiles
 
-Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Nine profiles ship: **Farm** (the default), **Beekeeping**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Ten profiles ship: **Farm** (the default), **Beekeeping**, **Musician**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
 
 A profile does two things:
 

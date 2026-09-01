@@ -71,6 +71,36 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$this->assertContains( 'farm', $slugs );
 		$this->assertContains( 'beekeeping', $slugs );
+		$this->assertContains( 'musician', $slugs );
+	}
+
+	public function test_musician_relabels_the_optional_fields_for_a_merch_table(): void {
+		$this->activate( 'musician' );
+
+		$this->assertSame( 'Format', get_taxonomy( 'lfuf_material' )->labels->singular_name );
+		$this->assertSame( 'Edition', get_taxonomy( 'lfuf_finish' )->labels->singular_name );
+		$this->assertSame( 'Packaging', get_taxonomy( 'lfuf_component' )->labels->singular_name );
+	}
+
+	/**
+	 * A profile may blank a core taxonomy it has no use for. Growing seasons
+	 * mean nothing on a tour schedule, so the musician profile seeds none —
+	 * which must be distinguishable from not mentioning the taxonomy at all.
+	 */
+	public function test_a_profile_can_blank_a_core_taxonomy_it_does_not_use(): void {
+		update_option( Profiles\OPTION, 'musician' );
+
+		$this->assertSame(
+			[],
+			apply_filters( 'lfuf_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'lfuf_season' ),
+			'The musician profile should seed no growing seasons.'
+		);
+
+		// But it does have plenty to say about event types.
+		$events = apply_filters( 'lfuf_taxonomy_default_terms', [ 'Potluck' ], 'lfuf_event_type' );
+		$this->assertContains( 'Show', $events );
+		$this->assertContains( 'Residency', $events );
+		$this->assertNotContains( 'Potluck', $events );
 	}
 
 	public function test_default_profile_is_farm(): void {
