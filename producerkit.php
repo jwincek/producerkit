@@ -51,6 +51,7 @@ function get_module_labels(): array {
 		'notifications'      => __( 'Notifications', 'producerkit' ),
 		'pre-order'          => __( 'Pre-Orders', 'producerkit' ),
 		'commissions'        => __( 'Commissions', 'producerkit' ),
+		'woocommerce'        => __( 'WooCommerce Settlement', 'producerkit' ),
 	];
 }
 
@@ -86,6 +87,10 @@ function get_registered_modules(): array {
 		],
 		'commissions'        => [
 			'bootstrap' => PLUGIN_DIR . '/modules/commissions/bootstrap.php',
+			'required'  => false,
+		],
+		'woocommerce'        => [
+			'bootstrap' => PLUGIN_DIR . '/modules/woocommerce/bootstrap.php',
 			'required'  => false,
 		],
 		// Future modules:

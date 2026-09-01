@@ -60,6 +60,12 @@ producerkit/
 │   │       ├── commissions-table.php  # Table, status machine, lifecycle
 │   │       ├── rest-extensions.php    # Public submit + tokenized decisions
 │   │       └── admin-commissions.php  # Request queue + quote form
+│   ├── woocommerce/                   # Optional settlement layer
+│   │   ├── bootstrap.php              # Gated on the WooCommerce class
+│   │   └── includes/
+│   │       ├── settlement.php         # Settlement columns on both tables
+│   │       ├── checkout.php           # Product + pending order + pay URL
+│   │       └── order-sync.php         # Order paid -> request settled
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -135,6 +141,18 @@ Kept as its own table rather than folded into pre-orders, because at submission 
 Managed under **ProducerKit → Commissions**: the request queue with a status filter, an inline quote form, and one-click moves along the machine. The **Commission Request Form** block puts the public form on any page — its type and material dropdowns come from your producer profile, so a woodworker's customers pick a Wood Species and a beekeeper's pick a Floral Source with no configuration.
 
 No WooCommerce required. Without it, an accepted commission is one the maker arranges payment for directly.
+
+### WooCommerce (optional)
+
+The compatibility layer. Everything else works with no store at all — a pre-order is paid at the stand, a commission is invoiced by the maker — and this module adds the option of settling either one through WooCommerce checkout instead.
+
+Both request tables gain four columns (`settlement`, `wc_order_id`, `wc_product_id`, `settled_at`), added only when the module runs, so a site that never installs WooCommerce never grows them. `settlement` defaults to `direct`, so switching the module on never reclassifies an existing request.
+
+- **A commission becomes** a hidden product at the quoted price plus a pending order, and the customer gets a pay link. Hidden, not published — "Dana's walnut bowl, $185" is not something another customer should be able to find and buy.
+- **A pre-order is priced** from the catalogue. Catalogue prices are free text on purpose ("$4/bunch", "market price"), so any line that does not parse to a clean number **refuses the whole checkout and names the product** rather than guessing — "2 for $5" reads as 2.00, and charging that would undercharge silently.
+- **Payment flows one way.** WooCommerce is the authority on whether money arrived; the request follows. A paid commission moves to In Progress through the same transition table everything else uses, so it cannot resurrect a cancelled one. A refund deliberately does *not* cancel the request — that is a human's call.
+
+Loading is gated on the `WooCommerce` class rather than `is_plugin_active()`, which needs an admin include, reads an option that lies on multisite, and would still be true during the request in which WooCommerce is being deactivated.
 
 ### Stand Status
 
