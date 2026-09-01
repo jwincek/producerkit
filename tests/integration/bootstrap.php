@@ -51,6 +51,7 @@ tests_add_filter(
 		\ProducerKit\Core\Availability\create_table();
 		\ProducerKit\EventManager\RSVP\create_table();
 		\ProducerKit\PreOrder\Orders\create_table();
+		\ProducerKit\Commissions\Store\create_table();
 	},
 	25
 );

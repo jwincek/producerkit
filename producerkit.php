@@ -50,6 +50,7 @@ function get_module_labels(): array {
 		'event-manager'      => __( 'Event Manager', 'producerkit' ),
 		'notifications'      => __( 'Notifications', 'producerkit' ),
 		'pre-order'          => __( 'Pre-Orders', 'producerkit' ),
+		'commissions'        => __( 'Commissions', 'producerkit' ),
 	];
 }
 
@@ -81,6 +82,10 @@ function get_registered_modules(): array {
 		],
 		'pre-order'          => [
 			'bootstrap' => PLUGIN_DIR . '/modules/pre-order/bootstrap.php',
+			'required'  => false,
+		],
+		'commissions'        => [
+			'bootstrap' => PLUGIN_DIR . '/modules/commissions/bootstrap.php',
 			'required'  => false,
 		],
 		// Future modules:
@@ -206,7 +211,7 @@ add_filter(
 			[
 				'slug'  => 'leftfield',
 				'title' => __( 'ProducerKit', 'producerkit' ),
-				'icon'  => 'carrot',
+				'icon'  => 'store',
 			]
 		);
 		return $categories;
