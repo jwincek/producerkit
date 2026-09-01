@@ -58,7 +58,8 @@ producerkit/
 │   │   ├── bootstrap.php
 │   │   └── includes/
 │   │       ├── commissions-table.php  # Table, status machine, lifecycle
-│   │       └── rest-extensions.php    # Public submit + tokenized decisions
+│   │       ├── rest-extensions.php    # Public submit + tokenized decisions
+│   │       └── admin-commissions.php  # Request queue + quote form
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -93,7 +94,8 @@ producerkit/
 │   ├── stand-hours-schedule/          # Weekly schedule grid (semantic table)
 │   ├── availability-board/            # Interactivity API, client-side filtering
 │   ├── event-list/                    # Interactivity API, inline RSVP
-│   └── event-card/                    # Single event embed with RSVP
+│   ├── event-card/                    # Single event embed with RSVP
+│   └── commission-form/               # Public custom-work request
 ├── languages/
 ├── GETTING-STARTED.md                 # Walkthrough for farm operators
 ├── composer.json
@@ -129,6 +131,8 @@ Kept as its own table rather than folded into pre-orders, because at submission 
 - **Enforced transitions.** `new → quoted → accepted → in_progress → complete`, with `declined` and `cancelled` as terminal branches. Illegal moves are refused, so a stale admin tab cannot revive a decision the customer already made.
 - **Two tokens.** A long-lived one lets the customer see their own request; a short-lived quote token (30 days) spends itself on accept or decline, so the emailed link cannot be replayed.
 - **Guests, not accounts.** Accept and decline authenticate with the quote token alone, over POST rather than GET, so a link preview or mail-client prefetch cannot accept on the customer's behalf.
+
+Managed under **ProducerKit → Commissions**: the request queue with a status filter, an inline quote form, and one-click moves along the machine. The **Commission Request Form** block puts the public form on any page — its type and material dropdowns come from your producer profile, so a woodworker's customers pick a Wood Species and a beekeeper's pick a Floral Source with no configuration.
 
 No WooCommerce required. Without it, an accepted commission is one the maker arranges payment for directly.
 
