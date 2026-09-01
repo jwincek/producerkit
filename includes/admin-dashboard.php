@@ -24,11 +24,13 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_dashboard_styles
 function register_dashboard_page(): void {
 	add_menu_page(
 		__( 'ProducerKit', 'producerkit' ),
-		__( 'Farm Stand', 'producerkit' ),
+		__( 'ProducerKit', 'producerkit' ),
 		'edit_posts',
+		// Page slug stays as-is: it is in admin URLs and is the parent slug
+		// for five submenus. Only the display label and icon change.
 		'farm-stand-dashboard',
 		__NAMESPACE__ . '\\render_dashboard',
-		'dashicons-carrot',
+		'dashicons-store',
 		3,
 	);
 }

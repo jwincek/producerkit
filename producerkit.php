@@ -44,6 +44,7 @@ const PREFIX     = 'lfuf';
 function get_module_labels(): array {
 	return [
 		'core'               => __( 'Core Data Layer', 'producerkit' ),
+		'producer-profiles'  => __( 'Producer Profiles', 'producerkit' ),
 		'stand-status'       => __( 'Stand Status', 'producerkit' ),
 		'availability-board' => __( 'Availability Board', 'producerkit' ),
 		'event-manager'      => __( 'Event Manager', 'producerkit' ),
@@ -57,6 +58,10 @@ function get_registered_modules(): array {
 		'core'               => [
 			'bootstrap' => PLUGIN_DIR . '/modules/core/bootstrap.php',
 			'required'  => true,
+		],
+		'producer-profiles'  => [
+			'bootstrap' => PLUGIN_DIR . '/modules/producer-profiles/bootstrap.php',
+			'required'  => false,
 		],
 		'stand-status'       => [
 			'bootstrap' => PLUGIN_DIR . '/modules/stand-status/bootstrap.php',

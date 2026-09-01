@@ -5,6 +5,12 @@
  * lfuf_product_type — Produce, Bread, Pantry Good, Seedling, etc.
  * lfuf_season       — Spring, Summer, Fall, Winter (shared across products & events).
  * lfuf_event_type   — Pizza Night, Potluck, Farm Dinner, Workshop, Tour, Market, etc.
+ *
+ * The display names and the seeded default terms both run through filters so
+ * that the producer-profiles module can re-label a taxonomy for a different
+ * trade — "Material" becomes "Floral Source" for a beekeeper, "Wood Species"
+ * for a woodworker — without core knowing that module exists. With no profile
+ * active the defaults below are what ships.
  */
 
 declare(strict_types=1);
@@ -19,29 +25,89 @@ function register(): void {
 	register_event_type();
 }
 
+/**
+ * Build a full WordPress label set from a singular/plural pair.
+ *
+ * Filterable as a pair rather than as a finished label array: a profile
+ * declaring `[ 'Floral Source', 'Floral Sources' ]` gets all eleven labels
+ * derived for it, instead of having to restate each one.
+ *
+ * @param string $taxonomy Taxonomy slug, passed to the filter for context.
+ * @param string $singular Default singular name.
+ * @param string $plural   Default plural name.
+ * @return array<string, string>
+ */
+function build_labels( string $taxonomy, string $singular, string $plural ): array {
+	/**
+	 * Filters the singular/plural display names for one of the plugin's taxonomies.
+	 *
+	 * @param array{0: string, 1: string} $names    [ singular, plural ].
+	 * @param string                      $taxonomy Taxonomy slug.
+	 */
+	[ $singular, $plural ] = apply_filters( 'lfuf_taxonomy_names', [ $singular, $plural ], $taxonomy );
+
+	return [
+		'name'              => $plural,
+		'singular_name'     => $singular,
+		/* translators: %s: plural taxonomy name. */
+		'search_items'      => sprintf( __( 'Search %s', 'producerkit' ), $plural ),
+		/* translators: %s: plural taxonomy name. */
+		'all_items'         => sprintf( __( 'All %s', 'producerkit' ), $plural ),
+		/* translators: %s: singular taxonomy name. */
+		'parent_item'       => sprintf( __( 'Parent %s', 'producerkit' ), $singular ),
+		/* translators: %s: singular taxonomy name. */
+		'parent_item_colon' => sprintf( __( 'Parent %s:', 'producerkit' ), $singular ),
+		/* translators: %s: singular taxonomy name. */
+		'edit_item'         => sprintf( __( 'Edit %s', 'producerkit' ), $singular ),
+		/* translators: %s: singular taxonomy name. */
+		'update_item'       => sprintf( __( 'Update %s', 'producerkit' ), $singular ),
+		/* translators: %s: singular taxonomy name. */
+		'add_new_item'      => sprintf( __( 'Add New %s', 'producerkit' ), $singular ),
+		/* translators: %s: singular taxonomy name. */
+		'new_item_name'     => sprintf( __( 'New %s Name', 'producerkit' ), $singular ),
+		'menu_name'         => $plural,
+	];
+}
+
+/**
+ * Seed a taxonomy's default terms, once, without ever removing existing ones.
+ *
+ * Admin-only and self-healing: a term deleted on purpose stays deleted until
+ * the next profile switch re-seeds, and a term added by hand is never touched.
+ *
+ * @param string   $taxonomy Taxonomy slug.
+ * @param string[] $defaults Term names to ensure exist.
+ */
+function seed_terms( string $taxonomy, array $defaults ): void {
+	/**
+	 * Filters the default terms seeded into one of the plugin's taxonomies.
+	 *
+	 * @param string[] $defaults Term names.
+	 * @param string   $taxonomy Taxonomy slug.
+	 */
+	$defaults = (array) apply_filters( 'lfuf_taxonomy_default_terms', $defaults, $taxonomy );
+
+	foreach ( $defaults as $term ) {
+		$term = trim( (string) $term );
+		if ( '' !== $term && ! term_exists( $term, $taxonomy ) ) {
+			wp_insert_term( $term, $taxonomy );
+		}
+	}
+}
+
 /* ───────────────────────────────────────────────
  * Product Type
  * ─────────────────────────────────────────────── */
 function register_product_type(): void {
-	$labels = [
-		'name'              => __( 'Product Types', 'producerkit' ),
-		'singular_name'     => __( 'Product Type', 'producerkit' ),
-		'search_items'      => __( 'Search Product Types', 'producerkit' ),
-		'all_items'         => __( 'All Product Types', 'producerkit' ),
-		'parent_item'       => __( 'Parent Product Type', 'producerkit' ),
-		'parent_item_colon' => __( 'Parent Product Type:', 'producerkit' ),
-		'edit_item'         => __( 'Edit Product Type', 'producerkit' ),
-		'update_item'       => __( 'Update Product Type', 'producerkit' ),
-		'add_new_item'      => __( 'Add New Product Type', 'producerkit' ),
-		'new_item_name'     => __( 'New Product Type Name', 'producerkit' ),
-		'menu_name'         => __( 'Product Types', 'producerkit' ),
-	];
-
 	register_taxonomy(
 		'lfuf_product_type',
 		[ 'lfuf_product' ],
 		[
-			'labels'            => $labels,
+			'labels'            => build_labels(
+				'lfuf_product_type',
+				__( 'Product Type', 'producerkit' ),
+				__( 'Product Types', 'producerkit' )
+			),
 			'hierarchical'      => true,
 			'public'            => true,
 			'show_in_rest'      => true,
@@ -57,12 +123,7 @@ function register_product_type(): void {
 
 	// Seed default terms (self-healing, admin only).
 	if ( is_admin() ) {
-		$defaults = [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ];
-		foreach ( $defaults as $term ) {
-			if ( ! term_exists( $term, 'lfuf_product_type' ) ) {
-				wp_insert_term( $term, 'lfuf_product_type' );
-			}
-		}
+		seed_terms( 'lfuf_product_type', [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ] );
 	}
 }
 
@@ -70,23 +131,15 @@ function register_product_type(): void {
  * Season (shared: products + events)
  * ─────────────────────────────────────────────── */
 function register_season(): void {
-	$labels = [
-		'name'          => __( 'Seasons', 'producerkit' ),
-		'singular_name' => __( 'Season', 'producerkit' ),
-		'search_items'  => __( 'Search Seasons', 'producerkit' ),
-		'all_items'     => __( 'All Seasons', 'producerkit' ),
-		'edit_item'     => __( 'Edit Season', 'producerkit' ),
-		'update_item'   => __( 'Update Season', 'producerkit' ),
-		'add_new_item'  => __( 'Add New Season', 'producerkit' ),
-		'new_item_name' => __( 'New Season Name', 'producerkit' ),
-		'menu_name'     => __( 'Seasons', 'producerkit' ),
-	];
-
 	register_taxonomy(
 		'lfuf_season',
 		[ 'lfuf_product', 'lfuf_event' ],
 		[
-			'labels'            => $labels,
+			'labels'            => build_labels(
+				'lfuf_season',
+				__( 'Season', 'producerkit' ),
+				__( 'Seasons', 'producerkit' )
+			),
 			'hierarchical'      => true,
 			'public'            => true,
 			'show_in_rest'      => true,
@@ -101,12 +154,7 @@ function register_season(): void {
 	);
 
 	if ( is_admin() ) {
-		$defaults = [ 'Spring', 'Summer', 'Fall', 'Winter' ];
-		foreach ( $defaults as $term ) {
-			if ( ! term_exists( $term, 'lfuf_season' ) ) {
-				wp_insert_term( $term, 'lfuf_season' );
-			}
-		}
+		seed_terms( 'lfuf_season', [ 'Spring', 'Summer', 'Fall', 'Winter' ] );
 	}
 }
 
@@ -114,23 +162,15 @@ function register_season(): void {
  * Event Type
  * ─────────────────────────────────────────────── */
 function register_event_type(): void {
-	$labels = [
-		'name'          => __( 'Event Types', 'producerkit' ),
-		'singular_name' => __( 'Event Type', 'producerkit' ),
-		'search_items'  => __( 'Search Event Types', 'producerkit' ),
-		'all_items'     => __( 'All Event Types', 'producerkit' ),
-		'edit_item'     => __( 'Edit Event Type', 'producerkit' ),
-		'update_item'   => __( 'Update Event Type', 'producerkit' ),
-		'add_new_item'  => __( 'Add New Event Type', 'producerkit' ),
-		'new_item_name' => __( 'New Event Type Name', 'producerkit' ),
-		'menu_name'     => __( 'Event Types', 'producerkit' ),
-	];
-
 	register_taxonomy(
 		'lfuf_event_type',
 		[ 'lfuf_event' ],
 		[
-			'labels'            => $labels,
+			'labels'            => build_labels(
+				'lfuf_event_type',
+				__( 'Event Type', 'producerkit' ),
+				__( 'Event Types', 'producerkit' )
+			),
 			'hierarchical'      => true,
 			'public'            => true,
 			'show_in_rest'      => true,
@@ -145,19 +185,17 @@ function register_event_type(): void {
 	);
 
 	if ( is_admin() ) {
-		$defaults = [
-			'Pizza Night',
-			'Potluck',
-			'Farm Dinner',
-			'Workshop',
-			'Farm Tour',
-			'Seed Exchange',
-			'Mini Market',
-		];
-		foreach ( $defaults as $term ) {
-			if ( ! term_exists( $term, 'lfuf_event_type' ) ) {
-				wp_insert_term( $term, 'lfuf_event_type' );
-			}
-		}
+		seed_terms(
+			'lfuf_event_type',
+			[
+				'Pizza Night',
+				'Potluck',
+				'Farm Dinner',
+				'Workshop',
+				'Farm Tour',
+				'Seed Exchange',
+				'Mini Market',
+			]
+		);
 	}
 }

@@ -47,6 +47,13 @@ producerkit/
 │   │       ├── single-styles.php      # Front-end styles for single CPTs
 │   │       ├── admin-columns.php      # Custom columns for CPT list tables
 │   │       └── product-import-export.php # CSV import/export for products
+│   ├── producer-profiles/             # Trade vocabulary + optional fields
+│   │   ├── bootstrap.php
+│   │   ├── includes/
+│   │   │   ├── profiles.php           # Registry, lazy per-file loading
+│   │   │   ├── taxonomies.php         # Optional material/finish/component
+│   │   │   └── admin-settings.php     # Profile picker
+│   │   └── profiles/                  # 9 profiles, one file each
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -94,6 +101,19 @@ producerkit/
 ### Core (always active)
 
 The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_source`, `lfuf_location`, `lfuf_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_lfuf_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `lfuf/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
+
+### Producer Profiles
+
+Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Nine profiles ship: **Farm** (the default), **Beekeeping**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+
+A profile does two things:
+
+- **Re-labels.** "Material" becomes *Floral Source* for a beekeeper, *Wood Species* for a woodworker, *Clay Body* for a potter. All eleven WordPress labels are derived from one singular/plural pair.
+- **Switches on optional fields.** `lfuf_material`, `lfuf_finish` and `lfuf_component` register only for profiles that ask for them, so a farm never sees them.
+
+Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe. Choose one under **ProducerKit → Producer Profile**.
+
+Core knows nothing about this module: it exposes two filters, `lfuf_taxonomy_names` and `lfuf_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
 
 ### Stand Status
 
