@@ -31,6 +31,13 @@ add_filter( 'lfuf_taxonomy_names', __NAMESPACE__ . '\\Taxonomies\\filter_names',
 add_filter( 'lfuf_taxonomy_default_terms', __NAMESPACE__ . '\\Taxonomies\\filter_default_terms', 10, 2 );
 add_filter( 'lfuf_post_type_names', __NAMESPACE__ . '\\Taxonomies\\filter_post_type_names', 10, 2 );
 
+// Tells core which taxonomies are worth showing on a product. Without this
+// module the list stays empty and templates render exactly as before.
+add_filter(
+	'lfuf_detail_taxonomies',
+	static fn ( array $taxonomies ): array => array_merge( $taxonomies, Profiles\active_taxonomies() )
+);
+
 // Core registers its three taxonomies at init/10; the optional ones follow.
 add_action( 'init', __NAMESPACE__ . '\\Taxonomies\\register', 11 );
 

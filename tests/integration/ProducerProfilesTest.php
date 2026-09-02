@@ -234,6 +234,89 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 		$this->assertNotEmpty( term_exists( 'Honey', 'lfuf_product_type' ), 'The new profile did not seed its own vocabulary.' );
 	}
 
+	/* ── Detail terms reach the templates ─────────────────────── */
+
+	/**
+	 * The bug this covers: a profile switched Clay Body and Glaze on, the
+	 * editor let you fill them in, and then nothing on the site displayed
+	 * them. Fields written and never read.
+	 */
+	public function test_profile_terms_are_exposed_for_display(): void {
+		$this->activate( 'pottery' );
+
+		$product = self::factory()->post->create(
+			[
+				'post_type'   => 'lfuf_product',
+				'post_status' => 'publish',
+			]
+		);
+		wp_set_object_terms( $product, 'Stoneware', 'lfuf_material' );
+		wp_set_object_terms( $product, 'Ash Glaze', 'lfuf_finish' );
+
+		$details = \ProducerKit\Core\Taxonomies\detail_terms( $product );
+
+		$this->assertSame( [ 'Stoneware' ], $details['Clay Body'] ?? null );
+		$this->assertSame( [ 'Ash Glaze' ], $details['Glaze'] ?? null );
+	}
+
+	public function test_a_taxonomy_with_no_terms_is_left_out(): void {
+		$this->activate( 'pottery' );
+
+		$product = self::factory()->post->create(
+			[
+				'post_type'   => 'lfuf_product',
+				'post_status' => 'publish',
+			]
+		);
+		wp_set_object_terms( $product, 'Porcelain', 'lfuf_material' );
+
+		$details = \ProducerKit\Core\Taxonomies\detail_terms( $product );
+
+		$this->assertArrayHasKey( 'Clay Body', $details );
+		$this->assertArrayNotHasKey( 'Glaze', $details, 'An untagged field should not render an empty row.' );
+	}
+
+	/**
+	 * A farm switches none of them on, so templates must get nothing rather
+	 * than a stray empty section.
+	 */
+	public function test_a_profile_with_no_extra_fields_exposes_nothing(): void {
+		$this->activate( 'farm' );
+
+		$product = self::factory()->post->create(
+			[
+				'post_type'   => 'lfuf_product',
+				'post_status' => 'publish',
+			]
+		);
+
+		$this->assertSame( [], \ProducerKit\Core\Taxonomies\detail_terms( $product ) );
+	}
+
+	/**
+	 * Core must not depend on the producer-profiles module: with nothing
+	 * answering the filter, the templates behave as they did before profiles
+	 * existed.
+	 */
+	public function test_core_exposes_nothing_when_no_module_answers(): void {
+		$this->activate( 'pottery' );
+
+		$product = self::factory()->post->create(
+			[
+				'post_type'   => 'lfuf_product',
+				'post_status' => 'publish',
+			]
+		);
+		wp_set_object_terms( $product, 'Stoneware', 'lfuf_material' );
+
+		$suppress = static fn (): array => [];
+		add_filter( 'lfuf_detail_taxonomies', $suppress, 99 );
+
+		$this->assertSame( [], \ProducerKit\Core\Taxonomies\detail_terms( $product ) );
+
+		remove_filter( 'lfuf_detail_taxonomies', $suppress, 99 );
+	}
+
 	public function test_seed_terms_is_idempotent(): void {
 		$this->activate( 'farm' );
 

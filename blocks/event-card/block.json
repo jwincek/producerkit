@@ -6,7 +6,7 @@
     "title": "Event Card",
     "category": "leftfield",
     "icon": "calendar",
-    "description": "Display a single farm event with date, location, RSVP, and donation link. Useful for featuring a specific event on any page.",
+    "description": "Display a single event with date, location, RSVP, and donation link. Useful for featuring a specific event on any page.",
     "textdomain": "producerkit",
     "attributes": {
         "eventId": {

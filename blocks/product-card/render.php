@@ -35,6 +35,10 @@ $placeholder = $thumbnail ? '' : \ProducerKit\Core\Product_Images\placeholder_ur
 $types         = get_the_terms( $product_id, 'lfuf_product_type' );
 $seasons       = get_the_terms( $product_id, 'lfuf_season' );
 
+// Trade-specific terms the active producer profiles switched on — a potter's
+// Clay Body, a printer's Ink. Empty when no profile asks for any.
+$detail_terms = \ProducerKit\Core\Taxonomies\detail_terms( $product_id );
+
 $availability_rows = [];
 if ( $show_availability ) {
 	$availability_rows = \ProducerKit\Core\Availability\get_current( $product_id );
@@ -111,6 +115,15 @@ $wrapper_attrs = get_block_wrapper_attributes(
 					<span class="lfuf-product-card__season-badge"><?php echo esc_html( $season->name ); ?></span>
 				<?php endforeach; ?>
 			</div>
+		<?php endif; ?>
+
+		<?php if ( $detail_terms ) : ?>
+			<dl class="lfuf-product-card__details">
+				<?php foreach ( $detail_terms as $label => $terms ) : ?>
+					<dt class="lfuf-product-card__detail-label"><?php echo esc_html( $label ); ?></dt>
+					<dd class="lfuf-product-card__detail-value"><?php echo esc_html( implode( ', ', $terms ) ); ?></dd>
+				<?php endforeach; ?>
+			</dl>
 		<?php endif; ?>
 
 		<?php if ( $growing_notes ) : ?>

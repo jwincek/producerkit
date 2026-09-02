@@ -6,7 +6,7 @@
     "title": "Availability Board",
     "category": "leftfield",
     "icon": "grid-view",
-    "description": "A live board showing what's currently available at the farm, grouped by product type with status badges and optional filtering. Uses the Interactivity API for reactive updates.",
+    "description": "A live board showing what's currently currently available, grouped by product type with status badges and optional filtering. Uses the Interactivity API for reactive updates.",
     "textdomain": "producerkit",
     "attributes": {
         "showFilters": {

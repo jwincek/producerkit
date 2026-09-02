@@ -6,7 +6,7 @@
     "title": "Pre-Order Form",
     "category": "leftfield",
     "icon": "cart",
-    "description": "Let visitors pre-order products for pickup — pay at the stand. Requires the Pre-Orders module.",
+    "description": "Let visitors pre-order products for pickup — pay on collection. Requires the Pre-Orders module.",
     "textdomain": "producerkit",
     "attributes": {
         "locationId": {

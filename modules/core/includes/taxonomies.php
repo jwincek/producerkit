@@ -95,6 +95,50 @@ function seed_terms( string $taxonomy, array $defaults ): void {
 	}
 }
 
+/**
+ * The trade-specific terms a product carries, keyed by their current label.
+ *
+ * Product type and season have their own places in every template. These are
+ * the optional ones a producer profile switches on — a potter's Clay Body and
+ * Glaze, a printer's Substrate and Ink — which otherwise had somewhere to be
+ * entered and nowhere to be seen.
+ *
+ * Core asks rather than knows: the list arrives by filter, so with the
+ * producer-profiles module off this returns nothing and every caller carries
+ * on unchanged.
+ *
+ * @param int $post_id Product id.
+ * @return array<string, string[]> Display label => term names.
+ */
+function detail_terms( int $post_id ): array {
+	/**
+	 * Filters which taxonomies count as trade detail on a product.
+	 *
+	 * @param string[] $taxonomies Taxonomy slugs, in display order.
+	 * @param int      $post_id    Product id.
+	 */
+	$taxonomies = (array) apply_filters( 'lfuf_detail_taxonomies', [], $post_id );
+
+	$out = [];
+
+	foreach ( $taxonomies as $taxonomy ) {
+		if ( ! is_string( $taxonomy ) || ! taxonomy_exists( $taxonomy ) ) {
+			continue;
+		}
+
+		$terms = get_the_terms( $post_id, $taxonomy );
+		if ( ! $terms || is_wp_error( $terms ) ) {
+			continue;
+		}
+
+		// Keyed by the label the current viewer sees, which under
+		// multi-profile is not the same for everyone.
+		$out[ get_taxonomy( $taxonomy )->labels->singular_name ] = wp_list_pluck( $terms, 'name' );
+	}
+
+	return $out;
+}
+
 /* ───────────────────────────────────────────────
  * Product Type
  * ─────────────────────────────────────────────── */

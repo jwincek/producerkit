@@ -135,7 +135,7 @@ Re-labels the product taxonomies for the trade the site actually practises, and 
 A profile does two things:
 
 - **Re-labels.** "Material" becomes *Floral Source* for a beekeeper, *Wood Species* for a woodworker, *Clay Body* for a potter. All eleven WordPress labels are derived from one singular/plural pair.
-- **Switches on optional fields.** `lfuf_material`, `lfuf_finish` and `lfuf_component` register only for profiles that ask for them, so a farm never sees them.
+- **Switches on optional fields.** `lfuf_material`, `lfuf_finish` and `lfuf_component` register only for profiles that ask for them, so a farm never sees them. They render on the Product Card block and the single product page, labelled as the viewer's profile names them — core asks which taxonomies count via the `lfuf_detail_taxonomies` filter, so with this module off the templates behave exactly as before.
 
 Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe.
 

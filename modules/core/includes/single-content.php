@@ -60,6 +60,7 @@ function render_product_details( \WP_Post $post ): string {
 	$growing_notes = get_post_meta( $id, '_lfuf_growing_notes', true );
 	$types         = get_the_terms( $id, 'lfuf_product_type' );
 	$seasons       = get_the_terms( $id, 'lfuf_season' );
+	$detail_terms  = \ProducerKit\Core\Taxonomies\detail_terms( $id );
 
 	// Availability.
 	$availability = \ProducerKit\Core\Availability\get_current( $id );
@@ -110,6 +111,15 @@ function render_product_details( \WP_Post $post ): string {
 				</span>
 			</div>
 		<?php endif; ?>
+
+		<?php foreach ( $detail_terms as $detail_label => $detail_values ) : ?>
+			<div class="lfuf-single-details__row">
+				<span class="lfuf-single-details__label"><?php echo esc_html( $detail_label ); ?></span>
+				<span class="lfuf-single-details__value">
+					<?php echo esc_html( implode( ', ', $detail_values ) ); ?>
+				</span>
+			</div>
+		<?php endforeach; ?>
 
 		<?php
 		if ( ! empty( $availability ) ) :

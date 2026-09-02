@@ -81,6 +81,27 @@
     color: var(--wp--preset--color--base, #fff);
 }
 
+/*
+ * Trade detail from the active producer profile — Clay Body, Ink, Binding.
+ * A definition list because that is what it is: a label and its value.
+ */
+.lfuf-product-card__details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.75rem;
+    margin: 0.5rem 0 0;
+    font-size: 0.8rem;
+}
+
+.lfuf-product-card__detail-label {
+    margin: 0;
+    opacity: 0.7;
+}
+
+.lfuf-product-card__detail-value {
+    margin: 0;
+}
+
 .lfuf-product-card__notes {
     font-size: 0.85rem;
     font-style: italic;
