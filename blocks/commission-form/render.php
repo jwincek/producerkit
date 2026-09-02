@@ -67,7 +67,8 @@ $material_label = $materials && taxonomy_exists( 'lfuf_material' )
 
 $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] );
 ?>
-<div <?php echo wp_kses_data( $wrapper ); ?>
+<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns escaped HTML. Not wp_kses_data(): that treats an attribute string as content and double-encodes any & in it. */ ?>
+<div <?php echo $wrapper; ?>
 	data-lfuf-commission-form
 	data-endpoint="<?php echo esc_url( rest_url( 'lfuf/v1/commissions' ) ); ?>">
 
