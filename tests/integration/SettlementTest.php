@@ -88,6 +88,68 @@ final class SettlementTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * The upgrade used to open with a version-option early return, so a site
+	 * that enabled the commissions module *after* this one had stamped the
+	 * option got a table with no settlement columns and no way to acquire
+	 * them — every later attach_order() failed silently, for good.
+	 */
+	public function test_columns_are_added_even_when_the_version_option_is_already_stamped(): void {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'pkit_commissions';
+
+		update_option( Settlement\OPTION, Settlement\DB_VERSION );
+		foreach ( array_keys( Settlement\columns() ) as $column ) {
+			$wpdb->query( "ALTER TABLE {$table} DROP COLUMN {$column}" ); // phpcs:ignore
+		}
+		Settlement\flush_column_cache();
+
+		$this->assertFalse( Settlement\has_column( $table, 'wc_order_id' ), 'Precondition: the column is gone.' );
+
+		Settlement\maybe_upgrade();
+		Settlement\flush_column_cache();
+
+		$this->assertTrue(
+			Settlement\has_column( $table, 'wc_order_id' ),
+			'The columns are the source of truth, not the option.'
+		);
+	}
+
+	/**
+	 * on_paid() is hooked to both `processing` and `completed`, so a normal
+	 * payment followed by the maker marking the order complete fires it twice.
+	 * Without the guard the second pass overwrote settled_at with the
+	 * fulfilment time and re-fired pkit_request_settled.
+	 */
+	public function test_settling_twice_only_counts_once(): void {
+		global $wpdb;
+
+		$commission = \ProducerKit\Commissions\Store\create(
+			[
+				'name'        => 'Dana',
+				'email'       => 'dana@example.com',
+				'description' => 'A walnut bowl.',
+			]
+		);
+		$this->assertNotWPError( $commission );
+
+		$id = (int) $commission['id'];
+
+		$this->assertTrue( Settlement\mark_settled( 'commission', $id ), 'First settlement takes.' );
+
+		$table = $wpdb->prefix . 'pkit_commissions';
+		// phpcs:ignore
+		$first = $wpdb->get_var( $wpdb->prepare( "SELECT settled_at FROM {$table} WHERE id = %d", $id ) );
+
+		$this->assertFalse( Settlement\mark_settled( 'commission', $id ), 'Second is a no-op.' );
+
+		// phpcs:ignore
+		$second = $wpdb->get_var( $wpdb->prepare( "SELECT settled_at FROM {$table} WHERE id = %d", $id ) );
+
+		$this->assertSame( $first, $second, 'settled_at must record when it was paid, not when it was fulfilled.' );
+	}
+
 	public function test_adding_columns_is_idempotent(): void {
 		$table = \ProducerKit\Commissions\Store\table_name();
 
@@ -105,10 +167,41 @@ final class SettlementTest extends WP_UnitTestCase {
 	/* ── Pricing a pre-order ──────────────────────────────────── */
 
 	/**
-	 * The reason this refuses rather than guessing: parse_price() is a
-	 * heuristic built for schema.org markup, where a wrong number is
-	 * cosmetic. "2 for $5" reads as 2.00. Charging that is not cosmetic.
+	 * Every string here was charged wrongly, or refused wrongly, before
+	 * chargeable_price() existed. The earlier guard used parse_price(), a
+	 * schema.org heuristic that takes the first run of digits — fine when a
+	 * wrong number is cosmetic, a mischarge when it is money.
+	 *
+	 * @dataProvider price_provider
 	 */
+	public function test_only_an_unambiguous_amount_is_chargeable( string $input, ?float $expected ): void {
+		$this->assertSame( $expected, Checkout\chargeable_price( $input ) );
+	}
+
+	public function price_provider(): array {
+		return [
+			'plain'                  => [ '4.00', 4.00 ],
+			'currency prefix'        => [ '$4.00', 4.00 ],
+			'per-unit suffix'        => [ '$6.50/loaf', 6.50 ],
+			'unit word'              => [ '$5 each', 5.00 ],
+			'thousands separator'    => [ '$1,200.00', 1200.00 ],
+
+			// parse_price() answered 2.00 here — a 60% undercharge on every order.
+			'quantity then price'    => [ '2 for $5', null ],
+			// parse_price() answered 1.00 here — off by a factor of 1200.
+			'comma read as a break'  => [ '1,200.00', 1200.00 ],
+			'two numbers'            => [ '50% off $10', null ],
+			'no number at all'       => [ 'market price', null ],
+			// The absint() trap: a minus swallowed as punctuation would charge
+			// for what should be a credit.
+			'negative'               => [ '-5', null ],
+			'negative with currency' => [ '$-5.00', null ],
+			'zero'                   => [ '0', null ],
+			'sub-cent precision'     => [ '4.005', null ],
+			'empty'                  => [ '', null ],
+		];
+	}
+
 	public function test_an_unparseable_line_price_refuses_the_whole_checkout(): void {
 		$result = Checkout\price_preorder(
 			[
@@ -136,6 +229,29 @@ final class SettlementTest extends WP_UnitTestCase {
 			$result->get_error_message(),
 			'The operator needs to know which product to fix.'
 		);
+	}
+
+	/**
+	 * The shape that actually loses money: it parses, so nothing errors, and
+	 * the customer is simply charged less than the sign says.
+	 */
+	public function test_a_quantity_priced_line_refuses_rather_than_undercharging(): void {
+		$result = Checkout\price_preorder(
+			[
+				'items' => [
+					[
+						'product_id' => 1,
+						'qty'        => 1,
+						'title'      => 'Sweetcorn',
+						'price'      => '2 for $5',
+					],
+				],
+			]
+		);
+
+		$this->assertWPError( $result );
+		$this->assertSame( 'unpriceable', $result->get_error_code() );
+		$this->assertStringContainsString( 'Sweetcorn', $result->get_error_message() );
 	}
 
 	public function test_a_fully_priced_order_totals_by_quantity(): void {

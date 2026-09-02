@@ -71,14 +71,18 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\\maybe_upgrade', 30 );
  * Add any missing columns.
  *
  * Runs at priority 30, after the request modules have created their tables at
- * 20. Self-healing like every other schema here: it checks the columns rather
- * than trusting the version option, so a half-applied upgrade repairs itself.
+ * 20.
+ *
+ * Genuinely self-healing, which the version-option early return it used to
+ * open with was not: a site that enabled the commissions module *after* this
+ * one had already stamped the option got a commissions table with no
+ * settlement columns and no way back, so every attach_order() failed silently
+ * for good. The columns are the source of truth, not the option.
+ *
+ * The cost is one cached SHOW COLUMNS per table per request, which is why
+ * has_column() memoises.
  */
 function maybe_upgrade(): void {
-	if ( get_option( OPTION ) === DB_VERSION ) {
-		return;
-	}
-
 	foreach ( tables() as $table ) {
 		add_columns( $table );
 	}
@@ -95,6 +99,8 @@ function maybe_upgrade(): void {
 function add_columns( string $table ): void {
 	global $wpdb;
 
+	$added = false;
+
 	foreach ( columns() as $column => $definition ) {
 		if ( has_column( $table, $column ) ) {
 			continue;
@@ -102,14 +108,55 @@ function add_columns( string $table ): void {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Identifiers and definitions are internal constants; neither can be parameterized.
 		$wpdb->query( "ALTER TABLE {$table} ADD COLUMN {$column} {$definition}" );
+		$added = true;
+	}
+
+	// The memoised answers describe the old shape.
+	if ( $added ) {
+		flush_column_cache();
 	}
 }
 
 function has_column( string $table, string $column ): bool {
 	global $wpdb;
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; the column name is bound.
-	return (bool) $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM {$table} LIKE %s", $column ) );
+	// Memoised per request. find_by_order() consults this for every table on
+	// every order status transition — including on stores that never use
+	// settlement — and an uncached SHOW COLUMNS there put four extra queries
+	// on each transition for nothing.
+	$cache = &column_cache();
+	$key   = $table . '.' . $column;
+
+	if ( ! array_key_exists( $key, $cache ) ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; the column name is bound.
+		$cache[ $key ] = (bool) $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM {$table} LIKE %s", $column ) );
+	}
+
+	return $cache[ $key ];
+}
+
+/**
+ * Backing store for has_column()'s memoisation.
+ *
+ * A named holder rather than a static inside has_column(), so the cache can
+ * be cleared when the table shape actually changes.
+ *
+ * @return array<string, bool>
+ */
+function &column_cache(): array {
+	static $cache = [];
+	return $cache;
+}
+
+/**
+ * Forget the memoised column checks.
+ *
+ * Needed after add_columns() alters a table mid-request, and by the tests,
+ * which create and drop tables between cases.
+ */
+function flush_column_cache(): void {
+	$cache = &column_cache();
+	$cache = [];
 }
 
 /* ───────────────────────────────────────────────
@@ -162,12 +209,27 @@ function mark_settled( string $type, int $id ): bool {
 		return false;
 	}
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table.
-	return false !== $wpdb->update(
-		$table,
-		[ 'settled_at' => current_time( 'mysql', true ) ],
-		[ 'id' => $id ]
+	// Only the first settlement counts. on_paid() is hooked to both
+	// `processing` and `completed`, so a normal payment followed by the maker
+	// marking the order complete fires it twice — and without this the second
+	// pass overwrote settled_at with the fulfilment time and re-fired
+	// pkit_request_settled, so anything listening ran twice per payment.
+	//
+	// The NULL check lives in the WHERE clause rather than in a read-then-write
+	// so two concurrent status transitions cannot both see it unset.
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; values are bound. Disabled rather than ignored because the interpolation sits on a different line from the call.
+	$updated = $wpdb->query(
+		$wpdb->prepare(
+			"UPDATE {$table} SET settled_at = %s WHERE id = %d AND settled_at IS NULL",
+			current_time( 'mysql', true ),
+			$id
+		)
 	);
+	// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	// Zero rows means it was already settled, which is success for the caller
+	// and a signal to on_paid() that it has nothing further to do.
+	return (int) $updated > 0;
 }
 
 /**

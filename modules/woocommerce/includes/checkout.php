@@ -17,7 +17,6 @@ namespace ProducerKit\WooCommerce\Checkout;
 use ProducerKit\Commissions\Store as Commissions;
 use ProducerKit\WooCommerce\Settlement;
 
-use function ProducerKit\Core\StructuredData\parse_price;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,8 +44,10 @@ function product_for_commission( int $commission_id ): int|\WP_Error {
 	}
 
 	// Reuse the product if one was already made, so a second accept — a retry,
-	// a double click — does not litter the catalogue.
-	$existing = (int) ( $commission['wc_product_id'] ?? 0 );
+	// a double click — does not litter the catalogue. Note the key:
+	// attach_product() writes `product_id`, and reading `wc_product_id` here
+	// always missed, so every retry made another product.
+	$existing = (int) ( $commission['product_id'] ?? 0 );
 	if ( $existing > 0 && 'product' === get_post_type( $existing ) ) {
 		return $existing;
 	}
@@ -60,11 +61,24 @@ function product_for_commission( int $commission_id ): int|\WP_Error {
 		)
 	);
 	$product->set_regular_price( number_format( (float) $price, 2, '.', '' ) );
+	// Hidden from the catalogue AND unreachable directly. catalog_visibility
+	// alone leaves the post published, so /?p=<id> served the customer's name
+	// and their verbatim commission description to anyone who guessed the id.
 	$product->set_catalog_visibility( 'hidden' );
+	$product->set_status( 'private' );
 	$product->set_sold_individually( true );
 	$product->set_virtual( false );
 	$product->set_stock_status( 'instock' );
-	$product->set_description( (string) $commission['description'] );
+	// Deliberately not the customer's description: it is their words about a
+	// private commission, and a product post is the wrong place to keep them.
+	// The admin queue is where the maker reads the request.
+	$product->set_description(
+		sprintf(
+			/* translators: %d: commission reference number. */
+			__( 'Commission #%d — agreed at the quoted price.', 'producerkit' ),
+			$commission_id
+		)
+	);
 
 	$product_id = (int) $product->save();
 	if ( $product_id < 1 ) {
@@ -78,16 +92,75 @@ function product_for_commission( int $commission_id ): int|\WP_Error {
 }
 
 /**
+ * Read a price string that is safe to charge, or null if it is not.
+ *
+ * Deliberately NOT parse_price(). That takes the first run of digits it finds,
+ * which is right for schema.org markup where a wrong number is cosmetic, and
+ * wrong for money:
+ *
+ *   "2 for $5"   -> 2.00      undercharges by 60%
+ *   "$1,200.00"  -> 1.00      undercharges by a factor of 1200
+ *
+ * The rule here is that the string must contain **exactly one** number. That
+ * is what separates the two shapes: in "$6.50/loaf" the number is the price
+ * and the rest is a unit, while in "2 for $5" the first number is a quantity
+ * and reading it as a price is a mischarge. A second number means the string
+ * says something about quantity that this cannot safely interpret, so it
+ * refuses and the operator is told which product to fix.
+ *
+ * Free text cannot be made completely safe, so the rule errs toward refusing:
+ * anything it cannot read as one price plus a unit stops the checkout with the
+ * product named, which is a problem the operator can see and fix.
+ *
+ * @param string $display Free-text price as entered.
+ * @return float|null Amount, or null when the string cannot be charged.
+ */
+function chargeable_price( string $display ): ?float {
+	$trimmed = trim( $display );
+	if ( '' === $trimmed ) {
+		return null;
+	}
+
+	// Thousands separators first, so 1,200.00 is one number and not two.
+	$normalised = preg_replace( '/(?<=\d),(?=\d{3}\b)/', '', $trimmed );
+
+	// Exactly one number, or the string is saying something extra.
+	if ( 1 !== preg_match_all( '/\d+(?:\.\d+)?/', $normalised, $matches ) ) {
+		return null;
+	}
+
+	$number = $matches[0][0];
+
+	// A leading minus would otherwise be swallowed as punctuation and the
+	// amount cast to a positive — the same trap as absint() turning -5 into 5,
+	// except here it would charge for a credit.
+	if ( preg_match( '/-\s*' . preg_quote( $number, '/' ) . '/', $normalised ) ) {
+		return null;
+	}
+
+	// Reject more precision than money has; "4.005" is not a price.
+	if ( str_contains( $number, '.' ) && strlen( explode( '.', $number )[1] ) > 2 ) {
+		return null;
+	}
+
+	// Whatever surrounds it must be a currency mark or a unit, never digits
+	// dressed up as words.
+	$remainder = trim( str_replace( $number, '', $normalised ) );
+	if ( '' !== $remainder && ! preg_match( '~^\p{Sc}?[\p{L}\s/\-.]*$~u', $remainder ) ) {
+		return null;
+	}
+
+	$amount = (float) $number;
+
+	return $amount > 0 ? $amount : null;
+}
+
+/**
  * Total a pre-order from its line items.
  *
- * Prices are free text on purpose — "$4/bunch", "market price" — because a
- * farm stand's sign is not a price list. parse_price() reads a number out of
- * that for schema.org markup, where a wrong guess is cosmetic.
- *
- * Charging money on the same guess is not cosmetic: "2 for $5" parses to 2.00
- * and would undercharge every time. So any line that does not parse cleanly
- * refuses the whole checkout and names the product, which turns a silent
- * mischarge into a visible problem the operator can fix.
+ * Any line that is not unambiguously priced refuses the whole checkout and
+ * names the product, which turns a silent mischarge into a visible problem the
+ * operator can fix.
  *
  * @param array $order Public-safe pre-order data.
  * @return array{lines: array<int, array{product_id: int, qty: int, title: string, price: float}>, total: float}|\WP_Error
@@ -97,7 +170,7 @@ function price_preorder( array $order ): array|\WP_Error {
 	$total = 0.0;
 
 	foreach ( (array) ( $order['items'] ?? [] ) as $item ) {
-		$parsed = parse_price( (string) ( $item['price'] ?? '' ) );
+		$parsed = chargeable_price( (string) ( $item['price'] ?? '' ) );
 
 		if ( null === $parsed ) {
 			return new \WP_Error(
@@ -187,12 +260,25 @@ function create_order( string $type, int $id, array $args ): array|\WP_Error {
 
 	$order_id = (int) $order->get_id();
 
-	Settlement\attach_order(
+	$linked = Settlement\attach_order(
 		$type,
 		$id,
 		$order_id,
 		(int) ( $args['product_id'] ?? 0 )
 	);
+
+	if ( ! $linked ) {
+		// Without the link, paying the order settles nothing — the request
+		// stays open forever and the customer has paid. Better to fail loudly
+		// here than hand back a pay URL that quietly leads nowhere.
+		$order->set_status( 'cancelled', __( 'Could not link this order to its ProducerKit request.', 'producerkit' ) );
+		$order->save();
+
+		return new \WP_Error(
+			'not_linked',
+			__( 'Could not link the order to this request, so it was cancelled rather than left unpayable. Please try again.', 'producerkit' )
+		);
+	}
 
 	return [
 		'order_id' => $order_id,
