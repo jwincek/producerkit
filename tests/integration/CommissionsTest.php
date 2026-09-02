@@ -14,7 +14,7 @@ final class CommissionsTest extends WP_UnitTestCase {
 		parent::set_up();
 		// Rate limiting is transient-backed; a fresh window per test.
 		global $wpdb;
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%lfuf_commission_rate%'" );
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%pkit_commission_rate%'" );
 	}
 
 	/**
@@ -100,13 +100,13 @@ final class CommissionsTest extends WP_UnitTestCase {
 	}
 
 	public function test_requests_are_rate_limited_per_ip(): void {
-		add_filter( 'lfuf_commission_rate_limit', fn () => 2 );
+		add_filter( 'pkit_commission_rate_limit', fn () => 2 );
 
 		$this->assertIsArray( $this->submit() );
 		$this->assertIsArray( $this->submit() );
 		$this->assertWPError( $this->submit() );
 
-		remove_all_filters( 'lfuf_commission_rate_limit' );
+		remove_all_filters( 'pkit_commission_rate_limit' );
 	}
 
 	public function test_the_stored_ip_is_never_returned(): void {
@@ -271,7 +271,7 @@ final class CommissionsTest extends WP_UnitTestCase {
 		$c       = $this->submit();
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);

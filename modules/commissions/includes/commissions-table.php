@@ -1,11 +1,11 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_commissions
+ * Custom table: {prefix}_pkit_commissions
  *
  * A commission is the other public request type. Where a pre-order reserves
  * things that already exist, a commission asks for something that does not:
  * there is no product and no price until the maker quotes one, which is why
- * this is a second table rather than a nullable column on lfuf_preorders.
+ * this is a second table rather than a nullable column on pkit_preorders.
  *
  * The guard rails in front of it — salted IP hash, honeypot, spam check,
  * token issue — come from Core\Requests, shared with pre-orders and RSVPs.
@@ -41,7 +41,7 @@ const MAX_DESCRIPTION = 5000;
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_commissions_db_version' ) !== DB_VERSION ) {
+		if ( get_option( 'pkit_commissions_db_version' ) !== DB_VERSION ) {
 			create_table();
 		}
 	},
@@ -50,7 +50,7 @@ add_action(
 
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_commissions';
+	return $wpdb->prefix . 'pkit_commissions';
 }
 
 /**
@@ -98,7 +98,7 @@ function schema_sql( string $table ): string {
 function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( schema_sql( table_name() ) );
-	update_option( 'lfuf_commissions_db_version', DB_VERSION );
+	update_option( 'pkit_commissions_db_version', DB_VERSION );
 }
 
 /* ───────────────────────────────────────────────
@@ -160,7 +160,7 @@ function budget_ranges(): array {
 	 *
 	 * @param array<string, string> $ranges Value => label.
 	 */
-	return (array) apply_filters( 'lfuf_commission_budget_ranges', $ranges );
+	return (array) apply_filters( 'pkit_commission_budget_ranges', $ranges );
 }
 
 /* ───────────────────────────────────────────────
@@ -246,14 +246,14 @@ function create( array $data ): array|\WP_Error {
 
 	// ── Rate limiting by IP. ──
 	$ip_hashed = Requests\hash_ip( Requests\get_client_ip() );
-	$rate_key  = 'lfuf_commission_rate_' . md5( $ip_hashed );
+	$rate_key  = 'pkit_commission_rate_' . md5( $ip_hashed );
 
 	/**
 	 * Filters the max commission requests per IP per hour.
 	 *
 	 * @param int $limit Default 3.
 	 */
-	$rate_limit = (int) apply_filters( 'lfuf_commission_rate_limit', RATE_LIMIT_PER_IP );
+	$rate_limit = (int) apply_filters( 'pkit_commission_rate_limit', RATE_LIMIT_PER_IP );
 
 	$recent = (int) get_transient( $rate_key );
 	if ( $recent >= $rate_limit ) {
@@ -298,7 +298,7 @@ function create( array $data ): array|\WP_Error {
 	 *
 	 * @param array $commission Public-safe commission data.
 	 */
-	do_action( 'lfuf_commission_created', $commission );
+	do_action( 'pkit_commission_created', $commission );
 
 	return $commission;
 }
@@ -480,7 +480,7 @@ function send_quote( int $id, float $price, string $estimated_date = '', string 
 	 *
 	 * @param array $commission Commission data including the quote token.
 	 */
-	do_action( 'lfuf_commission_quoted', $fresh );
+	do_action( 'pkit_commission_quoted', $fresh );
 
 	return $fresh;
 }
@@ -542,14 +542,14 @@ function set_status( int $id, string $status ): array|\WP_Error {
 	 * @param string $from       Previous status.
 	 * @param string $to         New status.
 	 */
-	do_action( 'lfuf_commission_status_changed', $fresh, $from, $status );
+	do_action( 'pkit_commission_status_changed', $fresh, $from, $status );
 
 	/**
 	 * Fires on the specific transition, for notification listeners.
 	 *
 	 * @param array $commission Public-safe commission data.
 	 */
-	do_action( 'lfuf_commission_' . $status, $fresh );
+	do_action( 'pkit_commission_' . $status, $fresh );
 
 	return $fresh;
 }

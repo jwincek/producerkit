@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 const VERSION    = '1.1.0';
 const PLUGIN_DIR = __DIR__;
-const PREFIX     = 'lfuf';
+const PREFIX     = 'pkit';
 
 /* ───────────────────────────────────────────────
  * Module registry
@@ -29,7 +29,7 @@ const PREFIX     = 'lfuf';
  * Each module has a slug, a label (for future admin UI),
  * and a bootstrap file. The core module is always loaded.
  * Feature modules can be toggled via the
- * 'lfuf_active_modules' filter.
+ * 'pkit_active_modules' filter.
  * ─────────────────────────────────────────────── */
 
 /**
@@ -111,7 +111,7 @@ function get_active_modules(): array {
 	$defaults   = array_keys( $registered );
 
 	/** @var string[] $active */
-	$active = apply_filters( 'lfuf_active_modules', $defaults );
+	$active = apply_filters( 'pkit_active_modules', $defaults );
 
 	// Ensure required modules are always loaded.
 	foreach ( $registered as $slug => $config ) {
@@ -181,21 +181,21 @@ add_action(
  * Front-end QR support (bundled qrcode-generator, MIT)
  *
  * Registered here, enqueued on demand by blocks that render a
- * [data-lfuf-qr] container (e.g. location-info with showQR on).
+ * [data-pkit-qr] container (e.g. location-info with showQR on).
  * ─────────────────────────────────────────────── */
 
 function register_qr_scripts(): void {
 	wp_register_script(
-		'lfuf-qrcode-vendor',
+		'pkit-qrcode-vendor',
 		plugins_url( 'assets/js/vendor/qrcode.js', __FILE__ ),
 		[],
 		VERSION,
 		true,
 	);
 	wp_register_script(
-		'lfuf-qr',
-		plugins_url( 'assets/js/lfuf-qr.js', __FILE__ ),
-		[ 'lfuf-qrcode-vendor' ],
+		'pkit-qr',
+		plugins_url( 'assets/js/pkit-qr.js', __FILE__ ),
+		[ 'pkit-qrcode-vendor' ],
 		VERSION,
 		true,
 	);
@@ -214,7 +214,7 @@ add_filter(
 		array_unshift(
 			$categories,
 			[
-				'slug'  => 'leftfield',
+				'slug'  => 'producerkit',
 				'title' => __( 'ProducerKit', 'producerkit' ),
 				'icon'  => 'store',
 			]
@@ -233,10 +233,10 @@ add_action(
 		wp_add_inline_script(
 			'wp-blocks',
 			sprintf(
-				'window.lfufSettings = %s;',
+				'window.pkitSettings = %s;',
 				wp_json_encode(
 					[
-						'restBase'      => esc_url_raw( rest_url( 'lfuf/v1' ) ),
+						'restBase'      => esc_url_raw( rest_url( 'producerkit/v1' ) ),
 						'nonce'         => wp_create_nonce( 'wp_rest' ),
 						'pluginUrl'     => plugins_url( '', __FILE__ ),
 						'activeModules' => get_active_modules(),
@@ -251,14 +251,14 @@ add_action(
 		$post_type = $screen->post_type ?? '';
 
 		$scripts = [
-			'lfuf_location' => 'editor-location.js',
-			'lfuf_product'  => 'editor-product.js',
-			'lfuf_event'    => 'editor-event.js',
+			'pkit_location' => 'editor-location.js',
+			'pkit_product'  => 'editor-product.js',
+			'pkit_event'    => 'editor-event.js',
 		];
 
 		if ( isset( $scripts[ $post_type ] ) ) {
 			wp_enqueue_script(
-				'lfuf-editor-' . $post_type,
+				'pkit-editor-' . $post_type,
 				plugins_url( 'assets/js/' . $scripts[ $post_type ], __FILE__ ),
 				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element' ],
 				filemtime( PLUGIN_DIR . '/assets/js/' . $scripts[ $post_type ] ),

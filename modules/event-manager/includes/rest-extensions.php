@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$ns = 'lfuf/v1';
+	$ns = 'producerkit/v1';
 
 	register_rest_route(
 		$ns,
@@ -60,7 +60,7 @@ function register_routes(): void {
 	);
 
 	/**
-	 * POST /lfuf/v1/events/{id}/rsvp
+	 * POST /producerkit/v1/events/{id}/rsvp
 	 *
 	 * Public RSVP submission with:
 	 *   - Honeypot field check (silent rejection)
@@ -152,7 +152,7 @@ function get_upcoming_events( \WP_REST_Request $request ): \WP_REST_Response {
 	$meta_query = [
 		'relation' => 'AND',
 		[
-			'key'     => '_lfuf_start_datetime',
+			'key'     => '_pkit_start_datetime',
 			'value'   => $now,
 			'compare' => '>=',
 			'type'    => 'DATETIME',
@@ -162,7 +162,7 @@ function get_upcoming_events( \WP_REST_Request $request ): \WP_REST_Response {
 	$tax_query = [];
 	if ( $type ) {
 		$tax_query[] = [
-			'taxonomy' => 'lfuf_event_type',
+			'taxonomy' => 'pkit_event_type',
 			'field'    => 'slug',
 			'terms'    => $type,
 		];
@@ -170,10 +170,10 @@ function get_upcoming_events( \WP_REST_Request $request ): \WP_REST_Response {
 
 	$events = get_posts(
 		[
-			'post_type'   => 'lfuf_event',
+			'post_type'   => 'pkit_event',
 			'post_status' => 'publish',
 			'numberposts' => $per_page,
-			'meta_key'    => '_lfuf_start_datetime',
+			'meta_key'    => '_pkit_start_datetime',
 			'orderby'     => 'meta_value',
 			'order'       => 'ASC',
 			'meta_query'  => $meta_query,
@@ -197,15 +197,15 @@ function get_past_events( \WP_REST_Request $request ): \WP_REST_Response {
 
 	$events = get_posts(
 		[
-			'post_type'   => 'lfuf_event',
+			'post_type'   => 'pkit_event',
 			'post_status' => 'publish',
 			'numberposts' => $per_page,
-			'meta_key'    => '_lfuf_start_datetime',
+			'meta_key'    => '_pkit_start_datetime',
 			'orderby'     => 'meta_value',
 			'order'       => 'DESC',
 			'meta_query'  => [
 				[
-					'key'     => '_lfuf_start_datetime',
+					'key'     => '_pkit_start_datetime',
 					'value'   => $now,
 					'compare' => '<',
 					'type'    => 'DATETIME',
@@ -351,7 +351,7 @@ function build_event_data( \WP_Post $event ): array {
 	$id = $event->ID;
 
 	// Location.
-	$location_id = (int) get_post_meta( $id, '_lfuf_event_location_id', true );
+	$location_id = (int) get_post_meta( $id, '_pkit_event_location_id', true );
 	$location    = null;
 	if ( $location_id > 0 ) {
 		$loc = get_post( $location_id );
@@ -359,14 +359,14 @@ function build_event_data( \WP_Post $event ): array {
 			$location = [
 				'id'      => $loc->ID,
 				'title'   => $loc->post_title,
-				'address' => get_post_meta( $loc->ID, '_lfuf_address', true ),
-				'venmo'   => get_post_meta( $loc->ID, '_lfuf_venmo_handle', true ),
+				'address' => get_post_meta( $loc->ID, '_pkit_address', true ),
+				'venmo'   => get_post_meta( $loc->ID, '_pkit_venmo_handle', true ),
 			];
 		}
 	}
 
 	// Event type terms.
-	$types      = get_the_terms( $id, 'lfuf_event_type' );
+	$types      = get_the_terms( $id, 'pkit_event_type' );
 	$type_names = ( $types && ! is_wp_error( $types ) ) ? wp_list_pluck( $types, 'name' ) : [];
 	$type_slugs = ( $types && ! is_wp_error( $types ) ) ? wp_list_pluck( $types, 'slug' ) : [];
 
@@ -375,16 +375,16 @@ function build_event_data( \WP_Post $event ): array {
 	$thumb_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '';
 
 	// RSVP summary.
-	$rsvp_enabled = (bool) get_post_meta( $id, '_lfuf_em_rsvp_enabled', true );
+	$rsvp_enabled = (bool) get_post_meta( $id, '_pkit_em_rsvp_enabled', true );
 	$rsvp_summary = $rsvp_enabled ? RSVP\get_event_rsvp_summary( $id ) : null;
 
 	// Featured products.
-	$product_ids = get_post_meta( $id, '_lfuf_featured_product_ids', true ) ?: [];
+	$product_ids = get_post_meta( $id, '_pkit_featured_product_ids', true ) ?: [];
 	$products    = [];
 	if ( ! empty( $product_ids ) ) {
 		$posts    = get_posts(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post__in'    => $product_ids,
 				'numberposts' => 10,
 				'post_status' => 'publish',
@@ -405,16 +405,16 @@ function build_event_data( \WP_Post $event ): array {
 		'excerpt'         => $event->post_excerpt,
 		'permalink'       => get_permalink( $id ),
 		'thumbnail_url'   => $thumb_url ?: '',
-		'start'           => get_post_meta( $id, '_lfuf_start_datetime', true ),
-		'end'             => get_post_meta( $id, '_lfuf_end_datetime', true ),
-		'recurrence_rule' => get_post_meta( $id, '_lfuf_recurrence_rule', true ),
+		'start'           => get_post_meta( $id, '_pkit_start_datetime', true ),
+		'end'             => get_post_meta( $id, '_pkit_end_datetime', true ),
+		'recurrence_rule' => get_post_meta( $id, '_pkit_recurrence_rule', true ),
 		'event_types'     => array_values( $type_names ),
 		'event_slugs'     => array_values( $type_slugs ),
 		'location'        => $location,
-		'donation_link'   => get_post_meta( $id, '_lfuf_donation_link', true ),
-		'cost_note'       => get_post_meta( $id, '_lfuf_em_cost_note', true ),
-		'what_to_bring'   => get_post_meta( $id, '_lfuf_em_what_to_bring', true ),
-		'cancelled'       => (bool) get_post_meta( $id, '_lfuf_em_cancelled', true ),
+		'donation_link'   => get_post_meta( $id, '_pkit_donation_link', true ),
+		'cost_note'       => get_post_meta( $id, '_pkit_em_cost_note', true ),
+		'what_to_bring'   => get_post_meta( $id, '_pkit_em_what_to_bring', true ),
+		'cancelled'       => (bool) get_post_meta( $id, '_pkit_em_cancelled', true ),
 		'rsvp'            => $rsvp_summary,
 		'products'        => $products,
 	];

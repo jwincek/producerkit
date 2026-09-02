@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$ns = 'lfuf/v1';
+	$ns = 'producerkit/v1';
 
 	/**
-	 * GET /lfuf/v1/board
+	 * GET /producerkit/v1/board
 	 *
 	 * Public endpoint returning the full board data structure.
 	 * Optimized for a single fetch from the front-end block.
@@ -58,7 +58,7 @@ function register_routes(): void {
 	);
 
 	/**
-	 * GET /lfuf/v1/board/last-updated
+	 * GET /producerkit/v1/board/last-updated
 	 *
 	 * Returns the timestamp of the most recent availability change.
 	 * Used by the front-end polling to skip full refetches when nothing changed.
@@ -81,7 +81,7 @@ function register_routes(): void {
 function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 	global $wpdb;
 
-	$table = $wpdb->prefix . 'lfuf_availability';
+	$table = $wpdb->prefix . 'pkit_availability';
 	$today = current_time( 'Y-m-d' );
 
 	// Build WHERE clause.
@@ -116,7 +116,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 	if ( $product_type_slug ) {
 		$type_join     = "
             INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
-            INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'lfuf_product_type'
+            INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'pkit_product_type'
             INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
         ";
 		$where_parts[] = $wpdb->prepare( 't.slug = %s', $product_type_slug );
@@ -162,7 +162,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 		$pid = (int) $row->product_id;
 
 		// Product type terms.
-		$types      = get_the_terms( $pid, 'lfuf_product_type' );
+		$types      = get_the_terms( $pid, 'pkit_product_type' );
 		$type_names = ( $types && ! is_wp_error( $types ) )
 			? wp_list_pluck( $types, 'name' )
 			: [];
@@ -171,7 +171,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 			: [];
 
 		// Season terms.
-		$seasons      = get_the_terms( $pid, 'lfuf_season' );
+		$seasons      = get_the_terms( $pid, 'pkit_season' );
 		$season_names = ( $seasons && ! is_wp_error( $seasons ) )
 			? wp_list_pluck( $seasons, 'name' )
 			: [];
@@ -192,8 +192,8 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 			'quantity_note'   => $row->quantity_note,
 			'effective_date'  => $row->effective_date,
 			'notes'           => $row->notes,
-			'price'           => get_post_meta( $pid, '_lfuf_price', true ) ?: '',
-			'unit'            => get_post_meta( $pid, '_lfuf_unit', true ) ?: '',
+			'price'           => get_post_meta( $pid, '_pkit_price', true ) ?: '',
+			'unit'            => get_post_meta( $pid, '_pkit_unit', true ) ?: '',
 			'product_types'   => array_values( $type_names ),
 			'product_slugs'   => array_values( $type_slugs ),
 			'seasons'         => array_values( $season_names ),
@@ -221,7 +221,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 	// Get available product type terms for filter UI.
 	$all_types    = get_terms(
 		[
-			'taxonomy'   => 'lfuf_product_type',
+			'taxonomy'   => 'pkit_product_type',
 			'hide_empty' => true,
 		]
 	);
@@ -255,7 +255,7 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 function get_last_updated( \WP_REST_Request $request ): \WP_REST_Response {
 	global $wpdb;
 
-	$table = $wpdb->prefix . 'lfuf_availability';
+	$table = $wpdb->prefix . 'pkit_availability';
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	$last = $wpdb->get_var( "SELECT MAX(updated_at) FROM {$table}" );

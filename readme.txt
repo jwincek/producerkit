@@ -78,7 +78,7 @@ The availability board and stand status banner are server-rendered and then kept
 
 = Can I turn off features I don't use? =
 
-Yes. Feature modules (stand status, availability board, event manager, notifications, pre-orders) can be disabled via the `lfuf_active_modules` filter; only the core data layer is required.
+Yes. Feature modules (stand status, availability board, event manager, notifications, pre-orders) can be disabled via the `pkit_active_modules` filter; only the core data layer is required.
 
 = What are Abilities? =
 
@@ -107,7 +107,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = 1.1.0 =
-* Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `lfuf_product_placeholder_url` to override or disable.
+* Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `pkit_product_placeholder_url` to override or disable.
 
 = 1.0.2 =
 * Fixed the availability table not being created at all on MySQL servers using STRICT_TRANS_TABLES (the default since MySQL 5.7), which left the availability board, quick entry, Fresh Sheet and REST endpoints with no data.
@@ -130,7 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Upgrade Notice ==
 
 = 1.1.0 =
-Products without a photo now show a type-based placeholder image. Filter `lfuf_product_placeholder_url` and return an empty string to keep the previous behaviour.
+Products without a photo now show a type-based placeholder image. Filter `pkit_product_placeholder_url` and return an empty string to keep the previous behaviour.
 
 = 1.0.2 =
 Important if your host runs MySQL in strict mode: the availability table was never created. This release fixes the schema and repairs existing sites automatically.

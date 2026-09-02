@@ -26,7 +26,7 @@ namespace ProducerKit\WooCommerce\Settlement;
 defined( 'ABSPATH' ) || exit;
 
 const DB_VERSION = '1.0.0';
-const OPTION     = 'lfuf_wc_settlement_db_version';
+const OPTION     = 'pkit_wc_settlement_db_version';
 
 /** How a request is paid for. */
 const DIRECT = 'direct';

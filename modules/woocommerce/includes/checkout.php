@@ -22,7 +22,7 @@ use function ProducerKit\Core\StructuredData\parse_price;
 defined( 'ABSPATH' ) || exit;
 
 /** Meta linking a generated product back to the request it came from. */
-const REQUEST_META = '_lfuf_request';
+const REQUEST_META = '_pkit_request';
 
 /**
  * Create the hidden product a commission is paid through.

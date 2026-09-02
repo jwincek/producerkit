@@ -41,7 +41,7 @@ producerkit/
 │   │       ├── taxonomies.php         # product_type, season, event_type (auto-seeded)
 │   │       ├── meta-fields.php        # All post meta (show_in_rest)
 │   │       ├── availability-table.php # Custom DB table + CRUD + expiration cron
-│   │       ├── rest-api.php           # REST routes under lfuf/v1
+│   │       ├── rest-api.php           # REST routes under producerkit/v1
 │   │       ├── abilities.php          # WP 6.9+ Abilities API
 │   │       ├── single-content.php     # CPT single page meta display
 │   │       ├── single-styles.php      # Front-end styles for single CPTs
@@ -69,7 +69,7 @@ producerkit/
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
-│   │       ├── meta-extensions.php    # _lfuf_ss_* meta on locations
+│   │       ├── meta-extensions.php    # _pkit_ss_* meta on locations
 │   │       ├── rest-extensions.php    # /stand/{id}/status, /stand/{id}/info
 │   │       ├── admin-bar.php          # Admin bar quick-toggle
 │   │       └── abilities.php          # Stand-specific abilities
@@ -82,7 +82,7 @@ producerkit/
 │   └── event-manager/
 │       ├── bootstrap.php
 │       └── includes/
-│           ├── meta-extensions.php    # _lfuf_em_* meta on events
+│           ├── meta-extensions.php    # _pkit_em_* meta on events
 │           ├── rsvp-table.php         # Custom RSVP table + CRUD + rate limiting
 │           ├── rest-extensions.php    # Event listing, RSVP endpoints
 │           ├── render-helpers.php     # Shared render functions for event blocks
@@ -113,7 +113,7 @@ producerkit/
 
 ### Core (always active)
 
-The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_source`, `lfuf_location`, `lfuf_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_lfuf_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `lfuf/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
+The shared data layer. Registers four custom post types (`pkit_product`, `pkit_source`, `pkit_location`, `pkit_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_pkit_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `producerkit/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
 
 ### Admin menu
 
@@ -135,7 +135,7 @@ Re-labels the product taxonomies for the trade the site actually practises, and 
 A profile does two things:
 
 - **Re-labels.** "Material" becomes *Floral Source* for a beekeeper, *Wood Species* for a woodworker, *Clay Body* for a potter. All eleven WordPress labels are derived from one singular/plural pair.
-- **Switches on optional fields.** `lfuf_material`, `lfuf_finish` and `lfuf_component` register only for profiles that ask for them, so a farm never sees them. They render on the Product Card block and the single product page, labelled as the viewer's profile names them — core asks which taxonomies count via the `lfuf_detail_taxonomies` filter, so with this module off the templates behave exactly as before.
+- **Switches on optional fields.** `pkit_material`, `pkit_finish` and `pkit_component` register only for profiles that ask for them, so a farm never sees them. They render on the Product Card block and the single product page, labelled as the viewer's profile names them — core asks which taxonomies count via the `pkit_detail_taxonomies` filter, so with this module off the templates behave exactly as before.
 
 Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe.
 
@@ -146,13 +146,13 @@ Switching is **additive** — it seeds new terms and never deletes a term or a p
 
 Both are set under **ProducerKit → Producer Profile** — the site list needs `manage_options`, the personal choice only `edit_posts`.
 
-Core knows nothing about this module: it exposes two filters, `lfuf_taxonomy_names` and `lfuf_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
+Core knows nothing about this module: it exposes two filters, `pkit_taxonomy_names` and `pkit_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
 
 ### Commissions
 
 Made-to-order requests, for makers who take custom work. A customer describes something that does not exist yet; the maker quotes a price and an estimated date; the customer accepts or declines from a link in their email.
 
-Kept as its own table rather than folded into pre-orders, because at submission a commission has no pickup date and no product — the point is that the maker will make one — while `lfuf_preorders` requires both.
+Kept as its own table rather than folded into pre-orders, because at submission a commission has no pickup date and no product — the point is that the maker will make one — while `pkit_preorders` requires both.
 
 - **Enforced transitions.** `new → quoted → accepted → in_progress → complete`, with `declined` and `cancelled` as terminal branches. Illegal moves are refused, so a stale admin tab cannot revive a decision the customer already made.
 - **Two tokens.** A long-lived one lets the customer see their own request; a short-lived quote token (30 days) spends itself on accept or decline, so the emailed link cannot be replayed.
@@ -251,7 +251,7 @@ All blocks follow WCAG 2.1 AA:
 
 ## REST API Endpoints
 
-All under `lfuf/v1`. 23 custom endpoints plus standard WP REST for each CPT.
+All under `producerkit/v1`. 23 custom endpoints plus standard WP REST for each CPT.
 
 ### Core
 | Method | Endpoint | Auth | Purpose |
@@ -320,15 +320,15 @@ CSV import and export under **ProducerKit → Product Import**. Export downloads
 
 ### Availability Expiration Cron
 
-A daily WP-Cron job (`lfuf_availability_cleanup`) runs at 3:00 AM and deletes availability rows with an `expires_date` in the past. The board already hides expired rows via date filtering — the cron just cleans up the database. Self-healing: if the cron event is missing (e.g., after a git pull without reactivation), it re-schedules on the next page load.
+A daily WP-Cron job (`pkit_availability_cleanup`) runs at 3:00 AM and deletes availability rows with an `expires_date` in the past. The board already hides expired rows via date filtering — the cron just cleans up the database. Self-healing: if the cron event is missing (e.g., after a git pull without reactivation), it re-schedules on the next page load.
 
 ### Email Notifications
 
-All filterable via `lfuf_notify_*` hooks. Recipients default to the site admin email and can be extended via the `lfuf_notify_recipients` filter. Individual notifications can be suppressed with `add_filter('lfuf_notify_rsvp_added', '__return_false')`.
+All filterable via `pkit_notify_*` hooks. Recipients default to the site admin email and can be extended via the `pkit_notify_recipients` filter. Individual notifications can be suppressed with `add_filter('pkit_notify_rsvp_added', '__return_false')`.
 
 ## Sample Data
 
-The admin dashboard provides a one-click toggle to load 8 products, 2 locations, 3 events, and availability entries. Sample content is tagged with `_lfuf_sample_data` meta for clean removal. Front-end shows amber "Sample" badges via `the_title` filter.
+The admin dashboard provides a one-click toggle to load 8 products, 2 locations, 3 events, and availability entries. Sample content is tagged with `_pkit_sample_data` meta for clean removal. Front-end shows amber "Sample" badges via `the_title` filter.
 
 ## License
 

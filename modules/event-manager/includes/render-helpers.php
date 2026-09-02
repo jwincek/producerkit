@@ -51,7 +51,7 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 	$article_aria_label = implode( ' — ', $aria_parts );
 
 	// Unique ID prefix for form label associations.
-	$uid = 'lfuf-rsvp-' . $id;
+	$uid = 'pkit-rsvp-' . $id;
 
 	// Interactivity API context for filtering + RSVP.
 	$rsvp_context = wp_json_encode(
@@ -76,47 +76,47 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 	ob_start();
 	?>
 	<article
-		class="lfuf-event-card<?php echo $cancelled ? ' lfuf-event-card--cancelled' : ''; ?>"
+		class="pkit-event-card<?php echo $cancelled ? ' pkit-event-card--cancelled' : ''; ?>"
 		data-type-slug="<?php echo esc_attr( $type_slug ); ?>"
 		data-wp-bind--hidden="state.isEventHidden"
 		data-wp-context='<?php echo esc_attr( $rsvp_context ); ?>'
 		aria-label="<?php echo esc_attr( $article_aria_label ); ?>"
 	>
 		<?php if ( $show_image && $event['thumbnail_url'] ) : ?>
-			<div class="lfuf-event-card__image">
+			<div class="pkit-event-card__image">
 				<img src="<?php echo esc_url( $event['thumbnail_url'] ); ?>"
 					alt=""
 					loading="lazy">
 			</div>
 		<?php endif; ?>
 
-		<div class="lfuf-event-card__body">
-			<div class="lfuf-event-card__header">
+		<div class="pkit-event-card__body">
+			<div class="pkit-event-card__header">
 				<?php if ( $event['event_types'] ) : ?>
-					<span class="lfuf-event-card__type-badge">
+					<span class="pkit-event-card__type-badge">
 						<?php echo esc_html( $event['event_types'][0] ); ?>
 					</span>
 				<?php endif; ?>
 
 				<?php if ( $cancelled ) : ?>
-					<span class="lfuf-event-card__cancelled-badge" role="status">
+					<span class="pkit-event-card__cancelled-badge" role="status">
 						<?php esc_html_e( 'Cancelled', 'producerkit' ); ?>
 					</span>
 				<?php endif; ?>
 			</div>
 
-			<h3 class="lfuf-event-card__title">
+			<h3 class="pkit-event-card__title">
 				<a href="<?php echo esc_url( $event['permalink'] ); ?>">
 					<?php echo esc_html( $event['title'] ); ?>
 				</a>
 			</h3>
 
 			<?php if ( $date_str ) : ?>
-				<p class="lfuf-event-card__datetime">
+				<p class="pkit-event-card__datetime">
 					<span class="screen-reader-text"><?php esc_html_e( 'Date:', 'producerkit' ); ?> </span>
-					<span class="lfuf-event-card__date"><?php echo esc_html( $date_str ); ?></span>
+					<span class="pkit-event-card__date"><?php echo esc_html( $date_str ); ?></span>
 					<?php if ( $time_str ) : ?>
-						<span class="lfuf-event-card__time">
+						<span class="pkit-event-card__time">
 							<span class="screen-reader-text"><?php esc_html_e( 'Time:', 'producerkit' ); ?> </span>
 							<?php echo esc_html( $time_str ); ?>
 						</span>
@@ -125,31 +125,31 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 			<?php endif; ?>
 
 			<?php if ( $show_location && $event['location'] ) : ?>
-				<p class="lfuf-event-card__location">
-					<span class="lfuf-event-card__icon" aria-hidden="true">📍</span>
+				<p class="pkit-event-card__location">
+					<span class="pkit-event-card__icon" aria-hidden="true">📍</span>
 					<span class="screen-reader-text"><?php esc_html_e( 'Location:', 'producerkit' ); ?> </span>
 					<?php echo esc_html( $event['location']['title'] ); ?>
 					<?php if ( $event['location']['address'] ) : ?>
-						<span class="lfuf-event-card__address">— <?php echo esc_html( $event['location']['address'] ); ?></span>
+						<span class="pkit-event-card__address">— <?php echo esc_html( $event['location']['address'] ); ?></span>
 					<?php endif; ?>
 				</p>
 			<?php endif; ?>
 
 			<?php if ( $event['excerpt'] ) : ?>
-				<p class="lfuf-event-card__excerpt"><?php echo esc_html( $event['excerpt'] ); ?></p>
+				<p class="pkit-event-card__excerpt"><?php echo esc_html( $event['excerpt'] ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( $event['cost_note'] || $event['what_to_bring'] ) : ?>
-				<div class="lfuf-event-card__details">
+				<div class="pkit-event-card__details">
 					<?php if ( $event['cost_note'] ) : ?>
-						<span class="lfuf-event-card__cost">
+						<span class="pkit-event-card__cost">
 							<span aria-hidden="true">💸</span>
 							<span class="screen-reader-text"><?php esc_html_e( 'Cost:', 'producerkit' ); ?> </span>
 							<?php echo esc_html( $event['cost_note'] ); ?>
 						</span>
 					<?php endif; ?>
 					<?php if ( $event['what_to_bring'] ) : ?>
-						<span class="lfuf-event-card__bring">
+						<span class="pkit-event-card__bring">
 							<span aria-hidden="true">🧺</span>
 							<span class="screen-reader-text"><?php esc_html_e( 'What to bring:', 'producerkit' ); ?> </span>
 							<?php echo esc_html( $event['what_to_bring'] ); ?>
@@ -159,7 +159,7 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 			<?php endif; ?>
 
 			<?php if ( $event['donation_link'] && ! $cancelled ) : ?>
-				<a class="lfuf-event-card__donate-link"
+				<a class="pkit-event-card__donate-link"
 					href="<?php echo esc_url( $event['donation_link'] ); ?>"
 					target="_blank"
 					rel="noopener noreferrer">
@@ -169,8 +169,8 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 			<?php endif; ?>
 
 			<?php if ( $show_rsvp && $rsvp && $rsvp['enabled'] && ! $cancelled ) : ?>
-				<div class="lfuf-event-card__rsvp" aria-live="polite">
-					<div class="lfuf-event-card__rsvp-summary">
+				<div class="pkit-event-card__rsvp" aria-live="polite">
+					<div class="pkit-event-card__rsvp-summary">
 						<span data-wp-text="state.rsvpSummaryText">
 							<?php
 							printf(
@@ -194,15 +194,15 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 
 					<div data-wp-bind--hidden="context.rsvpSubmitted">
 						<?php if ( ! $rsvp['closed'] && ! $rsvp['is_full'] ) : ?>
-							<div class="lfuf-event-card__rsvp-form" role="group" aria-label="<?php esc_attr_e( 'RSVP form', 'producerkit' ); ?>">
-								<div class="lfuf-event-card__rsvp-field">
+							<div class="pkit-event-card__rsvp-form" role="group" aria-label="<?php esc_attr_e( 'RSVP form', 'producerkit' ); ?>">
+								<div class="pkit-event-card__rsvp-field">
 									<label for="<?php echo esc_attr( $uid ); ?>-name" class="screen-reader-text">
 										<?php esc_html_e( 'Your name', 'producerkit' ); ?>
 									</label>
 									<input
 										type="text"
 										id="<?php echo esc_attr( $uid ); ?>-name"
-										class="lfuf-event-card__rsvp-input"
+										class="pkit-event-card__rsvp-input"
 										placeholder="<?php esc_attr_e( 'Your name', 'producerkit' ); ?>"
 										autocomplete="name"
 										data-wp-on--input="actions.updateRsvpName"
@@ -210,14 +210,14 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 										required
 									>
 								</div>
-								<div class="lfuf-event-card__rsvp-field">
+								<div class="pkit-event-card__rsvp-field">
 									<label for="<?php echo esc_attr( $uid ); ?>-size" class="screen-reader-text">
 										<?php esc_html_e( 'Party size', 'producerkit' ); ?>
 									</label>
 									<input
 										type="number"
 										id="<?php echo esc_attr( $uid ); ?>-size"
-										class="lfuf-event-card__rsvp-size"
+										class="pkit-event-card__rsvp-size"
 										min="1"
 										max="10"
 										autocomplete="off"
@@ -227,7 +227,7 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 								</div>
 
 								<!-- Honeypot: hidden from humans, bots fill it -->
-								<div class="lfuf-event-card__rsvp-hp" aria-hidden="true" tabindex="-1">
+								<div class="pkit-event-card__rsvp-hp" aria-hidden="true" tabindex="-1">
 									<label for="<?php echo esc_attr( $uid ); ?>-website">Website</label>
 									<input
 										type="text"
@@ -241,38 +241,38 @@ function render_event_card( array $event, bool $show_image, bool $show_rsvp, boo
 
 								<button
 									type="button"
-									class="lfuf-event-card__rsvp-btn"
+									class="pkit-event-card__rsvp-btn"
 									data-wp-on--click="actions.submitRsvp"
 									data-wp-bind--disabled="context.submitting"
 									data-wp-text="state.rsvpButtonText"
 								>
 								<?php
 								echo esc_html(
-									get_post_meta( $id, '_lfuf_em_rsvp_label', true ) ?: __( "I'm coming!", 'producerkit' )
+									get_post_meta( $id, '_pkit_em_rsvp_label', true ) ?: __( "I'm coming!", 'producerkit' )
 								);
 								?>
 								</button>
 							</div>
-							<p class="lfuf-event-card__rsvp-error"
+							<p class="pkit-event-card__rsvp-error"
 								role="alert"
 								data-wp-text="context.rsvpError"
 								data-wp-bind--hidden="!context.rsvpError"></p>
 						<?php elseif ( $rsvp['is_full'] ) : ?>
-							<p class="lfuf-event-card__rsvp-full">
+							<p class="pkit-event-card__rsvp-full">
 								<?php esc_html_e( 'This event is full!', 'producerkit' ); ?>
 							</p>
 						<?php else : ?>
-							<p class="lfuf-event-card__rsvp-closed">
+							<p class="pkit-event-card__rsvp-closed">
 								<?php esc_html_e( 'RSVPs are closed.', 'producerkit' ); ?>
 							</p>
 						<?php endif; ?>
 					</div>
 
 					<div data-wp-bind--hidden="!context.rsvpSubmitted">
-						<p class="lfuf-event-card__rsvp-success" role="status" data-wp-text="context.rsvpMessage"></p>
+						<p class="pkit-event-card__rsvp-success" role="status" data-wp-text="context.rsvpMessage"></p>
 						<button
 							type="button"
-							class="lfuf-event-card__rsvp-cancel-btn"
+							class="pkit-event-card__rsvp-cancel-btn"
 							data-wp-on--click="actions.cancelRsvp"
 						><?php esc_html_e( 'Cancel my RSVP', 'producerkit' ); ?></button>
 					</div>

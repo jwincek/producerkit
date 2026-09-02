@@ -62,14 +62,14 @@ final class AbilitiesTest extends WP_UnitTestCase {
 		// Fixture data so outputs are non-trivial.
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		update_post_meta( $product, '_lfuf_price', '4.00' );
+		update_post_meta( $product, '_pkit_price', '4.00' );
 		self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 			]
 		);

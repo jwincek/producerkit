@@ -35,8 +35,8 @@
 
 	function getRestBase() {
 		return (
-			( window.lfufStandSettings || window.lfufSettings || {} )
-				.restBase || '/wp-json/lfuf/v1'
+			( window.pkitStandSettings || window.pkitSettings || {} )
+				.restBase || '/wp-json/producerkit/v1'
 		);
 	}
 
@@ -79,7 +79,7 @@
 		return byDay;
 	}
 
-	registerBlockType( 'lfuf/stand-hours-schedule', {
+	registerBlockType( 'producerkit/stand-hours-schedule', {
 		edit: function EditSchedule( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -135,7 +135,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -153,7 +153,7 @@
 			} );
 
 			const blockProps = useBlockProps( {
-				className: 'lfuf-stand-schedule',
+				className: 'pkit-stand-schedule',
 			} );
 			const today = new Date().getDay();
 
@@ -195,7 +195,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-stand-schedule__loading' },
+							{ className: 'pkit-stand-schedule__loading' },
 							el( Spinner ),
 							' Loading schedule\u2026'
 						)
@@ -239,13 +239,13 @@
 									'p',
 									{
 										className:
-											'lfuf-stand-schedule__fallback',
+											'pkit-stand-schedule__fallback',
 									},
 									'\uD83D\uDD50 ' + stand.hours
 							  )
 							: el(
 									'p',
-									{ className: 'lfuf-stand-schedule__empty' },
+									{ className: 'pkit-stand-schedule__empty' },
 									'No schedule set yet.'
 							  )
 					)
@@ -263,7 +263,7 @@
 					el(
 						'table',
 						{
-							className: 'lfuf-stand-schedule__table',
+							className: 'pkit-stand-schedule__table',
 							role: 'table',
 						},
 						el(
@@ -272,14 +272,14 @@
 							DAY_NAMES.map( function ( dayName, d ) {
 								const isToday = highlightToday && d === today;
 								const hasHours = !! byDay[ d ];
-								let classes = 'lfuf-stand-schedule__day';
+								let classes = 'pkit-stand-schedule__day';
 								if ( isToday ) {
 									classes +=
-										' lfuf-stand-schedule__day--today';
+										' pkit-stand-schedule__day--today';
 								}
 								if ( ! hasHours ) {
 									classes +=
-										' lfuf-stand-schedule__day--closed';
+										' pkit-stand-schedule__day--closed';
 								}
 
 								return el(
@@ -293,7 +293,7 @@
 										{
 											scope: 'row',
 											className:
-												'lfuf-stand-schedule__day-label',
+												'pkit-stand-schedule__day-label',
 										},
 										dayName,
 										isToday
@@ -301,7 +301,7 @@
 													'span',
 													{
 														className:
-															'lfuf-stand-schedule__today-badge',
+															'pkit-stand-schedule__today-badge',
 													},
 													'Today'
 											  )
@@ -311,7 +311,7 @@
 										'td',
 										{
 											className:
-												'lfuf-stand-schedule__day-hours',
+												'pkit-stand-schedule__day-hours',
 										},
 										hasHours
 											? byDay[ d ].join( ', ' )

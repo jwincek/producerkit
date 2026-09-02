@@ -26,20 +26,20 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'label'           => __( 'Comics & Graphic Novels', 'producerkit' ),
 	'description'     => __( 'Graphic novels, single issues, minis and zines, plus prints and original pages.', 'producerkit' ),
-	'taxonomies'      => [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+	'taxonomies'      => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 	'names'           => [
-		'lfuf_material'  => [ __( 'Printing', 'producerkit' ), __( 'Printing', 'producerkit' ) ],
-		'lfuf_finish'    => [ __( 'Edition', 'producerkit' ), __( 'Editions', 'producerkit' ) ],
-		'lfuf_component' => [ __( 'Binding', 'producerkit' ), __( 'Bindings', 'producerkit' ) ],
+		'pkit_material'  => [ __( 'Printing', 'producerkit' ), __( 'Printing', 'producerkit' ) ],
+		'pkit_finish'    => [ __( 'Edition', 'producerkit' ), __( 'Editions', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Binding', 'producerkit' ), __( 'Bindings', 'producerkit' ) ],
 	],
 	'post_type_names' => [
-		'lfuf_product' => [ '', '', __( 'Comics', 'producerkit' ) ],
+		'pkit_product' => [ '', '', __( 'Comics', 'producerkit' ) ],
 	],
 	'terms'           => [
-		'lfuf_product_type' => [ 'Graphic Novel', 'Single Issue', 'Trade Paperback', 'Mini-Comic', 'Ashcan', 'Zine', 'Anthology', 'Art Book', 'Sketchbook', 'Original Page', 'Print', 'Sticker', 'Pin' ],
-		'lfuf_material'     => [ 'Offset', 'Risograph', 'Digital', 'Photocopy', 'Screen Printed', 'Letterpress' ],
-		'lfuf_finish'       => [ 'First Printing', 'Second Printing', 'Signed', 'Numbered', 'Sketch Edition', 'Variant Cover', 'Convention Exclusive', 'Standard' ],
-		'lfuf_component'    => [ 'Saddle Stitched', 'Perfect Bound', 'Hardcover', 'Digest', 'Ashcan', 'Accordion Fold', 'Hand Bound' ],
-		'lfuf_event_type'   => [ 'Comic Con', 'Small Press Expo', 'Zine Fest', 'Artist Alley', 'Signing', 'Launch', 'Workshop' ],
+		'pkit_product_type' => [ 'Graphic Novel', 'Single Issue', 'Trade Paperback', 'Mini-Comic', 'Ashcan', 'Zine', 'Anthology', 'Art Book', 'Sketchbook', 'Original Page', 'Print', 'Sticker', 'Pin' ],
+		'pkit_material'     => [ 'Offset', 'Risograph', 'Digital', 'Photocopy', 'Screen Printed', 'Letterpress' ],
+		'pkit_finish'       => [ 'First Printing', 'Second Printing', 'Signed', 'Numbered', 'Sketch Edition', 'Variant Cover', 'Convention Exclusive', 'Standard' ],
+		'pkit_component'    => [ 'Saddle Stitched', 'Perfect Bound', 'Hardcover', 'Digest', 'Ashcan', 'Accordion Fold', 'Hand Bound' ],
+		'pkit_event_type'   => [ 'Comic Con', 'Small Press Expo', 'Zine Fest', 'Artist Alley', 'Signing', 'Launch', 'Workshop' ],
 	],
 ];

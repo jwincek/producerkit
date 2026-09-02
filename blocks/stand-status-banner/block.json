@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/stand-status-banner",
+    "name": "producerkit/stand-status-banner",
     "version": "1.1.0",
     "title": "Stand Status Banner",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "store",
     "description": "A prominent banner showing the farm stand's current open/closed status, address, hours, Venmo link, and custom status message. Uses the Interactivity API for reactive updates.",
     "textdomain": "producerkit",

@@ -12,12 +12,12 @@
  *   - state.activeType      (string)
  *   - state.totalItems      (number)
  *
- * Store namespace: leftfield/availability-board
+ * Store namespace: producerkit/availability-board
  */
 
 import { store, getContext } from '@wordpress/interactivity';
 
-const { state } = store( 'leftfield/availability-board', {
+const { state } = store( 'producerkit/availability-board', {
 	state: {
 		// NO default values here — they come from wp_interactivity_state().
 

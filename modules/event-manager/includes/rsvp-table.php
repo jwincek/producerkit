@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_rsvps
+ * Custom table: {prefix}_pkit_rsvps
  *
  * Lightweight RSVP/headcount tracking with security hardening:
  *   - Rate limiting per IP (transient-based)
@@ -27,7 +27,7 @@ const MAX_PARTY_SIZE = 10;
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_rsvp_db_version' ) !== '1.1.0' ) {
+		if ( get_option( 'pkit_rsvp_db_version' ) !== '1.1.0' ) {
 			create_table();
 		}
 	},
@@ -36,7 +36,7 @@ add_action(
 
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_rsvps';
+	return $wpdb->prefix . 'pkit_rsvps';
 }
 
 function create_table(): void {
@@ -64,7 +64,7 @@ function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
-	update_option( 'lfuf_rsvp_db_version', '1.1.0' );
+	update_option( 'pkit_rsvp_db_version', '1.1.0' );
 }
 
 /**
@@ -112,22 +112,22 @@ function add_rsvp( array $data ): array|\WP_Error {
 	$event_id = (int) ( $data['event_id'] ?? 0 );
 	$event    = get_post( $event_id );
 
-	if ( ! $event || $event->post_type !== 'lfuf_event' || $event->post_status !== 'publish' ) {
+	if ( ! $event || $event->post_type !== 'pkit_event' || $event->post_status !== 'publish' ) {
 		return new \WP_Error( 'invalid_event', __( 'Event not found.', 'producerkit' ) );
 	}
 
 	// Check if cancelled.
-	if ( (bool) get_post_meta( $event_id, '_lfuf_em_cancelled', true ) ) {
+	if ( (bool) get_post_meta( $event_id, '_pkit_em_cancelled', true ) ) {
 		return new \WP_Error( 'event_cancelled', __( 'This event has been cancelled.', 'producerkit' ) );
 	}
 
 	// Check if RSVPs are enabled.
-	if ( ! (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_enabled', true ) ) {
+	if ( ! (bool) get_post_meta( $event_id, '_pkit_em_rsvp_enabled', true ) ) {
 		return new \WP_Error( 'rsvp_disabled', __( 'RSVPs are not enabled for this event.', 'producerkit' ) );
 	}
 
 	// Check if manually closed.
-	if ( (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_closed', true ) ) {
+	if ( (bool) get_post_meta( $event_id, '_pkit_em_rsvp_closed', true ) ) {
 		return new \WP_Error( 'rsvp_closed', __( 'RSVPs are closed for this event.', 'producerkit' ) );
 	}
 
@@ -142,7 +142,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 	// ── Rate limiting by IP ──
 	$client_ip = get_client_ip();
 	$ip_hashed = hash_ip( $client_ip );
-	$rate_key  = 'lfuf_rsvp_rate_' . md5( $ip_hashed . '_' . $event_id );
+	$rate_key  = 'pkit_rsvp_rate_' . md5( $ip_hashed . '_' . $event_id );
 
 	$recent_count = (int) get_transient( $rate_key );
 	if ( $recent_count >= RATE_LIMIT_PER_IP ) {
@@ -176,7 +176,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 
 	// ── Atomic cap enforcement ──
 	// Use a transaction to prevent race conditions.
-	$cap = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+	$cap = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 	if ( $cap > 0 ) {
 		$wpdb->query( 'START TRANSACTION' );
 
@@ -241,7 +241,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 	 * @param array $row      The RSVP data including id and token.
 	 * @param int   $event_id
 	 */
-	do_action( 'lfuf_rsvp_added', $row, $event_id );
+	do_action( 'pkit_rsvp_added', $row, $event_id );
 
 	return $row;
 }
@@ -268,7 +268,7 @@ function cancel_rsvp( string $token ): bool {
 	$deleted = (bool) $wpdb->delete( $table, [ 'token' => $token ], [ '%s' ] );
 
 	if ( $deleted ) {
-		do_action( 'lfuf_rsvp_cancelled', (array) $rsvp, (int) $rsvp->event_id );
+		do_action( 'pkit_rsvp_cancelled', (array) $rsvp, (int) $rsvp->event_id );
 	}
 
 	return $deleted;
@@ -329,11 +329,11 @@ function get_event_rsvps( int $event_id ): array {
  * Get RSVP summary for an event (public-safe).
  */
 function get_event_rsvp_summary( int $event_id ): array {
-	$cap        = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+	$cap        = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 	$headcount  = get_headcount( $event_id );
 	$rsvp_count = get_rsvp_count( $event_id );
-	$enabled    = (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_enabled', true );
-	$closed     = (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_closed', true );
+	$enabled    = (bool) get_post_meta( $event_id, '_pkit_em_rsvp_enabled', true );
+	$closed     = (bool) get_post_meta( $event_id, '_pkit_em_rsvp_closed', true );
 
 	return [
 		'enabled'    => $enabled,

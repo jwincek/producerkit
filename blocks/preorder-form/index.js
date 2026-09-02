@@ -23,7 +23,7 @@
 	const Placeholder = components.Placeholder;
 	const useSelect = data.useSelect;
 
-	registerBlockType( 'lfuf/preorder-form', {
+	registerBlockType( 'producerkit/preorder-form', {
 		edit: function EditPreorderForm( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -33,7 +33,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',

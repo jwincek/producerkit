@@ -23,7 +23,9 @@
 	const Spinner = components.Spinner;
 
 	function getRestBase() {
-		return ( window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
+		return (
+			( window.pkitSettings || {} ).restBase || '/wp-json/producerkit/v1'
+		);
 	}
 
 	/**
@@ -62,7 +64,7 @@
 		return { date: dateStr, time: timeStr };
 	}
 
-	registerBlockType( 'lfuf/event-list', {
+	registerBlockType( 'producerkit/event-list', {
 		edit: function EditEventList( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -138,7 +140,7 @@
 			);
 
 			const blockProps = useBlockProps( {
-				className: 'lfuf-event-list',
+				className: 'pkit-event-list',
 			} );
 
 			// Loading.
@@ -152,7 +154,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-event-list__loading' },
+							{ className: 'pkit-event-list__loading' },
 							el( Spinner ),
 							' Loading events\u2026'
 						)
@@ -193,7 +195,7 @@
 						blockProps,
 						el(
 							'p',
-							{ className: 'lfuf-event-list__empty' },
+							{ className: 'pkit-event-list__empty' },
 							attributes.emptyMessage
 						)
 					)
@@ -227,12 +229,12 @@
 					showTypeFilters && typeEntries.length > 1
 						? el(
 								'div',
-								{ className: 'lfuf-event-list__filters' },
+								{ className: 'pkit-event-list__filters' },
 								el(
 									'span',
 									{
 										className:
-											'lfuf-event-list__filter-btn lfuf-event-list__filter-btn--active',
+											'pkit-event-list__filter-btn pkit-event-list__filter-btn--active',
 									},
 									'All Events'
 								),
@@ -242,7 +244,7 @@
 										{
 											key: slug,
 											className:
-												'lfuf-event-list__filter-btn',
+												'pkit-event-list__filter-btn',
 										},
 										typeMap[ slug ]
 									);
@@ -273,12 +275,12 @@
 					'div',
 					{
 						className:
-							'lfuf-event-list__section' +
-							( isPast ? ' lfuf-event-list__section--past' : '' ),
+							'pkit-event-list__section' +
+							( isPast ? ' pkit-event-list__section--past' : '' ),
 					},
 					el(
 						'h3',
-						{ className: 'lfuf-event-list__section-title' },
+						{ className: 'pkit-event-list__section-title' },
 						title
 					),
 					events.map( function ( ev ) {
@@ -301,16 +303,16 @@
 					{
 						key: ev.id,
 						className:
-							'lfuf-event-card' +
+							'pkit-event-card' +
 							( ev.cancelled
-								? ' lfuf-event-card--cancelled'
+								? ' pkit-event-card--cancelled'
 								: '' ),
 					},
 					// Image.
 					showImages && ev.thumbnail_url
 						? el(
 								'div',
-								{ className: 'lfuf-event-card__image' },
+								{ className: 'pkit-event-card__image' },
 								el( 'img', {
 									src: ev.thumbnail_url,
 									alt: '',
@@ -322,18 +324,18 @@
 					// Body.
 					el(
 						'div',
-						{ className: 'lfuf-event-card__body' },
+						{ className: 'pkit-event-card__body' },
 
 						// Header (type badge + cancelled badge).
 						el(
 							'div',
-							{ className: 'lfuf-event-card__header' },
+							{ className: 'pkit-event-card__header' },
 							ev.event_types && ev.event_types[ 0 ]
 								? el(
 										'span',
 										{
 											className:
-												'lfuf-event-card__type-badge',
+												'pkit-event-card__type-badge',
 										},
 										ev.event_types[ 0 ]
 								  )
@@ -343,7 +345,7 @@
 										'span',
 										{
 											className:
-												'lfuf-event-card__cancelled-badge',
+												'pkit-event-card__cancelled-badge',
 										},
 										'Cancelled'
 								  )
@@ -353,7 +355,7 @@
 						// Title.
 						el(
 							'h3',
-							{ className: 'lfuf-event-card__title' },
+							{ className: 'pkit-event-card__title' },
 							el( 'span', null, ev.title )
 						),
 
@@ -361,10 +363,10 @@
 						dt.date
 							? el(
 									'p',
-									{ className: 'lfuf-event-card__datetime' },
+									{ className: 'pkit-event-card__datetime' },
 									el(
 										'span',
-										{ className: 'lfuf-event-card__date' },
+										{ className: 'pkit-event-card__date' },
 										dt.date
 									),
 									dt.time
@@ -372,7 +374,7 @@
 												'span',
 												{
 													className:
-														'lfuf-event-card__time',
+														'pkit-event-card__time',
 												},
 												dt.time
 										  )
@@ -384,7 +386,7 @@
 						showLocation && ev.location
 							? el(
 									'p',
-									{ className: 'lfuf-event-card__location' },
+									{ className: 'pkit-event-card__location' },
 									'\uD83D\uDCCD ',
 									ev.location.title,
 									ev.location.address
@@ -392,7 +394,7 @@
 												'span',
 												{
 													className:
-														'lfuf-event-card__address',
+														'pkit-event-card__address',
 												},
 												' \u2014 ' + ev.location.address
 										  )
@@ -404,7 +406,7 @@
 						ev.excerpt
 							? el(
 									'p',
-									{ className: 'lfuf-event-card__excerpt' },
+									{ className: 'pkit-event-card__excerpt' },
 									ev.excerpt
 							  )
 							: null,
@@ -413,13 +415,13 @@
 						ev.cost_note || ev.what_to_bring
 							? el(
 									'div',
-									{ className: 'lfuf-event-card__details' },
+									{ className: 'pkit-event-card__details' },
 									ev.cost_note
 										? el(
 												'span',
 												{
 													className:
-														'lfuf-event-card__cost',
+														'pkit-event-card__cost',
 												},
 												'\uD83D\uDCB8 ' + ev.cost_note
 										  )
@@ -429,7 +431,7 @@
 												'span',
 												{
 													className:
-														'lfuf-event-card__bring',
+														'pkit-event-card__bring',
 												},
 												'\uD83E\uDDFA ' +
 													ev.what_to_bring
@@ -446,12 +448,12 @@
 							! ev.cancelled
 							? el(
 									'div',
-									{ className: 'lfuf-event-card__rsvp' },
+									{ className: 'pkit-event-card__rsvp' },
 									el(
 										'div',
 										{
 											className:
-												'lfuf-event-card__rsvp-summary',
+												'pkit-event-card__rsvp-summary',
 										},
 										rsvp.headcount +
 											' people coming' +
@@ -466,7 +468,7 @@
 												'p',
 												{
 													className:
-														'lfuf-event-card__rsvp-full',
+														'pkit-event-card__rsvp-full',
 												},
 												'This event is full!'
 										  )
@@ -475,7 +477,7 @@
 												'p',
 												{
 													className:
-														'lfuf-event-card__rsvp-closed',
+														'pkit-event-card__rsvp-closed',
 												},
 												'RSVPs are closed.'
 										  )
@@ -483,19 +485,19 @@
 												'div',
 												{
 													className:
-														'lfuf-event-card__rsvp-form',
+														'pkit-event-card__rsvp-form',
 												},
 												el( 'input', {
 													type: 'text',
 													className:
-														'lfuf-event-card__rsvp-input',
+														'pkit-event-card__rsvp-input',
 													placeholder: 'Your name',
 													disabled: true,
 												} ),
 												el( 'input', {
 													type: 'number',
 													className:
-														'lfuf-event-card__rsvp-size',
+														'pkit-event-card__rsvp-size',
 													value: 1,
 													disabled: true,
 												} ),
@@ -504,7 +506,7 @@
 													{
 														type: 'button',
 														className:
-															'lfuf-event-card__rsvp-btn',
+															'pkit-event-card__rsvp-btn',
 														disabled: true,
 													},
 													"I'm coming!"

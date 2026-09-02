@@ -43,7 +43,9 @@
 	};
 
 	function getRestBase() {
-		return ( window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
+		return (
+			( window.pkitSettings || {} ).restBase || '/wp-json/producerkit/v1'
+		);
 	}
 
 	function statusLabel( slug ) {
@@ -63,7 +65,7 @@
 			.filter( Boolean );
 	}
 
-	registerBlockType( 'lfuf/availability-board', {
+	registerBlockType( 'producerkit/availability-board', {
 		edit: function EditBoard( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -123,7 +125,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -145,7 +147,7 @@
 			);
 
 			const blockProps = useBlockProps( {
-				className: 'lfuf-avail-board lfuf-avail-board--' + layout,
+				className: 'pkit-avail-board pkit-avail-board--' + layout,
 			} );
 
 			// Loading state.
@@ -159,7 +161,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-avail-board__loading' },
+							{ className: 'pkit-avail-board__loading' },
 							el( Spinner ),
 							' Loading availability data\u2026'
 						)
@@ -199,7 +201,7 @@
 						blockProps,
 						el(
 							'p',
-							{ className: 'lfuf-avail-board__empty' },
+							{ className: 'pkit-avail-board__empty' },
 							attributes.emptyMessage
 						)
 					)
@@ -219,19 +221,19 @@
 					showFilters
 						? el(
 								'div',
-								{ className: 'lfuf-avail-board__filters' },
+								{ className: 'pkit-avail-board__filters' },
 								el(
 									'div',
 									{
 										className:
-											'lfuf-avail-board__filter-group',
+											'pkit-avail-board__filter-group',
 										role: 'toolbar',
 									},
 									el(
 										'span',
 										{
 											className:
-												'lfuf-avail-board__filter-label',
+												'pkit-avail-board__filter-label',
 										},
 										'Show:'
 									),
@@ -246,10 +248,10 @@
 												{
 													key: s,
 													className:
-														'lfuf-avail-board__filter-btn lfuf-availability-badge lfuf-availability-badge--' +
+														'pkit-avail-board__filter-btn pkit-availability-badge pkit-availability-badge--' +
 														s +
 														( isActive
-															? ' lfuf-avail-board__filter-btn--active'
+															? ' pkit-avail-board__filter-btn--active'
 															: '' ),
 												},
 												statusLabel( s )
@@ -262,14 +264,14 @@
 											'div',
 											{
 												className:
-													'lfuf-avail-board__filter-group',
+													'pkit-avail-board__filter-group',
 												role: 'toolbar',
 											},
 											el(
 												'span',
 												{
 													className:
-														'lfuf-avail-board__filter-label',
+														'pkit-avail-board__filter-label',
 												},
 												'Type:'
 											),
@@ -277,7 +279,7 @@
 												'span',
 												{
 													className:
-														'lfuf-avail-board__filter-btn lfuf-avail-board__filter-btn--active',
+														'pkit-avail-board__filter-btn pkit-avail-board__filter-btn--active',
 												},
 												'All'
 											),
@@ -288,7 +290,7 @@
 														{
 															key: ft.slug,
 															className:
-																'lfuf-avail-board__filter-btn',
+																'pkit-avail-board__filter-btn',
 														},
 														ft.label
 													);
@@ -305,17 +307,17 @@
 							'div',
 							{
 								key: group.slug,
-								className: 'lfuf-avail-board__group',
+								className: 'pkit-avail-board__group',
 							},
 							el(
 								'h3',
-								{ className: 'lfuf-avail-board__group-title' },
+								{ className: 'pkit-avail-board__group-title' },
 								group.label,
 								el(
 									'span',
 									{
 										className:
-											'lfuf-avail-board__group-count',
+											'pkit-avail-board__group-count',
 									},
 									group.items.length
 								)
@@ -324,7 +326,7 @@
 								'div',
 								{
 									className:
-										'lfuf-avail-board__items lfuf-avail-board__items--' +
+										'pkit-avail-board__items pkit-avail-board__items--' +
 										layout,
 								},
 								group.items.map( function ( item ) {
@@ -334,7 +336,7 @@
 											key:
 												item.availability_id ||
 												item.product_id,
-											className: 'lfuf-avail-board__item',
+											className: 'pkit-avail-board__item',
 										},
 										// Thumbnail.
 										showImages && item.thumbnail_url
@@ -342,7 +344,7 @@
 													'div',
 													{
 														className:
-															'lfuf-avail-board__item-image',
+															'pkit-avail-board__item-image',
 													},
 													el( 'img', {
 														src: item.thumbnail_url,
@@ -358,19 +360,19 @@
 											'div',
 											{
 												className:
-													'lfuf-avail-board__item-body',
+													'pkit-avail-board__item-body',
 											},
 											el(
 												'div',
 												{
 													className:
-														'lfuf-avail-board__item-header',
+														'pkit-avail-board__item-header',
 												},
 												el(
 													'span',
 													{
 														className:
-															'lfuf-avail-board__item-name',
+															'pkit-avail-board__item-name',
 													},
 													item.product_name
 												),
@@ -378,7 +380,7 @@
 													'span',
 													{
 														className:
-															'lfuf-availability-badge lfuf-availability-badge--' +
+															'pkit-availability-badge pkit-availability-badge--' +
 															item.status,
 													},
 													statusLabel( item.status )
@@ -389,7 +391,7 @@
 														'span',
 														{
 															className:
-																'lfuf-avail-board__item-price',
+																'pkit-avail-board__item-price',
 														},
 														item.price,
 														item.unit
@@ -397,7 +399,7 @@
 																	'span',
 																	{
 																		className:
-																			'lfuf-avail-board__item-unit',
+																			'pkit-avail-board__item-unit',
 																	},
 																	' / ' +
 																		item.unit
@@ -411,7 +413,7 @@
 														'span',
 														{
 															className:
-																'lfuf-avail-board__item-note',
+																'pkit-avail-board__item-note',
 														},
 														item.quantity_note
 												  )
@@ -421,7 +423,7 @@
 														'div',
 														{
 															className:
-																'lfuf-avail-board__item-seasons',
+																'pkit-avail-board__item-seasons',
 														},
 														item.seasons.map(
 															function ( s ) {
@@ -430,7 +432,7 @@
 																	{
 																		key: s,
 																		className:
-																			'lfuf-avail-board__season-tag',
+																			'pkit-avail-board__season-tag',
 																	},
 																	s
 																);
@@ -448,14 +450,14 @@
 					// Footer.
 					el(
 						'p',
-						{ className: 'lfuf-avail-board__footer' },
+						{ className: 'pkit-avail-board__footer' },
 						'Showing ' + total + ' items',
 						board.generated_at
 							? el(
 									'span',
 									{
 										className:
-											'lfuf-avail-board__timestamp',
+											'pkit-avail-board__timestamp',
 									},
 									new Date(
 										board.generated_at

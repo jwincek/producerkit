@@ -7,28 +7,28 @@
  * fields that are.
  */
 
-.lfuf-commission-form__heading {
+.pkit-commission-form__heading {
 	margin-block-end: 0.25em;
 }
 
-.lfuf-commission-form__intro {
+.pkit-commission-form__intro {
 	margin-block-end: 1.5em;
 }
 
-.lfuf-commission-form__field {
+.pkit-commission-form__field {
 	display: flex;
 	flex-direction: column;
 	gap: 0.35em;
 	margin-block-end: 1.1em;
 }
 
-.lfuf-commission-form__field label {
+.pkit-commission-form__field label {
 	font-weight: 600;
 }
 
-.lfuf-commission-form__field input,
-.lfuf-commission-form__field select,
-.lfuf-commission-form__field textarea {
+.pkit-commission-form__field input,
+.pkit-commission-form__field select,
+.pkit-commission-form__field textarea {
 	width: 100%;
 	max-width: 34em;
 	padding: 0.5em 0.65em;
@@ -39,11 +39,11 @@
 	font: inherit;
 }
 
-.lfuf-commission-form__field textarea {
+.pkit-commission-form__field textarea {
 	resize: vertical;
 }
 
-.lfuf-commission-form__hint {
+.pkit-commission-form__hint {
 	font-size: 0.85em;
 	opacity: 0.75;
 }
@@ -52,7 +52,7 @@
  * Off-canvas rather than display:none — a bot that skips hidden inputs would
  * otherwise never trip it, which defeats the point.
  */
-.lfuf-commission-form__hp {
+.pkit-commission-form__hp {
 	position: absolute !important;
 	left: -9999px !important;
 	width: 1px;
@@ -60,34 +60,34 @@
 	overflow: hidden;
 }
 
-.lfuf-commission-form__actions {
+.pkit-commission-form__actions {
 	margin-block-start: 1.5em;
 }
 
-.lfuf-commission-form__submit[disabled] {
+.pkit-commission-form__submit[disabled] {
 	opacity: 0.6;
 	cursor: progress;
 }
 
-.lfuf-commission-form__message:empty {
+.pkit-commission-form__message:empty {
 	display: none;
 }
 
-.lfuf-commission-form__message {
+.pkit-commission-form__message {
 	margin-block-start: 1em;
 	padding: 0.75em 1em;
 	border-inline-start: 4px solid currentcolor;
 }
 
-.lfuf-commission-form__message.is-success {
+.pkit-commission-form__message.is-success {
 	border-color: #1a6b1a;
 }
 
-.lfuf-commission-form__message.is-error {
+.pkit-commission-form__message.is-error {
 	border-color: #d63638;
 }
 
-.lfuf-commission-form__notice {
+.pkit-commission-form__notice {
 	padding: 0.75em 1em;
 	border: 1px dashed currentcolor;
 	opacity: 0.8;

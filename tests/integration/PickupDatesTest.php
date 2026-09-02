@@ -18,17 +18,17 @@ final class PickupDatesTest extends WP_UnitTestCase {
 
 	public function set_up(): void {
 		parent::set_up();
-		add_filter( 'lfuf_preorder_rate_limit', fn () => 100 );
+		add_filter( 'pkit_preorder_rate_limit', fn () => 100 );
 
 		$this->product  = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
 		$this->location = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 			]
 		);
@@ -36,7 +36,7 @@ final class PickupDatesTest extends WP_UnitTestCase {
 		// Saturday-only schedule, generous season.
 		update_post_meta(
 			$this->location,
-			'_lfuf_ss_schedule',
+			'_pkit_ss_schedule',
 			wp_json_encode(
 				[
 					[
@@ -47,8 +47,8 @@ final class PickupDatesTest extends WP_UnitTestCase {
 				]
 			)
 		);
-		update_post_meta( $this->location, '_lfuf_ss_season_start', current_time( 'Y-m-d' ) );
-		update_post_meta( $this->location, '_lfuf_ss_season_end', gmdate( 'Y-m-d', strtotime( current_time( 'Y-m-d' ) . ' +60 days' ) ) );
+		update_post_meta( $this->location, '_pkit_ss_season_start', current_time( 'Y-m-d' ) );
+		update_post_meta( $this->location, '_pkit_ss_season_end', gmdate( 'Y-m-d', strtotime( current_time( 'Y-m-d' ) . ' +60 days' ) ) );
 
 		$day = current_time( 'Y-m-d' );
 		while ( (int) gmdate( 'w', strtotime( $day . ' 12:00:00' ) ) !== 6 ) {
@@ -86,14 +86,14 @@ final class PickupDatesTest extends WP_UnitTestCase {
 	}
 
 	public function test_blackout_date_is_refused(): void {
-		update_post_meta( $this->location, '_lfuf_pickup_blackouts', [ $this->saturday ] );
+		update_post_meta( $this->location, '_pkit_pickup_blackouts', [ $this->saturday ] );
 		$result = $this->order_for( $this->saturday );
 		$this->assertWPError( $result );
 		$this->assertSame( 'pickup_blackout', $result->get_error_code() );
 	}
 
 	public function test_out_of_season_date_is_refused(): void {
-		update_post_meta( $this->location, '_lfuf_ss_season_end', gmdate( 'Y-m-d', strtotime( current_time( 'Y-m-d' ) . ' +2 days' ) ) );
+		update_post_meta( $this->location, '_pkit_ss_season_end', gmdate( 'Y-m-d', strtotime( current_time( 'Y-m-d' ) . ' +2 days' ) ) );
 		$far_saturday = gmdate( 'Y-m-d', strtotime( $this->saturday . ' +14 days' ) );
 		$result       = $this->order_for( $far_saturday );
 		$this->assertWPError( $result );
@@ -105,12 +105,12 @@ final class PickupDatesTest extends WP_UnitTestCase {
 	}
 
 	public function test_location_without_schedule_allows_any_weekday(): void {
-		delete_post_meta( $this->location, '_lfuf_ss_schedule' );
+		delete_post_meta( $this->location, '_pkit_ss_schedule' );
 		$this->assertNotWPError( $this->order_for( $this->monday ) );
 	}
 
 	public function test_constraints_shape(): void {
-		update_post_meta( $this->location, '_lfuf_pickup_blackouts', [ '2026-12-25' ] );
+		update_post_meta( $this->location, '_pkit_pickup_blackouts', [ '2026-12-25' ] );
 		$constraints = pickup_constraints( $this->location );
 		$this->assertSame( [ 6 ], $constraints['allowed_days'] );
 		$this->assertSame( [ '2026-12-25' ], $constraints['blackouts'] );
@@ -122,8 +122,8 @@ final class PickupDatesTest extends WP_UnitTestCase {
 	}
 
 	public function test_form_renders_pickup_day_hint(): void {
-		update_post_meta( $this->product, '_lfuf_price', '$4' );
-		$html = do_blocks( sprintf( '<!-- wp:lfuf/preorder-form {"locationId":%d} /-->', $this->location ) );
+		update_post_meta( $this->product, '_pkit_price', '$4' );
+		$html = do_blocks( sprintf( '<!-- wp:producerkit/preorder-form {"locationId":%d} /-->', $this->location ) );
 		$this->assertStringContainsString( 'Pickup days: Saturday.', $html );
 		$this->assertStringContainsString( 'allowedDays', $html, 'constraints must reach the Interactivity context' );
 	}

@@ -20,28 +20,28 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'label'           => __( 'Musician', 'producerkit' ),
 	'description'     => __( 'Records, tapes and merch for a band or solo artist, with shows as events.', 'producerkit' ),
-	'taxonomies'      => [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+	'taxonomies'      => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 	// "Merch" is what a band calls the table; "Catalog" is what everyone else
 	// calls it. Only the sidebar word changes — it is still a Product on the
 	// edit screen, where the generic word reads better.
 	'post_type_names' => [
-		'lfuf_product' => [ '', '', __( 'Merch', 'producerkit' ) ],
-		'lfuf_event'   => [ __( 'Show', 'producerkit' ), __( 'Shows', 'producerkit' ), __( 'Shows', 'producerkit' ) ],
+		'pkit_product' => [ '', '', __( 'Merch', 'producerkit' ) ],
+		'pkit_event'   => [ __( 'Show', 'producerkit' ), __( 'Shows', 'producerkit' ), __( 'Shows', 'producerkit' ) ],
 	],
 	'names'           => [
-		'lfuf_material'  => [ __( 'Format', 'producerkit' ), __( 'Formats', 'producerkit' ) ],
-		'lfuf_finish'    => [ __( 'Edition', 'producerkit' ), __( 'Editions', 'producerkit' ) ],
-		'lfuf_component' => [ __( 'Packaging', 'producerkit' ), __( 'Packaging', 'producerkit' ) ],
+		'pkit_material'  => [ __( 'Format', 'producerkit' ), __( 'Formats', 'producerkit' ) ],
+		'pkit_finish'    => [ __( 'Edition', 'producerkit' ), __( 'Editions', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Packaging', 'producerkit' ), __( 'Packaging', 'producerkit' ) ],
 	],
 	'terms'           => [
-		'lfuf_product_type' => [ 'Vinyl LP', 'Vinyl 7"', 'Cassette', 'CD', 'Digital Download', 'T-Shirt', 'Hoodie', 'Poster', 'Sticker', 'Patch', 'Tote Bag', 'Songbook' ],
-		'lfuf_material'     => [ 'Black Vinyl', '180g Black Vinyl', 'Colored Vinyl', 'Splatter Vinyl', 'Picture Disc', 'Cassette', 'Compact Disc', 'Digital' ],
-		'lfuf_finish'       => [ 'First Pressing', 'Repress', 'Limited Edition', 'Numbered', 'Signed', 'Test Pressing', 'Tour Exclusive', 'Standard' ],
-		'lfuf_component'    => [ 'Gatefold', 'Single Sleeve', 'Hand-Screened Sleeve', 'Digipak', 'Jewel Case', 'Obi Strip', 'Download Card Included', 'Poly Bag' ],
-		'lfuf_event_type'   => [ 'Show', 'Album Release', 'Tour Date', 'Festival', 'Residency', 'House Show', 'In-Store', 'Livestream', 'Record Fair' ],
+		'pkit_product_type' => [ 'Vinyl LP', 'Vinyl 7"', 'Cassette', 'CD', 'Digital Download', 'T-Shirt', 'Hoodie', 'Poster', 'Sticker', 'Patch', 'Tote Bag', 'Songbook' ],
+		'pkit_material'     => [ 'Black Vinyl', '180g Black Vinyl', 'Colored Vinyl', 'Splatter Vinyl', 'Picture Disc', 'Cassette', 'Compact Disc', 'Digital' ],
+		'pkit_finish'       => [ 'First Pressing', 'Repress', 'Limited Edition', 'Numbered', 'Signed', 'Test Pressing', 'Tour Exclusive', 'Standard' ],
+		'pkit_component'    => [ 'Gatefold', 'Single Sleeve', 'Hand-Screened Sleeve', 'Digipak', 'Jewel Case', 'Obi Strip', 'Download Card Included', 'Poly Bag' ],
+		'pkit_event_type'   => [ 'Show', 'Album Release', 'Tour Date', 'Festival', 'Residency', 'House Show', 'In-Store', 'Livestream', 'Record Fair' ],
 		// Growing seasons mean nothing on a tour schedule. Seeding nothing
 		// leaves the taxonomy registered but empty, so anyone who does want
 		// to group by tour leg can add their own terms.
-		'lfuf_season'       => [],
+		'pkit_season'       => [],
 	],
 ];

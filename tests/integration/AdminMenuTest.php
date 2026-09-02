@@ -30,9 +30,9 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 * with no taxonomies are nested.
 	 */
 	public function test_only_the_taxonomy_free_types_are_nested(): void {
-		foreach ( [ 'lfuf_source', 'lfuf_location' ] as $type ) {
+		foreach ( [ 'pkit_source', 'pkit_location' ] as $type ) {
 			$this->assertSame(
-				'farm-stand-dashboard',
+				'producerkit',
 				get_post_type_object( $type )->show_in_menu,
 				"{$type} should sit under the ProducerKit menu."
 			);
@@ -46,7 +46,7 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	}
 
 	public function test_types_that_carry_taxonomies_stay_top_level(): void {
-		foreach ( [ 'lfuf_product', 'lfuf_event' ] as $type ) {
+		foreach ( [ 'pkit_product', 'pkit_event' ] as $type ) {
 			$this->assertTrue(
 				get_post_type_object( $type )->show_in_menu,
 				"{$type} carries taxonomies, which nesting would make unreachable from the menu."
@@ -63,24 +63,24 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	public function test_the_parent_menu_stays_open_on_a_nested_add_screen(): void {
 		global $typenow, $pagenow;
 
-		$typenow = 'lfuf_location';
+		$typenow = 'pkit_location';
 		$pagenow = 'post-new.php';
 		$this->assertSame(
-			'farm-stand-dashboard',
-			apply_filters( 'parent_file', 'edit.php?post_type=lfuf_location' )
+			'producerkit',
+			apply_filters( 'parent_file', 'edit.php?post_type=pkit_location' )
 		);
 
 		$pagenow = 'post.php';
 		$this->assertSame(
-			'farm-stand-dashboard',
-			apply_filters( 'parent_file', 'edit.php?post_type=lfuf_location' )
+			'producerkit',
+			apply_filters( 'parent_file', 'edit.php?post_type=pkit_location' )
 		);
 
 		// A type that was not nested must be left alone.
-		$typenow = 'lfuf_product';
+		$typenow = 'pkit_product';
 		$this->assertSame(
-			'edit.php?post_type=lfuf_product',
-			apply_filters( 'parent_file', 'edit.php?post_type=lfuf_product' )
+			'edit.php?post_type=pkit_product',
+			apply_filters( 'parent_file', 'edit.php?post_type=pkit_product' )
 		);
 
 		$typenow = '';
@@ -102,10 +102,10 @@ final class AdminMenuTest extends WP_UnitTestCase {
 			'edit.php?post_type=tribe_events',
 			'edit-comments.php',
 			'shelterkit-donations',
-			'farm-stand-dashboard',
-			'edit.php?post_type=lfuf_product',
+			'producerkit',
+			'edit.php?post_type=pkit_product',
 			'edit.php?post_type=shelterkit_pet',
-			'edit.php?post_type=lfuf_event',
+			'edit.php?post_type=pkit_event',
 			'woocommerce',
 		];
 	}
@@ -120,9 +120,9 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		$after = Post_Types\group_menu_items( $this->busy_sidebar() );
 
 		$positions = [
-			array_search( 'farm-stand-dashboard', $after, true ),
-			array_search( 'edit.php?post_type=lfuf_product', $after, true ),
-			array_search( 'edit.php?post_type=lfuf_event', $after, true ),
+			array_search( 'producerkit', $after, true ),
+			array_search( 'edit.php?post_type=pkit_product', $after, true ),
+			array_search( 'edit.php?post_type=pkit_event', $after, true ),
 		];
 
 		$this->assertSame( [ $positions[0], $positions[0] + 1, $positions[0] + 2 ], $positions );
@@ -144,7 +144,7 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		$after = Post_Types\group_menu_items( $this->busy_sidebar() );
 
 		$others = array_values(
-			array_filter( $after, static fn ( $slug ) => ! str_contains( $slug, 'lfuf' ) && 'farm-stand-dashboard' !== $slug )
+			array_filter( $after, static fn ( $slug ) => ! str_contains( $slug, 'pkit' ) && 'producerkit' !== $slug )
 		);
 
 		$this->assertSame(
@@ -158,18 +158,18 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 * sidebar exactly as found rather than invent a position.
 	 */
 	public function test_grouping_is_a_no_op_without_the_parent_menu(): void {
-		$order = [ 'index.php', 'edit.php?post_type=lfuf_product', 'woocommerce', 'edit.php?post_type=lfuf_event' ];
+		$order = [ 'index.php', 'edit.php?post_type=pkit_product', 'woocommerce', 'edit.php?post_type=pkit_event' ];
 
 		$this->assertSame( $order, Post_Types\group_menu_items( $order ) );
 	}
 
 	public function test_grouping_skips_items_that_are_not_there(): void {
 		// Events module off, so only two of the three exist.
-		$order = [ 'index.php', 'farm-stand-dashboard', 'woocommerce', 'edit.php?post_type=lfuf_product' ];
+		$order = [ 'index.php', 'producerkit', 'woocommerce', 'edit.php?post_type=pkit_product' ];
 		$after = Post_Types\group_menu_items( $order );
 
 		$this->assertSame(
-			[ 'index.php', 'farm-stand-dashboard', 'edit.php?post_type=lfuf_product', 'woocommerce' ],
+			[ 'index.php', 'producerkit', 'edit.php?post_type=pkit_product', 'woocommerce' ],
 			$after
 		);
 	}
@@ -181,7 +181,7 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 * identical sidebar entries is a support question waiting to happen.
 	 */
 	public function test_the_catalogue_menu_label_differs_from_woocommerce(): void {
-		$labels = get_post_type_object( 'lfuf_product' )->labels;
+		$labels = get_post_type_object( 'pkit_product' )->labels;
 
 		$this->assertSame( 'Catalog', $labels->menu_name );
 		$this->assertNotSame(
@@ -197,7 +197,7 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 * likely to sit beside.
 	 */
 	public function test_the_events_menu_label_differs_from_the_events_calendar(): void {
-		$labels = get_post_type_object( 'lfuf_event' )->labels;
+		$labels = get_post_type_object( 'pkit_event' )->labels;
 
 		$this->assertSame( 'Calendar', $labels->menu_name );
 		$this->assertNotSame( 'Events', $labels->menu_name );
@@ -211,8 +211,8 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 */
 	public function test_top_level_icons_are_distinct_from_each_other(): void {
 		$icons = [
-			get_post_type_object( 'lfuf_product' )->menu_icon,
-			get_post_type_object( 'lfuf_event' )->menu_icon,
+			get_post_type_object( 'pkit_product' )->menu_icon,
+			get_post_type_object( 'pkit_event' )->menu_icon,
 		];
 
 		$this->assertSame( $icons, array_unique( $icons ) );
@@ -224,7 +224,7 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	 * "No products found" — the ordinary word still reads better.
 	 */
 	public function test_the_word_product_survives_everywhere_else(): void {
-		$labels = get_post_type_object( 'lfuf_product' )->labels;
+		$labels = get_post_type_object( 'pkit_product' )->labels;
 
 		$this->assertSame( 'Products', $labels->name );
 		$this->assertSame( 'Product', $labels->singular_name );
@@ -239,14 +239,14 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		update_option( Profiles\OPTION, 'musician' );
 		Post_Types\register();
 
-		$labels = get_post_type_object( 'lfuf_product' )->labels;
+		$labels = get_post_type_object( 'pkit_product' )->labels;
 
 		$this->assertSame( 'Merch', $labels->menu_name, 'A band calls the table merch.' );
 		$this->assertSame( 'Product', $labels->singular_name, 'But it is still a product on the edit screen.' );
 		$this->assertSame( 'Add New Product', $labels->add_new_item );
 
 		// A profile may also override all three slots, not just the menu.
-		$events = get_post_type_object( 'lfuf_event' )->labels;
+		$events = get_post_type_object( 'pkit_event' )->labels;
 		$this->assertSame( 'Shows', $events->menu_name );
 		$this->assertSame( 'Show', $events->singular_name );
 		$this->assertSame( 'Add New Show', $events->add_new_item );
@@ -256,21 +256,21 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		update_option( Profiles\OPTION, 'pottery' );
 		Post_Types\register();
 
-		$this->assertSame( 'Catalog', get_post_type_object( 'lfuf_product' )->labels->menu_name );
+		$this->assertSame( 'Catalog', get_post_type_object( 'pkit_product' )->labels->menu_name );
 	}
 
 	public function test_labels_are_derived_from_the_filter(): void {
 		$override = static fn ( array $names, string $type ): array =>
-			'lfuf_product' === $type ? [ 'Widget', 'Widgets', 'Widgetry' ] : $names;
+			'pkit_product' === $type ? [ 'Widget', 'Widgets', 'Widgetry' ] : $names;
 
-		add_filter( 'lfuf_post_type_names', $override, 10, 2 );
+		add_filter( 'pkit_post_type_names', $override, 10, 2 );
 		Post_Types\register();
 
-		$labels = get_post_type_object( 'lfuf_product' )->labels;
+		$labels = get_post_type_object( 'pkit_product' )->labels;
 		$this->assertSame( 'Widgetry', $labels->menu_name );
 		$this->assertSame( 'Add New Widget', $labels->add_new_item );
 		$this->assertSame( 'No widgets found.', $labels->not_found );
 
-		remove_filter( 'lfuf_post_type_names', $override, 10 );
+		remove_filter( 'pkit_post_type_names', $override, 10 );
 	}
 }

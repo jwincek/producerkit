@@ -40,7 +40,7 @@ add_action(
 				'description'         => __( 'Retrieve upcoming farm events with location, RSVP status, and event type.', 'producerkit' ),
 				'category'            => 'farm-events',
 				'execute_callback'    => function ( array $input = [] ): array {
-					$request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/upcoming' );
+					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/events/upcoming' );
 					$request->set_param( 'per_page', (int) ( $input['per_page'] ?? 10 ) );
 					$request->set_param( 'event_type', $input['event_type'] ?? '' );
 

@@ -1,8 +1,8 @@
 /**
- * QR rendering for [data-lfuf-qr] elements.
+ * QR rendering for [data-pkit-qr] elements.
  *
  * Server-side render emits an empty container carrying the (already
- * URL-validated) target in data-lfuf-qr; this script draws the QR as an
+ * URL-validated) target in data-pkit-qr; this script draws the QR as an
  * inline SVG using the bundled qrcode-generator library (MIT, Kazuhiko
  * Arase). If JS is unavailable or encoding fails, the container stays
  * empty and the adjacent payment link remains the fallback.
@@ -15,10 +15,10 @@
 			return;
 		}
 		const nodes = document.querySelectorAll(
-			'[data-lfuf-qr]:not([data-lfuf-qr-done])'
+			'[data-pkit-qr]:not([data-pkit-qr-done])'
 		);
 		Array.prototype.forEach.call( nodes, function ( node ) {
-			const text = node.getAttribute( 'data-lfuf-qr' );
+			const text = node.getAttribute( 'data-pkit-qr' );
 			if ( ! text ) {
 				return;
 			}
@@ -30,9 +30,9 @@
 					cellSize: 4,
 					margin: 2,
 					scalable: true,
-					alt: node.getAttribute( 'data-lfuf-qr-label' ) || text,
+					alt: node.getAttribute( 'data-pkit-qr-label' ) || text,
 				} );
-				node.setAttribute( 'data-lfuf-qr-done', '1' );
+				node.setAttribute( 'data-pkit-qr-done', '1' );
 			} catch ( e ) {
 				// Data too long or encoder failure — leave the fallback link.
 			}

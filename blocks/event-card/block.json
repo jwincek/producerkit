@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/event-card",
+    "name": "producerkit/event-card",
     "version": "1.1.0",
     "title": "Event Card",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "calendar",
     "description": "Display a single event with date, location, RSVP, and donation link. Useful for featuring a specific event on any page.",
     "textdomain": "producerkit",

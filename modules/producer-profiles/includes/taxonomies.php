@@ -35,18 +35,18 @@ function register(): void {
 
 		register_taxonomy(
 			$taxonomy,
-			[ 'lfuf_product' ],
+			[ 'pkit_product' ],
 			[
-				// Runs the same lfuf_taxonomy_names filter core uses, so the
+				// Runs the same pkit_taxonomy_names filter core uses, so the
 				// profile's own re-labelling applies here for free.
 				'labels'            => Core\build_labels( $taxonomy, $singular, $plural ),
 				'hierarchical'      => false,
 				'public'            => true,
 				'show_in_rest'      => true,
-				'rest_base'         => str_replace( [ 'lfuf_', '_' ], [ '', '-' ], $taxonomy ) . 's',
-				'rest_namespace'    => 'lfuf/v1',
+				'rest_base'         => str_replace( [ 'pkit_', '_' ], [ '', '-' ], $taxonomy ) . 's',
+				'rest_namespace'    => 'producerkit/v1',
 				'rewrite'           => [
-					'slug'       => str_replace( 'lfuf_', '', $taxonomy ),
+					'slug'       => str_replace( 'pkit_', '', $taxonomy ),
 					'with_front' => false,
 				],
 				'show_admin_column' => true,

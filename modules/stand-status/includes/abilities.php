@@ -33,18 +33,18 @@ add_action(
 					$status_message = sanitize_text_field( $input['status_message'] ?? '' );
 
 					$post = get_post( $location_id );
-					if ( ! $post || $post->post_type !== 'lfuf_location' ) {
+					if ( ! $post || $post->post_type !== 'pkit_location' ) {
 						return [
 							'success' => false,
 							'message' => 'Location not found.',
 						];
 					}
 
-					update_post_meta( $location_id, '_lfuf_is_open', $is_open );
-					update_post_meta( $location_id, '_lfuf_ss_status_message', $status_message );
-					update_post_meta( $location_id, '_lfuf_ss_last_toggled', gmdate( 'c' ) );
+					update_post_meta( $location_id, '_pkit_is_open', $is_open );
+					update_post_meta( $location_id, '_pkit_ss_status_message', $status_message );
+					update_post_meta( $location_id, '_pkit_ss_last_toggled', gmdate( 'c' ) );
 
-					do_action( 'lfuf_stand_status_changed', $location_id, $is_open, $status_message );
+					do_action( 'pkit_stand_status_changed', $location_id, $is_open, $status_message );
 
 					return [
 						'success'        => true,
@@ -97,7 +97,7 @@ add_action(
 				'category'            => 'farm-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$post = get_post( (int) $input['location_id'] );
-					if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish' ) {
+					if ( ! $post || $post->post_type !== 'pkit_location' || $post->post_status !== 'publish' ) {
 						return [ 'error' => 'Stand not found.' ];
 					}
 					return \ProducerKit\StandStatus\REST\build_stand_data( $post );

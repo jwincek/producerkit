@@ -24,23 +24,23 @@ function register(): void {
  * ─────────────────────────────────────────────── */
 function register_product_meta(): void {
 	$fields = [
-		'_lfuf_source_ids'    => [
+		'_pkit_source_ids'    => [
 			'type'        => 'array',
 			'description' => 'Related source (grain/farm) post IDs.',
 			'default'     => [],
 			'items'       => [ 'type' => 'integer' ],
 		],
-		'_lfuf_unit'          => [
+		'_pkit_unit'          => [
 			'type'        => 'string',
 			'description' => 'Unit of sale — bunch, loaf, pint, lb, each, etc.',
 			'default'     => '',
 		],
-		'_lfuf_price'         => [
+		'_pkit_price'         => [
 			'type'        => 'string',
 			'description' => 'Display price (free-text to allow "donation" or "$5/loaf").',
 			'default'     => '',
 		],
-		'_lfuf_growing_notes' => [
+		'_pkit_growing_notes' => [
 			'type'        => 'string',
 			'description' => 'Brief growing / baking notes shown on front end.',
 			'default'     => '',
@@ -49,7 +49,7 @@ function register_product_meta(): void {
 
 	foreach ( $fields as $key => $args ) {
 		register_post_meta(
-			'lfuf_product',
+			'pkit_product',
 			$key,
 			[
 				'show_in_rest'      => is_array( $args['default'] )
@@ -76,22 +76,22 @@ function register_product_meta(): void {
  * ─────────────────────────────────────────────── */
 function register_source_meta(): void {
 	$fields = [
-		'_lfuf_source_farm_name' => [
+		'_pkit_source_farm_name' => [
 			'type'        => 'string',
 			'description' => 'Name of the partner farm or grain origin.',
 			'default'     => '',
 		],
-		'_lfuf_source_location'  => [
+		'_pkit_source_location'  => [
 			'type'        => 'string',
 			'description' => 'Geographic location of source (county, state).',
 			'default'     => '',
 		],
-		'_lfuf_source_history'   => [
+		'_pkit_source_history'   => [
 			'type'        => 'string',
 			'description' => 'Historical / heritage notes about the grain or ingredient.',
 			'default'     => '',
 		],
-		'_lfuf_milling_notes'    => [
+		'_pkit_milling_notes'    => [
 			'type'        => 'string',
 			'description' => 'Notes on milling process, grind, etc.',
 			'default'     => '',
@@ -100,7 +100,7 @@ function register_source_meta(): void {
 
 	foreach ( $fields as $key => $args ) {
 		register_post_meta(
-			'lfuf_source',
+			'pkit_source',
 			$key,
 			[
 				'show_in_rest'      => true,
@@ -120,50 +120,50 @@ function register_source_meta(): void {
  * ─────────────────────────────────────────────── */
 function register_location_meta(): void {
 	$fields = [
-		'_lfuf_address'          => [
+		'_pkit_address'          => [
 			'type'        => 'string',
 			'description' => 'Street address.',
 			'default'     => '',
 		],
-		'_lfuf_location_type'    => [
+		'_pkit_location_type'    => [
 			'type'        => 'string',
 			'description' => 'Type: stand, market, on-farm, other.',
 			'default'     => 'stand',
 		],
-		'_lfuf_venmo_handle'     => [
+		'_pkit_venmo_handle'     => [
 			'type'        => 'string',
-			'description' => 'Venmo handle for payment at this location (legacy; merged into _lfuf_payment_methods on read).',
+			'description' => 'Venmo handle for payment at this location (legacy; merged into _pkit_payment_methods on read).',
 			'default'     => '',
 			'sanitize'    => __NAMESPACE__ . '\\sanitize_payment_handle',
 		],
-		'_lfuf_payment_methods'  => [
+		'_pkit_payment_methods'  => [
 			'type'        => 'string',
 			'description' => 'JSON array of payment methods: [{type, value, label}].',
 			'default'     => '',
 			'sanitize'    => '\\ProducerKit\\Core\\Payments\\sanitize_payment_methods',
 		],
-		'_lfuf_pickup_blackouts' => [
+		'_pkit_pickup_blackouts' => [
 			'type'        => 'string',
 			'description' => 'JSON array of dates (YYYY-MM-DD) when pickups are unavailable — holidays, closures.',
 			'default'     => '',
 			'sanitize'    => __NAMESPACE__ . '\\sanitize_date_json_array',
 		],
-		'_lfuf_hours'            => [
+		'_pkit_hours'            => [
 			'type'        => 'string',
 			'description' => 'Human-readable hours string.',
 			'default'     => '',
 		],
-		'_lfuf_is_open'          => [
+		'_pkit_is_open'          => [
 			'type'        => 'boolean',
 			'description' => 'Quick toggle — is this location currently open?',
 			'default'     => false,
 		],
-		'_lfuf_lat'              => [
+		'_pkit_lat'              => [
 			'type'        => 'number',
 			'description' => 'Latitude.',
 			'default'     => 0,
 		],
-		'_lfuf_lng'              => [
+		'_pkit_lng'              => [
 			'type'        => 'number',
 			'description' => 'Longitude.',
 			'default'     => 0,
@@ -172,7 +172,7 @@ function register_location_meta(): void {
 
 	foreach ( $fields as $key => $args ) {
 		register_post_meta(
-			'lfuf_location',
+			'pkit_location',
 			$key,
 			[
 				'show_in_rest'      => true,
@@ -196,38 +196,38 @@ function register_location_meta(): void {
  * ─────────────────────────────────────────────── */
 function register_event_meta(): void {
 	$fields = [
-		'_lfuf_event_location_id'    => [
+		'_pkit_event_location_id'    => [
 			'type'        => 'integer',
-			'description' => 'Related lfuf_location post ID.',
+			'description' => 'Related pkit_location post ID.',
 			'default'     => 0,
 		],
-		'_lfuf_featured_product_ids' => [
+		'_pkit_featured_product_ids' => [
 			'type'        => 'array',
 			'description' => 'Featured product post IDs for this event.',
 			'default'     => [],
 			'items'       => [ 'type' => 'integer' ],
 		],
-		'_lfuf_start_datetime'       => [
+		'_pkit_start_datetime'       => [
 			'type'        => 'string',
 			'description' => 'ISO 8601 start date/time.',
 			'default'     => '',
 		],
-		'_lfuf_end_datetime'         => [
+		'_pkit_end_datetime'         => [
 			'type'        => 'string',
 			'description' => 'ISO 8601 end date/time.',
 			'default'     => '',
 		],
-		'_lfuf_recurrence_rule'      => [
+		'_pkit_recurrence_rule'      => [
 			'type'        => 'string',
 			'description' => 'iCal RRULE string for recurring events.',
 			'default'     => '',
 		],
-		'_lfuf_rsvp_cap'             => [
+		'_pkit_rsvp_cap'             => [
 			'type'        => 'integer',
 			'description' => 'Maximum attendees (0 = unlimited).',
 			'default'     => 0,
 		],
-		'_lfuf_donation_link'        => [
+		'_pkit_donation_link'        => [
 			'type'        => 'string',
 			'description' => 'Venmo deeplink or external donation URL.',
 			'default'     => '',
@@ -253,7 +253,7 @@ function register_event_meta(): void {
 		};
 
 		register_post_meta(
-			'lfuf_event',
+			'pkit_event',
 			$key,
 			[
 				'show_in_rest'      => $rest_schema,

@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/preorder-form",
+    "name": "producerkit/preorder-form",
     "version": "1.1.0",
     "title": "Pre-Order Form",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "cart",
     "description": "Let visitors pre-order products for pickup — pay on collection. Requires the Pre-Orders module.",
     "textdomain": "producerkit",

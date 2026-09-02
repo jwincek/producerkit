@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_availability
+ * Custom table: {prefix}_pkit_availability
  *
  * This is the shared, time-sensitive status layer. Each row represents:
  *   "Product X is [status] at Location Y as of [date]."
@@ -22,7 +22,7 @@ const DB_VERSION = '1.0.1';
  * Re-run the schema when the stored version is behind.
  *
  * The RSVP and pre-order tables already self-heal this way. Availability did
- * not: it was created on activation only, and wrote lfuf_availability_db_version
+ * not: it was created on activation only, and wrote pkit_availability_db_version
  * without anything ever reading it. That mattered once the schema was found to
  * be rejected outright by strict-mode MySQL — those sites have no table at all,
  * and without this they would need a manual deactivate/reactivate to get one.
@@ -30,7 +30,7 @@ const DB_VERSION = '1.0.1';
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_availability_db_version' ) !== DB_VERSION ) {
+		if ( get_option( 'pkit_availability_db_version' ) !== DB_VERSION ) {
 			create_table();
 		}
 	},
@@ -42,7 +42,7 @@ add_action(
  */
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_availability';
+	return $wpdb->prefix . 'pkit_availability';
 }
 
 /**
@@ -86,7 +86,7 @@ function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( schema_sql( table_name() ) );
 
-	update_option( 'lfuf_availability_db_version', DB_VERSION );
+	update_option( 'pkit_availability_db_version', DB_VERSION );
 }
 
 /**
@@ -232,9 +232,9 @@ function delete_row( int $id ): bool {
 function on_post_delete( int $post_id, \WP_Post $post ): void {
 	global $wpdb;
 
-	if ( $post->post_type === 'lfuf_product' ) {
+	if ( $post->post_type === 'pkit_product' ) {
 		$wpdb->delete( table_name(), [ 'product_id' => $post_id ], [ '%d' ] );
-	} elseif ( $post->post_type === 'lfuf_location' ) {
+	} elseif ( $post->post_type === 'pkit_location' ) {
 		// location_id = 0 means "all locations" — only exact matches are orphans.
 		$wpdb->delete( table_name(), [ 'location_id' => $post_id ], [ '%d' ] );
 	}
@@ -250,7 +250,7 @@ add_action( 'before_delete_post', __NAMESPACE__ . '\\on_post_delete', 10, 2 );
  * Purge expired availability rows.
  *
  * Deletes any row where expires_date is in the past.
- * Called daily via WP-Cron (lfuf_availability_cleanup).
+ * Called daily via WP-Cron (pkit_availability_cleanup).
  *
  * @return int Number of rows deleted.
  */
@@ -269,20 +269,20 @@ function purge_expired(): int {
 	);
 
 	if ( $count > 0 ) {
-		do_action( 'lfuf_availability_expired_purged', $count );
+		do_action( 'pkit_availability_expired_purged', $count );
 	}
 
 	return $count;
 }
 
-add_action( 'lfuf_availability_cleanup', __NAMESPACE__ . '\\purge_expired' );
+add_action( 'pkit_availability_cleanup', __NAMESPACE__ . '\\purge_expired' );
 
 /**
  * Schedule the daily cleanup cron event.
  * Safe to call multiple times — only schedules if not already scheduled.
  */
 function schedule_cleanup(): void {
-	if ( ! wp_next_scheduled( 'lfuf_availability_cleanup' ) ) {
+	if ( ! wp_next_scheduled( 'pkit_availability_cleanup' ) ) {
 		// wp_schedule_event() wants a true UTC epoch. Basing the calculation on
 		// current_time( 'timestamp' ) produced a local-wall-clock epoch instead,
 		// so the "03:00" cleanup actually ran gmt_offset hours away from 3am.
@@ -293,7 +293,7 @@ function schedule_cleanup(): void {
 		wp_schedule_event(
 			$next_run->getTimestamp(),
 			'daily',
-			'lfuf_availability_cleanup',
+			'pkit_availability_cleanup',
 		);
 	}
 }
@@ -302,8 +302,8 @@ function schedule_cleanup(): void {
  * Unschedule the cleanup cron event.
  */
 function unschedule_cleanup(): void {
-	$timestamp = wp_next_scheduled( 'lfuf_availability_cleanup' );
+	$timestamp = wp_next_scheduled( 'pkit_availability_cleanup' );
 	if ( $timestamp ) {
-		wp_unschedule_event( $timestamp, 'lfuf_availability_cleanup' );
+		wp_unschedule_event( $timestamp, 'pkit_availability_cleanup' );
 	}
 }

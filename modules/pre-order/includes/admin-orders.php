@@ -19,11 +19,11 @@ add_action(
 	'admin_menu',
 	function (): void {
 		add_submenu_page(
-			'farm-stand-dashboard',
+			'producerkit',
 			__( 'Pre-Orders', 'producerkit' ),
 			__( 'Pre-Orders', 'producerkit' ),
 			'edit_posts',
-			'farm-stand-preorders',
+			'producerkit-preorders',
 			__NAMESPACE__ . '\\render_page',
 		);
 	}
@@ -62,17 +62,17 @@ function status_label( string $status ): string {
 function render_harvest_view(): void {
 	$groups = Orders\get_harvest_list();
 	?>
-	<div class="wrap lfuf-harvest">
+	<div class="wrap pkit-harvest">
 		<h1>
 			<?php esc_html_e( 'Harvest List', 'producerkit' ); ?>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders' ) ); ?>" class="page-title-action lfuf-harvest__back">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=producerkit-preorders' ) ); ?>" class="page-title-action pkit-harvest__back">
 				<?php esc_html_e( 'All Pre-Orders', 'producerkit' ); ?>
 			</a>
-			<button type="button" class="page-title-action lfuf-harvest__print" onclick="window.print()">
+			<button type="button" class="page-title-action pkit-harvest__print" onclick="window.print()">
 				<?php esc_html_e( 'Print', 'producerkit' ); ?>
 			</button>
 		</h1>
-		<p class="lfuf-harvest__meta">
+		<p class="pkit-harvest__meta">
 			<?php
 			printf(
 				/* translators: %s: today's date. */
@@ -87,14 +87,14 @@ function render_harvest_view(): void {
 		<?php endif; ?>
 
 		<?php foreach ( $groups as $group ) : ?>
-			<h2 class="lfuf-harvest__date">
+			<h2 class="pkit-harvest__date">
 				<?php
 				echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $group['pickup_date'] ) ) );
 				if ( $group['location_name'] ) {
 					echo ' — ' . esc_html( $group['location_name'] );
 				}
 				?>
-				<span class="lfuf-harvest__count">
+				<span class="pkit-harvest__count">
 					<?php
 					printf(
 						/* translators: %d: number of orders. */
@@ -128,9 +128,9 @@ function render_harvest_view(): void {
 	<style>
 	@media print {
 		#adminmenumain, #wpadminbar, #wpfooter,
-		.lfuf-harvest__back, .lfuf-harvest__print, .notice { display: none !important; }
+		.pkit-harvest__back, .pkit-harvest__print, .notice { display: none !important; }
 		#wpcontent, #wpbody-content { margin: 0 !important; padding: 0 !important; }
-		.lfuf-harvest table { border: 1px solid #000; }
+		.pkit-harvest table { border: 1px solid #000; }
 	}
 	</style>
 	<?php
@@ -172,20 +172,20 @@ function render_page(): void {
 		)['total'];
 	}
 
-	$rest_base = esc_url_raw( rest_url( 'lfuf/v1' ) );
+	$rest_base = esc_url_raw( rest_url( 'producerkit/v1' ) );
 	$nonce     = wp_create_nonce( 'wp_rest' );
 	?>
 	<div class="wrap">
 		<h1>
 			<?php esc_html_e( 'Pre-Orders', 'producerkit' ); ?>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders&view=harvest' ) ); ?>" class="page-title-action">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=producerkit-preorders&view=harvest' ) ); ?>" class="page-title-action">
 				<?php esc_html_e( 'Harvest List', 'producerkit' ); ?>
 			</a>
 		</h1>
 
 		<ul class="subsubsub">
 			<li>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders' ) ); ?>"
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=producerkit-preorders' ) ); ?>"
 					<?php echo $status_filter === '' ? 'class="current"' : ''; ?>>
 					<?php esc_html_e( 'All', 'producerkit' ); ?>
 				</a> |
@@ -196,7 +196,7 @@ function render_page(): void {
 				++$i;
 				?>
 				<li>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=farm-stand-preorders&status=' . $s ) ); ?>"
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=producerkit-preorders&status=' . $s ) ); ?>"
 						<?php echo $status_filter === $s ? 'class="current"' : ''; ?>>
 						<?php echo esc_html( status_label( $s ) ); ?>
 						<span class="count">(<?php echo (int) $count; ?>)</span>
@@ -221,7 +221,7 @@ function render_page(): void {
 					<tr><td colspan="6"><?php esc_html_e( 'No pre-orders yet.', 'producerkit' ); ?></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $result['orders'] as $order ) : ?>
-					<tr data-lfuf-order="<?php echo (int) $order['id']; ?>">
+					<tr data-pkit-order="<?php echo (int) $order['id']; ?>">
 						<td><strong><?php echo esc_html( $order['pickup_date'] ); ?></strong></td>
 						<td>
 							<?php echo esc_html( $order['name'] ); ?>
@@ -250,12 +250,12 @@ function render_page(): void {
 							<?php endif; ?>
 						</td>
 						<td><?php echo esc_html( $order['location_name'] ?: '—' ); ?></td>
-						<td class="lfuf-preorder-status"><?php echo esc_html( status_label( $order['status'] ) ); ?></td>
+						<td class="pkit-preorder-status"><?php echo esc_html( status_label( $order['status'] ) ); ?></td>
 						<td>
 							<?php foreach ( next_actions()[ $order['status'] ] ?? [] as $next ) : ?>
 								<button
 									type="button"
-									class="button button-small lfuf-preorder-action"
+									class="button button-small pkit-preorder-action"
 									data-order-id="<?php echo (int) $order['id']; ?>"
 									data-next-status="<?php echo esc_attr( $next ); ?>"
 								>
@@ -275,7 +275,7 @@ function render_page(): void {
 		var nonce    = <?php echo wp_json_encode( $nonce ); ?>;
 
 		document.addEventListener( 'click', function ( event ) {
-			var button = event.target.closest( '.lfuf-preorder-action' );
+			var button = event.target.closest( '.pkit-preorder-action' );
 			if ( ! button ) return;
 
 			button.disabled = true;

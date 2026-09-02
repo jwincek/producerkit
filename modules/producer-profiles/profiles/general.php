@@ -12,12 +12,12 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'label'       => __( 'General', 'producerkit' ),
 	'description' => __( 'A blank slate: the full field set with no vocabulary seeded.', 'producerkit' ),
-	'taxonomies'  => [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+	'taxonomies'  => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 	'names'       => [],
 	'terms'       => [
-		'lfuf_product_type' => [],
-		'lfuf_material'     => [],
-		'lfuf_finish'       => [],
-		'lfuf_component'    => [],
+		'pkit_product_type' => [],
+		'pkit_material'     => [],
+		'pkit_finish'       => [],
+		'pkit_component'    => [],
 	],
 ];

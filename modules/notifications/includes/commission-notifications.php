@@ -4,11 +4,11 @@
  *
  * Hooks the commissions module's actions; if that module is disabled the
  * actions simply never fire. Suppress filters:
- *   - 'lfuf_notify_commission_created'   → bool (staff: a request arrived)
- *   - 'lfuf_notify_commission_quoted'    → bool (customer: here is the quote)
- *   - 'lfuf_notify_commission_accepted'  → bool (staff: they said yes)
- *   - 'lfuf_notify_commission_declined'  → bool (staff: they said no)
- *   - 'lfuf_notify_commission_complete'  → bool (customer: it is finished)
+ *   - 'pkit_notify_commission_created'   → bool (staff: a request arrived)
+ *   - 'pkit_notify_commission_quoted'    → bool (customer: here is the quote)
+ *   - 'pkit_notify_commission_accepted'  → bool (staff: they said yes)
+ *   - 'pkit_notify_commission_declined'  → bool (staff: they said no)
+ *   - 'pkit_notify_commission_complete'  → bool (customer: it is finished)
  *
  * wc-artisan-tools built these five on WC_Email subclasses, which meant the
  * commission workflow could not run without WooCommerce. Here they are plain
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
  * always present.
  */
 function decision_url( array $commission, string $decision ): string {
-	$url = rest_url( 'lfuf/v1/commissions/quote/' . rawurlencode( (string) ( $commission['quote_token'] ?? '' ) ) . '/' . $decision );
+	$url = rest_url( 'producerkit/v1/commissions/quote/' . rawurlencode( (string) ( $commission['quote_token'] ?? '' ) ) . '/' . $decision );
 
 	/**
 	 * Filters the accept/decline URL sent to the customer.
@@ -43,7 +43,7 @@ function decision_url( array $commission, string $decision ): string {
 	 * @param array  $commission Commission data.
 	 * @param string $decision   'accept' or 'decline'.
 	 */
-	return (string) apply_filters( 'lfuf_commission_decision_url', $url, $commission, $decision );
+	return (string) apply_filters( 'pkit_commission_decision_url', $url, $commission, $decision );
 }
 
 /**
@@ -85,14 +85,14 @@ function request_summary( array $commission ): string {
 /* ── New request → staff ───────────────────────── */
 
 add_action(
-	'lfuf_commission_created',
+	'pkit_commission_created',
 	function ( array $commission ): void {
 		// The honeypot receipt has id 0 and was never stored; do not mail on it.
 		if ( 0 === (int) ( $commission['id'] ?? 0 ) ) {
 			return;
 		}
 
-		if ( ! apply_filters( 'lfuf_notify_commission_created', true, $commission ) ) {
+		if ( ! apply_filters( 'pkit_notify_commission_created', true, $commission ) ) {
 			return;
 		}
 
@@ -110,9 +110,9 @@ add_action(
 /* ── Quote sent → customer ─────────────────────── */
 
 add_action(
-	'lfuf_commission_quoted',
+	'pkit_commission_quoted',
 	function ( array $commission ): void {
-		if ( ! apply_filters( 'lfuf_notify_commission_quoted', true, $commission ) ) {
+		if ( ! apply_filters( 'pkit_notify_commission_quoted', true, $commission ) ) {
 			return;
 		}
 
@@ -147,9 +147,9 @@ add_action(
 /* ── Accepted / declined → staff ───────────────── */
 
 add_action(
-	'lfuf_commission_accepted',
+	'pkit_commission_accepted',
 	function ( array $commission ): void {
-		if ( ! apply_filters( 'lfuf_notify_commission_accepted', true, $commission ) ) {
+		if ( ! apply_filters( 'pkit_notify_commission_accepted', true, $commission ) ) {
 			return;
 		}
 
@@ -162,9 +162,9 @@ add_action(
 );
 
 add_action(
-	'lfuf_commission_declined',
+	'pkit_commission_declined',
 	function ( array $commission ): void {
-		if ( ! apply_filters( 'lfuf_notify_commission_declined', true, $commission ) ) {
+		if ( ! apply_filters( 'pkit_notify_commission_declined', true, $commission ) ) {
 			return;
 		}
 
@@ -178,9 +178,9 @@ add_action(
 /* ── Complete → customer ───────────────────────── */
 
 add_action(
-	'lfuf_commission_complete',
+	'pkit_commission_complete',
 	function ( array $commission ): void {
-		if ( ! apply_filters( 'lfuf_notify_commission_complete', true, $commission ) ) {
+		if ( ! apply_filters( 'pkit_notify_commission_complete', true, $commission ) ) {
 			return;
 		}
 

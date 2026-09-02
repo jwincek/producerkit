@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom Post Types: lfuf_product, lfuf_source, lfuf_location, lfuf_event
+ * Custom Post Types: pkit_product, pkit_source, pkit_location, pkit_event
  */
 
 declare(strict_types=1);
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string[]
  */
 function nested_post_types(): array {
-	return [ 'lfuf_source', 'lfuf_location' ];
+	return [ 'pkit_source', 'pkit_location' ];
 }
 
 // Registered unconditionally: parent_file only ever runs in the admin, so
@@ -37,9 +37,9 @@ add_filter( 'menu_order', __NAMESPACE__ . '\\group_menu_items' );
  */
 function grouped_menu_items(): array {
 	return [
-		'farm-stand-dashboard',
-		'edit.php?post_type=lfuf_product',
-		'edit.php?post_type=lfuf_event',
+		'producerkit',
+		'edit.php?post_type=pkit_product',
+		'edit.php?post_type=pkit_event',
 	];
 }
 
@@ -63,12 +63,12 @@ function group_menu_items( array $order ): array {
 
 	// Nothing to do if the parent is absent — without an anchor there is no
 	// meaningful place to gather them.
-	if ( count( $ours ) < 2 || ! in_array( 'farm-stand-dashboard', $ours, true ) ) {
+	if ( count( $ours ) < 2 || ! in_array( 'producerkit', $ours, true ) ) {
 		return $order;
 	}
 
 	$rest   = array_values( array_diff( $order, $ours ) );
-	$anchor = array_search( 'farm-stand-dashboard', $order, true );
+	$anchor = array_search( 'producerkit', $order, true );
 
 	// Re-insert the group where the parent already sat, so this respects the
 	// parent's menu_position rather than overriding it.
@@ -93,7 +93,7 @@ function keep_parent_open( string $parent_file ): string {
 		in_array( $typenow, nested_post_types(), true )
 		&& in_array( $pagenow, [ 'post-new.php', 'post.php' ], true )
 	) {
-		return 'farm-stand-dashboard';
+		return 'producerkit';
 	}
 
 	return $parent_file;
@@ -134,7 +134,7 @@ function build_labels( string $post_type, string $singular, string $plural, stri
 	 * @param array{0: string, 1: string, 2: string} $names     [ singular, plural, menu_name ].
 	 * @param string                                 $post_type Post type slug.
 	 */
-	$names = apply_filters( 'lfuf_post_type_names', [ $singular, $plural, $menu ], $post_type );
+	$names = apply_filters( 'pkit_post_type_names', [ $singular, $plural, $menu ], $post_type );
 
 	$singular = (string) ( $names[0] ?? $singular );
 	$plural   = (string) ( $names[1] ?? $plural );
@@ -168,14 +168,14 @@ function build_labels( string $post_type, string $singular, string $plural, stri
  * ─────────────────────────────────────────────── */
 function register_product(): void {
 	$labels = build_labels(
-		'lfuf_product',
+		'pkit_product',
 		__( 'Product', 'producerkit' ),
 		__( 'Products', 'producerkit' ),
 		__( 'Catalog', 'producerkit' )
 	);
 
 	register_post_type(
-		'lfuf_product',
+		'pkit_product',
 		[
 			'labels'         => $labels,
 			'public'         => true,
@@ -189,7 +189,7 @@ function register_product(): void {
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ],
 			'show_in_rest'   => true,
 			'rest_base'      => 'products',
-			'rest_namespace' => 'lfuf/v1',
+			'rest_namespace' => 'producerkit/v1',
 			'template'       => [],
 			'template_lock'  => false,
 		]
@@ -214,7 +214,7 @@ function register_source(): void {
 	];
 
 	register_post_type(
-		'lfuf_source',
+		'pkit_source',
 		[
 			'labels'         => $labels,
 			'public'         => true,
@@ -225,11 +225,11 @@ function register_source(): void {
 			],
 			// Nested under the ProducerKit menu: no taxonomies to lose, and
 			// these are configured once rather than worked in daily.
-			'show_in_menu'   => 'farm-stand-dashboard',
+			'show_in_menu'   => 'producerkit',
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ],
 			'show_in_rest'   => true,
 			'rest_base'      => 'sources',
-			'rest_namespace' => 'lfuf/v1',
+			'rest_namespace' => 'producerkit/v1',
 		]
 	);
 }
@@ -252,7 +252,7 @@ function register_location(): void {
 	];
 
 	register_post_type(
-		'lfuf_location',
+		'pkit_location',
 		[
 			'labels'         => $labels,
 			'public'         => true,
@@ -263,11 +263,11 @@ function register_location(): void {
 			],
 			// Nested under the ProducerKit menu: no taxonomies to lose, and
 			// these are configured once rather than worked in daily.
-			'show_in_menu'   => 'farm-stand-dashboard',
+			'show_in_menu'   => 'producerkit',
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'custom-fields' ],
 			'show_in_rest'   => true,
 			'rest_base'      => 'locations',
-			'rest_namespace' => 'lfuf/v1',
+			'rest_namespace' => 'producerkit/v1',
 		]
 	);
 }
@@ -277,14 +277,14 @@ function register_location(): void {
  * ─────────────────────────────────────────────── */
 function register_event(): void {
 	$labels = build_labels(
-		'lfuf_event',
+		'pkit_event',
 		__( 'Event', 'producerkit' ),
 		__( 'Events', 'producerkit' ),
 		__( 'Calendar', 'producerkit' )
 	);
 
 	register_post_type(
-		'lfuf_event',
+		'pkit_event',
 		[
 			'labels'         => $labels,
 			'public'         => true,
@@ -298,7 +298,7 @@ function register_event(): void {
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ],
 			'show_in_rest'   => true,
 			'rest_base'      => 'events',
-			'rest_namespace' => 'lfuf/v1',
+			'rest_namespace' => 'producerkit/v1',
 		]
 	);
 }

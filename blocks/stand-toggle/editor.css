@@ -2,54 +2,54 @@
  * Stand Quick Toggle — editor-only styles.
  */
 
-.lfuf-stand-toggle {
+.pkit-stand-toggle {
     border: 1.5px solid #e5e7eb;
     border-radius: 0.5rem;
     padding: 1.25rem;
     background: #f9fafb;
 }
 
-.lfuf-stand-toggle__loading {
+.pkit-stand-toggle__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     color: #6b7280;
 }
 
-.lfuf-stand-toggle__panel {
+.pkit-stand-toggle__panel {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.lfuf-stand-toggle__header {
+.pkit-stand-toggle__header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 1rem;
 }
 
-.lfuf-stand-toggle__dot {
+.pkit-stand-toggle__dot {
     display: inline-block;
     width: 10px;
     height: 10px;
     border-radius: 50%;
 }
 
-.lfuf-stand-toggle__dot--open {
+.pkit-stand-toggle__dot--open {
     background: #16a34a;
     box-shadow: 0 0 4px rgba(22, 163, 74, 0.4);
 }
 
-.lfuf-stand-toggle__dot--closed {
+.pkit-stand-toggle__dot--closed {
     background: #dc2626;
     box-shadow: 0 0 4px rgba(220, 38, 38, 0.3);
 }
 
-.lfuf-stand-toggle__actions {
+.pkit-stand-toggle__actions {
     margin-top: 0.25rem;
 }
 
-.lfuf-stand-toggle .components-notice {
+.pkit-stand-toggle .components-notice {
     margin-top: 0.5rem;
 }

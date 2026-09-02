@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_preorders
+ * Custom table: {prefix}_pkit_preorders
  *
  * Cartless pre-orders: a visitor picks products and quantities, chooses a
  * pickup date, and pays at pickup (or via the location's payment links).
@@ -36,7 +36,7 @@ const MAX_PICKUP_DAYS = 30;
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_preorder_db_version' ) !== '1.0.0' ) {
+		if ( get_option( 'pkit_preorder_db_version' ) !== '1.0.0' ) {
 			create_table();
 		}
 	},
@@ -45,7 +45,7 @@ add_action(
 
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_preorders';
+	return $wpdb->prefix . 'pkit_preorders';
 }
 
 function create_table(): void {
@@ -77,7 +77,7 @@ function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
-	update_option( 'lfuf_preorder_db_version', '1.0.0' );
+	update_option( 'pkit_preorder_db_version', '1.0.0' );
 }
 
 /**
@@ -111,7 +111,7 @@ function valid_statuses(): array {
 /**
  * Validate and normalize the items payload.
  *
- * Each line must reference a published lfuf_product. A title snapshot is
+ * Each line must reference a published pkit_product. A title snapshot is
  * stored so the order stays readable if the product is later deleted.
  *
  * @return array|\WP_Error
@@ -136,7 +136,7 @@ function normalize_items( mixed $items ): array|\WP_Error {
 		$qty        = max( 1, min( MAX_QTY, (int) ( $line['qty'] ?? 0 ) ) );
 
 		$product = get_post( $product_id );
-		if ( ! $product || $product->post_type !== 'lfuf_product' || $product->post_status !== 'publish' ) {
+		if ( ! $product || $product->post_type !== 'pkit_product' || $product->post_status !== 'publish' ) {
 			return new \WP_Error( 'invalid_product', __( 'One of the selected products is unavailable.', 'producerkit' ) );
 		}
 
@@ -150,8 +150,8 @@ function normalize_items( mixed $items ): array|\WP_Error {
 			'product_id' => $product_id,
 			'qty'        => $qty,
 			'title'      => $product->post_title,
-			'unit'       => (string) get_post_meta( $product_id, '_lfuf_unit', true ),
-			'price'      => (string) get_post_meta( $product_id, '_lfuf_price', true ),
+			'unit'       => (string) get_post_meta( $product_id, '_pkit_unit', true ),
+			'price'      => (string) get_post_meta( $product_id, '_pkit_price', true ),
 		];
 	}
 
@@ -191,7 +191,7 @@ function pickup_constraints( int $location_id ): array {
 		return $constraints;
 	}
 
-	$schedule = json_decode( (string) get_post_meta( $location_id, '_lfuf_ss_schedule', true ), true );
+	$schedule = json_decode( (string) get_post_meta( $location_id, '_pkit_ss_schedule', true ), true );
 	if ( is_array( $schedule ) && $schedule !== [] ) {
 		$days = array_values(
 			array_unique(
@@ -207,10 +207,10 @@ function pickup_constraints( int $location_id ): array {
 		}
 	}
 
-	$constraints['season_start'] = (string) get_post_meta( $location_id, '_lfuf_ss_season_start', true );
-	$constraints['season_end']   = (string) get_post_meta( $location_id, '_lfuf_ss_season_end', true );
+	$constraints['season_start'] = (string) get_post_meta( $location_id, '_pkit_ss_season_start', true );
+	$constraints['season_end']   = (string) get_post_meta( $location_id, '_pkit_ss_season_end', true );
 
-	$blackouts = json_decode( (string) get_post_meta( $location_id, '_lfuf_pickup_blackouts', true ), true );
+	$blackouts = json_decode( (string) get_post_meta( $location_id, '_pkit_pickup_blackouts', true ), true );
 	if ( is_array( $blackouts ) ) {
 		$constraints['blackouts'] = array_values(
 			array_filter(
@@ -321,7 +321,7 @@ function create_order( array $data ): array|\WP_Error {
 	$location_id = (int) ( $data['location_id'] ?? 0 );
 	if ( $location_id > 0 ) {
 		$location = get_post( $location_id );
-		if ( ! $location || $location->post_type !== 'lfuf_location' || $location->post_status !== 'publish' ) {
+		if ( ! $location || $location->post_type !== 'pkit_location' || $location->post_status !== 'publish' ) {
 			return new \WP_Error( 'invalid_location', __( 'Pickup location not found.', 'producerkit' ) );
 		}
 	}
@@ -339,7 +339,7 @@ function create_order( array $data ): array|\WP_Error {
 
 	// ── Rate limiting by IP. ──
 	$ip_hashed = hash_ip( get_client_ip() );
-	$rate_key  = 'lfuf_preorder_rate_' . md5( $ip_hashed );
+	$rate_key  = 'pkit_preorder_rate_' . md5( $ip_hashed );
 
 	/**
 	 * Filters the max pre-orders per IP per hour. Raise for sites whose
@@ -347,7 +347,7 @@ function create_order( array $data ): array|\WP_Error {
 	 *
 	 * @param int $limit Default 3.
 	 */
-	$rate_limit = (int) apply_filters( 'lfuf_preorder_rate_limit', RATE_LIMIT_PER_IP );
+	$rate_limit = (int) apply_filters( 'pkit_preorder_rate_limit', RATE_LIMIT_PER_IP );
 
 	$recent = (int) get_transient( $rate_key );
 	if ( $recent >= $rate_limit ) {
@@ -385,7 +385,7 @@ function create_order( array $data ): array|\WP_Error {
 	 *
 	 * @param array $order Public-safe order data including id and token.
 	 */
-	do_action( 'lfuf_preorder_created', $order );
+	do_action( 'pkit_preorder_created', $order );
 
 	return $order;
 }
@@ -440,7 +440,7 @@ function cancel_order_by_token( string $token ): bool|\WP_Error {
 	$updated = (bool) $wpdb->update( table_name(), [ 'status' => 'cancelled' ], [ 'token' => $token ], [ '%s' ], [ '%s' ] );
 	if ( $updated ) {
 		$order['status'] = 'cancelled';
-		do_action( 'lfuf_preorder_cancelled', $order );
+		do_action( 'pkit_preorder_cancelled', $order );
 	}
 	return $updated;
 }
@@ -469,7 +469,7 @@ function update_status( int $id, string $status ): bool|\WP_Error {
 
 	$updated = (bool) $wpdb->update( $table, [ 'status' => $status ], [ 'id' => $id ], [ '%s' ], [ '%d' ] );
 	if ( $updated ) {
-		do_action( 'lfuf_preorder_status_changed', to_public( $row ), $old, $status );
+		do_action( 'pkit_preorder_status_changed', to_public( $row ), $old, $status );
 	}
 	return $updated;
 }

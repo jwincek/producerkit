@@ -4,7 +4,7 @@
  *
  * When sample data is loaded, this file:
  *  1. Adds a "(Sample)" badge next to any post title that has the
- *     _lfuf_sample_data meta — works across all blocks automatically.
+ *     _pkit_sample_data meta — works across all blocks automatically.
  *  2. Shows a site-wide banner on the front end (logged-in editors only)
  *     reminding them sample data is active.
  *  3. Shows a persistent admin notice on all admin pages.
@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Only activate markers if sample data is loaded.
  */
-if ( ! get_option( 'lfuf_sample_data_loaded', false ) ) {
+if ( ! get_option( 'pkit_sample_data_loaded', false ) ) {
 	return;
 }
 
 /* ───────────────────────────────────────────────
  * 1. Title badge — appends "(Sample)" to post titles
- *    for any post with the _lfuf_sample_data meta.
+ *    for any post with the _pkit_sample_data meta.
  *    Works in both front-end and admin list views.
  * ─────────────────────────────────────────────── */
 
@@ -37,14 +37,14 @@ add_filter(
 		}
 
 		// Only tag our custom post types.
-		$our_types = [ 'lfuf_product', 'lfuf_source', 'lfuf_location', 'lfuf_event' ];
+		$our_types = [ 'pkit_product', 'pkit_source', 'pkit_location', 'pkit_event' ];
 		$post_type = get_post_type( $post_id );
 
 		if ( ! in_array( $post_type, $our_types, true ) ) {
 			return $title;
 		}
 
-		if ( ! get_post_meta( $post_id, '_lfuf_sample_data', true ) ) {
+		if ( ! get_post_meta( $post_id, '_pkit_sample_data', true ) ) {
 			return $title;
 		}
 
@@ -59,7 +59,7 @@ add_filter(
 		}
 
 		// On the front end, add a styled badge.
-		return $title . ' <span class="lfuf-sample-badge">Sample</span>';
+		return $title . ' <span class="pkit-sample-badge">Sample</span>';
 	},
 	10,
 	2
@@ -79,16 +79,16 @@ add_action(
 		}
 
 		$remove_url = wp_nonce_url(
-			admin_url( 'admin.php?page=farm-stand-dashboard&lfuf_sample_action=remove' ),
-			'lfuf_sample_action',
+			admin_url( 'admin.php?page=producerkit&pkit_sample_action=remove' ),
+			'pkit_sample_action',
 		);
 		?>
-	<div class="lfuf-sample-banner">
-		<span class="lfuf-sample-banner__icon">🧪</span>
-		<span class="lfuf-sample-banner__text">
+	<div class="pkit-sample-banner">
+		<span class="pkit-sample-banner__icon">🧪</span>
+		<span class="pkit-sample-banner__text">
 			<?php esc_html_e( 'Sample data is active. Content marked "Sample" is test data.', 'producerkit' ); ?>
 		</span>
-		<a href="<?php echo esc_url( $remove_url ); ?>" class="lfuf-sample-banner__link">
+		<a href="<?php echo esc_url( $remove_url ); ?>" class="pkit-sample-banner__link">
 			<?php esc_html_e( 'Remove sample data →', 'producerkit' ); ?>
 		</a>
 	</div>
@@ -107,7 +107,7 @@ function output_styles(): void {
 	?>
 	<style>
 		/* Sample badge on post titles */
-		.lfuf-sample-badge {
+		.pkit-sample-badge {
 			display: inline-block;
 			font-size: 0.6rem;
 			font-weight: 700;
@@ -124,7 +124,7 @@ function output_styles(): void {
 		}
 
 		/* Front-end banner for editors */
-		.lfuf-sample-banner {
+		.pkit-sample-banner {
 			position: fixed;
 			bottom: 0;
 			left: 0;
@@ -142,24 +142,24 @@ function output_styles(): void {
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 		}
 
-		.lfuf-sample-banner__icon {
+		.pkit-sample-banner__icon {
 			font-size: 1rem;
 		}
 
-		.lfuf-sample-banner__link {
+		.pkit-sample-banner__link {
 			color: #92400e;
 			font-weight: 600;
 			text-decoration: underline;
 		}
 
-		.lfuf-sample-banner__link:hover {
+		.pkit-sample-banner__link:hover {
 			color: #78350f;
 		}
 
 		/* Admin: highlight sample rows in list tables */
-		.post-type-lfuf_product tr.type-lfuf_product .row-title:has(~ .lfuf-sample-badge),
-		.post-type-lfuf_event tr.type-lfuf_event .row-title:has(~ .lfuf-sample-badge),
-		.post-type-lfuf_location tr.type-lfuf_location .row-title:has(~ .lfuf-sample-badge) {
+		.post-type-pkit_product tr.type-pkit_product .row-title:has(~ .pkit-sample-badge),
+		.post-type-pkit_event tr.type-pkit_event .row-title:has(~ .pkit-sample-badge),
+		.post-type-pkit_location tr.type-pkit_location .row-title:has(~ .pkit-sample-badge) {
 			opacity: 0.7;
 		}
 	</style>
@@ -180,13 +180,13 @@ add_action(
 
 		// Don't show on the dashboard page itself (it has its own section).
 		$screen = get_current_screen();
-		if ( $screen && $screen->id === 'toplevel_page_farm-stand-dashboard' ) {
+		if ( $screen && $screen->id === 'toplevel_page_producerkit' ) {
 			return;
 		}
 
 		$remove_url = wp_nonce_url(
-			admin_url( 'admin.php?page=farm-stand-dashboard&lfuf_sample_action=remove' ),
-			'lfuf_sample_action',
+			admin_url( 'admin.php?page=producerkit&pkit_sample_action=remove' ),
+			'pkit_sample_action',
 		);
 
 		printf(

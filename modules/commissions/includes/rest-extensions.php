@@ -1,6 +1,6 @@
 <?php
 /**
- * REST routes for commissions, under lfuf/v1.
+ * REST routes for commissions, under producerkit/v1.
  *
  * Public:
  *   POST   /commissions                          submit a request
@@ -27,7 +27,7 @@ use ProducerKit\Commissions\Store;
 
 defined( 'ABSPATH' ) || exit;
 
-const NAMESPACE_V1 = 'lfuf/v1';
+const NAMESPACE_V1 = 'producerkit/v1';
 
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 

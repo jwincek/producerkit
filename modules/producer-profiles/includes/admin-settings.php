@@ -27,24 +27,24 @@ use ProducerKit\ProducerProfiles\Profiles;
 defined( 'ABSPATH' ) || exit;
 
 /** Set when the site's profiles change; consumed by a rewrite flush next load. */
-const FLUSH_FLAG = 'lfuf_producer_profile_flush';
+const FLUSH_FLAG = 'pkit_producer_profile_flush';
 
 add_action( 'admin_menu', __NAMESPACE__ . '\\register_page' );
-add_action( 'admin_post_lfuf_save_producer_profile', __NAMESPACE__ . '\\handle_save' );
+add_action( 'admin_post_pkit_save_producer_profile', __NAMESPACE__ . '\\handle_save' );
 
 function register_page(): void {
 	add_submenu_page(
-		'farm-stand-dashboard',
+		'producerkit',
 		__( 'Producer Profile', 'producerkit' ),
 		__( 'Producer Profile', 'producerkit' ),
 		'edit_posts',
-		'lfuf-producer-profile',
+		'pkit-producer-profile',
 		__NAMESPACE__ . '\\render_page'
 	);
 }
 
 function menu_url(): string {
-	return admin_url( 'admin.php?page=lfuf-producer-profile' );
+	return admin_url( 'admin.php?page=pkit-producer-profile' );
 }
 
 /**
@@ -55,7 +55,7 @@ function handle_save(): void {
 		wp_die( esc_html__( 'You do not have permission to change producer profiles.', 'producerkit' ), 403 );
 	}
 
-	check_admin_referer( 'lfuf_save_producer_profile' );
+	check_admin_referer( 'pkit_save_producer_profile' );
 
 	$choices = Profiles\choices();
 	$notice  = 'saved';
@@ -72,7 +72,7 @@ function handle_save(): void {
 		// Refuse to leave the site with none: every field would revert and the
 		// admin would look broken for reasons nobody could see.
 		if ( ! $requested ) {
-			wp_safe_redirect( add_query_arg( 'lfuf_profile', 'none', menu_url() ) );
+			wp_safe_redirect( add_query_arg( 'pkit_profile', 'none', menu_url() ) );
 			exit;
 		}
 
@@ -93,7 +93,7 @@ function handle_save(): void {
 		update_user_meta( get_current_user_id(), Profiles\USER_META, $mine );
 	}
 
-	wp_safe_redirect( add_query_arg( 'lfuf_profile', $notice, menu_url() ) );
+	wp_safe_redirect( add_query_arg( 'pkit_profile', $notice, menu_url() ) );
 	exit;
 }
 
@@ -118,7 +118,7 @@ function render_page(): void {
 	 * verify a nonce. It only selects which canned notice to print.
 	 */
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$notice = isset( $_GET['lfuf_profile'] ) ? sanitize_key( wp_unslash( $_GET['lfuf_profile'] ) ) : '';
+	$notice = isset( $_GET['pkit_profile'] ) ? sanitize_key( wp_unslash( $_GET['pkit_profile'] ) ) : '';
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Producer Profile', 'producerkit' ); ?></h1>
@@ -138,8 +138,8 @@ function render_page(): void {
 		<?php endif; ?>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<input type="hidden" name="action" value="lfuf_save_producer_profile">
-			<?php wp_nonce_field( 'lfuf_save_producer_profile' ); ?>
+			<input type="hidden" name="action" value="pkit_save_producer_profile">
+			<?php wp_nonce_field( 'pkit_save_producer_profile' ); ?>
 
 			<?php if ( $can_site ) : ?>
 				<h2><?php esc_html_e( 'What this site makes', 'producerkit' ); ?></h2>
@@ -153,11 +153,11 @@ function render_page(): void {
 						<?php $profile = Profiles\get( $slug ); ?>
 						<tr>
 							<th scope="row" style="padding-bottom:0">
-								<label for="lfuf-site-<?php echo esc_attr( $slug ); ?>">
+								<label for="pkit-site-<?php echo esc_attr( $slug ); ?>">
 									<input
 										type="checkbox"
 										name="site_profiles[]"
-										id="lfuf-site-<?php echo esc_attr( $slug ); ?>"
+										id="pkit-site-<?php echo esc_attr( $slug ); ?>"
 										value="<?php echo esc_attr( $slug ); ?>"
 										<?php checked( in_array( $slug, $active, true ) ); ?>
 									>
@@ -204,10 +204,10 @@ function render_page(): void {
 				<tbody>
 					<tr>
 						<th scope="row">
-							<label for="lfuf-my-profile"><?php esc_html_e( 'My vocabulary', 'producerkit' ); ?></label>
+							<label for="pkit-my-profile"><?php esc_html_e( 'My vocabulary', 'producerkit' ); ?></label>
 						</th>
 						<td>
-							<select name="my_profile" id="lfuf-my-profile">
+							<select name="my_profile" id="pkit-my-profile">
 								<option value=""><?php esc_html_e( '— Follow the site —', 'producerkit' ); ?></option>
 								<?php foreach ( $active as $slug ) : ?>
 									<?php $profile = Profiles\get( $slug ); ?>

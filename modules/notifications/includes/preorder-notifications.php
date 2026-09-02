@@ -4,9 +4,9 @@
  *
  * Hooks the pre-order module's actions; if that module is disabled the
  * actions simply never fire. Suppress filters:
- *   - 'lfuf_notify_preorder_created'        → bool (staff email)
- *   - 'lfuf_notify_preorder_confirmation'   → bool (customer email)
- *   - 'lfuf_notify_preorder_status_changed' → bool (customer "ready" email)
+ *   - 'pkit_notify_preorder_created'        → bool (staff email)
+ *   - 'pkit_notify_preorder_confirmation'   → bool (customer email)
+ *   - 'pkit_notify_preorder_status_changed' → bool (customer "ready" email)
  */
 
 declare(strict_types=1);
@@ -37,9 +37,9 @@ function items_html( array $order ): string {
 /* ── New pre-order → staff ─────────────────────── */
 
 add_action(
-	'lfuf_preorder_created',
+	'pkit_preorder_created',
 	function ( array $order ): void {
-		if ( ! apply_filters( 'lfuf_notify_preorder_created', true, $order ) ) {
+		if ( ! apply_filters( 'pkit_notify_preorder_created', true, $order ) ) {
 			return;
 		}
 
@@ -57,12 +57,12 @@ add_action(
 		if ( $order['note'] ) {
 			$body .= '<p>Note: ' . esc_html( $order['note'] ) . '</p>';
 		}
-		$body .= '<p><a href="' . esc_url( admin_url( 'admin.php?page=farm-stand-preorders' ) ) . '" style="color:#065f46;">Manage pre-orders →</a></p>';
+		$body .= '<p><a href="' . esc_url( admin_url( 'admin.php?page=producerkit-preorders' ) ) . '" style="color:#065f46;">Manage pre-orders →</a></p>';
 
 		send( $subject, $body );
 
 		// Confirmation to the customer, when they left an email.
-		if ( $order['email'] && apply_filters( 'lfuf_notify_preorder_confirmation', true, $order ) ) {
+		if ( $order['email'] && apply_filters( 'pkit_notify_preorder_confirmation', true, $order ) ) {
 			$confirm_subject = 'Your pre-order for ' . $order['pickup_date'];
 			$confirm         = '<p>Thanks, ' . esc_html( $order['name'] ) . '! We received your pre-order for pickup on <strong>' . esc_html( $order['pickup_date'] ) . '</strong>';
 			$confirm        .= $order['location_name'] ? ' at <strong>' . esc_html( $order['location_name'] ) . '</strong>.</p>' : '.</p>';
@@ -79,12 +79,12 @@ add_action(
 /* ── Ready for pickup → customer ───────────────── */
 
 add_action(
-	'lfuf_preorder_status_changed',
+	'pkit_preorder_status_changed',
 	function ( array $order, string $old, string $new ): void {
 		if ( $new !== 'ready' || ! $order['email'] ) {
 			return;
 		}
-		if ( ! apply_filters( 'lfuf_notify_preorder_status_changed', true, $order, $old, $new ) ) {
+		if ( ! apply_filters( 'pkit_notify_preorder_status_changed', true, $order, $old, $new ) ) {
 			return;
 		}
 

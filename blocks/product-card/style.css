@@ -2,7 +2,7 @@
  * Product Card — shared front + editor styles.
  */
 
-.lfuf-product-card {
+.pkit-product-card {
     color: #1f2937;
     display: flex;
     gap: 1.25rem;
@@ -12,7 +12,7 @@
     background: var(--wp--preset--color--base, #fff);
 }
 
-.lfuf-product-card__loading {
+.pkit-product-card__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -20,36 +20,36 @@
     color: #4b5563;
 }
 
-.lfuf-product-card__image {
+.pkit-product-card__image {
     flex: 0 0 140px;
 }
 
-.lfuf-product-card__image img {
+.pkit-product-card__image img {
     width: 100%;
     height: auto;
     border-radius: 0.375rem;
     object-fit: cover;
 }
 
-.lfuf-product-card__body {
+.pkit-product-card__body {
     flex: 1;
 }
 
-.lfuf-product-card__title {
+.pkit-product-card__title {
     margin: 0 0 0.25rem;
     font-size: 1.2rem;
 }
 
-.lfuf-product-card__title a {
+.pkit-product-card__title a {
     text-decoration: none;
     color: inherit;
 }
 
-.lfuf-product-card__title a:hover {
+.pkit-product-card__title a:hover {
     text-decoration: underline;
 }
 
-.lfuf-product-card__type {
+.pkit-product-card__type {
     display: inline-block;
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -58,22 +58,22 @@
     margin-bottom: 0.5rem;
 }
 
-.lfuf-product-card__price {
+.pkit-product-card__price {
     font-weight: 600;
 }
 
-.lfuf-product-card__unit {
+.pkit-product-card__unit {
     font-size: 0.85rem;
     opacity: 0.7;
 }
 
-.lfuf-product-card__seasons {
+.pkit-product-card__seasons {
     display: flex;
     gap: 0.375rem;
     margin-top: 0.5rem;
 }
 
-.lfuf-product-card__season-badge {
+.pkit-product-card__season-badge {
     font-size: 0.7rem;
     padding: 0.15rem 0.5rem;
     border-radius: 9999px;
@@ -85,7 +85,7 @@
  * Trade detail from the active producer profile — Clay Body, Ink, Binding.
  * A definition list because that is what it is: a label and its value.
  */
-.lfuf-product-card__details {
+.pkit-product-card__details {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.15rem 0.75rem;
@@ -93,23 +93,23 @@
     font-size: 0.8rem;
 }
 
-.lfuf-product-card__detail-label {
+.pkit-product-card__detail-label {
     margin: 0;
     opacity: 0.7;
 }
 
-.lfuf-product-card__detail-value {
+.pkit-product-card__detail-value {
     margin: 0;
 }
 
-.lfuf-product-card__notes {
+.pkit-product-card__notes {
     font-size: 0.85rem;
     font-style: italic;
     margin-top: 0.5rem;
     opacity: 0.8;
 }
 
-.lfuf-product-card__availability {
+.pkit-product-card__availability {
     margin-top: 0.75rem;
     display: flex;
     align-items: center;
@@ -117,7 +117,7 @@
     flex-wrap: wrap;
 }
 
-.lfuf-availability-badge {
+.pkit-availability-badge {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 600;
@@ -127,42 +127,42 @@
     border-radius: 0.25rem;
 }
 
-.lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+.pkit-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
 
-.lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+.pkit-availability-badge--available  { background: #dbeafe; color: #1e40af; }
 
-.lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+.pkit-availability-badge--limited    { background: #fef3c7; color: #92400e; }
 
-.lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+.pkit-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
 
-.lfuf-availability-badge--unavailable { background: #f3f4f6; color: #4b5563; }
+.pkit-availability-badge--unavailable { background: #f3f4f6; color: #4b5563; }
 
-.lfuf-product-card__quantity-note {
+.pkit-product-card__quantity-note {
     font-size: 0.8rem;
     opacity: 0.7;
 }
 
-.lfuf-product-card__sources {
+.pkit-product-card__sources {
     margin-top: 0.75rem;
     font-size: 0.85rem;
 }
 
-.lfuf-product-card__source {
+.pkit-product-card__source {
     margin-top: 0.25rem;
 }
 
-.lfuf-product-card__source-location {
+.pkit-product-card__source-location {
     opacity: 0.6;
     font-size: 0.8rem;
 }
 
 @media (max-width: 480px) {
 
-    .lfuf-product-card {
+    .pkit-product-card {
         flex-direction: column;
     }
 
-    .lfuf-product-card__image {
+    .pkit-product-card__image {
         flex: none;
     }
 }
@@ -170,37 +170,37 @@
 
 /* ── Accessibility ─────────────────────────────── */
 
-.lfuf-product-card .screen-reader-text {
+.pkit-product-card .screen-reader-text {
     border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%);
     height: 1px; margin: -1px; overflow: hidden; padding: 0;
     position: absolute; width: 1px; word-wrap: normal !important;
 }
 
-.lfuf-product-card__title a:focus-visible,
-.lfuf-product-card__source a:focus-visible {
+.pkit-product-card__title a:focus-visible,
+.pkit-product-card__source a:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-product-card { transition: none; }
+    .pkit-product-card { transition: none; }
 }
 
 @media (forced-colors: active) {
 
-    .lfuf-product-card { border-color: CanvasText; }
+    .pkit-product-card { border-color: CanvasText; }
 
-    .lfuf-product-card__title a { color: LinkText; }
+    .pkit-product-card__title a { color: LinkText; }
 
-    .lfuf-product-card__source a { color: LinkText; }
+    .pkit-product-card__source a { color: LinkText; }
 
-    .lfuf-availability-badge {
+    .pkit-availability-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
 
-    .lfuf-product-card__season-badge {
+    .pkit-product-card__season-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }

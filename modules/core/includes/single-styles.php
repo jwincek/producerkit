@@ -12,18 +12,18 @@ defined( 'ABSPATH' ) || exit;
 add_action(
 	'wp_head',
 	function (): void {
-		if ( ! is_singular( [ 'lfuf_product', 'lfuf_source', 'lfuf_location', 'lfuf_event' ] ) ) {
+		if ( ! is_singular( [ 'pkit_product', 'pkit_source', 'pkit_location', 'pkit_event' ] ) ) {
 			return;
 		}
 		?>
 	<style>
-		.lfuf-single-details {
+		.pkit-single-details {
 			margin-top: 2rem;
 			padding-top: 1.5rem;
 			border-top: 2px solid #e5e7eb;
 		}
 
-		.lfuf-single-details__row {
+		.pkit-single-details__row {
 			display: flex;
 			gap: 1rem;
 			padding: 0.5rem 0;
@@ -31,11 +31,11 @@ add_action(
 			font-size: 0.95rem;
 		}
 
-		.lfuf-single-details__row:last-child {
+		.pkit-single-details__row:last-child {
 			border-bottom: none;
 		}
 
-		.lfuf-single-details__label {
+		.pkit-single-details__label {
 			flex: 0 0 120px;
 			font-weight: 600;
 			color: #6b7280;
@@ -45,11 +45,11 @@ add_action(
 			padding-top: 0.1rem;
 		}
 
-		.lfuf-single-details__value {
+		.pkit-single-details__value {
 			flex: 1;
 		}
 
-		.lfuf-single-details__value a {
+		.pkit-single-details__value a {
 			color: inherit;
 			font-weight: 600;
 			text-decoration: underline;
@@ -57,33 +57,33 @@ add_action(
 			text-underline-offset: 2px;
 		}
 
-		.lfuf-single-details__value a:hover {
+		.pkit-single-details__value a:hover {
 			text-decoration-color: currentColor;
 		}
 
-		.lfuf-single-details__value a:focus-visible {
+		.pkit-single-details__value a:focus-visible {
 			outline: 2px solid currentColor;
 			outline-offset: 2px;
 		}
 
-		.lfuf-single-details__unit {
+		.pkit-single-details__unit {
 			font-weight: 400;
 			opacity: 0.7;
 			font-size: 0.85rem;
 		}
 
-		.lfuf-single-details__note {
+		.pkit-single-details__note {
 			font-size: 0.85rem;
 			color: #6b7280;
 		}
 
-		.lfuf-single-details__links {
+		.pkit-single-details__links {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 0.5rem;
 		}
 
-		.lfuf-single-details__alert {
+		.pkit-single-details__alert {
 			background: #fee2e2;
 			color: #991b1b;
 			padding: 0.75rem 1rem;
@@ -93,7 +93,7 @@ add_action(
 		}
 
 		/* Badge styles (in case they're not loaded from block CSS) */
-		.lfuf-single-details .lfuf-availability-badge {
+		.pkit-single-details .pkit-availability-badge {
 			display: inline-block;
 			font-size: 0.7rem;
 			font-weight: 600;
@@ -103,13 +103,13 @@ add_action(
 			border-radius: 0.25rem;
 		}
 
-		.lfuf-single-details .lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
-		.lfuf-single-details .lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
-		.lfuf-single-details .lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
-		.lfuf-single-details .lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
-		.lfuf-single-details .lfuf-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
+		.pkit-single-details .pkit-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+		.pkit-single-details .pkit-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+		.pkit-single-details .pkit-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+		.pkit-single-details .pkit-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+		.pkit-single-details .pkit-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
 
-		.lfuf-single-details .lfuf-location-info__status {
+		.pkit-single-details .pkit-location-info__status {
 			display: inline-block;
 			font-size: 0.7rem;
 			font-weight: 700;
@@ -119,31 +119,31 @@ add_action(
 			border-radius: 9999px;
 		}
 
-		.lfuf-single-details .lfuf-location-info__status--open  { background: #d1fae5; color: #065f46; }
-		.lfuf-single-details .lfuf-location-info__status--closed { background: #fee2e2; color: #991b1b; }
+		.pkit-single-details .pkit-location-info__status--open  { background: #d1fae5; color: #065f46; }
+		.pkit-single-details .pkit-location-info__status--closed { background: #fee2e2; color: #991b1b; }
 
-		.lfuf-single-details .screen-reader-text {
+		.pkit-single-details .screen-reader-text {
 			border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%);
 			height: 1px; margin: -1px; overflow: hidden; padding: 0;
 			position: absolute; width: 1px; word-wrap: normal !important;
 		}
 
 		@media (max-width: 480px) {
-			.lfuf-single-details__row {
+			.pkit-single-details__row {
 				flex-direction: column;
 				gap: 0.15rem;
 			}
-			.lfuf-single-details__label {
+			.pkit-single-details__label {
 				flex: none;
 			}
 		}
 
 		@media (forced-colors: active) {
-			.lfuf-single-details__row { border-bottom-color: CanvasText; }
-			.lfuf-single-details { border-top-color: CanvasText; }
-			.lfuf-single-details__value a { color: LinkText; }
-			.lfuf-single-details .lfuf-availability-badge,
-			.lfuf-single-details .lfuf-location-info__status {
+			.pkit-single-details__row { border-bottom-color: CanvasText; }
+			.pkit-single-details { border-top-color: CanvasText; }
+			.pkit-single-details__value a { color: LinkText; }
+			.pkit-single-details .pkit-availability-badge,
+			.pkit-single-details .pkit-location-info__status {
 				forced-color-adjust: none;
 				border: 1px solid CanvasText;
 			}

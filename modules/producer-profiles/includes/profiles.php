@@ -21,10 +21,10 @@ namespace ProducerKit\ProducerProfiles\Profiles;
 defined( 'ABSPATH' ) || exit;
 
 /** Option holding the site's active profile slugs (an array). */
-const OPTION = 'lfuf_producer_profile';
+const OPTION = 'pkit_producer_profile';
 
 /** User meta holding which active profile that person reads the admin in. */
-const USER_META = 'lfuf_producer_profile';
+const USER_META = 'pkit_producer_profile';
 
 /** Profile used when none has been chosen. */
 const DEFAULT_SLUG = 'farm';
@@ -40,9 +40,9 @@ const DEFAULT_SLUG = 'farm';
  */
 function optional_taxonomies(): array {
 	return [
-		'lfuf_material'  => [ __( 'Material', 'producerkit' ), __( 'Materials', 'producerkit' ) ],
-		'lfuf_finish'    => [ __( 'Finish', 'producerkit' ), __( 'Finishes', 'producerkit' ) ],
-		'lfuf_component' => [ __( 'Component', 'producerkit' ), __( 'Components', 'producerkit' ) ],
+		'pkit_material'  => [ __( 'Material', 'producerkit' ), __( 'Materials', 'producerkit' ) ],
+		'pkit_finish'    => [ __( 'Finish', 'producerkit' ), __( 'Finishes', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Component', 'producerkit' ), __( 'Components', 'producerkit' ) ],
 	];
 }
 
@@ -74,7 +74,7 @@ function get_slugs(): array {
 	 *
 	 * @param string[] $slugs Profile slugs.
 	 */
-	return (array) apply_filters( 'lfuf_producer_profile_slugs', $slugs );
+	return (array) apply_filters( 'pkit_producer_profile_slugs', $slugs );
 }
 
 /**
@@ -163,7 +163,7 @@ function active_profiles(): array {
  * Slug of the profile whose wording applies to this request.
  *
  * Labels are the one thing that cannot union — there is a single
- * `lfuf_material` field with a single label, and "Wood Species" and "Flour"
+ * `pkit_material` field with a single label, and "Wood Species" and "Flour"
  * have no sensible merge. But a label is display, not structure, so it can be
  * resolved per viewer instead of per site: two people sharing an install each
  * see their own trade's words over the same underlying fields.
@@ -192,7 +192,7 @@ function labelling_slug(): string {
 	 * @param string   $slug   Resolved profile slug.
 	 * @param string[] $active Profiles the site runs.
 	 */
-	return (string) apply_filters( 'lfuf_labelling_profile', $active[0], $active );
+	return (string) apply_filters( 'pkit_labelling_profile', $active[0], $active );
 }
 
 /**

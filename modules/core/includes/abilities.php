@@ -94,7 +94,7 @@ function register_product_abilities(): void {
 			'execute_callback'    => function (): array {
 				$products = get_posts(
 					[
-						'post_type'   => 'lfuf_product',
+						'post_type'   => 'pkit_product',
 						'post_status' => 'publish',
 						'numberposts' => 100,
 					]
@@ -102,8 +102,8 @@ function register_product_abilities(): void {
 
 				return array_map(
 					function ( \WP_Post $p ): array {
-						$types   = get_the_terms( $p->ID, 'lfuf_product_type' );
-						$seasons = get_the_terms( $p->ID, 'lfuf_season' );
+						$types   = get_the_terms( $p->ID, 'pkit_product_type' );
+						$seasons = get_the_terms( $p->ID, 'pkit_season' );
 
 						return [
 							'id'      => $p->ID,
@@ -115,8 +115,8 @@ function register_product_abilities(): void {
 							'seasons' => $seasons && ! is_wp_error( $seasons )
 								? wp_list_pluck( $seasons, 'name' )
 								: [],
-							'price'   => get_post_meta( $p->ID, '_lfuf_price', true ),
-							'unit'    => get_post_meta( $p->ID, '_lfuf_unit', true ),
+							'price'   => get_post_meta( $p->ID, '_pkit_price', true ),
+							'unit'    => get_post_meta( $p->ID, '_pkit_unit', true ),
 						];
 					},
 					$products
@@ -177,14 +177,14 @@ function register_product_abilities(): void {
 			'description'         => __( 'Retrieve the grain origins and partner farms linked to a product.', 'producerkit' ),
 			'category'            => 'farm-products',
 			'execute_callback'    => function ( array $input ): array {
-				$source_ids = get_post_meta( $input['product_id'], '_lfuf_source_ids', true );
+				$source_ids = get_post_meta( $input['product_id'], '_pkit_source_ids', true );
 				if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
 					return [];
 				}
 
 				$sources = get_posts(
 					[
-						'post_type'   => 'lfuf_source',
+						'post_type'   => 'pkit_source',
 						'post__in'    => $source_ids,
 						'numberposts' => 20,
 						'post_status' => 'publish',
@@ -195,10 +195,10 @@ function register_product_abilities(): void {
 					fn ( \WP_Post $s ) => [
 						'id'            => $s->ID,
 						'title'         => $s->post_title,
-						'farm_name'     => get_post_meta( $s->ID, '_lfuf_source_farm_name', true ),
-						'location'      => get_post_meta( $s->ID, '_lfuf_source_location', true ),
-						'history'       => get_post_meta( $s->ID, '_lfuf_source_history', true ),
-						'milling_notes' => get_post_meta( $s->ID, '_lfuf_milling_notes', true ),
+						'farm_name'     => get_post_meta( $s->ID, '_pkit_source_farm_name', true ),
+						'location'      => get_post_meta( $s->ID, '_pkit_source_location', true ),
+						'history'       => get_post_meta( $s->ID, '_pkit_source_history', true ),
+						'milling_notes' => get_post_meta( $s->ID, '_pkit_milling_notes', true ),
 					],
 					$sources
 				);
@@ -390,7 +390,7 @@ function register_location_abilities(): void {
 			'execute_callback'    => function (): array {
 				$locations = get_posts(
 					[
-						'post_type'   => 'lfuf_location',
+						'post_type'   => 'pkit_location',
 						'post_status' => 'publish',
 						'numberposts' => 50,
 					]
@@ -400,11 +400,11 @@ function register_location_abilities(): void {
 					fn ( \WP_Post $p ) => [
 						'id'              => $p->ID,
 						'title'           => $p->post_title,
-						'type'            => get_post_meta( $p->ID, '_lfuf_location_type', true ),
-						'address'         => get_post_meta( $p->ID, '_lfuf_address', true ),
-						'hours'           => get_post_meta( $p->ID, '_lfuf_hours', true ),
-						'is_open'         => (bool) get_post_meta( $p->ID, '_lfuf_is_open', true ),
-						'venmo'           => get_post_meta( $p->ID, '_lfuf_venmo_handle', true ),
+						'type'            => get_post_meta( $p->ID, '_pkit_location_type', true ),
+						'address'         => get_post_meta( $p->ID, '_pkit_address', true ),
+						'hours'           => get_post_meta( $p->ID, '_pkit_hours', true ),
+						'is_open'         => (bool) get_post_meta( $p->ID, '_pkit_is_open', true ),
+						'venmo'           => get_post_meta( $p->ID, '_pkit_venmo_handle', true ),
 						'payment_methods' => \ProducerKit\Core\Payments\get_payment_methods( $p->ID ),
 					],
 					$locations

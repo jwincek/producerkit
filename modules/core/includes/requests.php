@@ -51,7 +51,7 @@ function get_client_ip(): string {
 	 *
 	 * @param string $ip The address from REMOTE_ADDR.
 	 */
-	return (string) apply_filters( 'lfuf_client_ip', $ip );
+	return (string) apply_filters( 'pkit_client_ip', $ip );
 }
 
 /**

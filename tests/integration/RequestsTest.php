@@ -61,11 +61,11 @@ final class RequestsTest extends WP_UnitTestCase {
 
 	public function test_client_ip_is_filterable_for_sites_behind_a_proxy(): void {
 		$override = static fn () => '198.51.100.5';
-		add_filter( 'lfuf_client_ip', $override );
+		add_filter( 'pkit_client_ip', $override );
 
 		$this->assertSame( '198.51.100.5', Requests\get_client_ip() );
 
-		remove_filter( 'lfuf_client_ip', $override );
+		remove_filter( 'pkit_client_ip', $override );
 	}
 
 	/* ── Tokens ───────────────────────────────────────────────── */

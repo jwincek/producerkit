@@ -20,11 +20,11 @@ add_action( 'admin_menu', __NAMESPACE__ . '\\register_page' );
 
 function register_page(): void {
 	add_submenu_page(
-		'farm-stand-dashboard',
+		'producerkit',
 		__( 'Update Availability', 'producerkit' ),
 		__( 'Availability', 'producerkit' ),
 		'edit_posts',
-		'farm-stand-availability',
+		'producerkit-availability',
 		__NAMESPACE__ . '\\render_page',
 	);
 }
@@ -33,7 +33,7 @@ function render_page(): void {
 	// Get all published products grouped by type.
 	$products = get_posts(
 		[
-			'post_type'   => 'lfuf_product',
+			'post_type'   => 'pkit_product',
 			'post_status' => 'publish',
 			'numberposts' => 200,
 			'orderby'     => 'title',
@@ -51,7 +51,7 @@ function render_page(): void {
 	// Get locations for the location selector.
 	$locations = get_posts(
 		[
-			'post_type'   => 'lfuf_location',
+			'post_type'   => 'pkit_location',
 			'post_status' => 'publish',
 			'numberposts' => 50,
 			'orderby'     => 'title',
@@ -61,7 +61,7 @@ function render_page(): void {
 
 	$statuses  = \ProducerKit\Core\Availability\valid_statuses();
 	$today     = current_time( 'Y-m-d' );
-	$rest_base = esc_url_raw( rest_url( 'lfuf/v1' ) );
+	$rest_base = esc_url_raw( rest_url( 'producerkit/v1' ) );
 	$nonce     = wp_create_nonce( 'wp_rest' );
 
 	// Build a JSON map of last-known statuses for the copy-last-week feature.
@@ -74,17 +74,17 @@ function render_page(): void {
 	}
 
 	?>
-	<div class="wrap lfuf-quick-entry">
+	<div class="wrap pkit-quick-entry">
 		<h1><?php esc_html_e( 'Update Availability', 'producerkit' ); ?></h1>
 		<p class="description">
 			<?php esc_html_e( 'Set what\'s available this week. Changes take effect immediately on the site.', 'producerkit' ); ?>
 		</p>
 
-		<div class="lfuf-quick-entry__toolbar">
-			<label for="lfuf-qe-location">
+		<div class="pkit-quick-entry__toolbar">
+			<label for="pkit-qe-location">
 				<?php esc_html_e( 'Location:', 'producerkit' ); ?>
 			</label>
-			<select id="lfuf-qe-location">
+			<select id="pkit-qe-location">
 				<option value="0"><?php esc_html_e( 'All locations', 'producerkit' ); ?></option>
 				<?php foreach ( $locations as $loc ) : ?>
 					<option value="<?php echo (int) $loc->ID; ?>">
@@ -93,30 +93,30 @@ function render_page(): void {
 				<?php endforeach; ?>
 			</select>
 
-			<label for="lfuf-qe-date">
+			<label for="pkit-qe-date">
 				<?php esc_html_e( 'Effective date:', 'producerkit' ); ?>
 			</label>
-			<input type="date" id="lfuf-qe-date" value="<?php echo esc_attr( $today ); ?>">
+			<input type="date" id="pkit-qe-date" value="<?php echo esc_attr( $today ); ?>">
 
-			<button type="button" id="lfuf-qe-copy-last" class="button">
+			<button type="button" id="pkit-qe-copy-last" class="button">
 				<?php esc_html_e( 'Copy Last Week', 'producerkit' ); ?>
 			</button>
 
-			<button type="button" id="lfuf-qe-save-all" class="button button-primary" disabled>
+			<button type="button" id="pkit-qe-save-all" class="button button-primary" disabled>
 				<?php esc_html_e( 'Save All Changes', 'producerkit' ); ?>
 			</button>
-			<span id="lfuf-qe-status" class="lfuf-quick-entry__save-status"></span>
+			<span id="pkit-qe-status" class="pkit-quick-entry__save-status"></span>
 		</div>
 
-		<table class="wp-list-table widefat striped lfuf-quick-entry__table">
+		<table class="wp-list-table widefat striped pkit-quick-entry__table">
 			<thead>
 				<tr>
-					<th class="lfuf-qe-col-thumb"></th>
-					<th class="lfuf-qe-col-product"><?php esc_html_e( 'Product', 'producerkit' ); ?></th>
-					<th class="lfuf-qe-col-type"><?php esc_html_e( 'Type', 'producerkit' ); ?></th>
-					<th class="lfuf-qe-col-status"><?php esc_html_e( 'Status', 'producerkit' ); ?></th>
-					<th class="lfuf-qe-col-note"><?php esc_html_e( 'Quantity Note', 'producerkit' ); ?></th>
-					<th class="lfuf-qe-col-current"><?php esc_html_e( 'Current', 'producerkit' ); ?></th>
+					<th class="pkit-qe-col-thumb"></th>
+					<th class="pkit-qe-col-product"><?php esc_html_e( 'Product', 'producerkit' ); ?></th>
+					<th class="pkit-qe-col-type"><?php esc_html_e( 'Type', 'producerkit' ); ?></th>
+					<th class="pkit-qe-col-status"><?php esc_html_e( 'Status', 'producerkit' ); ?></th>
+					<th class="pkit-qe-col-note"><?php esc_html_e( 'Quantity Note', 'producerkit' ); ?></th>
+					<th class="pkit-qe-col-current"><?php esc_html_e( 'Current', 'producerkit' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -124,28 +124,28 @@ function render_page(): void {
 				foreach ( $products as $product ) :
 					$pid      = $product->ID;
 					$existing = $by_product[ $pid ] ?? null;
-					$types    = get_the_terms( $pid, 'lfuf_product_type' );
+					$types    = get_the_terms( $pid, 'pkit_product_type' );
 					$type_str = ( $types && ! is_wp_error( $types ) )
 						? implode( ', ', wp_list_pluck( $types, 'name' ) )
 						: '—';
 					$thumb    = \ProducerKit\Core\Product_Images\thumbnail_url( $pid, 'thumbnail' );
 					?>
-					<tr class="lfuf-qe-row" data-product-id="<?php echo (int) $pid; ?>">
-						<td class="lfuf-qe-col-thumb">
+					<tr class="pkit-qe-row" data-product-id="<?php echo (int) $pid; ?>">
+						<td class="pkit-qe-col-thumb">
 							<?php if ( $thumb ) : ?>
-								<img src="<?php echo esc_url( $thumb ); ?>" alt="" class="lfuf-qe-thumb">
+								<img src="<?php echo esc_url( $thumb ); ?>" alt="" class="pkit-qe-thumb">
 							<?php else : ?>
-								<span class="lfuf-qe-thumb-placeholder">📷</span>
+								<span class="pkit-qe-thumb-placeholder">📷</span>
 							<?php endif; ?>
 						</td>
-						<td class="lfuf-qe-col-product">
+						<td class="pkit-qe-col-product">
 							<strong><?php echo esc_html( $product->post_title ); ?></strong>
 							<?php
-								$price = get_post_meta( $pid, '_lfuf_price', true );
-								$unit  = get_post_meta( $pid, '_lfuf_unit', true );
+								$price = get_post_meta( $pid, '_pkit_price', true );
+								$unit  = get_post_meta( $pid, '_pkit_unit', true );
 							if ( $price ) :
 								?>
-								<span class="lfuf-qe-price"><?php echo esc_html( $price ); ?>
+								<span class="pkit-qe-price"><?php echo esc_html( $price ); ?>
 								<?php
 								if ( $unit ) {
 									echo ' / ' . esc_html( $unit );
@@ -154,11 +154,11 @@ function render_page(): void {
 								</span>
 							<?php endif; ?>
 						</td>
-						<td class="lfuf-qe-col-type">
-							<span class="lfuf-qe-type-label"><?php echo esc_html( $type_str ); ?></span>
+						<td class="pkit-qe-col-type">
+							<span class="pkit-qe-type-label"><?php echo esc_html( $type_str ); ?></span>
 						</td>
-						<td class="lfuf-qe-col-status">
-							<select class="lfuf-qe-status-select" data-original="<?php echo esc_attr( $existing->status ?? '' ); ?>">
+						<td class="pkit-qe-col-status">
+							<select class="pkit-qe-status-select" data-original="<?php echo esc_attr( $existing->status ?? '' ); ?>">
 								<option value=""><?php esc_html_e( '— Not listed —', 'producerkit' ); ?></option>
 								<?php foreach ( $statuses as $s ) : ?>
 									<option
@@ -170,22 +170,22 @@ function render_page(): void {
 								<?php endforeach; ?>
 							</select>
 						</td>
-						<td class="lfuf-qe-col-note">
+						<td class="pkit-qe-col-note">
 							<input
 								type="text"
-								class="lfuf-qe-note-input"
+								class="pkit-qe-note-input"
 								value="<?php echo esc_attr( $existing->quantity_note ?? '' ); ?>"
 								data-original="<?php echo esc_attr( $existing->quantity_note ?? '' ); ?>"
 								placeholder="<?php esc_attr_e( 'e.g. ~3 bunches left', 'producerkit' ); ?>"
 							>
 						</td>
-						<td class="lfuf-qe-col-current">
+						<td class="pkit-qe-col-current">
 							<?php if ( $existing ) : ?>
-								<span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $existing->status ); ?>">
+								<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $existing->status ); ?>">
 									<?php echo esc_html( ucfirst( str_replace( '_', ' ', $existing->status ) ) ); ?>
 								</span>
 							<?php else : ?>
-								<span class="lfuf-qe-not-listed"><?php esc_html_e( 'Not listed', 'producerkit' ); ?></span>
+								<span class="pkit-qe-not-listed"><?php esc_html_e( 'Not listed', 'producerkit' ); ?></span>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -194,7 +194,7 @@ function render_page(): void {
 		</table>
 
 		<?php if ( empty( $products ) ) : ?>
-			<p class="lfuf-quick-entry__empty">
+			<p class="pkit-quick-entry__empty">
 				<?php
 				printf(
 					wp_kses(
@@ -202,7 +202,7 @@ function render_page(): void {
 						__( 'No products found. <a href="%s">Add your first product</a> to get started.', 'producerkit' ),
 						[ 'a' => [ 'href' => [] ] ],
 					),
-					esc_url( admin_url( 'post-new.php?post_type=lfuf_product' ) ),
+					esc_url( admin_url( 'post-new.php?post_type=pkit_product' ) ),
 				);
 				?>
 			</p>
@@ -210,7 +210,7 @@ function render_page(): void {
 	</div>
 
 	<style>
-		.lfuf-quick-entry__toolbar {
+		.pkit-quick-entry__toolbar {
 			display: flex;
 			align-items: center;
 			gap: 0.75rem;
@@ -221,54 +221,54 @@ function render_page(): void {
 			border-radius: 0.25rem;
 			flex-wrap: wrap;
 		}
-		.lfuf-quick-entry__toolbar label { font-weight: 600; font-size: 0.85rem; }
-		.lfuf-quick-entry__save-status { font-size: 0.85rem; color: #16a34a; font-weight: 600; }
-		.lfuf-quick-entry__save-status.error { color: #dc2626; }
+		.pkit-quick-entry__toolbar label { font-weight: 600; font-size: 0.85rem; }
+		.pkit-quick-entry__save-status { font-size: 0.85rem; color: #16a34a; font-weight: 600; }
+		.pkit-quick-entry__save-status.error { color: #dc2626; }
 
-		.lfuf-quick-entry__table .lfuf-qe-col-thumb { width: 48px; padding: 4px 8px; }
-		.lfuf-qe-thumb {
+		.pkit-quick-entry__table .pkit-qe-col-thumb { width: 48px; padding: 4px 8px; }
+		.pkit-qe-thumb {
 			width: 40px; height: 40px; object-fit: cover; border-radius: 4px;
 			display: block;
 		}
-		.lfuf-qe-thumb-placeholder {
+		.pkit-qe-thumb-placeholder {
 			display: flex; align-items: center; justify-content: center;
 			width: 40px; height: 40px; background: #f3f4f6; border-radius: 4px;
 			font-size: 16px; opacity: 0.5;
 		}
-		.lfuf-quick-entry__table .lfuf-qe-col-product { min-width: 160px; }
-		.lfuf-qe-price { display: block; font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-		.lfuf-quick-entry__table .lfuf-qe-col-type { min-width: 90px; }
-		.lfuf-quick-entry__table .lfuf-qe-col-status { min-width: 140px; }
-		.lfuf-quick-entry__table .lfuf-qe-col-note { min-width: 180px; }
-		.lfuf-quick-entry__table .lfuf-qe-col-note input { width: 100%; }
-		.lfuf-qe-type-label { font-size: 0.8rem; color: #6b7280; }
-		.lfuf-qe-not-listed { font-size: 0.8rem; color: #9ca3af; font-style: italic; }
-		.lfuf-qe-row.lfuf-qe-changed { background: #fffbeb !important; }
-		.lfuf-qe-row.lfuf-qe-saved { background: #f0fdf4 !important; }
-		.lfuf-qe-row.lfuf-qe-error { background: #fef2f2 !important; }
+		.pkit-quick-entry__table .pkit-qe-col-product { min-width: 160px; }
+		.pkit-qe-price { display: block; font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
+		.pkit-quick-entry__table .pkit-qe-col-type { min-width: 90px; }
+		.pkit-quick-entry__table .pkit-qe-col-status { min-width: 140px; }
+		.pkit-quick-entry__table .pkit-qe-col-note { min-width: 180px; }
+		.pkit-quick-entry__table .pkit-qe-col-note input { width: 100%; }
+		.pkit-qe-type-label { font-size: 0.8rem; color: #6b7280; }
+		.pkit-qe-not-listed { font-size: 0.8rem; color: #9ca3af; font-style: italic; }
+		.pkit-qe-row.pkit-qe-changed { background: #fffbeb !important; }
+		.pkit-qe-row.pkit-qe-saved { background: #f0fdf4 !important; }
+		.pkit-qe-row.pkit-qe-error { background: #fef2f2 !important; }
 
 		/* Larger touch targets for mobile */
-		.lfuf-qe-status-select {
+		.pkit-qe-status-select {
 			min-height: 36px; font-size: 14px; padding: 4px 8px;
 		}
-		.lfuf-qe-note-input {
+		.pkit-qe-note-input {
 			min-height: 36px; font-size: 14px; padding: 4px 8px;
 		}
 
-		.lfuf-availability-badge {
+		.pkit-availability-badge {
 			display: inline-block; font-size: 0.7rem; font-weight: 600;
 			text-transform: uppercase; letter-spacing: 0.04em;
 			padding: 0.2rem 0.5rem; border-radius: 0.25rem;
 		}
-		.lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
-		.lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
-		.lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
-		.lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
-		.lfuf-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
+		.pkit-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+		.pkit-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+		.pkit-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+		.pkit-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+		.pkit-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
 
 		@media (max-width: 782px) {
-			.lfuf-qe-col-type, .lfuf-qe-col-current { display: none; }
-			.lfuf-qe-col-product { min-width: 120px; }
+			.pkit-qe-col-type, .pkit-qe-col-current { display: none; }
+			.pkit-qe-col-product { min-width: 120px; }
 		}
 	</style>
 
@@ -279,21 +279,21 @@ function render_page(): void {
 		var restBase    = <?php echo wp_json_encode( $rest_base ); ?>;
 		var nonce       = <?php echo wp_json_encode( $nonce ); ?>;
 		var lastWeek    = <?php echo wp_json_encode( $last_week_data ); ?>;
-		var saveBtn     = document.getElementById( 'lfuf-qe-save-all' );
-		var copyBtn     = document.getElementById( 'lfuf-qe-copy-last' );
-		var statusEl    = document.getElementById( 'lfuf-qe-status' );
-		var rows        = document.querySelectorAll( '.lfuf-qe-row' );
+		var saveBtn     = document.getElementById( 'pkit-qe-save-all' );
+		var copyBtn     = document.getElementById( 'pkit-qe-copy-last' );
+		var statusEl    = document.getElementById( 'pkit-qe-status' );
+		var rows        = document.querySelectorAll( '.pkit-qe-row' );
 
 		// Track changes.
 		rows.forEach( function ( row ) {
-			var select = row.querySelector( '.lfuf-qe-status-select' );
-			var input  = row.querySelector( '.lfuf-qe-note-input' );
+			var select = row.querySelector( '.pkit-qe-status-select' );
+			var input  = row.querySelector( '.pkit-qe-note-input' );
 
 			function markChanged() {
 				var changed = select.value !== select.dataset.original ||
 								input.value !== input.dataset.original;
-				row.classList.toggle( 'lfuf-qe-changed', changed );
-				row.classList.remove( 'lfuf-qe-saved', 'lfuf-qe-error' );
+				row.classList.toggle( 'pkit-qe-changed', changed );
+				row.classList.remove( 'pkit-qe-saved', 'pkit-qe-error' );
 				updateSaveBtn();
 			}
 
@@ -302,7 +302,7 @@ function render_page(): void {
 		} );
 
 		function updateSaveBtn() {
-			var changed = document.querySelectorAll( '.lfuf-qe-changed' );
+			var changed = document.querySelectorAll( '.pkit-qe-changed' );
 			saveBtn.disabled = changed.length === 0;
 			saveBtn.textContent = changed.length > 0
 				? 'Save ' + changed.length + ' Change' + ( changed.length > 1 ? 's' : '' )
@@ -317,8 +317,8 @@ function render_page(): void {
 				var prev   = lastWeek[ pid ];
 				if ( ! prev ) return;
 
-				var select = row.querySelector( '.lfuf-qe-status-select' );
-				var input  = row.querySelector( '.lfuf-qe-note-input' );
+				var select = row.querySelector( '.pkit-qe-status-select' );
+				var input  = row.querySelector( '.pkit-qe-note-input' );
 
 				if ( select.value !== prev.status || input.value !== prev.note ) {
 					select.value = prev.status;
@@ -328,39 +328,39 @@ function render_page(): void {
 
 				var changed = select.value !== select.dataset.original ||
 								input.value !== input.dataset.original;
-				row.classList.toggle( 'lfuf-qe-changed', changed );
-				row.classList.remove( 'lfuf-qe-saved', 'lfuf-qe-error' );
+				row.classList.toggle( 'pkit-qe-changed', changed );
+				row.classList.remove( 'pkit-qe-saved', 'pkit-qe-error' );
 			} );
 
 			updateSaveBtn();
 			statusEl.textContent = filled > 0
 				? 'Copied ' + filled + ' items from current availability. Review and save.'
 				: 'No changes — already matches current availability.';
-			statusEl.className = 'lfuf-quick-entry__save-status';
+			statusEl.className = 'pkit-quick-entry__save-status';
 		} );
 
 		// Batch save.
 		saveBtn.addEventListener( 'click', function () {
-			var changedRows  = document.querySelectorAll( '.lfuf-qe-changed' );
-			var locationId   = parseInt( document.getElementById( 'lfuf-qe-location' ).value ) || 0;
-			var effectiveDate = document.getElementById( 'lfuf-qe-date' ).value;
+			var changedRows  = document.querySelectorAll( '.pkit-qe-changed' );
+			var locationId   = parseInt( document.getElementById( 'pkit-qe-location' ).value ) || 0;
+			var effectiveDate = document.getElementById( 'pkit-qe-date' ).value;
 			var total        = changedRows.length;
 			var completed    = 0;
 			var errors       = 0;
 
 			saveBtn.disabled = true;
 			statusEl.textContent = 'Saving…';
-			statusEl.className = 'lfuf-quick-entry__save-status';
+			statusEl.className = 'pkit-quick-entry__save-status';
 
 			changedRows.forEach( function ( row ) {
 				var productId = parseInt( row.dataset.productId );
-				var status    = row.querySelector( '.lfuf-qe-status-select' ).value;
-				var note      = row.querySelector( '.lfuf-qe-note-input' ).value;
+				var status    = row.querySelector( '.pkit-qe-status-select' ).value;
+				var note      = row.querySelector( '.pkit-qe-note-input' ).value;
 
 				if ( ! status ) {
 					// Empty = skip (not listed).
-					row.classList.remove( 'lfuf-qe-changed' );
-					row.classList.add( 'lfuf-qe-saved' );
+					row.classList.remove( 'pkit-qe-changed' );
+					row.classList.add( 'pkit-qe-saved' );
 					completed++;
 					checkDone();
 					return;
@@ -385,12 +385,12 @@ function render_page(): void {
 					return r.json();
 				} )
 				.then( function () {
-					row.classList.remove( 'lfuf-qe-changed' );
-					row.classList.add( 'lfuf-qe-saved' );
+					row.classList.remove( 'pkit-qe-changed' );
+					row.classList.add( 'pkit-qe-saved' );
 
 					// Update "original" values so re-editing works.
-					var select = row.querySelector( '.lfuf-qe-status-select' );
-					var input  = row.querySelector( '.lfuf-qe-note-input' );
+					var select = row.querySelector( '.pkit-qe-status-select' );
+					var input  = row.querySelector( '.pkit-qe-note-input' );
 					select.dataset.original = select.value;
 					input.dataset.original  = input.value;
 
@@ -398,8 +398,8 @@ function render_page(): void {
 					checkDone();
 				} )
 				.catch( function () {
-					row.classList.remove( 'lfuf-qe-changed' );
-					row.classList.add( 'lfuf-qe-error' );
+					row.classList.remove( 'pkit-qe-changed' );
+					row.classList.add( 'pkit-qe-error' );
 					errors++;
 					completed++;
 					checkDone();
@@ -411,10 +411,10 @@ function render_page(): void {
 				updateSaveBtn();
 				if ( errors > 0 ) {
 					statusEl.textContent = errors + ' error(s). Some items may not have saved.';
-					statusEl.className = 'lfuf-quick-entry__save-status error';
+					statusEl.className = 'pkit-quick-entry__save-status error';
 				} else {
 					statusEl.textContent = 'All changes saved.';
-					statusEl.className = 'lfuf-quick-entry__save-status';
+					statusEl.className = 'pkit-quick-entry__save-status';
 					setTimeout( function () { statusEl.textContent = ''; }, 4000 );
 				}
 			}

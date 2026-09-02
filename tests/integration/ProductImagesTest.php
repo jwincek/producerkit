@@ -15,14 +15,14 @@ final class ProductImagesTest extends WP_UnitTestCase {
 	private function make_product( string $type = '' ): int {
 		$id = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 				'post_title'  => 'Kale',
 			]
 		);
 
 		if ( $type ) {
-			wp_set_object_terms( $id, $type, 'lfuf_product_type' );
+			wp_set_object_terms( $id, $type, 'pkit_product_type' );
 		}
 
 		return $id;
@@ -97,22 +97,22 @@ final class ProductImagesTest extends WP_UnitTestCase {
 		$product = $this->make_product( 'produce' );
 
 		$override = static fn() => 'https://example.org/my.png';
-		add_filter( 'lfuf_product_placeholder_url', $override );
+		add_filter( 'pkit_product_placeholder_url', $override );
 
 		$this->assertSame( 'https://example.org/my.png', placeholder_url( $product ) );
 
-		remove_filter( 'lfuf_product_placeholder_url', $override );
+		remove_filter( 'pkit_product_placeholder_url', $override );
 	}
 
 	public function test_filter_can_disable_placeholders_entirely(): void {
 		$product = $this->make_product( 'produce' );
 
 		$off = static fn() => '';
-		add_filter( 'lfuf_product_placeholder_url', $off );
+		add_filter( 'pkit_product_placeholder_url', $off );
 
 		$this->assertSame( '', placeholder_url( $product ) );
 		$this->assertSame( '', thumbnail_url( $product ) );
 
-		remove_filter( 'lfuf_product_placeholder_url', $off );
+		remove_filter( 'pkit_product_placeholder_url', $off );
 	}
 }

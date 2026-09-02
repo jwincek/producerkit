@@ -3,7 +3,7 @@
  * Commission Request Form — server render.
  *
  * A plain server-rendered form with a small viewScript that POSTs to
- * lfuf/v1/commissions. Deliberately not on the Interactivity API, unlike the
+ * producerkit/v1/commissions. Deliberately not on the Interactivity API, unlike the
  * pre-order form: that one has to keep a live basket of products and
  * quantities in sync, whereas this is one submission with no intermediate
  * state, and a form element plus fetch says so more clearly.
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! \ProducerKit\is_module_active( 'commissions' ) ) {
 	if ( current_user_can( 'edit_posts' ) ) {
-		echo '<p class="lfuf-commission-form__notice">'
+		echo '<p class="pkit-commission-form__notice">'
 			. esc_html__( 'The Commissions module is turned off, so this form is not shown to visitors.', 'producerkit' )
 			. '</p>';
 	}
@@ -34,7 +34,7 @@ $heading = (string) ( $attributes['heading'] ?? '' );
 $intro   = (string) ( $attributes['intro'] ?? '' );
 $budget  = ! empty( $attributes['showBudget'] );
 $dead    = ! empty( $attributes['showDeadline'] );
-$uid     = wp_unique_id( 'lfuf-commission-' );
+$uid     = wp_unique_id( 'pkit-commission-' );
 
 /**
  * Terms for one of the profile-driven selects, or an empty list when the
@@ -58,49 +58,49 @@ $terms_for = static function ( string $taxonomy ): array {
 	return is_wp_error( $terms ) ? [] : $terms;
 };
 
-$types     = $terms_for( 'lfuf_product_type' );
-$materials = $terms_for( 'lfuf_material' );
+$types     = $terms_for( 'pkit_product_type' );
+$materials = $terms_for( 'pkit_material' );
 
-$material_label = $materials && taxonomy_exists( 'lfuf_material' )
-	? get_taxonomy( 'lfuf_material' )->labels->singular_name
+$material_label = $materials && taxonomy_exists( 'pkit_material' )
+	? get_taxonomy( 'pkit_material' )->labels->singular_name
 	: '';
 
-$wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] );
+$wrapper = get_block_wrapper_attributes( [ 'class' => 'pkit-commission-form' ] );
 ?>
 <?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns escaped HTML. Not wp_kses_data(): that treats an attribute string as content and double-encodes any & in it. */ ?>
 <div <?php echo $wrapper; ?>
-	data-lfuf-commission-form
-	data-endpoint="<?php echo esc_url( rest_url( 'lfuf/v1/commissions' ) ); ?>">
+	data-pkit-commission-form
+	data-endpoint="<?php echo esc_url( rest_url( 'producerkit/v1/commissions' ) ); ?>">
 
 	<?php if ( '' !== $heading ) : ?>
-		<h2 class="lfuf-commission-form__heading"><?php echo esc_html( $heading ); ?></h2>
+		<h2 class="pkit-commission-form__heading"><?php echo esc_html( $heading ); ?></h2>
 	<?php endif; ?>
 
 	<?php if ( '' !== $intro ) : ?>
-		<p class="lfuf-commission-form__intro"><?php echo esc_html( $intro ); ?></p>
+		<p class="pkit-commission-form__intro"><?php echo esc_html( $intro ); ?></p>
 	<?php endif; ?>
 
-	<form class="lfuf-commission-form__form" novalidate>
-		<p class="lfuf-commission-form__field">
+	<form class="pkit-commission-form__form" novalidate>
+		<p class="pkit-commission-form__field">
 			<label for="<?php echo esc_attr( $uid ); ?>-name"><?php esc_html_e( 'Your name', 'producerkit' ); ?> <span aria-hidden="true">*</span></label>
 			<input type="text" id="<?php echo esc_attr( $uid ); ?>-name" name="name" required autocomplete="name">
 		</p>
 
-		<p class="lfuf-commission-form__field">
+		<p class="pkit-commission-form__field">
 			<label for="<?php echo esc_attr( $uid ); ?>-email"><?php esc_html_e( 'Email', 'producerkit' ); ?> <span aria-hidden="true">*</span></label>
 			<input type="email" id="<?php echo esc_attr( $uid ); ?>-email" name="email" required autocomplete="email">
-			<span class="lfuf-commission-form__hint"><?php esc_html_e( 'We send your quote here.', 'producerkit' ); ?></span>
+			<span class="pkit-commission-form__hint"><?php esc_html_e( 'We send your quote here.', 'producerkit' ); ?></span>
 		</p>
 
-		<p class="lfuf-commission-form__field">
+		<p class="pkit-commission-form__field">
 			<label for="<?php echo esc_attr( $uid ); ?>-phone"><?php esc_html_e( 'Phone (optional)', 'producerkit' ); ?></label>
 			<input type="tel" id="<?php echo esc_attr( $uid ); ?>-phone" name="phone" autocomplete="tel">
 		</p>
 
 		<?php if ( $types ) : ?>
-			<p class="lfuf-commission-form__field">
+			<p class="pkit-commission-form__field">
 				<label for="<?php echo esc_attr( $uid ); ?>-type">
-					<?php echo esc_html( get_taxonomy( 'lfuf_product_type' )->labels->singular_name ); ?>
+					<?php echo esc_html( get_taxonomy( 'pkit_product_type' )->labels->singular_name ); ?>
 				</label>
 				<select id="<?php echo esc_attr( $uid ); ?>-type" name="product_type">
 					<option value=""><?php esc_html_e( '— No preference —', 'producerkit' ); ?></option>
@@ -112,7 +112,7 @@ $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] )
 		<?php endif; ?>
 
 		<?php if ( $materials ) : ?>
-			<p class="lfuf-commission-form__field">
+			<p class="pkit-commission-form__field">
 				<label for="<?php echo esc_attr( $uid ); ?>-material"><?php echo esc_html( $material_label ); ?></label>
 				<select id="<?php echo esc_attr( $uid ); ?>-material" name="material">
 					<option value=""><?php esc_html_e( '— No preference —', 'producerkit' ); ?></option>
@@ -123,14 +123,14 @@ $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] )
 			</p>
 		<?php endif; ?>
 
-		<p class="lfuf-commission-form__field">
+		<p class="pkit-commission-form__field">
 			<label for="<?php echo esc_attr( $uid ); ?>-description"><?php esc_html_e( 'What would you like made?', 'producerkit' ); ?> <span aria-hidden="true">*</span></label>
 			<textarea id="<?php echo esc_attr( $uid ); ?>-description" name="description" rows="5" required
 				placeholder="<?php esc_attr_e( 'Size, colours, how it will be used, anything it has to match…', 'producerkit' ); ?>"></textarea>
 		</p>
 
 		<?php if ( $budget ) : ?>
-			<p class="lfuf-commission-form__field">
+			<p class="pkit-commission-form__field">
 				<label for="<?php echo esc_attr( $uid ); ?>-budget"><?php esc_html_e( 'Budget', 'producerkit' ); ?></label>
 				<select id="<?php echo esc_attr( $uid ); ?>-budget" name="budget_range">
 					<option value=""><?php esc_html_e( '— Prefer not to say —', 'producerkit' ); ?></option>
@@ -142,7 +142,7 @@ $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] )
 		<?php endif; ?>
 
 		<?php if ( $dead ) : ?>
-			<p class="lfuf-commission-form__field">
+			<p class="pkit-commission-form__field">
 				<label for="<?php echo esc_attr( $uid ); ?>-deadline"><?php esc_html_e( 'Needed by (optional)', 'producerkit' ); ?></label>
 				<input type="date" id="<?php echo esc_attr( $uid ); ?>-deadline" name="deadline"
 					min="<?php echo esc_attr( current_time( 'Y-m-d' ) ); ?>">
@@ -155,7 +155,7 @@ $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] )
 		 * aria-hidden + tabindex, so only a bot filling every input trips it.
 		 */
 		?>
-		<p class="lfuf-commission-form__hp" aria-hidden="true">
+		<p class="pkit-commission-form__hp" aria-hidden="true">
 			<label for="<?php echo esc_attr( $uid ); ?>-website"><?php esc_html_e( 'Website', 'producerkit' ); ?></label>
 			<input type="text" id="<?php echo esc_attr( $uid ); ?>-website" name="website" tabindex="-1" autocomplete="off">
 		</p>
@@ -173,12 +173,12 @@ $wrapper = get_block_wrapper_attributes( [ 'class' => 'lfuf-commission-form' ] )
 		}
 		?>
 
-		<p class="lfuf-commission-form__actions">
-			<button type="submit" class="lfuf-commission-form__submit wp-element-button">
+		<p class="pkit-commission-form__actions">
+			<button type="submit" class="pkit-commission-form__submit wp-element-button">
 				<?php esc_html_e( 'Send request', 'producerkit' ); ?>
 			</button>
 		</p>
 
-		<p class="lfuf-commission-form__message" role="status" aria-live="polite"></p>
+		<p class="pkit-commission-form__message" role="status" aria-live="polite"></p>
 	</form>
 </div>

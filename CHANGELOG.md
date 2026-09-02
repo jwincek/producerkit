@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   visually even on a site that has not uploaded photos yet. Art ships for the
   five types the plugin seeds by default; a product whose type has no art
   renders no image, exactly as before.
-- `lfuf_product_placeholder_url` filters the chosen placeholder. Return `''`
+- `pkit_product_placeholder_url` filters the chosen placeholder. Return `''`
   to switch the feature off entirely.
 
 ## [1.0.2] - 2026-08-03
@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The availability table now self-heals on `plugins_loaded` when its stored
   schema version is behind, matching what the RSVP and pre-order tables already
   did. Sites whose activation failed under strict mode get their table without
-  needing a manual deactivate/reactivate. `lfuf_availability_db_version` was
+  needing a manual deactivate/reactivate. `pkit_availability_db_version` was
   previously written but never read.
 ## [1.0.1] - 2026-08-02
 
@@ -98,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with JSON Schema input/output and capability checks, so agents and automation
   can discover and call them.
 - **Modular architecture** — every feature module except the core data layer
-  can be switched off through the `lfuf_active_modules` filter.
+  can be switched off through the `pkit_active_modules` filter.
 
 [Unreleased]: https://github.com/jwincek/producerkit/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/jwincek/producerkit/releases/tag/v1.1.0

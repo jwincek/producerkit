@@ -15,13 +15,13 @@ final class StructuredDataTest extends WP_UnitTestCase {
 	public function test_product_offer_from_parseable_price_and_availability(): void {
 		$product = self::factory()->post->create(
 			[
-				'post_type'    => 'lfuf_product',
+				'post_type'    => 'pkit_product',
 				'post_status'  => 'publish',
 				'post_title'   => 'Schema Kale',
 				'post_excerpt' => 'Fresh kale',
 			]
 		);
-		update_post_meta( $product, '_lfuf_price', '$4.50 / bunch' );
+		update_post_meta( $product, '_pkit_price', '$4.50 / bunch' );
 		upsert(
 			[
 				'product_id'     => $product,
@@ -42,11 +42,11 @@ final class StructuredDataTest extends WP_UnitTestCase {
 	public function test_donation_price_emits_no_offer(): void {
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		update_post_meta( $product, '_lfuf_price', 'donation' );
+		update_post_meta( $product, '_pkit_price', 'donation' );
 
 		$this->assertArrayNotHasKey( 'offers', product_data( get_post( $product ) ) );
 	}
@@ -54,17 +54,17 @@ final class StructuredDataTest extends WP_UnitTestCase {
 	public function test_location_business_data(): void {
 		$location = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 				'post_title'  => 'Schema Stand',
 			]
 		);
-		update_post_meta( $location, '_lfuf_address', '123 Farm Road' );
-		update_post_meta( $location, '_lfuf_lat', 36.1 );
-		update_post_meta( $location, '_lfuf_lng', -82.2 );
+		update_post_meta( $location, '_pkit_address', '123 Farm Road' );
+		update_post_meta( $location, '_pkit_lat', 36.1 );
+		update_post_meta( $location, '_pkit_lng', -82.2 );
 		update_post_meta(
 			$location,
-			'_lfuf_ss_schedule',
+			'_pkit_ss_schedule',
 			wp_json_encode(
 				[
 					[
@@ -75,10 +75,10 @@ final class StructuredDataTest extends WP_UnitTestCase {
 				]
 			)
 		);
-		update_post_meta( $location, '_lfuf_venmo_handle', 'examplefarm' );
+		update_post_meta( $location, '_pkit_venmo_handle', 'examplefarm' );
 		update_post_meta(
 			$location,
-			'_lfuf_payment_methods',
+			'_pkit_payment_methods',
 			[
 				[
 					'type'  => 'snap_ebt',
@@ -100,14 +100,14 @@ final class StructuredDataTest extends WP_UnitTestCase {
 	public function test_print_outputs_on_product_single_and_escapes_script_breakouts(): void {
 		$product = self::factory()->post->create(
 			[
-				'post_type'    => 'lfuf_product',
+				'post_type'    => 'pkit_product',
 				'post_status'  => 'publish',
 				'post_excerpt' => 'x</script><script>alert(1)</script>y',
 			]
 		);
 
 		$this->go_to( get_permalink( $product ) );
-		$this->assertTrue( is_singular( 'lfuf_product' ) );
+		$this->assertTrue( is_singular( 'pkit_product' ) );
 
 		ob_start();
 		print_json_ld();
@@ -134,11 +134,11 @@ final class StructuredDataTest extends WP_UnitTestCase {
 
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		add_filter( 'lfuf_structured_data', '__return_empty_array' );
+		add_filter( 'pkit_structured_data', '__return_empty_array' );
 		$this->go_to( get_permalink( $product ) );
 		ob_start();
 		print_json_ld();

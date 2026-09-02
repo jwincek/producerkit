@@ -2,20 +2,20 @@
  * Availability Badge — standalone styles.
  */
 
-.lfuf-availability-badge-wrapper {
+.pkit-availability-badge-wrapper {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
 }
 
-.lfuf-availability-badge__note {
+.pkit-availability-badge__note {
     font-size: 0.8rem;
     opacity: 0.7;
 }
 
 /* ── Accessibility ─────────────────────────────── */
 
-.lfuf-availability-badge-wrapper .screen-reader-text {
+.pkit-availability-badge-wrapper .screen-reader-text {
     border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%);
     height: 1px; margin: -1px; overflow: hidden; padding: 0;
     position: absolute; width: 1px; word-wrap: normal !important;
@@ -23,7 +23,7 @@
 
 @media (forced-colors: active) {
 
-    .lfuf-availability-badge {
+    .pkit-availability-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }

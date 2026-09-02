@@ -31,25 +31,25 @@
 
 	function getRestBase() {
 		return (
-			( window.lfufStandSettings || window.lfufSettings || {} )
-				.restBase || '/wp-json/lfuf/v1'
+			( window.pkitStandSettings || window.pkitSettings || {} )
+				.restBase || '/wp-json/producerkit/v1'
 		);
 	}
 
 	function getNonce() {
 		return (
-			( window.lfufStandSettings || window.lfufSettings || {} ).nonce ||
+			( window.pkitStandSettings || window.pkitSettings || {} ).nonce ||
 			''
 		);
 	}
 
-	registerBlockType( 'lfuf/stand-toggle', {
+	registerBlockType( 'producerkit/stand-toggle', {
 		edit: function EditStandToggle( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
 			const locationId = attributes.locationId;
 			const blockProps = useBlockProps( {
-				className: 'lfuf-stand-toggle',
+				className: 'pkit-stand-toggle',
 			} );
 
 			const _state = useState( false );
@@ -77,7 +77,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -192,19 +192,19 @@
 						: ! loaded
 						? el(
 								'div',
-								{ className: 'lfuf-stand-toggle__loading' },
+								{ className: 'pkit-stand-toggle__loading' },
 								el( Spinner ),
 								' Loading stand status…'
 						  )
 						: el(
 								'div',
-								{ className: 'lfuf-stand-toggle__panel' },
+								{ className: 'pkit-stand-toggle__panel' },
 								el(
 									'div',
-									{ className: 'lfuf-stand-toggle__header' },
+									{ className: 'pkit-stand-toggle__header' },
 									el( 'span', {
 										className:
-											'lfuf-stand-toggle__dot lfuf-stand-toggle__dot--' +
+											'pkit-stand-toggle__dot pkit-stand-toggle__dot--' +
 											( isOpen ? 'open' : 'closed' ),
 									} ),
 									el(
@@ -233,7 +233,7 @@
 								} ),
 								el(
 									'div',
-									{ className: 'lfuf-stand-toggle__actions' },
+									{ className: 'pkit-stand-toggle__actions' },
 									el(
 										Button,
 										{

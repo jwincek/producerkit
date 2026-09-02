@@ -1,7 +1,7 @@
 /**
  * Product Card — editor block (no-build IIFE).
  *
- * Registers lfuf/product-card with a product selector
+ * Registers producerkit/product-card with a product selector
  * and toggle controls for availability / source display.
  * @param blocks
  * @param element
@@ -35,10 +35,12 @@
 	};
 
 	function getRestBase() {
-		return ( window.lfufSettings || {} ).restBase || '/wp-json/lfuf/v1';
+		return (
+			( window.pkitSettings || {} ).restBase || '/wp-json/producerkit/v1'
+		);
 	}
 
-	registerBlockType( 'lfuf/product-card', {
+	registerBlockType( 'producerkit/product-card', {
 		edit: function EditProductCard( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -118,7 +120,7 @@
 
 							// Fetch sources if the product has source IDs.
 							const sourceIds = ( prod.meta || {} )
-								._lfuf_source_ids;
+								._pkit_source_ids;
 							if ( sourceIds && sourceIds.length ) {
 								const sourcePromises = sourceIds.map(
 									function ( sid ) {
@@ -163,7 +165,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_product',
+						'pkit_product',
 						{
 							per_page: 100,
 							status: 'publish',
@@ -181,15 +183,15 @@
 			} );
 
 			const blockProps = useBlockProps( {
-				className: 'lfuf-product-card',
+				className: 'pkit-product-card',
 			} );
 
 			// Extract display data from product response.
 			const title = product ? product.title?.rendered || '' : '';
 			const meta = product ? product.meta || {} : {};
-			const price = meta._lfuf_price || '';
-			const unit = meta._lfuf_unit || '';
-			const growingNotes = meta._lfuf_growing_notes || '';
+			const price = meta._pkit_price || '';
+			const unit = meta._pkit_unit || '';
+			const growingNotes = meta._pkit_growing_notes || '';
 
 			// Thumbnail from _embedded.
 			let thumbnailUrl = '';
@@ -222,9 +224,9 @@
 						return;
 					}
 					termGroup.forEach( function ( term ) {
-						if ( term.taxonomy === 'lfuf_product_type' ) {
+						if ( term.taxonomy === 'pkit_product_type' ) {
 							productTypes.push( term.name );
-						} else if ( term.taxonomy === 'lfuf_season' ) {
+						} else if ( term.taxonomy === 'pkit_season' ) {
 							seasons.push( term.name );
 						}
 					} );
@@ -269,7 +271,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-product-card__loading' },
+							{ className: 'pkit-product-card__loading' },
 							el( Spinner ),
 							' Loading product\u2026'
 						)
@@ -308,7 +310,7 @@
 					thumbnailUrl
 						? el(
 								'div',
-								{ className: 'lfuf-product-card__image' },
+								{ className: 'pkit-product-card__image' },
 								el( 'img', {
 									src: thumbnailUrl,
 									alt: '',
@@ -320,12 +322,12 @@
 					// Body.
 					el(
 						'div',
-						{ className: 'lfuf-product-card__body' },
+						{ className: 'pkit-product-card__body' },
 
 						// Title.
 						el(
 							'h3',
-							{ className: 'lfuf-product-card__title' },
+							{ className: 'pkit-product-card__title' },
 							el( 'span', null, title )
 						),
 
@@ -333,7 +335,7 @@
 						productTypes.length
 							? el(
 									'span',
-									{ className: 'lfuf-product-card__type' },
+									{ className: 'pkit-product-card__type' },
 									productTypes.join( ', ' )
 							  )
 							: null,
@@ -342,14 +344,14 @@
 						price
 							? el(
 									'span',
-									{ className: 'lfuf-product-card__price' },
+									{ className: 'pkit-product-card__price' },
 									price,
 									unit
 										? el(
 												'span',
 												{
 													className:
-														'lfuf-product-card__unit',
+														'pkit-product-card__unit',
 												},
 												' / ' + unit
 										  )
@@ -361,14 +363,14 @@
 						seasons.length
 							? el(
 									'div',
-									{ className: 'lfuf-product-card__seasons' },
+									{ className: 'pkit-product-card__seasons' },
 									seasons.map( function ( s ) {
 										return el(
 											'span',
 											{
 												key: s,
 												className:
-													'lfuf-product-card__season-badge',
+													'pkit-product-card__season-badge',
 											},
 											s
 										);
@@ -380,7 +382,7 @@
 						growingNotes
 							? el(
 									'p',
-									{ className: 'lfuf-product-card__notes' },
+									{ className: 'pkit-product-card__notes' },
 									growingNotes
 							  )
 							: null,
@@ -391,13 +393,13 @@
 									'div',
 									{
 										className:
-											'lfuf-product-card__availability',
+											'pkit-product-card__availability',
 									},
 									el(
 										'span',
 										{
 											className:
-												'lfuf-availability-badge lfuf-availability-badge--' +
+												'pkit-availability-badge pkit-availability-badge--' +
 												avail.status,
 										},
 										STATUS_LABELS[ avail.status ] ||
@@ -408,7 +410,7 @@
 												'span',
 												{
 													className:
-														'lfuf-product-card__quantity-note',
+														'pkit-product-card__quantity-note',
 												},
 												avail.quantity_note
 										  )
@@ -419,13 +421,13 @@
 									'div',
 									{
 										className:
-											'lfuf-product-card__availability',
+											'pkit-product-card__availability',
 									},
 									el(
 										'span',
 										{
 											className:
-												'lfuf-availability-badge lfuf-availability-badge--unavailable',
+												'pkit-availability-badge pkit-availability-badge--unavailable',
 										},
 										'No availability set'
 									)
@@ -436,28 +438,28 @@
 						showSource && sources.length
 							? el(
 									'div',
-									{ className: 'lfuf-product-card__sources' },
+									{ className: 'pkit-product-card__sources' },
 									el( 'strong', null, 'Sourced from:' ),
 									sources.map( function ( src ) {
 										const farmName =
 											src.meta &&
-											src.meta._lfuf_source_farm_name
+											src.meta._pkit_source_farm_name
 												? src.meta
-														._lfuf_source_farm_name
+														._pkit_source_farm_name
 												: src.title?.rendered ||
 												  src.title?.raw ||
 												  '';
 										const loc =
 											( src.meta &&
 												src.meta
-													._lfuf_source_location ) ||
+													._pkit_source_location ) ||
 											'';
 										return el(
 											'div',
 											{
 												key: src.id,
 												className:
-													'lfuf-product-card__source',
+													'pkit-product-card__source',
 											},
 											el( 'span', null, farmName ),
 											loc
@@ -465,7 +467,7 @@
 														'span',
 														{
 															className:
-																'lfuf-product-card__source-location',
+																'pkit-product-card__source-location',
 														},
 														' (' + loc + ')'
 												  )

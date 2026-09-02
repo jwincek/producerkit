@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/event-list",
+    "name": "producerkit/event-list",
     "version": "1.1.0",
     "title": "Event List",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "calendar-alt",
     "description": "Display upcoming (and optionally past) events with RSVP forms, location info, and event type filtering. Uses the Interactivity API for RSVP submission without page reload.",
     "textdomain": "producerkit",

@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API for pre-orders (lfuf/v1).
+ * REST API for pre-orders (producerkit/v1).
  *
  *   POST   /preorders            — create (public, rate-limited)
  *   GET    /preorders/{token}    — look up by token (public; token is the secret)
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$ns = 'lfuf/v1';
+	$ns = 'producerkit/v1';
 
 	register_rest_route(
 		$ns,

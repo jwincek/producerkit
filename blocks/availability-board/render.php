@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for lfuf/availability-board.
+ * Server-side render for producerkit/availability-board.
  *
  * activeStatuses is now an object map { "abundant": true, "available": true }
  * instead of an array, because the Interactivity API reactive proxy
@@ -24,7 +24,7 @@ $location_id         = (int) ( $attributes['locationId'] ?? 0 );
 $layout              = $attributes['layout'] ?? 'grid';
 $empty_message       = $attributes['emptyMessage'] ?? __( 'Check back soon — we\'re updating what\'s available this week!', 'producerkit' );
 
-$request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
+$request = new \WP_REST_Request( 'GET', '/producerkit/v1/board' );
 $request->set_param( 'location', $location_id );
 $response = \ProducerKit\AvailabilityBoard\REST\get_board( $request );
 $board    = $response->get_data();
@@ -53,7 +53,7 @@ foreach ( $groups as $group ) {
 }
 
 wp_interactivity_state(
-	'leftfield/availability-board',
+	'producerkit/availability-board',
 	[
 		'activeStatuses' => $status_map,
 		'allStatuses'    => array_values( $statuses ),
@@ -65,12 +65,12 @@ wp_interactivity_state(
 
 $context = [
 	'layout'   => $layout,
-	'restBase' => esc_url_raw( rest_url( 'lfuf/v1' ) ),
+	'restBase' => esc_url_raw( rest_url( 'producerkit/v1' ) ),
 ];
 
 $wrapper_attrs = get_block_wrapper_attributes(
 	[
-		'class' => 'lfuf-avail-board lfuf-avail-board--' . esc_attr( $layout ),
+		'class' => 'pkit-avail-board pkit-avail-board--' . esc_attr( $layout ),
 	]
 );
 ?>
@@ -78,23 +78,23 @@ $wrapper_attrs = get_block_wrapper_attributes(
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
 	aria-label="<?php esc_attr_e( 'Product Availability', 'producerkit' ); ?>"
-	data-wp-interactive="leftfield/availability-board"
+	data-wp-interactive="producerkit/availability-board"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
 	<?php if ( $total === 0 ) : ?>
-		<p class="lfuf-avail-board__empty">
+		<p class="pkit-avail-board__empty">
 			<?php echo esc_html( $empty_message ); ?>
 		</p>
 	<?php else : ?>
 
 		<?php if ( $show_filters ) : ?>
-			<div class="lfuf-avail-board__filters">
+			<div class="pkit-avail-board__filters">
 				<div
-					class="lfuf-avail-board__filter-group"
+					class="pkit-avail-board__filter-group"
 					role="toolbar"
 					aria-label="<?php esc_attr_e( 'Filter by availability status', 'producerkit' ); ?>"
 				>
-					<span class="lfuf-avail-board__filter-label">
+					<span class="pkit-avail-board__filter-label">
 						<?php esc_html_e( 'Show:', 'producerkit' ); ?>
 					</span>
 					<?php
@@ -103,10 +103,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						?>
 						<button
 							type="button"
-							class="lfuf-avail-board__filter-btn lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $status ); ?><?php echo $is_active ? ' lfuf-avail-board__filter-btn--active' : ''; ?>"
+							class="pkit-avail-board__filter-btn pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $status ); ?><?php echo $is_active ? ' pkit-avail-board__filter-btn--active' : ''; ?>"
 							data-wp-on--click="actions.toggleStatus"
 							data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterStatus' => $status ] ) ); ?>'
-							data-wp-class--lfuf-avail-board__filter-btn--active="state.isCurrentStatusActive"
+							data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentStatusActive"
 							data-wp-bind--aria-pressed="state.isCurrentStatusActive"
 							data-status="<?php echo esc_attr( $status ); ?>"
 							aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>"
@@ -116,19 +116,19 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 				<?php if ( count( $filter_types ) > 1 ) : ?>
 					<div
-						class="lfuf-avail-board__filter-group"
+						class="pkit-avail-board__filter-group"
 						role="toolbar"
 						aria-label="<?php esc_attr_e( 'Filter by product type', 'producerkit' ); ?>"
 					>
-						<span class="lfuf-avail-board__filter-label">
+						<span class="pkit-avail-board__filter-label">
 							<?php esc_html_e( 'Type:', 'producerkit' ); ?>
 						</span>
 						<button
 							type="button"
-							class="lfuf-avail-board__filter-btn lfuf-avail-board__filter-btn--active"
+							class="pkit-avail-board__filter-btn pkit-avail-board__filter-btn--active"
 							data-wp-on--click="actions.setTypeFilter"
 							data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => '' ] ) ); ?>'
-							data-wp-class--lfuf-avail-board__filter-btn--active="state.isCurrentTypeActive"
+							data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentTypeActive"
 							data-wp-bind--aria-pressed="state.isCurrentTypeActive"
 							data-type-slug=""
 							aria-pressed="true"
@@ -136,10 +136,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						<?php foreach ( $filter_types as $ft ) : ?>
 							<button
 								type="button"
-								class="lfuf-avail-board__filter-btn"
+								class="pkit-avail-board__filter-btn"
 								data-wp-on--click="actions.setTypeFilter"
 								data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => $ft['slug'] ] ) ); ?>'
-								data-wp-class--lfuf-avail-board__filter-btn--active="state.isCurrentTypeActive"
+								data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentTypeActive"
 								data-wp-bind--aria-pressed="state.isCurrentTypeActive"
 								data-type-slug="<?php echo esc_attr( $ft['slug'] ); ?>"
 								aria-pressed="false"
@@ -159,7 +159,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 			);
 			?>
 			<div
-				class="lfuf-avail-board__group"
+				class="pkit-avail-board__group"
 				data-type-slug="<?php echo esc_attr( $group['slug'] ); ?>"
 				data-wp-context='
 				<?php
@@ -176,16 +176,16 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				'
 				data-wp-bind--hidden="state.isCurrentGroupHidden"
 			>
-				<h3 class="lfuf-avail-board__group-title">
+				<h3 class="pkit-avail-board__group-title">
 					<?php echo esc_html( $group['label'] ); ?>
 					<span
-						class="lfuf-avail-board__group-count"
+						class="pkit-avail-board__group-count"
 						aria-hidden="true"
 						data-wp-text="state.currentGroupCount"
 					><?php echo count( $group['items'] ); ?></span>
 				</h3>
 
-				<div class="lfuf-avail-board__items lfuf-avail-board__items--<?php echo esc_attr( $layout ); ?>">
+				<div class="pkit-avail-board__items pkit-avail-board__items--<?php echo esc_attr( $layout ); ?>">
 					<?php
 					foreach ( $group['items'] as $item ) :
 						$status_text = ucfirst( str_replace( '_', ' ', $item['status'] ) );
@@ -208,7 +208,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						];
 						?>
 						<article
-							class="lfuf-avail-board__item"
+							class="pkit-avail-board__item"
 							data-status="<?php echo esc_attr( $item['status'] ); ?>"
 							data-type-slug="<?php echo esc_attr( $item['product_slugs'][0] ?? '' ); ?>"
 							data-wp-context='<?php echo esc_attr( wp_json_encode( $item_context ) ); ?>'
@@ -217,7 +217,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 							aria-label="<?php echo esc_attr( $item_aria_label ); ?>"
 						>
 							<?php if ( $show_images && $item['thumbnail_url'] ) : ?>
-								<div class="lfuf-avail-board__item-image">
+								<div class="pkit-avail-board__item-image">
 									<img
 										src="<?php echo esc_url( $item['thumbnail_url'] ); ?>"
 										alt=""
@@ -228,36 +228,36 @@ $wrapper_attrs = get_block_wrapper_attributes(
 								</div>
 							<?php endif; ?>
 
-							<div class="lfuf-avail-board__item-body">
-								<div class="lfuf-avail-board__item-header">
-									<a href="<?php echo esc_url( $item['permalink'] ); ?>" class="lfuf-avail-board__item-name">
+							<div class="pkit-avail-board__item-body">
+								<div class="pkit-avail-board__item-header">
+									<a href="<?php echo esc_url( $item['permalink'] ); ?>" class="pkit-avail-board__item-name">
 										<?php echo esc_html( $item['product_name'] ); ?>
 									</a>
-									<span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $item['status'] ); ?>">
+									<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $item['status'] ); ?>">
 										<?php echo esc_html( $status_text ); ?>
 									</span>
 								</div>
 
 								<?php if ( $show_prices && $item['price'] ) : ?>
-									<span class="lfuf-avail-board__item-price">
+									<span class="pkit-avail-board__item-price">
 										<span class="screen-reader-text"><?php esc_html_e( 'Price:', 'producerkit' ); ?> </span>
 										<?php echo esc_html( $item['price'] ); ?>
 										<?php if ( $item['unit'] ) : ?>
-											<span class="lfuf-avail-board__item-unit">/ <?php echo esc_html( $item['unit'] ); ?></span>
+											<span class="pkit-avail-board__item-unit">/ <?php echo esc_html( $item['unit'] ); ?></span>
 										<?php endif; ?>
 									</span>
 								<?php endif; ?>
 
 								<?php if ( $show_quantity_notes && $item['quantity_note'] ) : ?>
-									<span class="lfuf-avail-board__item-note">
+									<span class="pkit-avail-board__item-note">
 										<?php echo esc_html( $item['quantity_note'] ); ?>
 									</span>
 								<?php endif; ?>
 
 								<?php if ( $item['seasons'] ) : ?>
-									<div class="lfuf-avail-board__item-seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'producerkit' ); ?>">
+									<div class="pkit-avail-board__item-seasons" aria-label="<?php esc_attr_e( 'Available seasons', 'producerkit' ); ?>">
 										<?php foreach ( $item['seasons'] as $season ) : ?>
-											<span class="lfuf-avail-board__season-tag"><?php echo esc_html( $season ); ?></span>
+											<span class="pkit-avail-board__season-tag"><?php echo esc_html( $season ); ?></span>
 										<?php endforeach; ?>
 									</div>
 								<?php endif; ?>
@@ -268,7 +268,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 			</div>
 		<?php endforeach; ?>
 
-		<p class="lfuf-avail-board__footer" aria-live="polite" aria-atomic="true">
+		<p class="pkit-avail-board__footer" aria-live="polite" aria-atomic="true">
 			<span data-wp-text="state.footerText">
 				<?php
 				printf(
@@ -279,7 +279,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				?>
 			</span>
 			<?php if ( $board['generated_at'] ?? false ) : ?>
-				<span class="lfuf-avail-board__timestamp">
+				<span class="pkit-avail-board__timestamp">
 					<span class="screen-reader-text"><?php esc_html_e( 'Last updated:', 'producerkit' ); ?> </span>
 					<?php echo esc_html( date_i18n( 'M j, g:i A', strtotime( $board['generated_at'] ) ) ); ?>
 				</span>

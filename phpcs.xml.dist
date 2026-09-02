@@ -61,11 +61,11 @@
 
 	<!-- Prefixes for global functions, classes, hooks. Runtime code lives in
 	     the ProducerKit\* namespace; hooks, meta keys, options and the custom
-	     tables all use the lfuf_ prefix. -->
+	     tables all use the pkit_ prefix. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="lfuf"/>
+				<element value="pkit"/>
 				<element value="ProducerKit"/>
 			</property>
 		</properties>

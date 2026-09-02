@@ -4,56 +4,56 @@
 
 /* ── Base ──────────────────────────────────────── */
 
-.lfuf-avail-board {
-    --_lfuf-board-gap: 0.75rem;
-    --_lfuf-board-radius: 0.5rem;
-    --_lfuf-muted: #4b5563;
+.pkit-avail-board {
+    --_pkit-board-gap: 0.75rem;
+    --_pkit-board-radius: 0.5rem;
+    --_pkit-muted: #4b5563;
     color: #1f2937;
     font-family: inherit;
     line-height: 1.5;
 }
 
-.lfuf-avail-board__loading {
+.pkit-avail-board__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 2rem 1rem;
     font-size: 0.9rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
-.lfuf-avail-board__empty {
+.pkit-avail-board__empty {
     text-align: center;
     font-size: 1rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     font-style: italic;
     padding: 2rem 1rem;
 }
 
 /* ── Filters ───────────────────────────────────── */
 
-.lfuf-avail-board__filters {
+.pkit-avail-board__filters {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1.25rem;
 }
 
-.lfuf-avail-board__filter-group {
+.pkit-avail-board__filter-group {
     display: flex;
     align-items: center;
     gap: 0.4rem;
     flex-wrap: wrap;
 }
 
-.lfuf-avail-board__filter-label {
+.pkit-avail-board__filter-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     margin-right: 0.25rem;
 }
 
-.lfuf-avail-board__filter-btn {
+.pkit-avail-board__filter-btn {
     cursor: pointer;
     border: 1.5px solid transparent;
     transition: opacity 0.15s, border-color 0.15s, transform 0.1s;
@@ -66,28 +66,28 @@
     border-radius: 0.25rem;
 }
 
-.lfuf-avail-board__filter-btn:hover {
+.pkit-avail-board__filter-btn:hover {
     opacity: 0.85;
 }
 
-.lfuf-avail-board__filter-btn--active {
+.pkit-avail-board__filter-btn--active {
     opacity: 1;
     border-color: currentcolor;
     transform: scale(1.05);
 }
 
-.lfuf-avail-board__filter-btn:focus-visible {
+.pkit-avail-board__filter-btn:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 /* Type filter buttons (no badge colors) */
-.lfuf-avail-board__filter-group .lfuf-avail-board__filter-btn:not(.lfuf-availability-badge) {
+.pkit-avail-board__filter-group .pkit-avail-board__filter-btn:not(.pkit-availability-badge) {
     background: #f3f4f6;
     color: #374151;
 }
 
-.lfuf-avail-board__filter-group .lfuf-avail-board__filter-btn--active:not(.lfuf-availability-badge) {
+.pkit-avail-board__filter-group .pkit-avail-board__filter-btn--active:not(.pkit-availability-badge) {
     background: #374151;
     color: #fff;
     border-color: #374151;
@@ -95,11 +95,11 @@
 
 /* ── Group ─────────────────────────────────────── */
 
-.lfuf-avail-board__group {
+.pkit-avail-board__group {
     margin-bottom: 1.5rem;
 }
 
-.lfuf-avail-board__group-title {
+.pkit-avail-board__group-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -109,50 +109,50 @@
     border-bottom: 2px solid #e5e7eb;
 }
 
-.lfuf-avail-board__group-count {
+.pkit-avail-board__group-count {
     font-size: 0.75rem;
     font-weight: 400;
     background: #f3f4f6;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     padding: 0.1rem 0.45rem;
     border-radius: 9999px;
 }
 
 /* ── Grid layout ───────────────────────────────── */
 
-.lfuf-avail-board__items--grid {
+.pkit-avail-board__items--grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: var(--_lfuf-board-gap);
+    gap: var(--_pkit-board-gap);
 }
 
-.lfuf-avail-board--grid .lfuf-avail-board__item {
+.pkit-avail-board--grid .pkit-avail-board__item {
     display: flex;
     gap: 0.75rem;
     padding: 0.75rem;
     border: 1px solid #e5e7eb;
-    border-radius: var(--_lfuf-board-radius);
+    border-radius: var(--_pkit-board-radius);
     background: #fff;
     transition: box-shadow 0.15s;
 }
 
-.lfuf-avail-board--grid .lfuf-avail-board__item[hidden] {
+.pkit-avail-board--grid .pkit-avail-board__item[hidden] {
     display: none;
 }
 
-.lfuf-avail-board--grid .lfuf-avail-board__item:hover {
+.pkit-avail-board--grid .pkit-avail-board__item:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* ── List layout ───────────────────────────────── */
 
-.lfuf-avail-board__items--list {
+.pkit-avail-board__items--list {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item {
+.pkit-avail-board--list .pkit-avail-board__item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -161,107 +161,107 @@
     transition: background 0.1s;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item[hidden] {
+.pkit-avail-board--list .pkit-avail-board__item[hidden] {
     display: none;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item:hover {
+.pkit-avail-board--list .pkit-avail-board__item:hover {
     background: #fafafa;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item:last-child {
+.pkit-avail-board--list .pkit-avail-board__item:last-child {
     border-bottom: none;
 }
 
 /* ── Item parts ────────────────────────────────── */
 
-.lfuf-avail-board__item-image {
+.pkit-avail-board__item-image {
     flex: 0 0 60px;
 }
 
-.lfuf-avail-board__item-image img {
+.pkit-avail-board__item-image img {
     width: 60px;
     height: 60px;
     object-fit: cover;
     border-radius: 0.375rem;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item-image {
+.pkit-avail-board--list .pkit-avail-board__item-image {
     flex: 0 0 40px;
 }
 
-.lfuf-avail-board--list .lfuf-avail-board__item-image img {
+.pkit-avail-board--list .pkit-avail-board__item-image img {
     width: 40px;
     height: 40px;
 }
 
-.lfuf-avail-board__item-body {
+.pkit-avail-board__item-body {
     flex: 1;
     min-width: 0;
 }
 
-.lfuf-avail-board__item-header {
+.pkit-avail-board__item-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
 }
 
-.lfuf-avail-board__item-name {
+.pkit-avail-board__item-name {
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
     color: inherit;
 }
 
-.lfuf-avail-board__item-name:hover {
+.pkit-avail-board__item-name:hover {
     text-decoration: underline;
 }
 
-.lfuf-avail-board__item-name:focus-visible {
+.pkit-avail-board__item-name:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
     border-radius: 2px;
 }
 
-.lfuf-avail-board__item-price {
+.pkit-avail-board__item-price {
     font-size: 0.85rem;
     font-weight: 600;
     margin-top: 0.15rem;
     display: block;
 }
 
-.lfuf-avail-board__item-unit {
+.pkit-avail-board__item-unit {
     font-weight: 400;
     opacity: 0.7;
     font-size: 0.8rem;
 }
 
-.lfuf-avail-board__item-note {
+.pkit-avail-board__item-note {
     display: block;
     font-size: 0.8rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     font-style: italic;
     margin-top: 0.15rem;
 }
 
-.lfuf-avail-board__item-seasons {
+.pkit-avail-board__item-seasons {
     display: flex;
     gap: 0.25rem;
     margin-top: 0.35rem;
 }
 
-.lfuf-avail-board__season-tag {
+.pkit-avail-board__season-tag {
     font-size: 0.65rem;
     padding: 0.1rem 0.4rem;
     border-radius: 9999px;
     background: #f3f4f6;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
 /* ── Badge styles (shared) ─────────────────────── */
 
-.lfuf-availability-badge {
+.pkit-availability-badge {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 600;
@@ -272,36 +272,36 @@
     white-space: nowrap;
 }
 
-.lfuf-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
+.pkit-availability-badge--abundant   { background: #d1fae5; color: #065f46; }
 
-.lfuf-availability-badge--available  { background: #dbeafe; color: #1e40af; }
+.pkit-availability-badge--available  { background: #dbeafe; color: #1e40af; }
 
-.lfuf-availability-badge--limited    { background: #fef3c7; color: #92400e; }
+.pkit-availability-badge--limited    { background: #fef3c7; color: #92400e; }
 
-.lfuf-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
+.pkit-availability-badge--sold_out   { background: #fee2e2; color: #991b1b; }
 
-.lfuf-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
+.pkit-availability-badge--unavailable { background: #f3f4f6; color: #6b7280; }
 
 /* ── Footer ────────────────────────────────────── */
 
-.lfuf-avail-board__footer {
+.pkit-avail-board__footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     margin-top: 1rem;
     padding-top: 0.75rem;
     border-top: 1px solid #e5e7eb;
 }
 
-.lfuf-avail-board__timestamp {
+.pkit-avail-board__timestamp {
     font-style: italic;
 }
 
 /* ── Screen reader text ────────────────────────── */
 
-.lfuf-avail-board .screen-reader-text {
+.pkit-avail-board .screen-reader-text {
     border: 0;
     clip: rect(1px, 1px, 1px, 1px);
     clip-path: inset(50%);
@@ -318,15 +318,15 @@
 
 @media (max-width: 480px) {
 
-    .lfuf-avail-board__items--grid {
+    .pkit-avail-board__items--grid {
         grid-template-columns: 1fr;
     }
 
-    .lfuf-avail-board__filter-group {
+    .pkit-avail-board__filter-group {
         gap: 0.3rem;
     }
 
-    .lfuf-avail-board__footer {
+    .pkit-avail-board__footer {
         flex-direction: column;
         gap: 0.25rem;
         text-align: center;
@@ -342,13 +342,13 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-avail-board--grid .lfuf-avail-board__item,
-    .lfuf-avail-board--list .lfuf-avail-board__item,
-    .lfuf-avail-board__filter-btn {
+    .pkit-avail-board--grid .pkit-avail-board__item,
+    .pkit-avail-board--list .pkit-avail-board__item,
+    .pkit-avail-board__filter-btn {
         transition: none;
     }
 
-    .lfuf-avail-board__filter-btn--active {
+    .pkit-avail-board__filter-btn--active {
         transform: none;
     }
 }
@@ -357,31 +357,31 @@
 
 @media (forced-colors: active) {
 
-    .lfuf-avail-board--grid .lfuf-avail-board__item {
+    .pkit-avail-board--grid .pkit-avail-board__item {
         border-color: CanvasText;
     }
 
-    .lfuf-avail-board__filter-btn {
+    .pkit-avail-board__filter-btn {
         border-color: ButtonText;
         forced-color-adjust: none;
     }
 
-    .lfuf-avail-board__filter-btn--active {
+    .pkit-avail-board__filter-btn--active {
         background: Highlight;
         color: HighlightText;
         border-color: Highlight;
     }
 
-    .lfuf-availability-badge {
+    .pkit-availability-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
 
-    .lfuf-avail-board__item-name {
+    .pkit-avail-board__item-name {
         color: LinkText;
     }
 
-    .lfuf-avail-board__group-title {
+    .pkit-avail-board__group-title {
         border-bottom-color: CanvasText;
     }
 }

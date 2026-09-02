@@ -1,5 +1,5 @@
 /**
- * Product Editor Sidebar — custom panels for lfuf_product meta.
+ * Product Editor Sidebar — custom panels for pkit_product meta.
  *
  * Panels:
  *   1. Product Details — price, unit, growing notes
@@ -46,11 +46,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_product' ) {
+		if ( postType !== 'pkit_product' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_product', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_product', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
@@ -65,7 +65,7 @@
 		}
 
 		// Check if current unit is in the common list.
-		const currentUnit = meta._lfuf_unit || '';
+		const currentUnit = meta._pkit_unit || '';
 		const unitInList = COMMON_UNITS.some( function ( u ) {
 			return u.value === currentUnit;
 		} );
@@ -74,7 +74,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-product-details',
+				name: 'pkit-product-details',
 				title: 'Product Details',
 				initialOpen: true,
 				icon: 'carrot',
@@ -82,9 +82,9 @@
 
 			el( TextControl, {
 				label: 'Price',
-				value: meta._lfuf_price || '',
+				value: meta._pkit_price || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_price', val );
+					updateMeta( '_pkit_price', val );
 				},
 				placeholder: '$4',
 				help: 'Display price. Can be "$5", "Donation", "$3-5", etc.',
@@ -99,7 +99,7 @@
 						setShowCustomUnit( true );
 					} else {
 						setShowCustomUnit( false );
-						updateMeta( '_lfuf_unit', val );
+						updateMeta( '_pkit_unit', val );
 					}
 				},
 				help: 'How this product is sold.',
@@ -110,7 +110,7 @@
 						label: 'Custom Unit',
 						value: currentUnit,
 						onChange( val ) {
-							updateMeta( '_lfuf_unit', val );
+							updateMeta( '_pkit_unit', val );
 						},
 						placeholder: 'e.g. 4 oz bag',
 				  } )
@@ -118,9 +118,9 @@
 
 			el( TextareaControl, {
 				label: 'Growing / Baking Notes',
-				value: meta._lfuf_growing_notes || '',
+				value: meta._pkit_growing_notes || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_growing_notes', val );
+					updateMeta( '_pkit_growing_notes', val );
 				},
 				placeholder: 'Heirloom variety, cold-hardy. No-till grown.',
 				help: 'Shown on the product card and single product page.',
@@ -138,20 +138,20 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_product' ) {
+		if ( postType !== 'pkit_product' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_product', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_product', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
-		const sourceIds = meta._lfuf_source_ids || [];
+		const sourceIds = meta._pkit_source_ids || [];
 
 		// Fetch all sources.
 		const allSources = useSelect( function ( select ) {
 			return (
-				select( 'core' ).getEntityRecords( 'postType', 'lfuf_source', {
+				select( 'core' ).getEntityRecords( 'postType', 'pkit_source', {
 					per_page: 50,
 					status: 'publish',
 					_fields: 'id,title',
@@ -169,7 +169,7 @@
 					.map( function ( id ) {
 						return select( 'core' ).getEntityRecord(
 							'postType',
-							'lfuf_source',
+							'pkit_source',
 							id
 						);
 					} )
@@ -181,14 +181,14 @@
 		function addSource( id ) {
 			if ( sourceIds.indexOf( id ) === -1 ) {
 				const updated = {};
-				updated._lfuf_source_ids = sourceIds.concat( [ id ] );
+				updated._pkit_source_ids = sourceIds.concat( [ id ] );
 				setMeta( Object.assign( {}, meta, updated ) );
 			}
 		}
 
 		function removeSource( id ) {
 			const updated = {};
-			updated._lfuf_source_ids = sourceIds.filter( function ( s ) {
+			updated._pkit_source_ids = sourceIds.filter( function ( s ) {
 				return s !== id;
 			} );
 			setMeta( Object.assign( {}, meta, updated ) );
@@ -202,7 +202,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-product-sources',
+				name: 'pkit-product-sources',
 				title: 'Sources',
 				initialOpen: false,
 				icon: 'admin-site-alt3',
@@ -297,12 +297,12 @@
 	 * Register
 	 * ───────────────────────────────────────────── */
 
-	registerPlugin( 'lfuf-product-details', {
+	registerPlugin( 'pkit-product-details', {
 		render: ProductDetailsPanel,
 		icon: 'carrot',
 	} );
 
-	registerPlugin( 'lfuf-product-sources', {
+	registerPlugin( 'pkit-product-sources', {
 		render: ProductSourcesPanel,
 		icon: 'admin-site-alt3',
 	} );

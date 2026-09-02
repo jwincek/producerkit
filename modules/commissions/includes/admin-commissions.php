@@ -31,11 +31,11 @@ function register_page(): void {
 		: '';
 
 	add_submenu_page(
-		'farm-stand-dashboard',
+		'producerkit',
 		__( 'Commissions', 'producerkit' ),
 		__( 'Commissions', 'producerkit' ) . $badge,
 		'edit_posts',
-		'farm-stand-commissions',
+		'producerkit-commissions',
 		__NAMESPACE__ . '\\render_page'
 	);
 }
@@ -91,7 +91,7 @@ function render_page(): void {
 			'limit'  => 100,
 		]
 	);
-	$base  = admin_url( 'admin.php?page=farm-stand-commissions' );
+	$base  = admin_url( 'admin.php?page=producerkit-commissions' );
 	$money = html_entity_decode( get_woocommerce_currency_symbol_safe() );
 	?>
 	<div class="wrap">
@@ -131,7 +131,7 @@ function render_page(): void {
 			<?php endforeach; ?>
 		</ul>
 
-		<p id="lfuf-commission-status" style="min-height:1.5em;color:#2271b1;"></p>
+		<p id="pkit-commission-status" style="min-height:1.5em;color:#2271b1;"></p>
 
 		<?php if ( ! $list['commissions'] ) : ?>
 			<div class="notice notice-info inline"><p>
@@ -205,20 +205,20 @@ function render_page(): void {
 						</td>
 						<td>
 							<?php if ( 'new' === $status ) : ?>
-								<div class="lfuf-quote-form" style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
-									<input type="number" step="0.01" min="0.01" class="lfuf-price small-text"
+								<div class="pkit-quote-form" style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+									<input type="number" step="0.01" min="0.01" class="pkit-price small-text"
 										placeholder="<?php esc_attr_e( 'Price', 'producerkit' ); ?>"
 										aria-label="<?php esc_attr_e( 'Quoted price', 'producerkit' ); ?>">
-									<input type="date" class="lfuf-date"
+									<input type="date" class="pkit-date"
 										aria-label="<?php esc_attr_e( 'Estimated ready date', 'producerkit' ); ?>">
-									<button type="button" class="button button-primary lfuf-send-quote">
+									<button type="button" class="button button-primary pkit-send-quote">
 										<?php esc_html_e( 'Send quote', 'producerkit' ); ?>
 									</button>
 								</div>
 							<?php endif; ?>
 
 							<?php foreach ( $onward as $next ) : ?>
-								<button type="button" class="button lfuf-set-status"
+								<button type="button" class="button pkit-set-status"
 									data-status="<?php echo esc_attr( $next ); ?>">
 									<?php echo esc_html( status_label( $next ) ); ?>
 								</button>
@@ -251,7 +251,7 @@ function get_woocommerce_currency_symbol_safe(): string {
 	 *
 	 * @param string $symbol Defaults to a dollar sign.
 	 */
-	return (string) apply_filters( 'lfuf_currency_symbol', '$' );
+	return (string) apply_filters( 'pkit_currency_symbol', '$' );
 }
 
 /**
@@ -260,7 +260,7 @@ function get_woocommerce_currency_symbol_safe(): string {
  */
 function render_script(): void {
 	$config = [
-		'root'  => esc_url_raw( rest_url( 'lfuf/v1/commissions' ) ),
+		'root'  => esc_url_raw( rest_url( 'producerkit/v1/commissions' ) ),
 		'nonce' => wp_create_nonce( 'wp_rest' ),
 		'i18n'  => [
 			'needPrice' => __( 'Enter a price before sending the quote.', 'producerkit' ),
@@ -273,7 +273,7 @@ function render_script(): void {
 	<script>
 	( function () {
 		var cfg = <?php echo wp_json_encode( $config ); ?>;
-		var out = document.getElementById( 'lfuf-commission-status' );
+		var out = document.getElementById( 'pkit-commission-status' );
 
 		function say( msg, isError ) {
 			out.textContent = msg;
@@ -309,9 +309,9 @@ function render_script(): void {
 			if ( ! row ) { return; }
 			var id = row.getAttribute( 'data-commission' );
 
-			if ( e.target.classList.contains( 'lfuf-send-quote' ) ) {
-				var price = row.querySelector( '.lfuf-price' ).value;
-				var date = row.querySelector( '.lfuf-date' ).value;
+			if ( e.target.classList.contains( 'pkit-send-quote' ) ) {
+				var price = row.querySelector( '.pkit-price' ).value;
+				var date = row.querySelector( '.pkit-date' ).value;
 				if ( ! price || parseFloat( price ) <= 0 ) {
 					say( cfg.i18n.needPrice, true );
 					return;
@@ -321,7 +321,7 @@ function render_script(): void {
 				} );
 			}
 
-			if ( e.target.classList.contains( 'lfuf-set-status' ) ) {
+			if ( e.target.classList.contains( 'pkit-set-status' ) ) {
 				post( cfg.root + '/' + id + '/status', { status: e.target.getAttribute( 'data-status' ) }, function () {
 					window.location.reload();
 				} );

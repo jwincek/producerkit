@@ -1,7 +1,7 @@
 /**
  * Event Card — Interactivity API view module.
  *
- * Shares the leftfield/event-list store namespace so the
+ * Shares the producerkit/event-list store namespace so the
  * RSVP actions and state getters work identically whether
  * the card is rendered standalone or within the event list.
  *
@@ -15,7 +15,7 @@ import { store, getContext } from '@wordpress/interactivity';
 // Register a minimal store to ensure the namespace exists
 // even if event-list/view.js hasn't loaded on this page.
 // If event-list IS loaded, WordPress merges the stores.
-store( 'leftfield/event-list', {
+store( 'producerkit/event-list', {
 	state: {
 		get isEventHidden() {
 			return false; // Single card is never hidden.

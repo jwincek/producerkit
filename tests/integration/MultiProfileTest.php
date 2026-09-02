@@ -51,11 +51,11 @@ final class MultiProfileTest extends WP_UnitTestCase {
 		$this->farm_and_bakery();
 
 		$this->assertSame(
-			[ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+			[ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 			Profiles\active_taxonomies()
 		);
 
-		foreach ( [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ] as $taxonomy ) {
+		foreach ( [ 'pkit_material', 'pkit_finish', 'pkit_component' ] as $taxonomy ) {
 			$this->assertTrue( taxonomy_exists( $taxonomy ) );
 		}
 	}
@@ -63,7 +63,7 @@ final class MultiProfileTest extends WP_UnitTestCase {
 	public function test_seeded_vocabulary_unions_across_the_active_profiles(): void {
 		$this->farm_and_bakery();
 
-		$types = apply_filters( 'lfuf_taxonomy_default_terms', [ 'CORE' ], 'lfuf_product_type' );
+		$types = apply_filters( 'pkit_taxonomy_default_terms', [ 'CORE' ], 'pkit_product_type' );
 
 		$this->assertContains( 'Produce', $types, 'The farm vocabulary should survive.' );
 		$this->assertContains( 'Sourdough', $types, 'The bakery vocabulary should be added.' );
@@ -73,7 +73,7 @@ final class MultiProfileTest extends WP_UnitTestCase {
 	public function test_a_term_both_profiles_name_is_not_duplicated(): void {
 		update_option( Profiles\OPTION, [ 'bakery', 'musician' ] );
 
-		$events = apply_filters( 'lfuf_taxonomy_default_terms', [], 'lfuf_event_type' );
+		$events = apply_filters( 'pkit_taxonomy_default_terms', [], 'pkit_event_type' );
 
 		$this->assertSame( array_values( array_unique( $events ) ), $events );
 		$this->assertContains( 'Market', $events, 'Both profiles list Market; it should appear once.' );
@@ -85,7 +85,7 @@ final class MultiProfileTest extends WP_UnitTestCase {
 
 		$this->assertSame(
 			[ 'Spring', 'Summer' ],
-			apply_filters( 'lfuf_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'lfuf_season' )
+			apply_filters( 'pkit_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'pkit_season' )
 		);
 	}
 
@@ -101,15 +101,15 @@ final class MultiProfileTest extends WP_UnitTestCase {
 
 		wp_set_current_user( $baker );
 		ProfileTaxonomies\register();
-		$this->assertSame( 'Flour', get_taxonomy( 'lfuf_material' )->labels->singular_name );
+		$this->assertSame( 'Flour', get_taxonomy( 'pkit_material' )->labels->singular_name );
 
-		unregister_taxonomy( 'lfuf_material' );
+		unregister_taxonomy( 'pkit_material' );
 
 		// The farm says nothing about Material, so the grower gets the generic
 		// name rather than the baker's.
 		wp_set_current_user( $grower );
 		ProfileTaxonomies\register();
-		$this->assertSame( 'Material', get_taxonomy( 'lfuf_material' )->labels->singular_name );
+		$this->assertSame( 'Material', get_taxonomy( 'pkit_material' )->labels->singular_name );
 	}
 
 	public function test_the_menu_label_follows_the_person_too(): void {
@@ -120,11 +120,11 @@ final class MultiProfileTest extends WP_UnitTestCase {
 
 		wp_set_current_user( $baker );
 		Post_Types\register();
-		$this->assertSame( 'Bakery', get_post_type_object( 'lfuf_product' )->labels->menu_name );
+		$this->assertSame( 'Bakery', get_post_type_object( 'pkit_product' )->labels->menu_name );
 
 		wp_set_current_user( 0 );
 		Post_Types\register();
-		$this->assertSame( 'Catalog', get_post_type_object( 'lfuf_product' )->labels->menu_name );
+		$this->assertSame( 'Catalog', get_post_type_object( 'pkit_product' )->labels->menu_name );
 	}
 
 	/**
@@ -165,11 +165,11 @@ final class MultiProfileTest extends WP_UnitTestCase {
 		update_option( Profiles\OPTION, [ 'farm', 'bakery' ] );
 
 		$override = static fn (): string => 'bakery';
-		add_filter( 'lfuf_labelling_profile', $override );
+		add_filter( 'pkit_labelling_profile', $override );
 
 		$this->assertSame( 'bakery', Profiles\labelling_slug() );
 
-		remove_filter( 'lfuf_labelling_profile', $override );
+		remove_filter( 'pkit_labelling_profile', $override );
 	}
 
 	/* ── Degenerate input ─────────────────────────────────────── */

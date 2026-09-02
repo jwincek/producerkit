@@ -26,11 +26,11 @@ add_action( 'admin_init', __NAMESPACE__ . '\\handle_import' );
 
 function register_page(): void {
 	add_submenu_page(
-		'farm-stand-dashboard',
+		'producerkit',
 		__( 'Import / Export Products', 'producerkit' ),
 		__( 'Product Import', 'producerkit' ),
 		'edit_posts',
-		'farm-stand-product-io',
+		'producerkit-product-io',
 		__NAMESPACE__ . '\\render_page',
 	);
 }
@@ -43,8 +43,8 @@ function handle_export(): void {
 	$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 
 	if (
-		! isset( $_GET['lfuf_export_products'] )
-		|| ! wp_verify_nonce( $nonce, 'lfuf_export_products' )
+		! isset( $_GET['pkit_export_products'] )
+		|| ! wp_verify_nonce( $nonce, 'pkit_export_products' )
 		|| ! current_user_can( 'edit_posts' )
 	) {
 		return;
@@ -52,7 +52,7 @@ function handle_export(): void {
 
 	$products = get_posts(
 		[
-			'post_type'      => 'lfuf_product',
+			'post_type'      => 'pkit_product',
 			'post_status'    => [ 'publish', 'draft' ],
 			'posts_per_page' => -1,
 			'orderby'        => 'title',
@@ -60,7 +60,7 @@ function handle_export(): void {
 		]
 	);
 
-	$filename = 'farm-stand-products-' . gmdate( 'Y-m-d' ) . '.csv';
+	$filename = 'producerkit-products-' . gmdate( 'Y-m-d' ) . '.csv';
 
 	header( 'Content-Type: text/csv; charset=utf-8' );
 	header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -92,8 +92,8 @@ function handle_export(): void {
 		$pid = $product->ID;
 
 		// Taxonomies.
-		$types      = get_the_terms( $pid, 'lfuf_product_type' );
-		$seasons    = get_the_terms( $pid, 'lfuf_season' );
+		$types      = get_the_terms( $pid, 'pkit_product_type' );
+		$seasons    = get_the_terms( $pid, 'pkit_season' );
 		$type_str   = ( $types && ! is_wp_error( $types ) )
 			? implode( '|', wp_list_pluck( $types, 'name' ) )
 			: '';
@@ -102,7 +102,7 @@ function handle_export(): void {
 			: '';
 
 		// Sources.
-		$source_ids   = get_post_meta( $pid, '_lfuf_source_ids', true );
+		$source_ids   = get_post_meta( $pid, '_pkit_source_ids', true );
 		$source_names = [];
 		if ( is_array( $source_ids ) ) {
 			foreach ( $source_ids as $sid ) {
@@ -123,9 +123,9 @@ function handle_export(): void {
 				$product->post_title,
 				$product->post_status,
 				$product->post_excerpt,
-				get_post_meta( $pid, '_lfuf_price', true ),
-				get_post_meta( $pid, '_lfuf_unit', true ),
-				get_post_meta( $pid, '_lfuf_growing_notes', true ),
+				get_post_meta( $pid, '_pkit_price', true ),
+				get_post_meta( $pid, '_pkit_unit', true ),
+				get_post_meta( $pid, '_pkit_growing_notes', true ),
 				$type_str,
 				$season_str,
 				implode( '|', $source_names ),
@@ -146,8 +146,8 @@ function handle_import(): void {
 	$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
 
 	if (
-		! isset( $_POST['lfuf_import_products'] )
-		|| ! wp_verify_nonce( $nonce, 'lfuf_import_products' )
+		! isset( $_POST['pkit_import_products'] )
+		|| ! wp_verify_nonce( $nonce, 'pkit_import_products' )
 		|| ! current_user_can( 'edit_posts' )
 	) {
 		return;
@@ -155,8 +155,8 @@ function handle_import(): void {
 
 	// Read every index defensively: a request can omit the file part
 	// altogether, in which case PHP populates none of these keys.
-	$upload = isset( $_FILES['lfuf_csv'] )
-		? array_map( 'sanitize_text_field', wp_unslash( (array) $_FILES['lfuf_csv'] ) )
+	$upload = isset( $_FILES['pkit_csv'] )
+		? array_map( 'sanitize_text_field', wp_unslash( (array) $_FILES['pkit_csv'] ) )
 		: [];
 	$tmp    = (string) ( $upload['tmp_name'] ?? '' );
 	$error  = isset( $upload['error'] ) ? (int) $upload['error'] : UPLOAD_ERR_NO_FILE;
@@ -188,7 +188,7 @@ function handle_import(): void {
 	$results = import_rows( $rows );
 
 	// Store results in a transient for display.
-	set_transient( 'lfuf_import_results', $results, 60 );
+	set_transient( 'pkit_import_results', $results, 60 );
 }
 
 /**
@@ -246,7 +246,7 @@ function import_rows( array $rows ): array {
 	// Pre-fetch source posts for matching by title.
 	$sources    = get_posts(
 		[
-			'post_type'      => 'lfuf_source',
+			'post_type'      => 'pkit_source',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 		]
@@ -270,7 +270,7 @@ function import_rows( array $rows ): array {
 		// (get_page_by_title() is deprecated since WP 6.2.)
 		$title_query = new \WP_Query(
 			[
-				'post_type'              => 'lfuf_product',
+				'post_type'              => 'pkit_product',
 				'title'                  => $title,
 				'post_status'            => 'all',
 				'posts_per_page'         => 1,
@@ -289,7 +289,7 @@ function import_rows( array $rows ): array {
 
 		$post_data = [
 			'post_title'   => $title,
-			'post_type'    => 'lfuf_product',
+			'post_type'    => 'pkit_product',
 			'post_status'  => $post_status,
 			'post_excerpt' => sanitize_textarea_field( $row['excerpt'] ?? '' ),
 		];
@@ -315,23 +315,23 @@ function import_rows( array $rows ): array {
 
 		// Meta fields.
 		if ( isset( $row['price'] ) ) {
-			update_post_meta( $pid, '_lfuf_price', sanitize_text_field( $row['price'] ) );
+			update_post_meta( $pid, '_pkit_price', sanitize_text_field( $row['price'] ) );
 		}
 		if ( isset( $row['unit'] ) ) {
-			update_post_meta( $pid, '_lfuf_unit', sanitize_text_field( $row['unit'] ) );
+			update_post_meta( $pid, '_pkit_unit', sanitize_text_field( $row['unit'] ) );
 		}
 		if ( isset( $row['growing_notes'] ) ) {
-			update_post_meta( $pid, '_lfuf_growing_notes', sanitize_text_field( $row['growing_notes'] ) );
+			update_post_meta( $pid, '_pkit_growing_notes', sanitize_text_field( $row['growing_notes'] ) );
 		}
 
 		// Taxonomies (pipe-separated).
 		if ( ! empty( $row['product_types'] ) ) {
 			$terms = array_map( 'trim', explode( '|', $row['product_types'] ) );
-			wp_set_object_terms( $pid, $terms, 'lfuf_product_type' );
+			wp_set_object_terms( $pid, $terms, 'pkit_product_type' );
 		}
 		if ( ! empty( $row['seasons'] ) ) {
 			$terms = array_map( 'trim', explode( '|', $row['seasons'] ) );
-			wp_set_object_terms( $pid, $terms, 'lfuf_season' );
+			wp_set_object_terms( $pid, $terms, 'pkit_season' );
 		}
 
 		// Source links (pipe-separated titles).
@@ -344,7 +344,7 @@ function import_rows( array $rows ): array {
 					$ids[] = $source_map[ $key ];
 				}
 			}
-			update_post_meta( $pid, '_lfuf_source_ids', $ids );
+			update_post_meta( $pid, '_pkit_source_ids', $ids );
 		}
 
 		// Featured image (sideload from URL).
@@ -375,14 +375,14 @@ function import_rows( array $rows ): array {
  * ─────────────────────────────────────────────── */
 
 function render_page(): void {
-	$results = get_transient( 'lfuf_import_results' );
+	$results = get_transient( 'pkit_import_results' );
 	if ( $results ) {
-		delete_transient( 'lfuf_import_results' );
+		delete_transient( 'pkit_import_results' );
 	}
 
-	$product_count = (int) wp_count_posts( 'lfuf_product' )->publish;
+	$product_count = (int) wp_count_posts( 'pkit_product' )->publish;
 	?>
-	<div class="wrap lfuf-product-io">
+	<div class="wrap pkit-product-io">
 		<h1><?php esc_html_e( 'Product Import / Export', 'producerkit' ); ?></h1>
 
 		<?php if ( $results ) : ?>
@@ -414,9 +414,9 @@ function render_page(): void {
 			<?php endif; ?>
 		<?php endif; ?>
 
-		<div class="lfuf-product-io__panels">
+		<div class="pkit-product-io__panels">
 			<!-- ── Export ── -->
-			<div class="lfuf-product-io__panel">
+			<div class="pkit-product-io__panel">
 				<h2><?php esc_html_e( 'Export', 'producerkit' ); ?></h2>
 				<p>
 				<?php
@@ -428,7 +428,7 @@ function render_page(): void {
 				?>
 				</p>
 				<a
-					href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=farm-stand-product-io&lfuf_export_products=1' ), 'lfuf_export_products' ) ); ?>"
+					href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=producerkit-product-io&pkit_export_products=1' ), 'pkit_export_products' ) ); ?>"
 					class="button button-primary"
 					<?php disabled( $product_count, 0 ); ?>
 				>
@@ -437,16 +437,16 @@ function render_page(): void {
 			</div>
 
 			<!-- ── Import ── -->
-			<div class="lfuf-product-io__panel">
+			<div class="pkit-product-io__panel">
 				<h2><?php esc_html_e( 'Import', 'producerkit' ); ?></h2>
 				<p><?php esc_html_e( 'Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated.', 'producerkit' ); ?></p>
 
 				<form method="post" enctype="multipart/form-data">
-					<?php wp_nonce_field( 'lfuf_import_products' ); ?>
-					<input type="hidden" name="lfuf_import_products" value="1">
+					<?php wp_nonce_field( 'pkit_import_products' ); ?>
+					<input type="hidden" name="pkit_import_products" value="1">
 
 					<p>
-						<input type="file" name="lfuf_csv" accept=".csv,text/csv" required>
+						<input type="file" name="pkit_csv" accept=".csv,text/csv" required>
 					</p>
 
 					<p>
@@ -494,19 +494,19 @@ function render_page(): void {
 	</div>
 
 	<style>
-		.lfuf-product-io__panels {
+		.pkit-product-io__panels {
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
 			gap: 1.5rem;
 			margin-top: 1rem;
 		}
-		.lfuf-product-io__panel {
+		.pkit-product-io__panel {
 			background: #fff;
 			border: 1px solid #dcdcde;
 			border-radius: 0.375rem;
 			padding: 1.25rem 1.5rem;
 		}
-		.lfuf-product-io__panel h2 {
+		.pkit-product-io__panel h2 {
 			margin-top: 0;
 			font-size: 1.1rem;
 		}

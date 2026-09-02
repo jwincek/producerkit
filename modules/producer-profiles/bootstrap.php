@@ -7,7 +7,7 @@
  * component fields for the trades that need them.
  *
  * Core knows nothing about this module. It exposes two filters —
- * `lfuf_taxonomy_names` and `lfuf_taxonomy_default_terms` — and this module
+ * `pkit_taxonomy_names` and `pkit_taxonomy_default_terms` — and this module
  * answers them. Deactivate the module and core falls back to its own farm
  * vocabulary with no other change.
  */
@@ -27,14 +27,14 @@ if ( is_admin() ) {
 
 // Registered now, at plugins_loaded, so both are in place before core's own
 // init callback builds its labels and seeds its terms.
-add_filter( 'lfuf_taxonomy_names', __NAMESPACE__ . '\\Taxonomies\\filter_names', 10, 2 );
-add_filter( 'lfuf_taxonomy_default_terms', __NAMESPACE__ . '\\Taxonomies\\filter_default_terms', 10, 2 );
-add_filter( 'lfuf_post_type_names', __NAMESPACE__ . '\\Taxonomies\\filter_post_type_names', 10, 2 );
+add_filter( 'pkit_taxonomy_names', __NAMESPACE__ . '\\Taxonomies\\filter_names', 10, 2 );
+add_filter( 'pkit_taxonomy_default_terms', __NAMESPACE__ . '\\Taxonomies\\filter_default_terms', 10, 2 );
+add_filter( 'pkit_post_type_names', __NAMESPACE__ . '\\Taxonomies\\filter_post_type_names', 10, 2 );
 
 // Tells core which taxonomies are worth showing on a product. Without this
 // module the list stays empty and templates render exactly as before.
 add_filter(
-	'lfuf_detail_taxonomies',
+	'pkit_detail_taxonomies',
 	static fn ( array $taxonomies ): array => array_merge( $taxonomies, Profiles\active_taxonomies() )
 );
 

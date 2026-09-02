@@ -25,7 +25,7 @@
 	const ToggleControl = components.ToggleControl;
 	const Placeholder = components.Placeholder;
 
-	registerBlockType( 'lfuf/commission-form', {
+	registerBlockType( 'producerkit/commission-form', {
 		edit: function EditCommissionForm( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;

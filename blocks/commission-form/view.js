@@ -2,7 +2,7 @@
  * Commission Request Form — front end.
  *
  * Serialises the form (including whatever hidden fields Onsite Spam Guard
- * added) and POSTs it as JSON to lfuf/v1/commissions. No nonce: the route is
+ * added) and POSTs it as JSON to producerkit/v1/commissions. No nonce: the route is
  * public by design, and the server applies the honeypot, the spam guard and a
  * per-IP rate limit.
  */
@@ -19,11 +19,11 @@
 
 	ready( function () {
 		const roots = document.querySelectorAll(
-			'[data-lfuf-commission-form]'
+			'[data-pkit-commission-form]'
 		);
 
 		Array.prototype.forEach.call( roots, function ( root ) {
-			const form = root.querySelector( '.lfuf-commission-form__form' );
+			const form = root.querySelector( '.pkit-commission-form__form' );
 			const endpoint = root.getAttribute( 'data-endpoint' );
 
 			if ( ! form || ! endpoint ) {
@@ -31,15 +31,15 @@
 			}
 
 			const message = root.querySelector(
-				'.lfuf-commission-form__message'
+				'.pkit-commission-form__message'
 			);
 			const submit = root.querySelector(
-				'.lfuf-commission-form__submit'
+				'.pkit-commission-form__submit'
 			);
 
 			function say( text, kind ) {
 				message.textContent = text;
-				message.className = 'lfuf-commission-form__message is-' + kind;
+				message.className = 'pkit-commission-form__message is-' + kind;
 			}
 
 			form.addEventListener( 'submit', function ( event ) {

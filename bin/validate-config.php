@@ -280,7 +280,7 @@ if ( null !== $main_file ) {
 }
 
 // ── Check 6: block.json integrity ────────────────────────────────────────────
-$block_prefix = 'lfuf/';
+$block_prefix = 'producerkit/';
 foreach ( glob( $root . '/blocks/*/block.json' ) ?: [] as $block_json ) {
 	$dir   = dirname( $block_json );
 	$name  = basename( $dir );

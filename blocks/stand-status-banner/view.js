@@ -6,7 +6,7 @@
  * directives (data-wp-text, data-wp-class, data-wp-bind) that
  * automatically update the DOM when context values change.
  *
- * Store namespace: leftfield/stand-status
+ * Store namespace: producerkit/stand-status
  *
  * Context (per-block instance, set via data-wp-context in render.php):
  *   - locationId      (number)  — the stand's post ID
@@ -28,7 +28,7 @@ import { store, getContext } from '@wordpress/interactivity';
 
 const POLL_INTERVAL = 60000; // 60 seconds
 
-store( 'leftfield/stand-status', {
+store( 'producerkit/stand-status', {
 	/**
 	 * Derived state — computed from context values.
 	 * These are referenced by directives in render.php.
@@ -81,7 +81,7 @@ store( 'leftfield/stand-status', {
 			} catch ( err ) {
 				// Silently fail — stale server-rendered content is
 				// better than breaking the display.
-				console.warn( '[leftfield/stand-status] Poll failed:', err );
+				console.warn( '[producerkit/stand-status] Poll failed:', err );
 			}
 		},
 	},
@@ -104,7 +104,7 @@ store( 'leftfield/stand-status', {
 				return;
 			}
 
-			const { actions } = store( 'leftfield/stand-status' );
+			const { actions } = store( 'producerkit/stand-status' );
 
 			// Start polling. The interval ID is stored on the DOM element
 			// so it can be cleaned up if needed in the future.

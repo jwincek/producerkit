@@ -15,7 +15,7 @@
 	const { PanelBody, ComboboxControl, Placeholder } = components;
 	const { useSelect } = data;
 
-	registerBlockType( 'lfuf/availability-badge', {
+	registerBlockType( 'producerkit/availability-badge', {
 		edit: function EditAvailabilityBadge( props ) {
 			const { attributes, setAttributes } = props;
 			const { productId, locationId } = attributes;
@@ -25,7 +25,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_product',
+						'pkit_product',
 						{
 							per_page: 100,
 							status: 'publish',
@@ -39,7 +39,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -112,7 +112,7 @@
 								'span',
 								{
 									className:
-										'lfuf-availability-badge lfuf-availability-badge--available',
+										'pkit-availability-badge pkit-availability-badge--available',
 								},
 								'Available (preview)'
 						  )

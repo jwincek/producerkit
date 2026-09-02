@@ -12,15 +12,15 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'label'       => __( 'Woodworking', 'producerkit' ),
 	'description' => __( 'Hand-turned and hand-crafted wood items.', 'producerkit' ),
-	'taxonomies'  => [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+	'taxonomies'  => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 	'names'       => [
-		'lfuf_material'  => [ __( 'Wood Species', 'producerkit' ), __( 'Wood Species', 'producerkit' ) ],
-		'lfuf_component' => [ __( 'Hardware', 'producerkit' ), __( 'Hardware', 'producerkit' ) ],
+		'pkit_material'  => [ __( 'Wood Species', 'producerkit' ), __( 'Wood Species', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Hardware', 'producerkit' ), __( 'Hardware', 'producerkit' ) ],
 	],
 	'terms'       => [
-		'lfuf_product_type' => [ 'Pen', 'Bowl', 'Razor', 'Coffee Scoop', 'Bottle Stopper', 'Letter Opener', 'Cutting Board', 'Rolling Pin', 'Utensil' ],
-		'lfuf_material'     => [ 'Black Walnut', 'Cherry', 'Maple', 'Spalted Maple', 'Oak', 'Olive', 'Padauk', 'Purple Heart', 'Bocote', 'Zebrawood', 'Cedar', 'Hickory', 'Ash', 'Ebony', 'Cocobolo' ],
-		'lfuf_finish'       => [ 'CA Glue', 'Tung Oil', 'Beeswax', 'Danish Oil', 'Lacquer', 'Food Safe', 'Raw' ],
-		'lfuf_component'    => [ 'Slimline', 'Cigar', 'Bolt Action', 'Tactical', 'Click', 'Fountain', 'Rollerball', 'Double Edge Razor', 'Mach 3 Razor' ],
+		'pkit_product_type' => [ 'Pen', 'Bowl', 'Razor', 'Coffee Scoop', 'Bottle Stopper', 'Letter Opener', 'Cutting Board', 'Rolling Pin', 'Utensil' ],
+		'pkit_material'     => [ 'Black Walnut', 'Cherry', 'Maple', 'Spalted Maple', 'Oak', 'Olive', 'Padauk', 'Purple Heart', 'Bocote', 'Zebrawood', 'Cedar', 'Hickory', 'Ash', 'Ebony', 'Cocobolo' ],
+		'pkit_finish'       => [ 'CA Glue', 'Tung Oil', 'Beeswax', 'Danish Oil', 'Lacquer', 'Food Safe', 'Raw' ],
+		'pkit_component'    => [ 'Slimline', 'Cigar', 'Bolt Action', 'Tactical', 'Click', 'Fountain', 'Rollerball', 'Double Edge Razor', 'Mach 3 Razor' ],
 	],
 ];

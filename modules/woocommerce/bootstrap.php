@@ -45,7 +45,8 @@ function missing_notice(): void {
 		return;
 	}
 
-	if ( ! $screen || ! str_contains( (string) $screen->id, 'farm-stand' ) ) {
+	// Screen ids for this plugin's pages are producerkit / producerkit-*.
+	if ( ! $screen || ! str_contains( (string) $screen->id, 'producerkit' ) ) {
 		return;
 	}
 

@@ -27,7 +27,7 @@ add_action(
 				'category'            => 'farm-availability',
 				'execute_callback'    => function ( array $input = [] ): array {
 					// Reuse the REST callback by constructing a mock request.
-					$request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
+					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/board' );
 					$request->set_param( 'status', $input['status'] ?? '' );
 					$request->set_param( 'product_type', $input['product_type'] ?? '' );
 					$request->set_param( 'location', (int) ( $input['location_id'] ?? 0 ) );

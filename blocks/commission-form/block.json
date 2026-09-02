@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/commission-form",
+    "name": "producerkit/commission-form",
     "version": "1.1.0",
     "title": "Commission Request Form",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "hammer",
     "description": "Let visitors ask for a custom piece. You quote a price; they accept or decline by email. Requires the Commissions module.",
     "textdomain": "producerkit",

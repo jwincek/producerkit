@@ -18,8 +18,8 @@ return [
 	'taxonomies'  => [],
 	'names'       => [],
 	'terms'       => [
-		'lfuf_product_type' => [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ],
-		'lfuf_season'       => [ 'Spring', 'Summer', 'Fall', 'Winter' ],
-		'lfuf_event_type'   => [ 'Pizza Night', 'Potluck', 'Farm Dinner', 'Workshop', 'Farm Tour', 'Seed Exchange', 'Mini Market' ],
+		'pkit_product_type' => [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ],
+		'pkit_season'       => [ 'Spring', 'Summer', 'Fall', 'Winter' ],
+		'pkit_event_type'   => [ 'Pizza Night', 'Potluck', 'Farm Dinner', 'Workshop', 'Farm Tour', 'Seed Exchange', 'Mini Market' ],
 	],
 ];

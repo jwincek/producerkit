@@ -6,12 +6,12 @@
  *  - RSVP form submission (async action → REST API)
  *  - RSVP cancellation via token
  *
- * Store namespace: leftfield/event-list
+ * Store namespace: producerkit/event-list
  */
 
 import { store, getContext } from '@wordpress/interactivity';
 
-const { state } = store( 'leftfield/event-list', {
+const { state } = store( 'producerkit/event-list', {
 	state: {
 		// activeTypeFilter comes from wp_interactivity_state() — do NOT redeclare.
 

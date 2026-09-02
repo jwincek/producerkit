@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for lfuf/event-list.
+ * Server-side render for producerkit/event-list.
  *
  * Renders upcoming events with Interactivity API directives
  * for type filtering and inline RSVP form submission.
@@ -23,7 +23,7 @@ $show_type_filters = (bool) ( $attributes['showTypeFilters'] ?? true );
 $empty_message     = $attributes['emptyMessage'] ?? __( 'No upcoming events right now — check back soon!', 'producerkit' );
 
 // Fetch upcoming events.
-$request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/upcoming' );
+$request = new \WP_REST_Request( 'GET', '/producerkit/v1/events/upcoming' );
 $request->set_param( 'per_page', $per_page );
 $response = \ProducerKit\EventManager\REST\get_upcoming_events( $request );
 $upcoming = $response->get_data();
@@ -31,7 +31,7 @@ $upcoming = $response->get_data();
 // Fetch past events if enabled.
 $past = [];
 if ( $show_past ) {
-	$past_request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/past' );
+	$past_request = new \WP_REST_Request( 'GET', '/producerkit/v1/events/past' );
 	$past_request->set_param( 'per_page', $per_page );
 	$past_response = \ProducerKit\EventManager\REST\get_past_events( $past_request );
 	$past          = $past_response->get_data();
@@ -40,7 +40,7 @@ if ( $show_past ) {
 // Collect event type terms for filters.
 $all_types    = get_terms(
 	[
-		'taxonomy'   => 'lfuf_event_type',
+		'taxonomy'   => 'pkit_event_type',
 		'hide_empty' => true,
 	]
 );
@@ -58,7 +58,7 @@ $has_events = ! empty( $upcoming ) || ! empty( $past );
 
 // Interactivity API state + context.
 wp_interactivity_state(
-	'leftfield/event-list',
+	'producerkit/event-list',
 	[
 		'activeTypeFilter' => '',
 	]
@@ -66,44 +66,44 @@ wp_interactivity_state(
 
 $context = [
 	'showPast' => $show_past,
-	'restBase' => esc_url_raw( rest_url( 'lfuf/v1' ) ),
+	'restBase' => esc_url_raw( rest_url( 'producerkit/v1' ) ),
 ];
 
 $wrapper_attrs = get_block_wrapper_attributes(
 	[
-		'class' => 'lfuf-event-list',
+		'class' => 'pkit-event-list',
 	]
 );
 ?>
 
 <div
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
-	data-wp-interactive="leftfield/event-list"
+	data-wp-interactive="producerkit/event-list"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
 	<?php if ( ! $has_events ) : ?>
-		<p class="lfuf-event-list__empty"><?php echo esc_html( $empty_message ); ?></p>
+		<p class="pkit-event-list__empty"><?php echo esc_html( $empty_message ); ?></p>
 	<?php else : ?>
 
 		<!-- ── Type filters ── -->
 		<?php if ( $show_type_filters && count( $filter_types ) > 1 ) : ?>
-			<div class="lfuf-event-list__filters">
+			<div class="pkit-event-list__filters">
 				<button
 					type="button"
-					class="lfuf-event-list__filter-btn lfuf-event-list__filter-btn--active"
+					class="pkit-event-list__filter-btn pkit-event-list__filter-btn--active"
 					data-wp-on--click="actions.setTypeFilter"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => '' ] ) ); ?>'
-					data-wp-class--lfuf-event-list__filter-btn--active="state.isCurrentTypeActive"
+					data-wp-class--pkit-event-list__filter-btn--active="state.isCurrentTypeActive"
 					data-wp-bind--aria-pressed="state.isCurrentTypeActive"
 					aria-pressed="true"
 				><?php esc_html_e( 'All Events', 'producerkit' ); ?></button>
 				<?php foreach ( $filter_types as $ft ) : ?>
 					<button
 						type="button"
-						class="lfuf-event-list__filter-btn"
+						class="pkit-event-list__filter-btn"
 						data-wp-on--click="actions.setTypeFilter"
 						data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => $ft['slug'] ] ) ); ?>'
-						data-wp-class--lfuf-event-list__filter-btn--active="state.isCurrentTypeActive"
+						data-wp-class--pkit-event-list__filter-btn--active="state.isCurrentTypeActive"
 						data-wp-bind--aria-pressed="state.isCurrentTypeActive"
 						aria-pressed="false"
 					><?php echo esc_html( $ft['label'] ); ?></button>
@@ -113,8 +113,8 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 		<!-- ── Upcoming events ── -->
 		<?php if ( ! empty( $upcoming ) ) : ?>
-			<div class="lfuf-event-list__section">
-				<h3 class="lfuf-event-list__section-title"><?php esc_html_e( 'Upcoming', 'producerkit' ); ?></h3>
+			<div class="pkit-event-list__section">
+				<h3 class="pkit-event-list__section-title"><?php esc_html_e( 'Upcoming', 'producerkit' ); ?></h3>
 				<?php
 				foreach ( $upcoming as $event ) :
 					echo \ProducerKit\EventManager\Render\render_event_card( $event, $show_images, $show_rsvp, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.
@@ -125,8 +125,8 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 		<!-- ── Past events ── -->
 		<?php if ( $show_past && ! empty( $past ) ) : ?>
-			<div class="lfuf-event-list__section lfuf-event-list__section--past">
-				<h3 class="lfuf-event-list__section-title"><?php esc_html_e( 'Past Events', 'producerkit' ); ?></h3>
+			<div class="pkit-event-list__section pkit-event-list__section--past">
+				<h3 class="pkit-event-list__section-title"><?php esc_html_e( 'Past Events', 'producerkit' ); ?></h3>
 				<?php
 				foreach ( $past as $event ) :
 					echo \ProducerKit\EventManager\Render\render_event_card( $event, $show_images, false, $show_location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_event_card() escapes all output internally.

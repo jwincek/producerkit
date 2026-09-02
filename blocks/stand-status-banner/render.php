@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for lfuf/stand-status-banner.
+ * Server-side render for producerkit/stand-status-banner.
  *
  * Accessibility improvements:
  *   - <section> landmark with aria-label for navigation
@@ -33,21 +33,21 @@ if ( $location_id < 1 ) {
 }
 
 $post = get_post( $location_id );
-if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish' ) {
+if ( ! $post || $post->post_type !== 'pkit_location' || $post->post_status !== 'publish' ) {
 	return;
 }
 
 // Gather all meta.
-$is_open        = (bool) get_post_meta( $location_id, '_lfuf_is_open', true );
-$address        = get_post_meta( $location_id, '_lfuf_address', true );
-$hours          = get_post_meta( $location_id, '_lfuf_hours', true );
+$is_open        = (bool) get_post_meta( $location_id, '_pkit_is_open', true );
+$address        = get_post_meta( $location_id, '_pkit_address', true );
+$hours          = get_post_meta( $location_id, '_pkit_hours', true );
 $pay_methods    = \ProducerKit\Core\Payments\get_payment_methods( $location_id );
-$status_message = get_post_meta( $location_id, '_lfuf_ss_status_message', true );
-$last_toggled   = get_post_meta( $location_id, '_lfuf_ss_last_toggled', true );
-$season_start   = get_post_meta( $location_id, '_lfuf_ss_season_start', true );
-$season_end     = get_post_meta( $location_id, '_lfuf_ss_season_end', true );
-$auto_toggle    = (bool) get_post_meta( $location_id, '_lfuf_ss_auto_toggle', true );
-$schedule       = get_post_meta( $location_id, '_lfuf_ss_schedule', true );
+$status_message = get_post_meta( $location_id, '_pkit_ss_status_message', true );
+$last_toggled   = get_post_meta( $location_id, '_pkit_ss_last_toggled', true );
+$season_start   = get_post_meta( $location_id, '_pkit_ss_season_start', true );
+$season_end     = get_post_meta( $location_id, '_pkit_ss_season_end', true );
+$auto_toggle    = (bool) get_post_meta( $location_id, '_pkit_ss_auto_toggle', true );
+$schedule       = get_post_meta( $location_id, '_pkit_ss_schedule', true );
 
 // Compute effective status.
 if ( $auto_toggle && $schedule ) {
@@ -72,7 +72,7 @@ $time_ago = '';
 if ( $last_toggled ) {
 	$toggled_ts = strtotime( $last_toggled );
 	if ( $toggled_ts ) {
-		// time(), not current_time( 'timestamp' ): _lfuf_ss_last_toggled is
+		// time(), not current_time( 'timestamp' ): _pkit_ss_last_toggled is
 		// stored with an offset, so strtotime() yields a true UTC epoch, while
 		// current_time( 'timestamp' ) yields epoch + gmt_offset. Comparing the
 		// two made a stand toggled seconds ago read "4 hours ago" on a UTC-4
@@ -125,12 +125,12 @@ $context = [
 	'nextOpen'       => $next_open,
 	'timeAgo'        => $time_ago,
 	'pollingEnabled' => $polling_enabled,
-	'restBase'       => esc_url_raw( rest_url( 'lfuf/v1' ) ),
+	'restBase'       => esc_url_raw( rest_url( 'producerkit/v1' ) ),
 ];
 
 $wrapper_attrs = get_block_wrapper_attributes(
 	[
-		'class' => 'lfuf-stand-banner lfuf-stand-banner--' . esc_attr( $layout ) . ' lfuf-stand-banner--' . $status_slug,
+		'class' => 'pkit-stand-banner pkit-stand-banner--' . esc_attr( $layout ) . ' pkit-stand-banner--' . $status_slug,
 	]
 );
 
@@ -145,43 +145,43 @@ $section_label = sprintf(
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
 	aria-label="<?php echo esc_attr( $section_label ); ?>"
-	data-wp-interactive="leftfield/stand-status"
+	data-wp-interactive="producerkit/stand-status"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 	data-wp-init="callbacks.initPolling"
-	data-wp-class--lfuf-stand-banner--open="context.isOpen"
-	data-wp-class--lfuf-stand-banner--closed="!context.isOpen"
+	data-wp-class--pkit-stand-banner--open="context.isOpen"
+	data-wp-class--pkit-stand-banner--closed="!context.isOpen"
 >
 	<!--
 		The status region uses aria-live="polite" so screen readers
 		announce changes when polling updates the open/closed state.
 		"polite" waits for the user's current reading to finish.
 	-->
-	<div class="lfuf-stand-banner__main" aria-live="polite" aria-atomic="true">
-		<div class="lfuf-stand-banner__status-row">
+	<div class="pkit-stand-banner__main" aria-live="polite" aria-atomic="true">
+		<div class="pkit-stand-banner__status-row">
 			<span
-				class="lfuf-stand-banner__indicator"
+				class="pkit-stand-banner__indicator"
 				aria-hidden="true"
-				data-wp-class--lfuf-stand-banner__indicator--open="context.isOpen"
-				data-wp-class--lfuf-stand-banner__indicator--closed="!context.isOpen"
+				data-wp-class--pkit-stand-banner__indicator--open="context.isOpen"
+				data-wp-class--pkit-stand-banner__indicator--closed="!context.isOpen"
 			></span>
 			<span
-				class="lfuf-stand-banner__status-label"
+				class="pkit-stand-banner__status-label"
 				role="status"
 				data-wp-text="context.statusLabel"
 			><?php echo esc_html( $status_label ); ?></span>
 		</div>
 
-		<h2 class="lfuf-stand-banner__name"><?php echo esc_html( $post->post_title ); ?></h2>
+		<h2 class="pkit-stand-banner__name"><?php echo esc_html( $post->post_title ); ?></h2>
 
 		<p
-			class="lfuf-stand-banner__message"
+			class="pkit-stand-banner__message"
 			data-wp-text="context.statusMessage"
 			data-wp-bind--hidden="!context.statusMessage"
 			<?php echo $status_message ? '' : 'hidden'; ?>
 		><?php echo esc_html( $status_message ); ?></p>
 
 		<p
-			class="lfuf-stand-banner__next-open"
+			class="pkit-stand-banner__next-open"
 			data-wp-text="state.nextOpenText"
 			data-wp-bind--hidden="state.hideNextOpen"
 			<?php echo ( ! $is_open && $next_open ) ? '' : 'hidden'; ?>
@@ -196,7 +196,7 @@ $section_label = sprintf(
 
 		<?php if ( $time_ago ) : ?>
 			<span
-				class="lfuf-stand-banner__updated"
+				class="pkit-stand-banner__updated"
 				data-wp-text="state.updatedText"
 			>
 			<?php
@@ -207,41 +207,41 @@ $section_label = sprintf(
 		<?php endif; ?>
 	</div>
 
-	<div class="lfuf-stand-banner__details">
+	<div class="pkit-stand-banner__details">
 		<?php if ( ! $in_season && $show_season && $season_range_full ) : ?>
-			<p class="lfuf-stand-banner__off-season">
+			<p class="pkit-stand-banner__off-season">
 				<?php echo esc_html( $season_range_full ); ?>
 			</p>
 		<?php endif; ?>
 
 		<?php if ( $in_season && $show_season && $season_range_short ) : ?>
-			<p class="lfuf-stand-banner__season-note">
+			<p class="pkit-stand-banner__season-note">
 				<?php echo esc_html( $season_range_short ); ?>
 			</p>
 		<?php endif; ?>
 
 		<?php if ( $show_address && $address ) : ?>
-			<p class="lfuf-stand-banner__address">
-				<span class="lfuf-stand-banner__icon" aria-hidden="true">📍</span>
+			<p class="pkit-stand-banner__address">
+				<span class="pkit-stand-banner__icon" aria-hidden="true">📍</span>
 				<span class="screen-reader-text"><?php esc_html_e( 'Address:', 'producerkit' ); ?> </span>
 				<?php echo esc_html( $address ); ?>
 			</p>
 		<?php endif; ?>
 
 		<?php if ( $show_hours && $hours ) : ?>
-			<p class="lfuf-stand-banner__hours">
-				<span class="lfuf-stand-banner__icon" aria-hidden="true">🕐</span>
+			<p class="pkit-stand-banner__hours">
+				<span class="pkit-stand-banner__icon" aria-hidden="true">🕐</span>
 				<span class="screen-reader-text"><?php esc_html_e( 'Hours:', 'producerkit' ); ?> </span>
 				<?php echo esc_html( $hours ); ?>
 			</p>
 		<?php endif; ?>
 
 		<?php if ( $show_venmo && $pay_link ) : ?>
-			<a class="lfuf-stand-banner__venmo-link"
+			<a class="pkit-stand-banner__venmo-link"
 				href="<?php echo esc_url( $pay_link['url'] ); ?>"
 				target="_blank"
 				rel="noopener noreferrer">
-				<span class="lfuf-stand-banner__icon" aria-hidden="true">💸</span>
+				<span class="pkit-stand-banner__icon" aria-hidden="true">💸</span>
 				<?php
 				if ( in_array( $pay_link['type'], [ 'venmo', 'cashapp', 'paypal' ], true ) ) {
 					printf(

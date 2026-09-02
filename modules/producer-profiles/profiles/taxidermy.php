@@ -20,20 +20,20 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'label'           => __( 'Taxidermy', 'producerkit' ),
 	'description'     => __( 'Mounts taken in as commissions, catalogued by species, style and base.', 'producerkit' ),
-	'taxonomies'      => [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ],
+	'taxonomies'      => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
 	'names'           => [
-		'lfuf_material'  => [ __( 'Species', 'producerkit' ), __( 'Species', 'producerkit' ) ],
-		'lfuf_finish'    => [ __( 'Mount Style', 'producerkit' ), __( 'Mount Styles', 'producerkit' ) ],
-		'lfuf_component' => [ __( 'Base', 'producerkit' ), __( 'Bases', 'producerkit' ) ],
+		'pkit_material'  => [ __( 'Species', 'producerkit' ), __( 'Species', 'producerkit' ) ],
+		'pkit_finish'    => [ __( 'Mount Style', 'producerkit' ), __( 'Mount Styles', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Base', 'producerkit' ), __( 'Bases', 'producerkit' ) ],
 	],
 	'post_type_names' => [
-		'lfuf_product' => [ __( 'Mount', 'producerkit' ), __( 'Mounts', 'producerkit' ), __( 'Mounts', 'producerkit' ) ],
+		'pkit_product' => [ __( 'Mount', 'producerkit' ), __( 'Mounts', 'producerkit' ), __( 'Mounts', 'producerkit' ) ],
 	],
 	'terms'           => [
-		'lfuf_product_type' => [ 'Shoulder Mount', 'Full Body Mount', 'European Mount', 'Pedestal Mount', 'Bird Mount', 'Fish Mount', 'Hide or Rug', 'Habitat Scene', 'Repair or Restoration' ],
-		'lfuf_material'     => [ 'Whitetail Deer', 'Mule Deer', 'Elk', 'Black Bear', 'Pronghorn', 'Turkey', 'Pheasant', 'Waterfowl', 'Trout', 'Bass', 'Coyote', 'Fox' ],
-		'lfuf_finish'       => [ 'Upright', 'Semi-Sneak', 'Sneak', 'Open Mouth', 'Wall Pedestal', 'Standing', 'Flying' ],
-		'lfuf_component'    => [ 'Walnut Panel', 'Oak Panel', 'Driftwood', 'Rock Base', 'Habitat Base', 'No Base' ],
-		'lfuf_event_type'   => [ 'Sportsmans Show', 'Open Shop', 'Drop-Off Day', 'Workshop' ],
+		'pkit_product_type' => [ 'Shoulder Mount', 'Full Body Mount', 'European Mount', 'Pedestal Mount', 'Bird Mount', 'Fish Mount', 'Hide or Rug', 'Habitat Scene', 'Repair or Restoration' ],
+		'pkit_material'     => [ 'Whitetail Deer', 'Mule Deer', 'Elk', 'Black Bear', 'Pronghorn', 'Turkey', 'Pheasant', 'Waterfowl', 'Trout', 'Bass', 'Coyote', 'Fox' ],
+		'pkit_finish'       => [ 'Upright', 'Semi-Sneak', 'Sneak', 'Open Mouth', 'Wall Pedestal', 'Standing', 'Flying' ],
+		'pkit_component'    => [ 'Walnut Panel', 'Oak Panel', 'Driftwood', 'Rock Base', 'Habitat Base', 'No Base' ],
+		'pkit_event_type'   => [ 'Sportsmans Show', 'Open Shop', 'Drop-Off Day', 'Workshop' ],
 	],
 ];

@@ -47,7 +47,7 @@ function on_paid( int $order_id ): void {
 	 * @param int    $id       Request id.
 	 * @param int    $order_id WooCommerce order id.
 	 */
-	do_action( 'lfuf_request_settled', $request['type'], $request['id'], $order_id );
+	do_action( 'pkit_request_settled', $request['type'], $request['id'], $order_id );
 }
 
 /**
@@ -71,5 +71,5 @@ function on_cancelled( int $order_id ): void {
 	 * @param int    $id       Request id.
 	 * @param int    $order_id WooCommerce order id.
 	 */
-	do_action( 'lfuf_request_payment_reversed', $request['type'], $request['id'], $order_id );
+	do_action( 'pkit_request_payment_reversed', $request['type'], $request['id'], $order_id );
 }

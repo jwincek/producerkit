@@ -2,9 +2,9 @@
 /**
  * Shared Taxonomies.
  *
- * lfuf_product_type — Produce, Bread, Pantry Good, Seedling, etc.
- * lfuf_season       — Spring, Summer, Fall, Winter (shared across products & events).
- * lfuf_event_type   — Pizza Night, Potluck, Farm Dinner, Workshop, Tour, Market, etc.
+ * pkit_product_type — Produce, Bread, Pantry Good, Seedling, etc.
+ * pkit_season       — Spring, Summer, Fall, Winter (shared across products & events).
+ * pkit_event_type   — Pizza Night, Potluck, Farm Dinner, Workshop, Tour, Market, etc.
  *
  * The display names and the seeded default terms both run through filters so
  * that the producer-profiles module can re-label a taxonomy for a different
@@ -44,7 +44,7 @@ function build_labels( string $taxonomy, string $singular, string $plural ): arr
 	 * @param array{0: string, 1: string} $names    [ singular, plural ].
 	 * @param string                      $taxonomy Taxonomy slug.
 	 */
-	[ $singular, $plural ] = apply_filters( 'lfuf_taxonomy_names', [ $singular, $plural ], $taxonomy );
+	[ $singular, $plural ] = apply_filters( 'pkit_taxonomy_names', [ $singular, $plural ], $taxonomy );
 
 	return [
 		'name'              => $plural,
@@ -85,7 +85,7 @@ function seed_terms( string $taxonomy, array $defaults ): void {
 	 * @param string[] $defaults Term names.
 	 * @param string   $taxonomy Taxonomy slug.
 	 */
-	$defaults = (array) apply_filters( 'lfuf_taxonomy_default_terms', $defaults, $taxonomy );
+	$defaults = (array) apply_filters( 'pkit_taxonomy_default_terms', $defaults, $taxonomy );
 
 	foreach ( $defaults as $term ) {
 		$term = trim( (string) $term );
@@ -117,7 +117,7 @@ function detail_terms( int $post_id ): array {
 	 * @param string[] $taxonomies Taxonomy slugs, in display order.
 	 * @param int      $post_id    Product id.
 	 */
-	$taxonomies = (array) apply_filters( 'lfuf_detail_taxonomies', [], $post_id );
+	$taxonomies = (array) apply_filters( 'pkit_detail_taxonomies', [], $post_id );
 
 	$out = [];
 
@@ -144,11 +144,11 @@ function detail_terms( int $post_id ): array {
  * ─────────────────────────────────────────────── */
 function register_product_type(): void {
 	register_taxonomy(
-		'lfuf_product_type',
-		[ 'lfuf_product' ],
+		'pkit_product_type',
+		[ 'pkit_product' ],
 		[
 			'labels'            => build_labels(
-				'lfuf_product_type',
+				'pkit_product_type',
 				__( 'Product Type', 'producerkit' ),
 				__( 'Product Types', 'producerkit' )
 			),
@@ -156,7 +156,7 @@ function register_product_type(): void {
 			'public'            => true,
 			'show_in_rest'      => true,
 			'rest_base'         => 'product-types',
-			'rest_namespace'    => 'lfuf/v1',
+			'rest_namespace'    => 'producerkit/v1',
 			'rewrite'           => [
 				'slug'       => 'product-type',
 				'with_front' => false,
@@ -167,7 +167,7 @@ function register_product_type(): void {
 
 	// Seed default terms (self-healing, admin only).
 	if ( is_admin() ) {
-		seed_terms( 'lfuf_product_type', [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ] );
+		seed_terms( 'pkit_product_type', [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ] );
 	}
 }
 
@@ -176,11 +176,11 @@ function register_product_type(): void {
  * ─────────────────────────────────────────────── */
 function register_season(): void {
 	register_taxonomy(
-		'lfuf_season',
-		[ 'lfuf_product', 'lfuf_event' ],
+		'pkit_season',
+		[ 'pkit_product', 'pkit_event' ],
 		[
 			'labels'            => build_labels(
-				'lfuf_season',
+				'pkit_season',
 				__( 'Season', 'producerkit' ),
 				__( 'Seasons', 'producerkit' )
 			),
@@ -188,7 +188,7 @@ function register_season(): void {
 			'public'            => true,
 			'show_in_rest'      => true,
 			'rest_base'         => 'seasons',
-			'rest_namespace'    => 'lfuf/v1',
+			'rest_namespace'    => 'producerkit/v1',
 			'rewrite'           => [
 				'slug'       => 'season',
 				'with_front' => false,
@@ -198,7 +198,7 @@ function register_season(): void {
 	);
 
 	if ( is_admin() ) {
-		seed_terms( 'lfuf_season', [ 'Spring', 'Summer', 'Fall', 'Winter' ] );
+		seed_terms( 'pkit_season', [ 'Spring', 'Summer', 'Fall', 'Winter' ] );
 	}
 }
 
@@ -207,11 +207,11 @@ function register_season(): void {
  * ─────────────────────────────────────────────── */
 function register_event_type(): void {
 	register_taxonomy(
-		'lfuf_event_type',
-		[ 'lfuf_event' ],
+		'pkit_event_type',
+		[ 'pkit_event' ],
 		[
 			'labels'            => build_labels(
-				'lfuf_event_type',
+				'pkit_event_type',
 				__( 'Event Type', 'producerkit' ),
 				__( 'Event Types', 'producerkit' )
 			),
@@ -219,7 +219,7 @@ function register_event_type(): void {
 			'public'            => true,
 			'show_in_rest'      => true,
 			'rest_base'         => 'event-types',
-			'rest_namespace'    => 'lfuf/v1',
+			'rest_namespace'    => 'producerkit/v1',
 			'rewrite'           => [
 				'slug'       => 'event-type',
 				'with_front' => false,
@@ -230,7 +230,7 @@ function register_event_type(): void {
 
 	if ( is_admin() ) {
 		seed_terms(
-			'lfuf_event_type',
+			'pkit_event_type',
 			[
 				'Pizza Night',
 				'Potluck',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for lfuf/availability-badge.
+ * Server-side render for producerkit/availability-badge.
  *
  * Accessibility: screen-reader label "Availability:" before the badge,
  * role="status" on the wrapper for context.
@@ -30,7 +30,7 @@ $product_name = $product ? $product->post_title : '';
 
 $wrapper_attrs = get_block_wrapper_attributes(
 	[
-		'class' => 'lfuf-availability-badge-wrapper',
+		'class' => 'pkit-availability-badge-wrapper',
 	]
 );
 ?>
@@ -46,10 +46,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 		}
 		?>
 	</span>
-	<span class="lfuf-availability-badge lfuf-availability-badge--<?php echo esc_attr( $row->status ); ?>">
+	<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $row->status ); ?>">
 		<?php echo esc_html( $status_text ); ?>
 	</span>
 	<?php if ( $row->quantity_note ) : ?>
-		<span class="lfuf-availability-badge__note"><?php echo esc_html( $row->quantity_note ); ?></span>
+		<span class="pkit-availability-badge__note"><?php echo esc_html( $row->quantity_note ); ?></span>
 	<?php endif; ?>
 </span>

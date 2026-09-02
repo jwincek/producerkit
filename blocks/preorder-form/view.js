@@ -4,7 +4,7 @@
 
 import { store, getContext } from '@wordpress/interactivity';
 
-store( 'leftfield/preorder-form', {
+store( 'producerkit/preorder-form', {
 	actions: {
 		updateQty( event ) {
 			const ctx = getContext();

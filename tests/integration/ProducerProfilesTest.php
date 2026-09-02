@@ -51,7 +51,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 			// or one of core's own.
 			$known = array_merge(
 				(array) $profile['taxonomies'],
-				[ 'lfuf_product_type', 'lfuf_season', 'lfuf_event_type' ]
+				[ 'pkit_product_type', 'pkit_season', 'pkit_event_type' ]
 			);
 			foreach ( array_keys( $profile['names'] ) as $taxonomy ) {
 				$this->assertContains( $taxonomy, $known, "Profile '{$slug}' re-labels '{$taxonomy}', which it does not enable." );
@@ -81,9 +81,9 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 	public function test_musician_relabels_the_optional_fields_for_a_merch_table(): void {
 		$this->activate( 'musician' );
 
-		$this->assertSame( 'Format', get_taxonomy( 'lfuf_material' )->labels->singular_name );
-		$this->assertSame( 'Edition', get_taxonomy( 'lfuf_finish' )->labels->singular_name );
-		$this->assertSame( 'Packaging', get_taxonomy( 'lfuf_component' )->labels->singular_name );
+		$this->assertSame( 'Format', get_taxonomy( 'pkit_material' )->labels->singular_name );
+		$this->assertSame( 'Edition', get_taxonomy( 'pkit_finish' )->labels->singular_name );
+		$this->assertSame( 'Packaging', get_taxonomy( 'pkit_component' )->labels->singular_name );
 	}
 
 	/**
@@ -96,12 +96,12 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$this->assertSame(
 			[],
-			apply_filters( 'lfuf_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'lfuf_season' ),
+			apply_filters( 'pkit_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'pkit_season' ),
 			'The musician profile should seed no growing seasons.'
 		);
 
 		// But it does have plenty to say about event types.
-		$events = apply_filters( 'lfuf_taxonomy_default_terms', [ 'Potluck' ], 'lfuf_event_type' );
+		$events = apply_filters( 'pkit_taxonomy_default_terms', [ 'Potluck' ], 'pkit_event_type' );
 		$this->assertContains( 'Show', $events );
 		$this->assertContains( 'Residency', $events );
 		$this->assertNotContains( 'Potluck', $events );
@@ -146,9 +146,9 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 	public function test_beekeeping_enables_all_three_optional_taxonomies(): void {
 		$this->activate( 'beekeeping' );
 
-		foreach ( [ 'lfuf_material', 'lfuf_finish', 'lfuf_component' ] as $taxonomy ) {
+		foreach ( [ 'pkit_material', 'pkit_finish', 'pkit_component' ] as $taxonomy ) {
 			$this->assertTrue( taxonomy_exists( $taxonomy ), "'{$taxonomy}' should be registered for a beekeeper." );
-			$this->assertContains( 'lfuf_product', get_taxonomy( $taxonomy )->object_type );
+			$this->assertContains( 'pkit_product', get_taxonomy( $taxonomy )->object_type );
 		}
 	}
 
@@ -157,7 +157,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 	public function test_beekeeping_relabels_material_as_floral_source(): void {
 		$this->activate( 'beekeeping' );
 
-		$labels = get_taxonomy( 'lfuf_material' )->labels;
+		$labels = get_taxonomy( 'pkit_material' )->labels;
 		$this->assertSame( 'Floral Source', $labels->singular_name );
 		$this->assertSame( 'Floral Sources', $labels->name );
 		// Derived labels follow the override, not the default.
@@ -166,16 +166,16 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 	public function test_woodworking_relabels_material_as_wood_species(): void {
 		$this->activate( 'woodworking' );
-		$this->assertSame( 'Wood Species', get_taxonomy( 'lfuf_material' )->labels->singular_name );
+		$this->assertSame( 'Wood Species', get_taxonomy( 'pkit_material' )->labels->singular_name );
 	}
 
 	public function test_a_profile_without_an_override_keeps_the_default_name(): void {
 		$this->activate( 'general' );
-		$this->assertSame( 'Material', get_taxonomy( 'lfuf_material' )->labels->singular_name );
+		$this->assertSame( 'Material', get_taxonomy( 'pkit_material' )->labels->singular_name );
 	}
 
 	public function test_relabelling_ignores_a_half_declared_override(): void {
-		$names = ProfileTaxonomies\filter_names( [ 'Material', 'Materials' ], 'lfuf_nonexistent' );
+		$names = ProfileTaxonomies\filter_names( [ 'Material', 'Materials' ], 'pkit_nonexistent' );
 		$this->assertSame( [ 'Material', 'Materials' ], $names );
 	}
 
@@ -185,9 +185,9 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 		update_option( Profiles\OPTION, 'beekeeping' );
 
 		$terms = apply_filters(
-			'lfuf_taxonomy_default_terms',
+			'pkit_taxonomy_default_terms',
 			[ 'Produce', 'Bread' ],
-			'lfuf_product_type'
+			'pkit_product_type'
 		);
 
 		$this->assertContains( 'Honey', $terms );
@@ -200,7 +200,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$this->assertSame(
 			[],
-			apply_filters( 'lfuf_taxonomy_default_terms', [ 'Produce' ], 'lfuf_product_type' ),
+			apply_filters( 'pkit_taxonomy_default_terms', [ 'Produce' ], 'pkit_product_type' ),
 			'The blank-slate profile should seed no vocabulary.'
 		);
 	}
@@ -211,7 +211,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 		// Woodworking says nothing about seasons, so core's list survives.
 		$this->assertSame(
 			[ 'Spring', 'Summer' ],
-			apply_filters( 'lfuf_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'lfuf_season' )
+			apply_filters( 'pkit_taxonomy_default_terms', [ 'Spring', 'Summer' ], 'pkit_season' )
 		);
 	}
 
@@ -221,17 +221,17 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 	public function test_switching_profiles_never_removes_existing_terms(): void {
 		$this->activate( 'farm' );
 
-		\ProducerKit\Core\Taxonomies\seed_terms( 'lfuf_product_type', [ 'Produce', 'Bread' ] );
-		$mine = wp_insert_term( 'Heirloom Tomatoes', 'lfuf_product_type' );
+		\ProducerKit\Core\Taxonomies\seed_terms( 'pkit_product_type', [ 'Produce', 'Bread' ] );
+		$mine = wp_insert_term( 'Heirloom Tomatoes', 'pkit_product_type' );
 		$this->assertIsArray( $mine );
 
 		// Switch trades entirely.
 		$this->activate( 'beekeeping' );
-		\ProducerKit\Core\Taxonomies\seed_terms( 'lfuf_product_type', [ 'Produce', 'Bread' ] );
+		\ProducerKit\Core\Taxonomies\seed_terms( 'pkit_product_type', [ 'Produce', 'Bread' ] );
 
-		$this->assertNotEmpty( term_exists( 'Heirloom Tomatoes', 'lfuf_product_type' ), 'A hand-added term was lost on switch.' );
-		$this->assertNotEmpty( term_exists( 'Produce', 'lfuf_product_type' ), 'A previously seeded term was lost on switch.' );
-		$this->assertNotEmpty( term_exists( 'Honey', 'lfuf_product_type' ), 'The new profile did not seed its own vocabulary.' );
+		$this->assertNotEmpty( term_exists( 'Heirloom Tomatoes', 'pkit_product_type' ), 'A hand-added term was lost on switch.' );
+		$this->assertNotEmpty( term_exists( 'Produce', 'pkit_product_type' ), 'A previously seeded term was lost on switch.' );
+		$this->assertNotEmpty( term_exists( 'Honey', 'pkit_product_type' ), 'The new profile did not seed its own vocabulary.' );
 	}
 
 	/* ── Detail terms reach the templates ─────────────────────── */
@@ -246,12 +246,12 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		wp_set_object_terms( $product, 'Stoneware', 'lfuf_material' );
-		wp_set_object_terms( $product, 'Ash Glaze', 'lfuf_finish' );
+		wp_set_object_terms( $product, 'Stoneware', 'pkit_material' );
+		wp_set_object_terms( $product, 'Ash Glaze', 'pkit_finish' );
 
 		$details = \ProducerKit\Core\Taxonomies\detail_terms( $product );
 
@@ -264,11 +264,11 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		wp_set_object_terms( $product, 'Porcelain', 'lfuf_material' );
+		wp_set_object_terms( $product, 'Porcelain', 'pkit_material' );
 
 		$details = \ProducerKit\Core\Taxonomies\detail_terms( $product );
 
@@ -285,7 +285,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
@@ -303,29 +303,29 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 		$product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 			]
 		);
-		wp_set_object_terms( $product, 'Stoneware', 'lfuf_material' );
+		wp_set_object_terms( $product, 'Stoneware', 'pkit_material' );
 
 		$suppress = static fn (): array => [];
-		add_filter( 'lfuf_detail_taxonomies', $suppress, 99 );
+		add_filter( 'pkit_detail_taxonomies', $suppress, 99 );
 
 		$this->assertSame( [], \ProducerKit\Core\Taxonomies\detail_terms( $product ) );
 
-		remove_filter( 'lfuf_detail_taxonomies', $suppress, 99 );
+		remove_filter( 'pkit_detail_taxonomies', $suppress, 99 );
 	}
 
 	public function test_seed_terms_is_idempotent(): void {
 		$this->activate( 'farm' );
 
-		\ProducerKit\Core\Taxonomies\seed_terms( 'lfuf_product_type', [ 'Produce' ] );
-		\ProducerKit\Core\Taxonomies\seed_terms( 'lfuf_product_type', [ 'Produce' ] );
+		\ProducerKit\Core\Taxonomies\seed_terms( 'pkit_product_type', [ 'Produce' ] );
+		\ProducerKit\Core\Taxonomies\seed_terms( 'pkit_product_type', [ 'Produce' ] );
 
 		$found = get_terms(
 			[
-				'taxonomy'   => 'lfuf_product_type',
+				'taxonomy'   => 'pkit_product_type',
 				'hide_empty' => false,
 				'name'       => 'Produce',
 			]
