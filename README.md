@@ -53,7 +53,7 @@ producerkit/
 │   │   │   ├── profiles.php           # Registry, lazy per-file loading
 │   │   │   ├── taxonomies.php         # Optional material/finish/component
 │   │   │   └── admin-settings.php     # Profile picker
-│   │   └── profiles/                  # 11 profiles, one file each
+│   │   └── profiles/                  # 15 profiles, one file each
 │   ├── commissions/                   # Made-to-order requests
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -128,7 +128,9 @@ Both of the obvious names are taken by plugins ProducerKit is likely to sit besi
 
 ### Producer Profiles
 
-Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Eleven profiles ship: **Farm** (the default), **Bakery**, **Beekeeping**, **Musician**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Fifteen profiles ship: **Farm** (the default), **Bakery**, **Beekeeping**, **Musician**, **Author**, **Painting & Drawing**, **Screen Printing**, **Taxidermy**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+
+**General** is the deliberate fallback: all three fields, no vocabulary. A trade whose words we would only be guessing at is better served by a blank slate than by someone else's wrong list.
 
 A profile does two things:
 
