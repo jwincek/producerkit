@@ -121,7 +121,7 @@ Three top-level items, not five. **Catalog** and **Events** stay top-level becau
 
 That split is forced by core: `wp-admin/menu.php` skips a post type whose `show_in_menu` is a string, so nesting one drops its "Add New" entry *and* every taxonomy submenu it has. Nesting Catalog would put up to five taxonomies out of reach of the menu entirely.
 
-The catalogue's sidebar label is **Catalog**, not "Products", because WooCommerce also registers a top-level "Products". Only the menu word changes — it is still a Product on the edit screen, and a producer profile can re-word it again (a musician sees *Merch*).
+Both of the obvious names are taken by plugins ProducerKit is likely to sit beside: WooCommerce registers a top-level **Products**, The Events Calendar a top-level **Events**. So the sidebar says **Catalog** and **Calendar** while the content stays Products and Events everywhere the word appears in a sentence. A producer profile can re-word them again — a musician sees *Merch* and *Shows*.
 
 ### Producer Profiles
 

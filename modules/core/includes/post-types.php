@@ -60,10 +60,12 @@ function register(): void {
  * separate word that goes in the sidebar.
  *
  * menu_name is deliberately its own value rather than defaulting to the
- * plural. WooCommerce also registers a top-level menu called "Products", and
- * two identical entries in one sidebar is a support question waiting to
- * happen — so this plugin's catalogue says "Catalog" in the menu while
- * remaining "Products" everywhere the word appears in context.
+ * plural, because the two obvious names for this plugin's content are both
+ * taken by plugins it is likely to sit beside. WooCommerce registers a
+ * top-level "Products"; The Events Calendar registers a top-level "Events".
+ * Two identical entries in one sidebar is a support question waiting to
+ * happen, so the menu says "Catalog" and "Calendar" while the content stays
+ * Products and Events everywhere the word appears in a sentence.
  *
  * Filterable so the producer-profiles module can re-word it per trade, the
  * same way it re-words the taxonomies.
@@ -131,7 +133,7 @@ function register_product(): void {
 				'slug'       => 'products',
 				'with_front' => false,
 			],
-			'menu_icon'      => 'dashicons-archive',
+			'menu_icon'      => 'dashicons-tag',
 			'menu_position'  => 26,
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ],
 			'show_in_rest'   => true,
@@ -223,18 +225,12 @@ function register_location(): void {
  * Event — pizza nights, potlucks, farm dinners.
  * ─────────────────────────────────────────────── */
 function register_event(): void {
-	$labels = [
-		'name'          => __( 'Events', 'producerkit' ),
-		'singular_name' => __( 'Event', 'producerkit' ),
-		'add_new_item'  => __( 'Add New Event', 'producerkit' ),
-		'edit_item'     => __( 'Edit Event', 'producerkit' ),
-		'new_item'      => __( 'New Event', 'producerkit' ),
-		'view_item'     => __( 'View Event', 'producerkit' ),
-		'search_items'  => __( 'Search Events', 'producerkit' ),
-		'not_found'     => __( 'No events found.', 'producerkit' ),
-		'all_items'     => __( 'All Events', 'producerkit' ),
-		'menu_name'     => __( 'Events', 'producerkit' ),
-	];
+	$labels = build_labels(
+		'lfuf_event',
+		__( 'Event', 'producerkit' ),
+		__( 'Events', 'producerkit' ),
+		__( 'Calendar', 'producerkit' )
+	);
 
 	register_post_type(
 		'lfuf_event',

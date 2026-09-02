@@ -26,6 +26,7 @@ return [
 	// edit screen, where the generic word reads better.
 	'post_type_names' => [
 		'lfuf_product' => [ '', '', __( 'Merch', 'producerkit' ) ],
+		'lfuf_event'   => [ __( 'Show', 'producerkit' ), __( 'Shows', 'producerkit' ), __( 'Shows', 'producerkit' ) ],
 	],
 	'names'           => [
 		'lfuf_material'  => [ __( 'Format', 'producerkit' ), __( 'Formats', 'producerkit' ) ],

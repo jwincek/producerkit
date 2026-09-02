@@ -105,6 +105,34 @@ final class AdminMenuTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The Events Calendar also registers a top-level "Events". Both of the
+	 * obvious names for this plugin's content are taken by plugins it is
+	 * likely to sit beside.
+	 */
+	public function test_the_events_menu_label_differs_from_the_events_calendar(): void {
+		$labels = get_post_type_object( 'lfuf_event' )->labels;
+
+		$this->assertSame( 'Calendar', $labels->menu_name );
+		$this->assertNotSame( 'Events', $labels->menu_name );
+		$this->assertSame( 'Events', $labels->name, 'Still Events in a sentence.' );
+		$this->assertSame( 'Add New Event', $labels->add_new_item );
+	}
+
+	/**
+	 * The two top-level icons must not read as the same glyph as a neighbour's.
+	 * A plain box collides with WooCommerce's Products icon.
+	 */
+	public function test_top_level_icons_are_distinct_from_each_other(): void {
+		$icons = [
+			get_post_type_object( 'lfuf_product' )->menu_icon,
+			get_post_type_object( 'lfuf_event' )->menu_icon,
+		];
+
+		$this->assertSame( $icons, array_unique( $icons ) );
+		$this->assertNotContains( 'dashicons-archive', $icons, 'Reads as WooCommerce’s Products box.' );
+	}
+
+	/**
 	 * Only the sidebar word changes. In a sentence — "Add New Product",
 	 * "No products found" — the ordinary word still reads better.
 	 */
@@ -129,6 +157,12 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		$this->assertSame( 'Merch', $labels->menu_name, 'A band calls the table merch.' );
 		$this->assertSame( 'Product', $labels->singular_name, 'But it is still a product on the edit screen.' );
 		$this->assertSame( 'Add New Product', $labels->add_new_item );
+
+		// A profile may also override all three slots, not just the menu.
+		$events = get_post_type_object( 'lfuf_event' )->labels;
+		$this->assertSame( 'Shows', $events->menu_name );
+		$this->assertSame( 'Show', $events->singular_name );
+		$this->assertSame( 'Add New Show', $events->add_new_item );
 	}
 
 	public function test_a_profile_that_says_nothing_keeps_the_default(): void {
