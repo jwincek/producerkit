@@ -84,6 +84,36 @@ function filter_names( array $names, string $taxonomy ): array {
 }
 
 /**
+ * Re-word a post type from the active profile.
+ *
+ * Same shape as filter_names(), but a triple: a trade may want a different
+ * word in the sidebar from the one it uses in a sentence. A musician's
+ * catalogue is "Merch" in the menu and still a "Product" on the edit screen.
+ *
+ * @param array{0: string, 1: string, 2: string} $names     [ singular, plural, menu ].
+ * @param string                                 $post_type Post type slug.
+ * @return array{0: string, 1: string, 2: string}
+ */
+function filter_post_type_names( array $names, string $post_type ): array {
+	$profile = Profiles\active();
+
+	if ( null === $profile || ! array_key_exists( $post_type, $profile['post_type_names'] ) ) {
+		return $names;
+	}
+
+	$override = (array) $profile['post_type_names'][ $post_type ];
+
+	// Any slot the profile leaves out keeps the default.
+	foreach ( [ 0, 1, 2 ] as $i ) {
+		if ( isset( $override[ $i ] ) && '' !== (string) $override[ $i ] ) {
+			$names[ $i ] = (string) $override[ $i ];
+		}
+	}
+
+	return $names;
+}
+
+/**
  * Replace a taxonomy's seeded default terms with the active profile's.
  *
  * A profile that does not mention a taxonomy leaves core's defaults alone.

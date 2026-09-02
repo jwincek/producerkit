@@ -78,7 +78,7 @@ function get_slugs(): array {
  * Load one profile by slug.
  *
  * @param string $slug Profile slug.
- * @return array{label: string, description: string, taxonomies: string[], names: array<string, array{0: string, 1: string}>, terms: array<string, string[]>}|null
+ * @return array{label: string, description: string, taxonomies: string[], names: array<string, array{0: string, 1: string}>, terms: array<string, string[]>, post_type_names: array<string, array>}|null
  */
 function get( string $slug ): ?array {
 	static $cache = [];
@@ -107,11 +107,12 @@ function get( string $slug ): ?array {
 	$cache[ $slug ] = wp_parse_args(
 		$profile,
 		[
-			'label'       => $slug,
-			'description' => '',
-			'taxonomies'  => [],
-			'names'       => [],
-			'terms'       => [],
+			'label'           => $slug,
+			'description'     => '',
+			'taxonomies'      => [],
+			'names'           => [],
+			'terms'           => [],
+			'post_type_names' => [],
 		]
 	);
 
@@ -135,7 +136,7 @@ function active_slug(): string {
 /**
  * The active profile.
  *
- * @return array{label: string, description: string, taxonomies: string[], names: array<string, array{0: string, 1: string}>, terms: array<string, string[]>}|null
+ * @return array{label: string, description: string, taxonomies: string[], names: array<string, array{0: string, 1: string}>, terms: array<string, string[]>, post_type_names: array<string, array>}|null
  */
 function active(): ?array {
 	return get( active_slug() );

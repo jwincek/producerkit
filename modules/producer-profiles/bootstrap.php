@@ -29,6 +29,7 @@ if ( is_admin() ) {
 // init callback builds its labels and seeds its terms.
 add_filter( 'lfuf_taxonomy_names', __NAMESPACE__ . '\\Taxonomies\\filter_names', 10, 2 );
 add_filter( 'lfuf_taxonomy_default_terms', __NAMESPACE__ . '\\Taxonomies\\filter_default_terms', 10, 2 );
+add_filter( 'lfuf_post_type_names', __NAMESPACE__ . '\\Taxonomies\\filter_post_type_names', 10, 2 );
 
 // Core registers its three taxonomies at init/10; the optional ones follow.
 add_action( 'init', __NAMESPACE__ . '\\Taxonomies\\register', 11 );

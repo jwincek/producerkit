@@ -115,6 +115,14 @@ producerkit/
 
 The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_source`, `lfuf_location`, `lfuf_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_lfuf_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `lfuf/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
 
+### Admin menu
+
+Three top-level items, not five. **Catalog** and **Events** stay top-level because they own taxonomies; **Sources** and **Locations** are nested under **ProducerKit**, because they own none and are configured once rather than worked in daily.
+
+That split is forced by core: `wp-admin/menu.php` skips a post type whose `show_in_menu` is a string, so nesting one drops its "Add New" entry *and* every taxonomy submenu it has. Nesting Catalog would put up to five taxonomies out of reach of the menu entirely.
+
+The catalogue's sidebar label is **Catalog**, not "Products", because WooCommerce also registers a top-level "Products". Only the menu word changes — it is still a Product on the edit screen, and a producer profile can re-word it again (a musician sees *Merch*).
+
 ### Producer Profiles
 
 Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Ten profiles ship: **Farm** (the default), **Beekeeping**, **Musician**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
