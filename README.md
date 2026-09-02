@@ -115,7 +115,7 @@ producerkit/
 
 ### Core (always active)
 
-The shared data layer. Registers four custom post types (`pkit_product`, `pkit_source`, `pkit_location`, `pkit_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_pkit_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `producerkit/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
+The shared data layer. Registers four custom post types (`pkit_product`, `pkit_source`, `pkit_location`, `pkit_event`), three always-on taxonomies with auto-seeded default terms (plus three more the producer profile may switch on), a custom `{prefix}_pkit_availability` table for time-sensitive product status with daily expiration cron, 46 REST routes under `producerkit/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
 
 ### Admin menu
 
@@ -149,6 +149,14 @@ Switching is **additive** — it seeds new terms and never deletes a term or a p
 Both are set under **ProducerKit → Producer Profile** — the site list needs `manage_options`, the personal choice only `edit_posts`.
 
 Core knows nothing about this module: it exposes two filters, `pkit_taxonomy_names` and `pkit_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
+
+### Pre-Orders
+
+Cartless reservations for collection. A visitor picks products and a pickup date; no money moves through the plugin, so payment happens at the counter or through one of the location's payment links.
+
+Pickup dates are validated against data other modules already hold — the location's weekly schedule, its season dates, and its blackout dates — so the form cannot offer a day the stand is shut. The **Harvest List** aggregates active orders per pickup date into per-product totals: what to have ready, and how much.
+
+Shares the request substrate in `Core\Requests` with RSVPs and commissions: salted IP hashing, honeypot, spam-guard delegation, token issue.
 
 ### Commissions
 
@@ -302,7 +310,7 @@ The token routes are POST rather than GET so a link preview or a mail client pre
 
 ## Abilities (WP 6.9+)
 
-10 abilities across 4 categories, registered via `wp_register_ability()` with `function_exists()` guard for backward compatibility.
+14 abilities across 5 categories, registered via `wp_register_ability()` behind a `function_exists()` guard so the plugin still loads below WordPress 6.9.
 
 ## Admin Tools
 

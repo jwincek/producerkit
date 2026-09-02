@@ -53,7 +53,7 @@ final class AbilitiesTest extends WP_UnitTestCase {
 
 	public function test_ability_categories_register(): void {
 		$categories = array_keys( \WP_Ability_Categories_Registry::get_instance()->get_all_registered() );
-		foreach ( [ 'farm-products', 'farm-availability', 'farm-locations', 'farm-events', 'farm-preorders' ] as $slug ) {
+		foreach ( [ 'producerkit-products', 'producerkit-availability', 'producerkit-locations', 'producerkit-events', 'producerkit-preorders' ] as $slug ) {
 			$this->assertContains( $slug, $categories );
 		}
 	}

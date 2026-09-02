@@ -2,7 +2,7 @@
 /**
  * Abilities API registration for Stand Status.
  *
- * Extends the core farm-locations category with
+ * Extends the core producerkit-locations category with
  * stand-specific abilities for toggling and querying status.
  *
  * Requires WordPress 6.9+ (gracefully skips on older versions).
@@ -26,7 +26,7 @@ add_action(
 			[
 				'label'               => __( 'Toggle Stand Status', 'producerkit' ),
 				'description'         => __( 'Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'producerkit' ),
-				'category'            => 'farm-locations',
+				'category'            => 'producerkit-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$location_id    = (int) $input['location_id'];
 					$is_open        = (bool) $input['is_open'];
@@ -94,7 +94,7 @@ add_action(
 			[
 				'label'               => __( 'Get Stand Info', 'producerkit' ),
 				'description'         => __( 'Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'producerkit' ),
-				'category'            => 'farm-locations',
+				'category'            => 'producerkit-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$post = get_post( (int) $input['location_id'] );
 					if ( ! $post || $post->post_type !== 'pkit_location' || $post->post_status !== 'publish' ) {

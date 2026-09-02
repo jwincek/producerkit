@@ -2,8 +2,8 @@
 Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
-Tested up to: 7.0
-Stable tag: 1.1.0
+Tested up to: 7.1
+Stable tag: 2.0.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,15 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 2.0.0 =
+* **Breaking: no upgrade path from 1.x.** Every stored identifier was renamed and nothing is migrated. Content saved by 1.x is not read by 2.0.0. Do not update a site with real data — export first, or stay on 1.1.0.
+* Producer profiles: sixteen trades, each re-labelling the product fields and seeding that trade's vocabulary. A site can run more than one, and each person chooses which trade's wording they see.
+* Commissions: made-to-order requests with a quote sent by email, accept or decline by link, an admin queue, and a request form block.
+* Optional WooCommerce module, so requests can settle through a store when one is present and directly when it is not.
+* Admin menu consolidated to three items, with the catalogue and events renamed Catalog and Calendar so they do not collide with WooCommerce and The Events Calendar.
+* Fixed: an RSVP placed through an Event Card never recorded that the event had filled.
+* Fixed: commission rate limiting hashed visitor IP addresses with an unsalted digest.
+
 = 1.1.0 =
 * Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `pkit_product_placeholder_url` to override or disable.
 
@@ -128,6 +137,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+Do not update an existing site without exporting first. This release renames every stored identifier — post types, taxonomies, meta keys and database tables — and provides no migration, so content created by 1.x will not be visible. It is safe on a new install.
 
 = 1.1.0 =
 Products without a photo now show a type-based placeholder image. Filter `pkit_product_placeholder_url` and return an empty string to keep the previous behaviour.

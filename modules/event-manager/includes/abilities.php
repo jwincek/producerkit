@@ -17,7 +17,7 @@ add_action(
 		}
 
 		wp_register_ability_category(
-			'farm-events',
+			'producerkit-events',
 			[
 				'label'       => __( 'Farm Events', 'producerkit' ),
 				'description' => __( 'Abilities for farm events — pizza nights, potlucks, workshops, and tours.', 'producerkit' ),
@@ -38,7 +38,7 @@ add_action(
 			[
 				'label'               => __( 'List Upcoming Events', 'producerkit' ),
 				'description'         => __( 'Retrieve upcoming farm events with location, RSVP status, and event type.', 'producerkit' ),
-				'category'            => 'farm-events',
+				'category'            => 'producerkit-events',
 				'execute_callback'    => function ( array $input = [] ): array {
 					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/events/upcoming' );
 					$request->set_param( 'per_page', (int) ( $input['per_page'] ?? 10 ) );
@@ -88,7 +88,7 @@ add_action(
 			[
 				'label'               => __( 'RSVP to Event', 'producerkit' ),
 				'description'         => __( 'Submit an RSVP to a farm event. Returns a cancellation token.', 'producerkit' ),
-				'category'            => 'farm-events',
+				'category'            => 'producerkit-events',
 				'execute_callback'    => function ( array $input ): array {
 					$result = \ProducerKit\EventManager\RSVP\add_rsvp( $input );
 					if ( is_wp_error( $result ) ) {

@@ -24,7 +24,7 @@ add_action(
 			[
 				'label'               => __( 'Get Availability Board', 'producerkit' ),
 				'description'         => __( 'Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'producerkit' ),
-				'category'            => 'farm-availability',
+				'category'            => 'producerkit-availability',
 				'execute_callback'    => function ( array $input = [] ): array {
 					// Reuse the REST callback by constructing a mock request.
 					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/board' );

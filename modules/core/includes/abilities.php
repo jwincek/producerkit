@@ -39,7 +39,7 @@ add_action(
 		}
 
 		wp_register_ability_category(
-			'farm-products',
+			'producerkit-products',
 			[
 				'label'       => __( 'Farm Products', 'producerkit' ),
 				'description' => __( 'Abilities for managing farm products — produce, bread, pantry goods.', 'producerkit' ),
@@ -47,7 +47,7 @@ add_action(
 		);
 
 		wp_register_ability_category(
-			'farm-availability',
+			'producerkit-availability',
 			[
 				'label'       => __( 'Farm Availability', 'producerkit' ),
 				'description' => __( 'Abilities for querying and updating product availability at locations.', 'producerkit' ),
@@ -55,7 +55,7 @@ add_action(
 		);
 
 		wp_register_ability_category(
-			'farm-locations',
+			'producerkit-locations',
 			[
 				'label'       => __( 'Farm Locations', 'producerkit' ),
 				'description' => __( 'Abilities for managing sales locations — stand, market, on-farm.', 'producerkit' ),
@@ -90,7 +90,7 @@ function register_product_abilities(): void {
 		[
 			'label'               => __( 'List Products', 'producerkit' ),
 			'description'         => __( 'Retrieve a list of all published farm products with their type, season, price, and unit.', 'producerkit' ),
-			'category'            => 'farm-products',
+			'category'            => 'producerkit-products',
 			'execute_callback'    => function (): array {
 				$products = get_posts(
 					[
@@ -175,7 +175,7 @@ function register_product_abilities(): void {
 		[
 			'label'               => __( 'Get Product Sources', 'producerkit' ),
 			'description'         => __( 'Retrieve the grain origins and partner farms linked to a product.', 'producerkit' ),
-			'category'            => 'farm-products',
+			'category'            => 'producerkit-products',
 			'execute_callback'    => function ( array $input ): array {
 				$source_ids = get_post_meta( $input['product_id'], '_pkit_source_ids', true );
 				if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
@@ -245,7 +245,7 @@ function register_availability_abilities(): void {
 		[
 			'label'               => __( 'Get Current Availability', 'producerkit' ),
 			'description'         => __( 'Retrieve the current availability status of all products, optionally filtered by product or location.', 'producerkit' ),
-			'category'            => 'farm-availability',
+			'category'            => 'producerkit-availability',
 			'execute_callback'    => function ( array $input = [] ): array {
 				$product_id  = (int) ( $input['product_id'] ?? 0 );
 				$location_id = (int) ( $input['location_id'] ?? 0 );
@@ -311,7 +311,7 @@ function register_availability_abilities(): void {
 		[
 			'label'               => __( 'Update Product Availability', 'producerkit' ),
 			'description'         => __( 'Set the availability status of a product at a location for a given date.', 'producerkit' ),
-			'category'            => 'farm-availability',
+			'category'            => 'producerkit-availability',
 			'execute_callback'    => function ( array $input ): array {
 				$id = \ProducerKit\Core\Availability\upsert( $input );
 				if ( $id === false ) {
@@ -386,7 +386,7 @@ function register_location_abilities(): void {
 		[
 			'label'               => __( 'List Locations', 'producerkit' ),
 			'description'         => __( 'Retrieve all published sales locations with address, type, hours, and open/closed status.', 'producerkit' ),
-			'category'            => 'farm-locations',
+			'category'            => 'producerkit-locations',
 			'execute_callback'    => function (): array {
 				$locations = get_posts(
 					[

@@ -7,6 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-02
+
+A breaking release. **There is no upgrade path from 1.x.** Every stored
+identifier was renamed, and no migration is provided — see *Removed* below
+before updating any site that ran 1.1.0 or earlier.
+
+### Added
+
+- **Producer profiles.** Sixteen trades — Farm, Bakery, Beekeeping, Musician,
+  Author, Comics & Graphic Novels, Painting & Drawing, Screen Printing,
+  Taxidermy, and seven crafts — each re-labelling the product taxonomies and
+  seeding that trade's vocabulary. A site may run **more than one**: which
+  fields exist and which terms are seeded union across the active profiles,
+  while the wording resolves per person, so two people sharing an install each
+  read the same field in their own trade's words.
+- **Commissions module**, merged in from wc-artisan-tools: made-to-order
+  requests with a quote round-trip, its own table, an enforced status machine,
+  an admin queue, a request-form block, and five emails.
+- **Optional WooCommerce module.** Absent WooCommerce, requests settle
+  directly; present, they can settle through it.
+- **Three optional product taxonomies** — Material, Finish, Component —
+  registered only when a profile asks for them, and rendered on the Product
+  Card and the single product page under the viewer's own labels.
+- `Core\Requests`, a shared substrate behind every public form: salted IP
+  hashing, client-IP resolution, token issue, honeypot, and spam-guard
+  delegation that degrades to allow when Onsite Spam Guard is absent.
+
+### Changed
+
+- **Admin menu consolidated.** Five top-level items became three, kept
+  adjacent by a `menu_order` filter. Sources and Locations are nested; the
+  catalogue and events stay top-level because nesting a post type also hides
+  its taxonomy submenus.
+- **Menu labels avoid collisions.** The catalogue reads **Catalog** and events
+  read **Calendar**, because WooCommerce owns "Products" and The Events
+  Calendar owns "Events" in the same sidebar. The content is still Products
+  and Events wherever the word appears in a sentence.
+- **One Interactivity store.** Six per-block stores became a shared
+  `producerkit` namespace with feature modules; block view scripts are now
+  import shims. Per-block JavaScript fell from 800 lines to 147.
+
+### Fixed
+
+- **RSVP through an Event Card did not record that an event had filled.** The
+  card and the list each carried their own copy of the submit action in the
+  same store namespace; the copies had drifted, and on a page holding both
+  blocks whichever loaded second silently decided the behaviour for both.
+- Commission rate-limit keys hashed the client IP with bare `md5()`, which is
+  reversible by brute force over the IPv4 space. All IP hashing is now salted
+  with `wp_salt( 'auth' )`.
+- The Onsite Spam Guard call passed a single wrapper array where the function
+  takes `( array $fields, string $context )`, so the context was sent as a
+  field and the guard's hidden fields never reached it from a JSON body.
+- The QR helper's registered path and its filename disagreed after the rename,
+  so the script 404'd.
+- Block wrapper attributes were run through `wp_kses_data()` in one block,
+  which double-encodes `&` in an attribute string.
+
+### Removed
+
+- **The `lfuf` prefix, with no migration.** Post types, taxonomies, meta keys,
+  tables, options, cron hooks, transients, block names and the REST namespace
+  were all renamed: `lfuf_*` to `pkit_*`, and `lfuf/*` to `producerkit/*`.
+  Content stored by 1.x is **not** read by 2.0.0 and is not converted.
+
+  This was done deliberately while the plugin had no installed base. If you
+  are running 1.x with real data, do not update — export first, or stay on
+  1.1.0.
+
+
 ## [1.1.0] - 2026-08-03
 
 ### Added
