@@ -53,7 +53,7 @@ producerkit/
 │   │   │   ├── profiles.php           # Registry, lazy per-file loading
 │   │   │   ├── taxonomies.php         # Optional material/finish/component
 │   │   │   └── admin-settings.php     # Profile picker
-│   │   └── profiles/                  # 10 profiles, one file each
+│   │   └── profiles/                  # 11 profiles, one file each
 │   ├── commissions/                   # Made-to-order requests
 │   │   ├── bootstrap.php
 │   │   └── includes/
@@ -128,14 +128,21 @@ Both of the obvious names are taken by plugins ProducerKit is likely to sit besi
 
 ### Producer Profiles
 
-Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Ten profiles ship: **Farm** (the default), **Beekeeping**, **Musician**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Eleven profiles ship: **Farm** (the default), **Bakery**, **Beekeeping**, **Musician**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
 
 A profile does two things:
 
 - **Re-labels.** "Material" becomes *Floral Source* for a beekeeper, *Wood Species* for a woodworker, *Clay Body* for a potter. All eleven WordPress labels are derived from one singular/plural pair.
 - **Switches on optional fields.** `lfuf_material`, `lfuf_finish` and `lfuf_component` register only for profiles that ask for them, so a farm never sees them.
 
-Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe. Choose one under **ProducerKit → Producer Profile**.
+Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe.
+
+**More than one trade on a site** is supported, and the two halves of a profile behave differently:
+
+- **Structure unions.** Which optional fields exist and which vocabulary is seeded are physical facts about the install, so they combine — a farm that also bakes gets both. Seeding only ever inserts, so there is no conflict to resolve.
+- **Wording resolves per person.** There is one Material field with one label, and "Wood Species" and "Flour" have no sensible merge. But a label is display, so each admin picks which trade's words *they* read: the grower sees Material, the baker sees Flour, over the same field. Logged-out visitors and anyone who hasn't chosen get the first active profile, so the front end stays deterministic.
+
+Both are set under **ProducerKit → Producer Profile** — the site list needs `manage_options`, the personal choice only `edit_posts`.
 
 Core knows nothing about this module: it exposes two filters, `lfuf_taxonomy_names` and `lfuf_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
 

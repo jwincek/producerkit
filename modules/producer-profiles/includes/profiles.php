@@ -20,8 +20,11 @@ namespace ProducerKit\ProducerProfiles\Profiles;
 
 defined( 'ABSPATH' ) || exit;
 
-/** Option holding the active profile slug. */
+/** Option holding the site's active profile slugs (an array). */
 const OPTION = 'lfuf_producer_profile';
+
+/** User meta holding which active profile that person reads the admin in. */
+const USER_META = 'lfuf_producer_profile';
 
 /** Profile used when none has been chosen. */
 const DEFAULT_SLUG = 'farm';
@@ -120,26 +123,95 @@ function get( string $slug ): ?array {
 }
 
 /**
- * Slug of the active profile, falling back to the default if the stored one
- * has gone missing (a filter removed it, or a file was deleted).
+ * The profiles this site runs, in stored order.
+ *
+ * A site can practise more than one trade — a farm that also runs a bakery,
+ * two people sharing one install. What that decides is site-wide and
+ * physical: which optional taxonomies get registered, and which vocabulary
+ * gets seeded. Both of those union cleanly, because registration is a set and
+ * seeding only ever inserts.
+ *
+ * Never returns empty: a site with no valid selection falls back to the
+ * default rather than losing its fields.
+ *
+ * @return string[]
  */
-function active_slug(): string {
-	$slug = (string) get_option( OPTION, DEFAULT_SLUG );
+function active_slugs(): array {
+	$stored = get_option( OPTION, DEFAULT_SLUG );
 
-	if ( '' === $slug || null === get( $slug ) ) {
-		$slug = DEFAULT_SLUG;
-	}
+	// Stored as a single string before multi-profile support; read either.
+	$slugs = array_values(
+		array_filter(
+			array_map( 'strval', (array) $stored ),
+			static fn ( string $slug ): bool => '' !== $slug && null !== get( $slug )
+		)
+	);
 
-	return $slug;
+	return $slugs ?: [ DEFAULT_SLUG ];
 }
 
 /**
- * The active profile.
+ * The loaded profiles this site runs.
+ *
+ * @return array<int, array>
+ */
+function active_profiles(): array {
+	return array_values( array_filter( array_map( __NAMESPACE__ . '\\get', active_slugs() ) ) );
+}
+
+/**
+ * Slug of the profile whose wording applies to this request.
+ *
+ * Labels are the one thing that cannot union — there is a single
+ * `lfuf_material` field with a single label, and "Wood Species" and "Flour"
+ * have no sensible merge. But a label is display, not structure, so it can be
+ * resolved per viewer instead of per site: two people sharing an install each
+ * see their own trade's words over the same underlying fields.
+ *
+ * Falls back to the first site-active profile — for logged-out visitors, for
+ * cron, and for anyone who has not chosen. That keeps the front end
+ * deterministic rather than varying by whoever happens to be signed in.
+ */
+function labelling_slug(): string {
+	$active = active_slugs();
+	$user   = get_current_user_id();
+
+	if ( $user > 0 ) {
+		$chosen = (string) get_user_meta( $user, USER_META, true );
+
+		// Only honoured while the site still runs that profile, so turning one
+		// off does not leave someone stranded on vocabulary nothing else uses.
+		if ( '' !== $chosen && in_array( $chosen, $active, true ) ) {
+			return $chosen;
+		}
+	}
+
+	/**
+	 * Filters the profile whose wording applies to this request.
+	 *
+	 * @param string   $slug   Resolved profile slug.
+	 * @param string[] $active Profiles the site runs.
+	 */
+	return (string) apply_filters( 'lfuf_labelling_profile', $active[0], $active );
+}
+
+/**
+ * The profile whose wording applies to this request.
  *
  * @return array{label: string, description: string, taxonomies: string[], names: array<string, array{0: string, 1: string}>, terms: array<string, string[]>, post_type_names: array<string, array>}|null
  */
-function active(): ?array {
-	return get( active_slug() );
+function labelling_profile(): ?array {
+	return get( labelling_slug() );
+}
+
+/**
+ * The profile a given user reads the admin in, if they have chosen one that
+ * the site still runs.
+ */
+function user_slug( int $user_id ): string {
+	$chosen = (string) get_user_meta( $user_id, USER_META, true );
+
+	return in_array( $chosen, active_slugs(), true ) ? $chosen : '';
 }
 
 /**
@@ -161,17 +233,22 @@ function choices(): array {
 }
 
 /**
- * Which optional taxonomies the active profile switches on.
+ * Which optional taxonomies the site's profiles switch on, combined.
+ *
+ * A union rather than a choice: registering a taxonomy is a physical fact
+ * about the site, so if any active trade needs Material, the field exists.
+ * A trade that does not use it simply leaves it blank.
  *
  * @return string[]
  */
 function active_taxonomies(): array {
-	$profile = active();
-	if ( null === $profile ) {
-		return [];
+	$wanted = [];
+
+	foreach ( active_profiles() as $profile ) {
+		$wanted = array_merge( $wanted, (array) $profile['taxonomies'] );
 	}
 
 	return array_values(
-		array_intersect( (array) $profile['taxonomies'], array_keys( optional_taxonomies() ) )
+		array_intersect( array_unique( $wanted ), array_keys( optional_taxonomies() ) )
 	);
 }

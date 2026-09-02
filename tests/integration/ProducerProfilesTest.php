@@ -105,12 +105,18 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 
 	public function test_default_profile_is_farm(): void {
 		delete_option( Profiles\OPTION );
-		$this->assertSame( 'farm', Profiles\active_slug() );
+		$this->assertSame( [ 'farm' ], Profiles\active_slugs() );
 	}
 
 	public function test_unknown_profile_falls_back_to_the_default(): void {
 		update_option( Profiles\OPTION, 'basket-weaving' );
-		$this->assertSame( Profiles\DEFAULT_SLUG, Profiles\active_slug() );
+		$this->assertSame( [ Profiles\DEFAULT_SLUG ], Profiles\active_slugs() );
+	}
+
+	/** Sites saved before multi-profile support stored a bare string. */
+	public function test_a_legacy_single_string_option_still_reads(): void {
+		update_option( Profiles\OPTION, 'pottery' );
+		$this->assertSame( [ 'pottery' ], Profiles\active_slugs() );
 	}
 
 	/** A slug reaches the filesystem, so it must not be able to walk out of it. */

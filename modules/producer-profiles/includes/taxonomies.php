@@ -67,7 +67,7 @@ function register(): void {
  * @return array{0: string, 1: string}
  */
 function filter_names( array $names, string $taxonomy ): array {
-	$profile = Profiles\active();
+	$profile = Profiles\labelling_profile();
 
 	if ( null === $profile || ! array_key_exists( $taxonomy, $profile['names'] ) ) {
 		return $names;
@@ -95,7 +95,7 @@ function filter_names( array $names, string $taxonomy ): array {
  * @return array{0: string, 1: string, 2: string}
  */
 function filter_post_type_names( array $names, string $post_type ): array {
-	$profile = Profiles\active();
+	$profile = Profiles\labelling_profile();
 
 	if ( null === $profile || ! array_key_exists( $post_type, $profile['post_type_names'] ) ) {
 		return $names;
@@ -114,22 +114,37 @@ function filter_post_type_names( array $names, string $post_type ): array {
 }
 
 /**
- * Replace a taxonomy's seeded default terms with the active profile's.
+ * Replace a taxonomy's seeded default terms with the active profiles'.
  *
- * A profile that does not mention a taxonomy leaves core's defaults alone.
- * A profile that mentions it with an empty list seeds nothing — that is how
- * the "General" blank-slate profile works.
+ * Unions across every profile the site runs, because seeding is additive by
+ * construction — it only ever inserts a term that does not exist — so a farm
+ * that also bakes gets both vocabularies and no conflict arises.
+ *
+ * A profile that does not mention a taxonomy contributes nothing. If none of
+ * them mention it, core's own defaults stand. A profile that mentions it with
+ * an empty list still counts as mentioning it, which is how the "General"
+ * blank-slate profile suppresses seeding.
  *
  * @param string[] $defaults Term names.
  * @param string   $taxonomy Taxonomy slug.
  * @return string[]
  */
 function filter_default_terms( array $defaults, string $taxonomy ): array {
-	$profile = Profiles\active();
+	$mentioned = false;
+	$terms     = [];
 
-	if ( null === $profile || ! array_key_exists( $taxonomy, $profile['terms'] ) ) {
+	foreach ( Profiles\active_profiles() as $profile ) {
+		if ( ! array_key_exists( $taxonomy, $profile['terms'] ) ) {
+			continue;
+		}
+
+		$mentioned = true;
+		$terms     = array_merge( $terms, array_map( 'strval', (array) $profile['terms'][ $taxonomy ] ) );
+	}
+
+	if ( ! $mentioned ) {
 		return $defaults;
 	}
 
-	return array_values( array_map( 'strval', (array) $profile['terms'][ $taxonomy ] ) );
+	return array_values( array_unique( $terms ) );
 }
