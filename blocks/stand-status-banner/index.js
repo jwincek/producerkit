@@ -26,8 +26,8 @@
 
 	function getRestBase() {
 		return (
-			( window.lfufStandSettings || window.lfufSettings || {} )
-				.restBase || '/wp-json/lfuf/v1'
+			( window.pkitStandSettings || window.pkitSettings || {} )
+				.restBase || '/wp-json/producerkit/v1'
 		);
 	}
 
@@ -79,7 +79,7 @@
 		} );
 	}
 
-	registerBlockType( 'lfuf/stand-status-banner', {
+	registerBlockType( 'producerkit/stand-status-banner', {
 		edit: function EditBanner( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -140,7 +140,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -179,9 +179,9 @@
 
 			const blockProps = useBlockProps( {
 				className:
-					'lfuf-stand-banner lfuf-stand-banner--' +
+					'pkit-stand-banner pkit-stand-banner--' +
 					layout +
-					( stand ? ' lfuf-stand-banner--' + statusSlug : '' ),
+					( stand ? ' pkit-stand-banner--' + statusSlug : '' ),
 			} );
 
 			// --- Render ---
@@ -224,7 +224,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-stand-banner__loading' },
+							{ className: 'pkit-stand-banner__loading' },
 							el( Spinner ),
 							' Loading stand status…'
 						)
@@ -264,33 +264,33 @@
 					// Main status area.
 					el(
 						'div',
-						{ className: 'lfuf-stand-banner__main' },
+						{ className: 'pkit-stand-banner__main' },
 						el(
 							'div',
-							{ className: 'lfuf-stand-banner__status-row' },
+							{ className: 'pkit-stand-banner__status-row' },
 							el( 'span', {
 								className:
-									'lfuf-stand-banner__indicator lfuf-stand-banner__indicator--' +
+									'pkit-stand-banner__indicator pkit-stand-banner__indicator--' +
 									statusSlug,
 							} ),
 							el(
 								'span',
 								{
 									className:
-										'lfuf-stand-banner__status-label',
+										'pkit-stand-banner__status-label',
 								},
 								statusLabel
 							)
 						),
 						el(
 							'h2',
-							{ className: 'lfuf-stand-banner__name' },
+							{ className: 'pkit-stand-banner__name' },
 							stand.name
 						),
 						stand.status_message
 							? el(
 									'p',
-									{ className: 'lfuf-stand-banner__message' },
+									{ className: 'pkit-stand-banner__message' },
 									stand.status_message
 							  )
 							: null,
@@ -299,7 +299,7 @@
 									'p',
 									{
 										className:
-											'lfuf-stand-banner__next-open',
+											'pkit-stand-banner__next-open',
 									},
 									'Next open: ' + stand.next_open
 							  )
@@ -307,7 +307,7 @@
 						timeAgo
 							? el(
 									'span',
-									{ className: 'lfuf-stand-banner__updated' },
+									{ className: 'pkit-stand-banner__updated' },
 									'Updated ' + timeAgo
 							  )
 							: null
@@ -316,14 +316,14 @@
 					// Details area.
 					el(
 						'div',
-						{ className: 'lfuf-stand-banner__details' },
+						{ className: 'pkit-stand-banner__details' },
 						// Off-season notice.
 						! stand.in_season && showSeasonDates && hasSeasonDates
 							? el(
 									'p',
 									{
 										className:
-											'lfuf-stand-banner__off-season',
+											'pkit-stand-banner__off-season',
 									},
 									'Our season runs ' +
 										formatDate(
@@ -341,7 +341,7 @@
 									'p',
 									{
 										className:
-											'lfuf-stand-banner__season-note',
+											'pkit-stand-banner__season-note',
 									},
 									'Season: ' +
 										formatDate(
@@ -356,12 +356,12 @@
 						showAddress && stand.address
 							? el(
 									'p',
-									{ className: 'lfuf-stand-banner__address' },
+									{ className: 'pkit-stand-banner__address' },
 									el(
 										'span',
 										{
 											className:
-												'lfuf-stand-banner__icon',
+												'pkit-stand-banner__icon',
 											'aria-hidden': 'true',
 										},
 										'\uD83D\uDCCD'
@@ -373,12 +373,12 @@
 						showHours && stand.hours
 							? el(
 									'p',
-									{ className: 'lfuf-stand-banner__hours' },
+									{ className: 'pkit-stand-banner__hours' },
 									el(
 										'span',
 										{
 											className:
-												'lfuf-stand-banner__icon',
+												'pkit-stand-banner__icon',
 											'aria-hidden': 'true',
 										},
 										'\uD83D\uDD50'
@@ -392,13 +392,13 @@
 									'span',
 									{
 										className:
-											'lfuf-stand-banner__venmo-link',
+											'pkit-stand-banner__venmo-link',
 									},
 									el(
 										'span',
 										{
 											className:
-												'lfuf-stand-banner__icon',
+												'pkit-stand-banner__icon',
 											'aria-hidden': 'true',
 										},
 										'\uD83D\uDCB8'

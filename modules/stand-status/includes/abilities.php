@@ -2,7 +2,7 @@
 /**
  * Abilities API registration for Stand Status.
  *
- * Extends the core farm-locations category with
+ * Extends the core producerkit-locations category with
  * stand-specific abilities for toggling and querying status.
  *
  * Requires WordPress 6.9+ (gracefully skips on older versions).
@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\Abilities;
+namespace ProducerKit\StandStatus\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,29 +22,29 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/toggle-stand-status',
+			'producerkit/toggle-stand-status',
 			[
-				'label'               => __( 'Toggle Stand Status', 'farm-stand-manager' ),
-				'description'         => __( 'Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'farm-stand-manager' ),
-				'category'            => 'farm-locations',
+				'label'               => __( 'Toggle Stand Status', 'producerkit' ),
+				'description'         => __( 'Open or close the farm stand and optionally set a status message. Records a timestamp of the change.', 'producerkit' ),
+				'category'            => 'producerkit-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$location_id    = (int) $input['location_id'];
 					$is_open        = (bool) $input['is_open'];
 					$status_message = sanitize_text_field( $input['status_message'] ?? '' );
 
 					$post = get_post( $location_id );
-					if ( ! $post || $post->post_type !== 'lfuf_location' ) {
+					if ( ! $post || $post->post_type !== 'pkit_location' ) {
 						return [
 							'success' => false,
 							'message' => 'Location not found.',
 						];
 					}
 
-					update_post_meta( $location_id, '_lfuf_is_open', $is_open );
-					update_post_meta( $location_id, '_lfuf_ss_status_message', $status_message );
-					update_post_meta( $location_id, '_lfuf_ss_last_toggled', gmdate( 'c' ) );
+					update_post_meta( $location_id, '_pkit_is_open', $is_open );
+					update_post_meta( $location_id, '_pkit_ss_status_message', $status_message );
+					update_post_meta( $location_id, '_pkit_ss_last_toggled', gmdate( 'c' ) );
 
-					do_action( 'lfuf_stand_status_changed', $location_id, $is_open, $status_message );
+					do_action( 'pkit_stand_status_changed', $location_id, $is_open, $status_message );
 
 					return [
 						'success'        => true,
@@ -90,17 +90,17 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/get-stand-info',
+			'producerkit/get-stand-info',
 			[
-				'label'               => __( 'Get Stand Info', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'farm-stand-manager' ),
-				'category'            => 'farm-locations',
+				'label'               => __( 'Get Stand Info', 'producerkit' ),
+				'description'         => __( 'Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location.', 'producerkit' ),
+				'category'            => 'producerkit-locations',
 				'execute_callback'    => function ( array $input ): array {
 					$post = get_post( (int) $input['location_id'] );
-					if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish' ) {
+					if ( ! $post || $post->post_type !== 'pkit_location' || $post->post_status !== 'publish' ) {
 						return [ 'error' => 'Stand not found.' ];
 					}
-					return \Leftfield\StandStatus\REST\build_stand_data( $post );
+					return \ProducerKit\StandStatus\REST\build_stand_data( $post );
 				},
 				'input_schema'        => [
 					'type'       => 'object',

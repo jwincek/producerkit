@@ -1,0 +1,26 @@
+<?php
+/**
+ * Producer profile: Metalwork.
+ *
+ * Ported from WC Artisan Tools' craft profiles.
+ */
+
+declare(strict_types=1);
+
+defined( 'ABSPATH' ) || exit;
+
+return [
+	'label'       => __( 'Metalwork', 'producerkit' ),
+	'description' => __( 'Forged and fabricated steel, iron and non-ferrous metalwork.', 'producerkit' ),
+	'taxonomies'  => [ 'pkit_material', 'pkit_finish', 'pkit_component' ],
+	'names'       => [
+		'pkit_material'  => [ __( 'Steel / Metal', 'producerkit' ), __( 'Steels / Metals', 'producerkit' ) ],
+		'pkit_component' => [ __( 'Handle / Accessory', 'producerkit' ), __( 'Handles / Accessories', 'producerkit' ) ],
+	],
+	'terms'       => [
+		'pkit_product_type' => [ 'Knife', 'Bottle Opener', 'Hook', 'Fire Poker', 'Candle Holder', 'Shelf Bracket', 'Letter Opener', 'Keychain', 'Sculpture', 'Tool' ],
+		'pkit_material'     => [ '1095 Carbon Steel', 'Damascus Steel', 'O1 Tool Steel', 'Wrought Iron', 'Mild Steel', 'Stainless Steel', 'Copper', 'Bronze', 'Brass' ],
+		'pkit_finish'       => [ 'Mirror Polish', 'Satin', 'Acid Etch', 'Patina', 'Beeswax', 'Clear Coat', 'Blued', 'Forge Scale' ],
+		'pkit_component'    => [ 'Walnut Handle', 'Micarta Handle', 'G10 Handle', 'Antler Handle', 'Leather Wrap', 'Paracord Wrap', 'Leather Sheath', 'Kydex Sheath', 'No Handle' ],
+	],
+];

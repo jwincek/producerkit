@@ -38,7 +38,7 @@ matches this site in Local's `sites.json`.)
 ## Conventions
 
 - Integration tests raise the pre-order rate limit via the
-  `lfuf_preorder_rate_limit` filter when a test legitimately creates
+  `pkit_preorder_rate_limit` filter when a test legitimately creates
   several orders; the rate-limit test itself uses the default.
 - Don't assert on block markup details beyond the load-bearing bits
   (data attributes, escaping) — markup is free to change.

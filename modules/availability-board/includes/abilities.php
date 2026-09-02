@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard\Abilities;
+namespace ProducerKit\AvailabilityBoard\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,19 +20,19 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/get-board',
+			'producerkit/get-board',
 			[
-				'label'               => __( 'Get Availability Board', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'farm-stand-manager' ),
-				'category'            => 'farm-availability',
+				'label'               => __( 'Get Availability Board', 'producerkit' ),
+				'description'         => __( 'Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location.', 'producerkit' ),
+				'category'            => 'producerkit-availability',
 				'execute_callback'    => function ( array $input = [] ): array {
 					// Reuse the REST callback by constructing a mock request.
-					$request = new \WP_REST_Request( 'GET', '/lfuf/v1/board' );
+					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/board' );
 					$request->set_param( 'status', $input['status'] ?? '' );
 					$request->set_param( 'product_type', $input['product_type'] ?? '' );
 					$request->set_param( 'location', (int) ( $input['location_id'] ?? 0 ) );
 
-					$response = \Leftfield\AvailabilityBoard\REST\get_board( $request );
+					$response = \ProducerKit\AvailabilityBoard\REST\get_board( $request );
 					return $response->get_data();
 				},
 				'input_schema'        => [

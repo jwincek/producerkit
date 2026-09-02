@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\AdminBar;
+namespace ProducerKit\StandStatus\AdminBar;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,12 +32,12 @@ function get_all_stands(): array {
 
 	$stands = get_posts(
 		[
-			'post_type'   => 'lfuf_location',
+			'post_type'   => 'pkit_location',
 			'post_status' => 'publish',
 			'numberposts' => 20,
 			'meta_query'  => [
 				[
-					'key'   => '_lfuf_location_type',
+					'key'   => '_pkit_location_type',
 					'value' => 'stand',
 				],
 			],
@@ -54,18 +54,18 @@ function get_all_stands(): array {
  * and season boundaries. Matches the logic in stand-status-banner render.php.
  */
 function get_effective_status( int $id ): bool {
-	$is_open = (bool) get_post_meta( $id, '_lfuf_is_open', true );
+	$is_open = (bool) get_post_meta( $id, '_pkit_is_open', true );
 
-	$auto_toggle = (bool) get_post_meta( $id, '_lfuf_ss_auto_toggle', true );
-	$schedule    = get_post_meta( $id, '_lfuf_ss_schedule', true );
-	if ( $auto_toggle && $schedule && function_exists( '\\Leftfield\\StandStatus\\REST\\compute_schedule_status' ) ) {
-		$is_open = \Leftfield\StandStatus\REST\compute_schedule_status( $schedule );
+	$auto_toggle = (bool) get_post_meta( $id, '_pkit_ss_auto_toggle', true );
+	$schedule    = get_post_meta( $id, '_pkit_ss_schedule', true );
+	if ( $auto_toggle && $schedule && function_exists( '\\ProducerKit\\StandStatus\\REST\\compute_schedule_status' ) ) {
+		$is_open = \ProducerKit\StandStatus\REST\compute_schedule_status( $schedule );
 	}
 
-	$season_start = get_post_meta( $id, '_lfuf_ss_season_start', true );
-	$season_end   = get_post_meta( $id, '_lfuf_ss_season_end', true );
-	if ( $season_start && $season_end && function_exists( '\\Leftfield\\StandStatus\\REST\\is_in_season' ) ) {
-		if ( ! \Leftfield\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
+	$season_start = get_post_meta( $id, '_pkit_ss_season_start', true );
+	$season_end   = get_post_meta( $id, '_pkit_ss_season_end', true );
+	if ( $season_start && $season_end && function_exists( '\\ProducerKit\\StandStatus\\REST\\is_in_season' ) ) {
+		if ( ! \ProducerKit\StandStatus\REST\is_in_season( $season_start, $season_end ) ) {
 			$is_open = false;
 		}
 	}
@@ -90,7 +90,7 @@ function get_stand_data(): array {
 		$data[] = [
 			'post'    => $stand,
 			'is_open' => get_effective_status( $stand->ID ),
-			'message' => get_post_meta( $stand->ID, '_lfuf_ss_status_message', true ) ?: '',
+			'message' => get_post_meta( $stand->ID, '_pkit_ss_status_message', true ) ?: '',
 		];
 	}
 
@@ -115,26 +115,26 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 	if ( $single ) {
 		$d         = $stand_data[0];
 		$top_title = sprintf(
-			'<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s%s',
+			'<span class="pkit-ab-indicator pkit-ab-indicator--%s"></span>%s%s',
 			$d['is_open'] ? 'open' : 'closed',
-			$d['is_open'] ? __( 'Stand Open', 'farm-stand-manager' ) : __( 'Stand Closed', 'farm-stand-manager' ),
-			$d['message'] ? ' &mdash; <span class="lfuf-ab-msg">' . esc_html( $d['message'] ) . '</span>' : '',
+			$d['is_open'] ? __( 'Stand Open', 'producerkit' ) : __( 'Stand Closed', 'producerkit' ),
+			$d['message'] ? ' &mdash; <span class="pkit-ab-msg">' . esc_html( $d['message'] ) . '</span>' : '',
 		);
 	} else {
 		$top_title = sprintf(
-			'<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s',
+			'<span class="pkit-ab-indicator pkit-ab-indicator--%s"></span>%s',
 			$open_count > 0 ? 'open' : 'closed',
 			/* translators: %1$d: number of open stands, %2$d: total number of stands. */
-			sprintf( __( 'Stands (%1$d/%2$d open)', 'farm-stand-manager' ), $open_count, $total ),
+			sprintf( __( 'Stands (%1$d/%2$d open)', 'producerkit' ), $open_count, $total ),
 		);
 	}
 
 	$bar->add_node(
 		[
-			'id'    => 'lfuf-stands',
+			'id'    => 'pkit-stands',
 			'title' => $top_title,
 			'href'  => '#',
-			'meta'  => [ 'class' => 'lfuf-stands-node' ],
+			'meta'  => [ 'class' => 'pkit-stands-node' ],
 		]
 	);
 
@@ -149,33 +149,33 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 		if ( ! $single ) {
 			$bar->add_node(
 				[
-					'id'     => 'lfuf-stand-' . $sid,
-					'parent' => 'lfuf-stands',
+					'id'     => 'pkit-stand-' . $sid,
+					'parent' => 'pkit-stands',
 					'title'  => sprintf(
-						'<span class="lfuf-ab-indicator lfuf-ab-indicator--%s"></span>%s%s',
+						'<span class="pkit-ab-indicator pkit-ab-indicator--%s"></span>%s%s',
 						$is_open ? 'open' : 'closed',
 						esc_html( $stand->post_title ),
-						$message ? ' <span class="lfuf-ab-msg">&mdash; ' . esc_html( $message ) . '</span>' : '',
+						$message ? ' <span class="pkit-ab-msg">&mdash; ' . esc_html( $message ) . '</span>' : '',
 					),
 					'href'   => '#',
-					'meta'   => [ 'class' => 'lfuf-stand-item' ],
+					'meta'   => [ 'class' => 'pkit-stand-item' ],
 				]
 			);
 		}
 
-		$parent = $single ? 'lfuf-stands' : 'lfuf-stand-' . $sid;
+		$parent = $single ? 'pkit-stands' : 'pkit-stand-' . $sid;
 
 		// Toggle action.
 		$bar->add_node(
 			[
-				'id'     => 'lfuf-stand-' . $sid . '-toggle',
+				'id'     => 'pkit-stand-' . $sid . '-toggle',
 				'parent' => $parent,
 				'title'  => $is_open
-					? __( 'Close the Stand', 'farm-stand-manager' )
-					: __( 'Open the Stand', 'farm-stand-manager' ),
+					? __( 'Close the Stand', 'producerkit' )
+					: __( 'Open the Stand', 'producerkit' ),
 				'href'   => '#',
 				'meta'   => [
-					'class'         => 'lfuf-stand-toggle-action',
+					'class'         => 'pkit-stand-toggle-action',
 					'data-stand-id' => (string) $sid,
 				],
 			]
@@ -183,33 +183,33 @@ function add_stand_nodes( \WP_Admin_Bar $bar ): void {
 
 		// Inline message input.
 		$input_html = sprintf(
-			'<label class="screen-reader-text" for="lfuf-ab-msg-%1$d">%2$s</label>'
-			. '<input type="text" id="lfuf-ab-msg-%1$d" class="lfuf-ab-msg-input"'
+			'<label class="screen-reader-text" for="pkit-ab-msg-%1$d">%2$s</label>'
+			. '<input type="text" id="pkit-ab-msg-%1$d" class="pkit-ab-msg-input"'
 			. ' placeholder="%3$s" value="%4$s" data-stand-id="%1$d" />'
-			. '<button type="button" class="lfuf-ab-msg-save" data-stand-id="%1$d">%5$s</button>',
+			. '<button type="button" class="pkit-ab-msg-save" data-stand-id="%1$d">%5$s</button>',
 			$sid,
-			esc_attr__( 'Status message', 'farm-stand-manager' ),
-			esc_attr__( "Status message\u{2026}", 'farm-stand-manager' ),
+			esc_attr__( 'Status message', 'producerkit' ),
+			esc_attr__( "Status message\u{2026}", 'producerkit' ),
 			esc_attr( $message ),
-			esc_html__( 'Save', 'farm-stand-manager' ),
+			esc_html__( 'Save', 'producerkit' ),
 		);
 
 		$bar->add_node(
 			[
-				'id'     => 'lfuf-stand-' . $sid . '-message',
+				'id'     => 'pkit-stand-' . $sid . '-message',
 				'parent' => $parent,
 				'title'  => $input_html,
 				'href'   => false,
-				'meta'   => [ 'class' => 'lfuf-stand-msg-form' ],
+				'meta'   => [ 'class' => 'pkit-stand-msg-form' ],
 			]
 		);
 
 		// Edit location link.
 		$bar->add_node(
 			[
-				'id'     => 'lfuf-stand-' . $sid . '-edit',
+				'id'     => 'pkit-stand-' . $sid . '-edit',
 				'parent' => $parent,
-				'title'  => __( 'Edit Stand Settings', 'farm-stand-manager' ),
+				'title'  => __( 'Edit Stand Settings', 'producerkit' ),
 				'href'   => get_edit_post_link( $sid, 'raw' ),
 			]
 		);
@@ -223,7 +223,7 @@ function inline_styles(): void {
 	?>
 	<style>
 		/* ── Indicator dot ── */
-		.lfuf-ab-indicator {
+		.pkit-ab-indicator {
 			display: inline-block;
 			width: 8px;
 			height: 8px;
@@ -231,29 +231,29 @@ function inline_styles(): void {
 			margin-right: 6px;
 			vertical-align: middle;
 		}
-		.lfuf-ab-indicator--open  { background: #22c55e; box-shadow: 0 0 4px #22c55e; }
-		.lfuf-ab-indicator--closed { background: #ef4444; box-shadow: 0 0 4px #ef4444; }
+		.pkit-ab-indicator--open  { background: #22c55e; box-shadow: 0 0 4px #22c55e; }
+		.pkit-ab-indicator--closed { background: #ef4444; box-shadow: 0 0 4px #ef4444; }
 
-		#wp-admin-bar-lfuf-stands > .ab-item { cursor: pointer; }
+		#wp-admin-bar-pkit-stands > .ab-item { cursor: pointer; }
 
 		/* ── Message text in node labels ── */
-		.lfuf-ab-msg { opacity: 0.7; font-size: 0.9em; }
+		.pkit-ab-msg { opacity: 0.7; font-size: 0.9em; }
 
 		/* ── Updating state ── */
-		.lfuf-stand-toggle-action.lfuf-ab-updating > .ab-item {
+		.pkit-stand-toggle-action.pkit-ab-updating > .ab-item {
 			opacity: 0.5;
 			pointer-events: none;
 		}
 
 		/* ── Inline message form ── */
-		.lfuf-stand-msg-form .ab-item {
+		.pkit-stand-msg-form .ab-item {
 			display: flex !important;
 			align-items: center;
 			gap: 4px;
 			height: auto !important;
 			padding: 4px 8px !important;
 		}
-		.lfuf-ab-msg-input {
+		.pkit-ab-msg-input {
 			width: 150px;
 			padding: 3px 6px;
 			font-size: 12px;
@@ -263,13 +263,13 @@ function inline_styles(): void {
 			color: #eee;
 			line-height: 1.4;
 		}
-		.lfuf-ab-msg-input:focus {
+		.pkit-ab-msg-input:focus {
 			border-color: #72aee6;
 			outline: none;
 			box-shadow: 0 0 0 1px #72aee6;
 		}
-		.lfuf-ab-msg-input::placeholder { color: #9ca3af; }
-		.lfuf-ab-msg-save {
+		.pkit-ab-msg-input::placeholder { color: #9ca3af; }
+		.pkit-ab-msg-save {
 			padding: 3px 8px;
 			font-size: 11px;
 			font-weight: 600;
@@ -281,8 +281,8 @@ function inline_styles(): void {
 			white-space: nowrap;
 			line-height: 1.4;
 		}
-		.lfuf-ab-msg-save:hover { background: #135e96; }
-		.lfuf-ab-msg-save:disabled {
+		.pkit-ab-msg-save:hover { background: #135e96; }
+		.pkit-ab-msg-save:disabled {
 			opacity: 0.5;
 			pointer-events: none;
 		}
@@ -310,7 +310,7 @@ function inline_script(): void {
 	( function () {
 		'use strict';
 
-		var restBase = <?php echo wp_json_encode( esc_url_raw( rest_url( 'lfuf/v1' ) ) ); ?>;
+		var restBase = <?php echo wp_json_encode( esc_url_raw( rest_url( 'producerkit/v1' ) ) ); ?>;
 		var nonce    = <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>;
 		var stands   = <?php echo wp_json_encode( $js_stands ); ?>;
 		var total    = Object.keys( stands ).length;
@@ -350,41 +350,41 @@ function inline_script(): void {
 
 			// Toggle action: swap text.
 			var toggleItem = document.querySelector(
-				'#wp-admin-bar-lfuf-stand-' + id + '-toggle .ab-item'
+				'#wp-admin-bar-pkit-stand-' + id + '-toggle .ab-item'
 			);
 			if ( toggleItem ) {
 				toggleItem.textContent = s.isOpen ? 'Close the Stand' : 'Open the Stand';
 			}
 
 			// Message input: sync value.
-			var msgInput = document.getElementById( 'lfuf-ab-msg-' + id );
+			var msgInput = document.getElementById( 'pkit-ab-msg-' + id );
 			if ( msgInput ) {
 				msgInput.value = s.message;
 			}
 
 			if ( total === 1 ) {
 				// Single stand: update the top-level node directly.
-				var topItem = document.querySelector( '#wp-admin-bar-lfuf-stands > .ab-item' );
+				var topItem = document.querySelector( '#wp-admin-bar-pkit-stands > .ab-item' );
 				if ( topItem ) {
 					var label = s.isOpen ? 'Stand Open' : 'Stand Closed';
 					var msgHtml = s.message
-						? ' &mdash; <span class="lfuf-ab-msg">' + esc( s.message ) + '</span>'
+						? ' &mdash; <span class="pkit-ab-msg">' + esc( s.message ) + '</span>'
 						: '';
 					topItem.innerHTML =
-						'<span class="lfuf-ab-indicator lfuf-ab-indicator--' + slug + '"></span>' +
+						'<span class="pkit-ab-indicator pkit-ab-indicator--' + slug + '"></span>' +
 						esc( label ) + msgHtml;
 				}
 			} else {
 				// Multi-stand: update the per-stand node.
 				var standItem = document.querySelector(
-					'#wp-admin-bar-lfuf-stand-' + id + ' > .ab-item'
+					'#wp-admin-bar-pkit-stand-' + id + ' > .ab-item'
 				);
 				if ( standItem ) {
 					var msgHtml2 = s.message
-						? ' <span class="lfuf-ab-msg">&mdash; ' + esc( s.message ) + '</span>'
+						? ' <span class="pkit-ab-msg">&mdash; ' + esc( s.message ) + '</span>'
 						: '';
 					standItem.innerHTML =
-						'<span class="lfuf-ab-indicator lfuf-ab-indicator--' + slug + '"></span>' +
+						'<span class="pkit-ab-indicator pkit-ab-indicator--' + slug + '"></span>' +
 						esc( s.name ) + msgHtml2;
 				}
 
@@ -394,11 +394,11 @@ function inline_script(): void {
 				for ( var i = 0; i < ids.length; i++ ) {
 					if ( stands[ ids[ i ] ].isOpen ) openCount++;
 				}
-				var topItem2 = document.querySelector( '#wp-admin-bar-lfuf-stands > .ab-item' );
+				var topItem2 = document.querySelector( '#wp-admin-bar-pkit-stands > .ab-item' );
 				if ( topItem2 ) {
 					var topSlug = openCount > 0 ? 'open' : 'closed';
 					topItem2.innerHTML =
-						'<span class="lfuf-ab-indicator lfuf-ab-indicator--' + topSlug + '"></span>' +
+						'<span class="pkit-ab-indicator pkit-ab-indicator--' + topSlug + '"></span>' +
 						'Stands (' + openCount + '/' + total + ' open)';
 				}
 			}
@@ -407,7 +407,7 @@ function inline_script(): void {
 		// ── Toggle click handler ──
 
 		document.addEventListener( 'click', function ( e ) {
-			var toggleLink = e.target.closest( '.lfuf-stand-toggle-action' );
+			var toggleLink = e.target.closest( '.pkit-stand-toggle-action' );
 			if ( ! toggleLink ) return;
 
 			e.preventDefault();
@@ -415,7 +415,7 @@ function inline_script(): void {
 			if ( ! id || ! stands[ id ] ) return;
 
 			// Show updating state.
-			toggleLink.classList.add( 'lfuf-ab-updating' );
+			toggleLink.classList.add( 'pkit-ab-updating' );
 			var item = toggleLink.querySelector( '.ab-item' );
 			var prevText = item ? item.textContent : '';
 			if ( item ) item.textContent = 'Updating\u2026';
@@ -434,14 +434,14 @@ function inline_script(): void {
 					if ( item ) item.textContent = prevText;
 				} )
 				.finally( function () {
-					toggleLink.classList.remove( 'lfuf-ab-updating' );
+					toggleLink.classList.remove( 'pkit-ab-updating' );
 				} );
 		} );
 
 		// ── Message save click handler ──
 
 		document.addEventListener( 'click', function ( e ) {
-			var saveBtn = e.target.closest( '.lfuf-ab-msg-save' );
+			var saveBtn = e.target.closest( '.pkit-ab-msg-save' );
 			if ( ! saveBtn ) return;
 
 			e.preventDefault();
@@ -449,7 +449,7 @@ function inline_script(): void {
 			var id = saveBtn.getAttribute( 'data-stand-id' );
 			if ( ! id || ! stands[ id ] ) return;
 
-			var input = document.getElementById( 'lfuf-ab-msg-' + id );
+			var input = document.getElementById( 'pkit-ab-msg-' + id );
 			if ( ! input ) return;
 
 			var msg = input.value.trim();
@@ -471,19 +471,19 @@ function inline_script(): void {
 
 		document.addEventListener( 'keydown', function ( e ) {
 			if ( e.key !== 'Enter' ) return;
-			var input = e.target.closest( '.lfuf-ab-msg-input' );
+			var input = e.target.closest( '.pkit-ab-msg-input' );
 			if ( ! input ) return;
 
 			e.preventDefault();
 			var id = input.getAttribute( 'data-stand-id' );
 			var saveBtn = document.querySelector(
-				'.lfuf-ab-msg-save[data-stand-id="' + id + '"]'
+				'.pkit-ab-msg-save[data-stand-id="' + id + '"]'
 			);
 			if ( saveBtn ) saveBtn.click();
 		} );
 
 		document.addEventListener( 'click', function ( e ) {
-			if ( e.target.closest( '.lfuf-stand-msg-form' ) ) {
+			if ( e.target.closest( '.pkit-stand-msg-form' ) ) {
 				e.stopPropagation();
 			}
 		} );

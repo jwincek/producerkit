@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\Abilities;
+namespace ProducerKit\EventManager\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,10 +17,10 @@ add_action(
 		}
 
 		wp_register_ability_category(
-			'farm-events',
+			'producerkit-events',
 			[
-				'label'       => __( 'Farm Events', 'farm-stand-manager' ),
-				'description' => __( 'Abilities for farm events — pizza nights, potlucks, workshops, and tours.', 'farm-stand-manager' ),
+				'label'       => __( 'Farm Events', 'producerkit' ),
+				'description' => __( 'Abilities for farm events — pizza nights, potlucks, workshops, and tours.', 'producerkit' ),
 			]
 		);
 	}
@@ -34,17 +34,17 @@ add_action(
 		}
 
 		wp_register_ability(
-			'farm-stand-manager/list-upcoming-events',
+			'producerkit/list-upcoming-events',
 			[
-				'label'               => __( 'List Upcoming Events', 'farm-stand-manager' ),
-				'description'         => __( 'Retrieve upcoming farm events with location, RSVP status, and event type.', 'farm-stand-manager' ),
-				'category'            => 'farm-events',
+				'label'               => __( 'List Upcoming Events', 'producerkit' ),
+				'description'         => __( 'Retrieve upcoming farm events with location, RSVP status, and event type.', 'producerkit' ),
+				'category'            => 'producerkit-events',
 				'execute_callback'    => function ( array $input = [] ): array {
-					$request = new \WP_REST_Request( 'GET', '/lfuf/v1/events/upcoming' );
+					$request = new \WP_REST_Request( 'GET', '/producerkit/v1/events/upcoming' );
 					$request->set_param( 'per_page', (int) ( $input['per_page'] ?? 10 ) );
 					$request->set_param( 'event_type', $input['event_type'] ?? '' );
 
-					$response = \Leftfield\EventManager\REST\get_upcoming_events( $request );
+					$response = \ProducerKit\EventManager\REST\get_upcoming_events( $request );
 					return $response->get_data();
 				},
 				'input_schema'        => [
@@ -84,13 +84,13 @@ add_action(
 		);
 
 		wp_register_ability(
-			'farm-stand-manager/rsvp-to-event',
+			'producerkit/rsvp-to-event',
 			[
-				'label'               => __( 'RSVP to Event', 'farm-stand-manager' ),
-				'description'         => __( 'Submit an RSVP to a farm event. Returns a cancellation token.', 'farm-stand-manager' ),
-				'category'            => 'farm-events',
+				'label'               => __( 'RSVP to Event', 'producerkit' ),
+				'description'         => __( 'Submit an RSVP to a farm event. Returns a cancellation token.', 'producerkit' ),
+				'category'            => 'producerkit-events',
 				'execute_callback'    => function ( array $input ): array {
-					$result = \Leftfield\EventManager\RSVP\add_rsvp( $input );
+					$result = \ProducerKit\EventManager\RSVP\add_rsvp( $input );
 					if ( is_wp_error( $result ) ) {
 						return [
 							'success' => false,

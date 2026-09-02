@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/availability-badge",
-    "version": "1.1.0",
+    "name": "producerkit/availability-badge",
+    "version": "2.0.0",
     "title": "Availability Badge",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "visibility",
     "description": "Show a compact availability status badge for a product. Reads from the shared availability table.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "productId": {
             "type": "number",

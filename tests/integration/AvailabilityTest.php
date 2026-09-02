@@ -6,18 +6,18 @@
 
 declare(strict_types=1);
 
-use function Leftfield\Core\Availability\get_all_current;
-use function Leftfield\Core\Availability\get_current;
-use function Leftfield\Core\Availability\purge_expired;
-use function Leftfield\Core\Availability\table_name;
-use function Leftfield\Core\Availability\upsert;
+use function ProducerKit\Core\Availability\get_all_current;
+use function ProducerKit\Core\Availability\get_current;
+use function ProducerKit\Core\Availability\purge_expired;
+use function ProducerKit\Core\Availability\table_name;
+use function ProducerKit\Core\Availability\upsert;
 
 final class AvailabilityTest extends WP_UnitTestCase {
 
 	private function make_product( string $title = 'Kale' ): int {
 		return self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 				'post_title'  => $title,
 			]
@@ -84,7 +84,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 
 		$draft = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'draft',
 			]
 		);
@@ -146,7 +146,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 		$product  = $this->make_product();
 		$location = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 			]
 		);
@@ -187,7 +187,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 	public function test_schema_is_accepted_under_strict_sql_mode(): void {
 		global $wpdb;
 
-		$probe    = $wpdb->prefix . 'lfuf_schema_probe';
+		$probe    = $wpdb->prefix . 'pkit_schema_probe';
 		$previous = (string) $wpdb->get_var( 'SELECT @@SESSION.sql_mode' );
 
 		$wpdb->query( $wpdb->prepare( 'SET SESSION sql_mode = %s', 'STRICT_TRANS_TABLES' ) );
@@ -196,7 +196,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 		$wpdb->query( "DROP TABLE IF EXISTS `$probe`" );
 
 		$wpdb->suppress_errors( true );
-		$created = $wpdb->query( \Leftfield\Core\Availability\schema_sql( $probe ) );
+		$created = $wpdb->query( \ProducerKit\Core\Availability\schema_sql( $probe ) );
 		$error   = $wpdb->last_error;
 		$wpdb->suppress_errors( false );
 
@@ -239,7 +239,7 @@ final class AvailabilityTest extends WP_UnitTestCase {
 		// cannot tell "no row" from "empty column", and neither can get_col(),
 		// which calls it. '' is exactly the value under test here.
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT notes FROM {$wpdb->prefix}lfuf_availability WHERE id = %d", $id ),
+			$wpdb->prepare( "SELECT notes FROM {$wpdb->prefix}pkit_availability WHERE id = %d", $id ),
 			ARRAY_A
 		);
 
@@ -258,11 +258,11 @@ final class AvailabilityTest extends WP_UnitTestCase {
 	public function test_cleanup_cron_is_scheduled_for_three_am_site_local(): void {
 		foreach ( [ 'UTC', 'America/New_York', 'Asia/Kolkata', 'Pacific/Auckland' ] as $tz ) {
 			update_option( 'timezone_string', $tz );
-			wp_clear_scheduled_hook( 'lfuf_availability_cleanup' );
+			wp_clear_scheduled_hook( 'pkit_availability_cleanup' );
 
-			\Leftfield\Core\Availability\schedule_cleanup();
+			\ProducerKit\Core\Availability\schedule_cleanup();
 
-			$ts = wp_next_scheduled( 'lfuf_availability_cleanup' );
+			$ts = wp_next_scheduled( 'pkit_availability_cleanup' );
 			$this->assertNotFalse( $ts, "cleanup was not scheduled under $tz" );
 
 			// Render the scheduled instant in the site's own timezone.
@@ -275,6 +275,6 @@ final class AvailabilityTest extends WP_UnitTestCase {
 			);
 		}
 
-		wp_clear_scheduled_hook( 'lfuf_availability_cleanup' );
+		wp_clear_scheduled_hook( 'pkit_availability_cleanup' );
 	}
 }

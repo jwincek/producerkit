@@ -2,7 +2,7 @@
  * Location Info — shared front + editor styles.
  */
 
-.lfuf-location-info {
+.pkit-location-info {
     color: #1f2937;
     border: 1px solid var(--wp--preset--color--contrast, #ddd);
     border-radius: 0.5rem;
@@ -10,7 +10,7 @@
     background: var(--wp--preset--color--base, #fff);
 }
 
-.lfuf-location-info__loading {
+.pkit-location-info__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -18,19 +18,19 @@
     color: #4b5563;
 }
 
-.lfuf-location-info__header {
+.pkit-location-info__header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
 }
 
-.lfuf-location-info__title {
+.pkit-location-info__title {
     margin: 0;
     font-size: 1.15rem;
 }
 
-.lfuf-location-info__status {
+.pkit-location-info__status {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 700;
@@ -40,17 +40,17 @@
     border-radius: 9999px;
 }
 
-.lfuf-location-info__status--open {
+.pkit-location-info__status--open {
     background: #d1fae5;
     color: #065f46;
 }
 
-.lfuf-location-info__status--closed {
+.pkit-location-info__status--closed {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.lfuf-location-info__type {
+.pkit-location-info__type {
     display: inline-block;
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -59,17 +59,17 @@
     margin-top: 0.25rem;
 }
 
-.lfuf-location-info__address,
-.lfuf-location-info__hours {
+.pkit-location-info__address,
+.pkit-location-info__hours {
     margin: 0.5rem 0 0;
     font-size: 0.9rem;
 }
 
-.lfuf-location-info__hours {
+.pkit-location-info__hours {
     opacity: 0.7;
 }
 
-.lfuf-location-info__venmo {
+.pkit-location-info__venmo {
     display: inline-block;
     margin-top: 0.75rem;
     font-size: 0.85rem;
@@ -82,7 +82,7 @@
     transition: background 0.15s, color 0.15s;
 }
 
-.lfuf-location-info__venmo:hover {
+.pkit-location-info__venmo:hover {
     background: #008CFF;
     color: #fff;
 }
@@ -90,40 +90,40 @@
 
 /* ── Accessibility ─────────────────────────────── */
 
-.lfuf-location-info .screen-reader-text {
+.pkit-location-info .screen-reader-text {
     border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%);
     height: 1px; margin: -1px; overflow: hidden; padding: 0;
     position: absolute; width: 1px; word-wrap: normal !important;
 }
 
-.lfuf-location-info__venmo:focus-visible {
+.pkit-location-info__venmo:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-location-info__venmo { transition: none; }
+    .pkit-location-info__venmo { transition: none; }
 }
 
 @media (forced-colors: active) {
 
-    .lfuf-location-info { border-color: CanvasText; }
+    .pkit-location-info { border-color: CanvasText; }
 
-    .lfuf-location-info__venmo { border-color: LinkText; color: LinkText; }
+    .pkit-location-info__venmo { border-color: LinkText; color: LinkText; }
 
-    .lfuf-location-info__status {
+    .pkit-location-info__status {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
 }
 
 /* ── Payment options ── */
-.lfuf-location-info__payments {
+.pkit-location-info__payments {
     margin-top: 0.75rem;
 }
 
-.lfuf-location-info__payments-label {
+.pkit-location-info__payments-label {
     display: block;
     font-size: 0.8125rem;
     font-weight: 600;
@@ -131,7 +131,7 @@
     margin-bottom: 0.25rem;
 }
 
-.lfuf-location-info__payments-list {
+.pkit-location-info__payments-list {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -140,8 +140,8 @@
     padding: 0;
 }
 
-.lfuf-location-info__payment-link,
-.lfuf-location-info__payment-badge {
+.pkit-location-info__payment-link,
+.pkit-location-info__payment-badge {
     display: inline-block;
     padding: 0.25rem 0.625rem;
     border-radius: 999px;
@@ -149,56 +149,56 @@
     line-height: 1.4;
 }
 
-.lfuf-location-info__payment-link {
+.pkit-location-info__payment-link {
     background: #eff6ff;
     color: #1d4ed8;
     text-decoration: none;
     border: 1px solid #bfdbfe;
 }
 
-.lfuf-location-info__payment-link:hover,
-.lfuf-location-info__payment-link:focus {
+.pkit-location-info__payment-link:hover,
+.pkit-location-info__payment-link:focus {
     background: #dbeafe;
     text-decoration: underline;
 }
 
-.lfuf-location-info__payment-badge {
+.pkit-location-info__payment-badge {
     background: #f3f4f6;
     color: #374151;
     border: 1px solid #e5e7eb;
 }
 
 /* ── Payment QR ── */
-.lfuf-location-info__qr {
+.pkit-location-info__qr {
     margin-top: 0.625rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.lfuf-location-info__qr-code {
+.pkit-location-info__qr-code {
     width: 6.5rem;
 }
 
-.lfuf-location-info__qr-code svg {
+.pkit-location-info__qr-code svg {
     display: block;
     width: 100%;
     height: auto;
 }
 
-.lfuf-location-info__qr-caption {
+.pkit-location-info__qr-caption {
     font-size: 0.8125rem;
     color: #6b7280;
 }
 
 @media print {
 
-    .lfuf-location-info__qr-code {
+    .pkit-location-info__qr-code {
         width: 12rem;
     }
 }
 
-.lfuf-location-info__directions {
+.pkit-location-info__directions {
     margin-left: 0.5rem;
     font-size: 0.8125rem;
     white-space: nowrap;

@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API routes under the lfuf/v1 namespace.
+ * REST API routes under the producerkit/v1 namespace.
  *
  * CPTs already expose themselves via show_in_rest + rest_namespace,
  * so these routes cover the custom availability table and any
@@ -9,21 +9,21 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\REST;
+namespace ProducerKit\Core\REST;
 
-use Leftfield\Core\Availability;
+use ProducerKit\Core\Availability;
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$namespace = 'lfuf/v1';
+	$namespace = 'producerkit/v1';
 
 	/* ── Availability ────────────────────────── */
 
-	// GET  /lfuf/v1/availability          — all current rows
-	// GET  /lfuf/v1/availability?product=1 — filtered by product
+	// GET  /producerkit/v1/availability          — all current rows
+	// GET  /producerkit/v1/availability?product=1 — filtered by product
 	register_rest_route(
 		$namespace,
 		'/availability',
@@ -46,7 +46,7 @@ function register_routes(): void {
 		]
 	);
 
-	// POST /lfuf/v1/availability          — upsert a row
+	// POST /producerkit/v1/availability          — upsert a row
 	register_rest_route(
 		$namespace,
 		'/availability',
@@ -89,7 +89,7 @@ function register_routes(): void {
 		]
 	);
 
-	// DELETE /lfuf/v1/availability/(?P<id>\d+)
+	// DELETE /producerkit/v1/availability/(?P<id>\d+)
 	register_rest_route(
 		$namespace,
 		'/availability/(?P<id>\d+)',
@@ -109,7 +109,7 @@ function register_routes(): void {
 
 	/* ── Cross-entity: product → sources ─── */
 
-	// GET /lfuf/v1/products/(?P<id>\d+)/sources
+	// GET /producerkit/v1/products/(?P<id>\d+)/sources
 	register_rest_route(
 		$namespace,
 		'/products/(?P<id>\d+)/sources',
@@ -129,7 +129,7 @@ function register_routes(): void {
 
 	/* ── Cross-entity: event → location + products */
 
-	// GET /lfuf/v1/events/(?P<id>\d+)/details
+	// GET /producerkit/v1/events/(?P<id>\d+)/details
 	register_rest_route(
 		$namespace,
 		'/events/(?P<id>\d+)/details',
@@ -149,7 +149,7 @@ function register_routes(): void {
 
 	/* ── Stand status (quick toggle) ─────── */
 
-	// PATCH /lfuf/v1/locations/(?P<id>\d+)/toggle
+	// PATCH /producerkit/v1/locations/(?P<id>\d+)/toggle
 	register_rest_route(
 		$namespace,
 		'/locations/(?P<id>\d+)/toggle',
@@ -219,7 +219,7 @@ function delete_availability( \WP_REST_Request $request ): \WP_REST_Response {
 
 function get_product_sources( \WP_REST_Request $request ): \WP_REST_Response {
 	$product_id = $request->get_param( 'id' );
-	$source_ids = get_post_meta( $product_id, '_lfuf_source_ids', true );
+	$source_ids = get_post_meta( $product_id, '_pkit_source_ids', true );
 
 	if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
 		return new \WP_REST_Response( [], 200 );
@@ -227,7 +227,7 @@ function get_product_sources( \WP_REST_Request $request ): \WP_REST_Response {
 
 	$sources = get_posts(
 		[
-			'post_type'   => 'lfuf_source',
+			'post_type'   => 'pkit_source',
 			'post__in'    => $source_ids,
 			'numberposts' => 20,
 			'post_status' => 'publish',
@@ -239,10 +239,10 @@ function get_product_sources( \WP_REST_Request $request ): \WP_REST_Response {
 			'id'            => $p->ID,
 			'title'         => $p->post_title,
 			'excerpt'       => $p->post_excerpt,
-			'farm_name'     => get_post_meta( $p->ID, '_lfuf_source_farm_name', true ),
-			'location'      => get_post_meta( $p->ID, '_lfuf_source_location', true ),
-			'history'       => get_post_meta( $p->ID, '_lfuf_source_history', true ),
-			'milling_notes' => get_post_meta( $p->ID, '_lfuf_milling_notes', true ),
+			'farm_name'     => get_post_meta( $p->ID, '_pkit_source_farm_name', true ),
+			'location'      => get_post_meta( $p->ID, '_pkit_source_location', true ),
+			'history'       => get_post_meta( $p->ID, '_pkit_source_history', true ),
+			'milling_notes' => get_post_meta( $p->ID, '_pkit_milling_notes', true ),
 		],
 		$sources
 	);
@@ -254,12 +254,12 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 	$event_id = $request->get_param( 'id' );
 	$event    = get_post( $event_id );
 
-	if ( ! $event || $event->post_type !== 'lfuf_event' ) {
+	if ( ! $event || $event->post_type !== 'pkit_event' ) {
 		return new \WP_REST_Response( [ 'message' => 'Event not found.' ], 404 );
 	}
 
-	$location_id = (int) get_post_meta( $event_id, '_lfuf_event_location_id', true );
-	$product_ids = get_post_meta( $event_id, '_lfuf_featured_product_ids', true ) ?: [];
+	$location_id = (int) get_post_meta( $event_id, '_pkit_event_location_id', true );
+	$product_ids = get_post_meta( $event_id, '_pkit_featured_product_ids', true ) ?: [];
 
 	$location = null;
 	if ( $location_id > 0 ) {
@@ -268,9 +268,9 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 			$location = [
 				'id'      => $loc_post->ID,
 				'title'   => $loc_post->post_title,
-				'address' => get_post_meta( $loc_post->ID, '_lfuf_address', true ),
-				'type'    => get_post_meta( $loc_post->ID, '_lfuf_location_type', true ),
-				'venmo'   => get_post_meta( $loc_post->ID, '_lfuf_venmo_handle', true ),
+				'address' => get_post_meta( $loc_post->ID, '_pkit_address', true ),
+				'type'    => get_post_meta( $loc_post->ID, '_pkit_location_type', true ),
+				'venmo'   => get_post_meta( $loc_post->ID, '_pkit_venmo_handle', true ),
 			];
 		}
 	}
@@ -279,7 +279,7 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 	if ( ! empty( $product_ids ) ) {
 		$posts    = get_posts(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post__in'    => $product_ids,
 				'numberposts' => 20,
 				'post_status' => 'publish',
@@ -289,7 +289,7 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 			fn ( \WP_Post $p ) => [
 				'id'    => $p->ID,
 				'title' => $p->post_title,
-				'price' => get_post_meta( $p->ID, '_lfuf_price', true ),
+				'price' => get_post_meta( $p->ID, '_pkit_price', true ),
 			],
 			$posts
 		);
@@ -302,11 +302,11 @@ function get_event_details( \WP_REST_Request $request ): \WP_REST_Response {
 				'title'           => $event->post_title,
 				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Applying core's own filter, which is how post content is meant to be rendered.
 				'content'         => apply_filters( 'the_content', $event->post_content ),
-				'start'           => get_post_meta( $event_id, '_lfuf_start_datetime', true ),
-				'end'             => get_post_meta( $event_id, '_lfuf_end_datetime', true ),
-				'recurrence_rule' => get_post_meta( $event_id, '_lfuf_recurrence_rule', true ),
-				'rsvp_cap'        => (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true ),
-				'donation_link'   => get_post_meta( $event_id, '_lfuf_donation_link', true ),
+				'start'           => get_post_meta( $event_id, '_pkit_start_datetime', true ),
+				'end'             => get_post_meta( $event_id, '_pkit_end_datetime', true ),
+				'recurrence_rule' => get_post_meta( $event_id, '_pkit_recurrence_rule', true ),
+				'rsvp_cap'        => (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true ),
+				'donation_link'   => get_post_meta( $event_id, '_pkit_donation_link', true ),
 			],
 			'location' => $location,
 			'products' => $products,
@@ -320,11 +320,11 @@ function toggle_location_open( \WP_REST_Request $request ): \WP_REST_Response {
 	$is_open     = $request->get_param( 'is_open' );
 
 	$post = get_post( $location_id );
-	if ( ! $post || $post->post_type !== 'lfuf_location' ) {
+	if ( ! $post || $post->post_type !== 'pkit_location' ) {
 		return new \WP_REST_Response( [ 'message' => 'Location not found.' ], 404 );
 	}
 
-	update_post_meta( $location_id, '_lfuf_is_open', $is_open );
+	update_post_meta( $location_id, '_pkit_is_open', $is_open );
 
 	return new \WP_REST_Response(
 		[

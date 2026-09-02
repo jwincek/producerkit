@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Farm Stand Manager">
-	<description>WordPress coding standards for the Farm Stand Manager plugin.</description>
+<ruleset name="ProducerKit">
+	<description>WordPress coding standards for the ProducerKit plugin.</description>
 
 	<!-- What to scan: PHP only — JS and CSS are covered by
 	     @wordpress/scripts (eslint / stylelint). -->
@@ -54,19 +54,19 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="farm-stand-manager"/>
+				<element value="producerkit"/>
 			</property>
 		</properties>
 	</rule>
 
 	<!-- Prefixes for global functions, classes, hooks. Runtime code lives in
-	     the Leftfield\* namespace; hooks, meta keys, options and the custom
-	     tables all use the lfuf_ prefix. -->
+	     the ProducerKit\* namespace; hooks, meta keys, options and the custom
+	     tables all use the pkit_ prefix. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="lfuf"/>
-				<element value="Leftfield"/>
+				<element value="pkit"/>
+				<element value="ProducerKit"/>
 			</property>
 		</properties>
 	</rule>

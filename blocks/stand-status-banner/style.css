@@ -4,34 +4,34 @@
 
 /* ── Base / shared ─────────────────────────────── */
 
-.lfuf-stand-banner {
-    --_lfuf-open-color: #16a34a;
-    --_lfuf-open-bg: #f0fdf4;
-    --_lfuf-open-border: #bbf7d0;
-    --_lfuf-closed-color: #991b1b;
-    --_lfuf-closed-bg: #fef2f2;
-    --_lfuf-closed-border: #fecaca;
-    --_lfuf-muted: #4b5563;
-    --_lfuf-radius: 0.625rem;
+.pkit-stand-banner {
+    --_pkit-open-color: #16a34a;
+    --_pkit-open-bg: #f0fdf4;
+    --_pkit-open-border: #bbf7d0;
+    --_pkit-closed-color: #991b1b;
+    --_pkit-closed-bg: #fef2f2;
+    --_pkit-closed-border: #fecaca;
+    --_pkit-muted: #4b5563;
+    --_pkit-radius: 0.625rem;
 
     color: #1f2937;
     font-family: inherit;
     line-height: 1.5;
 }
 
-.lfuf-stand-banner--open {
-    border-color: var(--_lfuf-open-border);
-    background: var(--_lfuf-open-bg);
+.pkit-stand-banner--open {
+    border-color: var(--_pkit-open-border);
+    background: var(--_pkit-open-bg);
 }
 
-.lfuf-stand-banner--closed {
-    border-color: var(--_lfuf-closed-border);
-    background: var(--_lfuf-closed-bg);
+.pkit-stand-banner--closed {
+    border-color: var(--_pkit-closed-border);
+    background: var(--_pkit-closed-bg);
 }
 
 /* ── Indicator dot ─────────────────────────────── */
 
-.lfuf-stand-banner__indicator {
+.pkit-stand-banner__indicator {
     display: inline-block;
     width: 12px;
     height: 12px;
@@ -39,18 +39,18 @@
     flex-shrink: 0;
 }
 
-.lfuf-stand-banner__indicator--open {
-    background: var(--_lfuf-open-color);
+.pkit-stand-banner__indicator--open {
+    background: var(--_pkit-open-color);
     box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
-    animation: lfuf-pulse 2s ease-in-out infinite;
+    animation: pkit-pulse 2s ease-in-out infinite;
 }
 
-.lfuf-stand-banner__indicator--closed {
-    background: var(--_lfuf-closed-color);
+.pkit-stand-banner__indicator--closed {
+    background: var(--_pkit-closed-color);
     box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.15);
 }
 
-@keyframes lfuf-pulse {
+@keyframes pkit-pulse {
 
     0%, 100% { box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); }
 
@@ -59,30 +59,30 @@
 
 /* ── Status row ────────────────────────────────── */
 
-.lfuf-stand-banner__status-row {
+.pkit-stand-banner__status-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.lfuf-stand-banner__status-label {
+.pkit-stand-banner__status-label {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 0.06em;
 }
 
-.lfuf-stand-banner--open .lfuf-stand-banner__status-label {
-    color: var(--_lfuf-open-color);
+.pkit-stand-banner--open .pkit-stand-banner__status-label {
+    color: var(--_pkit-open-color);
 }
 
-.lfuf-stand-banner--closed .lfuf-stand-banner__status-label {
-    color: var(--_lfuf-closed-color);
+.pkit-stand-banner--closed .pkit-stand-banner__status-label {
+    color: var(--_pkit-closed-color);
 }
 
 /* ── Name ──────────────────────────────────────── */
 
-.lfuf-stand-banner__name {
+.pkit-stand-banner__name {
     margin: 0.35rem 0 0;
     font-size: 1.3rem;
     font-weight: 700;
@@ -91,7 +91,7 @@
 
 /* ── Message ───────────────────────────────────── */
 
-.lfuf-stand-banner__message {
+.pkit-stand-banner__message {
     margin: 0.35rem 0 0;
     font-style: italic;
     font-size: 0.95rem;
@@ -99,55 +99,55 @@
 
 /* ── Next open ─────────────────────────────────── */
 
-.lfuf-stand-banner__next-open {
+.pkit-stand-banner__next-open {
     margin: 0.35rem 0 0;
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.lfuf-stand-banner--closed .lfuf-stand-banner__next-open {
-    color: var(--_lfuf-closed-color);
+.pkit-stand-banner--closed .pkit-stand-banner__next-open {
+    color: var(--_pkit-closed-color);
 }
 
 /* ── Updated timestamp ─────────────────────────── */
 
-.lfuf-stand-banner__updated {
+.pkit-stand-banner__updated {
     display: inline-block;
     margin-top: 0.35rem;
     font-size: 0.75rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
 /* ── Details section ───────────────────────────── */
 
-.lfuf-stand-banner__details {
+.pkit-stand-banner__details {
     margin-top: 0.75rem;
 }
 
-.lfuf-stand-banner__address,
-.lfuf-stand-banner__hours,
-.lfuf-stand-banner__season-note,
-.lfuf-stand-banner__off-season {
+.pkit-stand-banner__address,
+.pkit-stand-banner__hours,
+.pkit-stand-banner__season-note,
+.pkit-stand-banner__off-season {
     margin: 0.3rem 0 0;
     font-size: 0.9rem;
 }
 
-.lfuf-stand-banner__season-note {
-    color: var(--_lfuf-muted);
+.pkit-stand-banner__season-note {
+    color: var(--_pkit-muted);
     font-size: 0.8rem;
 }
 
-.lfuf-stand-banner__off-season {
+.pkit-stand-banner__off-season {
     font-weight: 600;
 }
 
-.lfuf-stand-banner__icon {
+.pkit-stand-banner__icon {
     margin-right: 0.3rem;
 }
 
 /* ── Venmo link ────────────────────────────────── */
 
-.lfuf-stand-banner__venmo-link {
+.pkit-stand-banner__venmo-link {
     display: inline-block;
     margin-top: 0.5rem;
     font-size: 0.85rem;
@@ -160,21 +160,21 @@
     transition: background 0.15s, color 0.15s;
 }
 
-.lfuf-stand-banner__venmo-link:hover,
-.lfuf-stand-banner__venmo-link:focus {
+.pkit-stand-banner__venmo-link:hover,
+.pkit-stand-banner__venmo-link:focus {
     background: #008CFF;
     color: #fff;
 }
 
 /* ── Editor loading state ─────────────────────── */
 
-.lfuf-stand-banner__loading {
+.pkit-stand-banner__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 1.25rem 1.5rem;
     font-size: 0.9rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
 
@@ -182,17 +182,17 @@
  * LAYOUT: BANNER (full-width strip)
  * ================================================= */
 
-.lfuf-stand-banner--banner {
+.pkit-stand-banner--banner {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 1.5rem;
     padding: 1.25rem 1.5rem;
     border: 1.5px solid;
-    border-radius: var(--_lfuf-radius);
+    border-radius: var(--_pkit-radius);
 }
 
-.lfuf-stand-banner--banner .lfuf-stand-banner__details {
+.pkit-stand-banner--banner .pkit-stand-banner__details {
     margin-top: 0;
     text-align: right;
     flex-shrink: 0;
@@ -200,11 +200,11 @@
 
 @media (max-width: 600px) {
 
-    .lfuf-stand-banner--banner {
+    .pkit-stand-banner--banner {
         flex-direction: column;
     }
 
-    .lfuf-stand-banner--banner .lfuf-stand-banner__details {
+    .pkit-stand-banner--banner .pkit-stand-banner__details {
         text-align: left;
     }
 }
@@ -214,39 +214,39 @@
  * LAYOUT: COMPACT (minimal strip, one line)
  * ================================================= */
 
-.lfuf-stand-banner--compact {
+.pkit-stand-banner--compact {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 0.6rem 1.25rem;
     border: 1.5px solid;
-    border-radius: var(--_lfuf-radius);
+    border-radius: var(--_pkit-radius);
     flex-wrap: wrap;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__main {
+.pkit-stand-banner--compact .pkit-stand-banner__main {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     flex: 1;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__name {
+.pkit-stand-banner--compact .pkit-stand-banner__name {
     margin: 0;
     font-size: 1rem;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__message {
+.pkit-stand-banner--compact .pkit-stand-banner__message {
     margin: 0;
     font-size: 0.85rem;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__updated,
-.lfuf-stand-banner--compact .lfuf-stand-banner__next-open {
+.pkit-stand-banner--compact .pkit-stand-banner__updated,
+.pkit-stand-banner--compact .pkit-stand-banner__next-open {
     margin: 0;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__details {
+.pkit-stand-banner--compact .pkit-stand-banner__details {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -254,15 +254,15 @@
     flex-wrap: wrap;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__address,
-.lfuf-stand-banner--compact .lfuf-stand-banner__hours,
-.lfuf-stand-banner--compact .lfuf-stand-banner__season-note,
-.lfuf-stand-banner--compact .lfuf-stand-banner__off-season {
+.pkit-stand-banner--compact .pkit-stand-banner__address,
+.pkit-stand-banner--compact .pkit-stand-banner__hours,
+.pkit-stand-banner--compact .pkit-stand-banner__season-note,
+.pkit-stand-banner--compact .pkit-stand-banner__off-season {
     margin: 0;
     font-size: 0.8rem;
 }
 
-.lfuf-stand-banner--compact .lfuf-stand-banner__venmo-link {
+.pkit-stand-banner--compact .pkit-stand-banner__venmo-link {
     margin-top: 0;
     padding: 0.25rem 0.6rem;
     font-size: 0.8rem;
@@ -273,19 +273,19 @@
  * LAYOUT: CARD (centered, self-contained)
  * ================================================= */
 
-.lfuf-stand-banner--card {
+.pkit-stand-banner--card {
     max-width: 400px;
     padding: 1.5rem;
     border: 1.5px solid;
-    border-radius: var(--_lfuf-radius);
+    border-radius: var(--_pkit-radius);
     text-align: center;
 }
 
-.lfuf-stand-banner--card .lfuf-stand-banner__status-row {
+.pkit-stand-banner--card .pkit-stand-banner__status-row {
     justify-content: center;
 }
 
-.lfuf-stand-banner--card .lfuf-stand-banner__details {
+.pkit-stand-banner--card .pkit-stand-banner__details {
     text-align: center;
 }
 
@@ -298,18 +298,18 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-stand-banner__indicator--open {
+    .pkit-stand-banner__indicator--open {
         animation: none;
     }
 
-    .lfuf-stand-banner__venmo-link {
+    .pkit-stand-banner__venmo-link {
         transition: none;
     }
 }
 
 /* ── Focus styles ──────────────────────────────── */
 
-.lfuf-stand-banner__venmo-link:focus-visible {
+.pkit-stand-banner__venmo-link:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
@@ -319,7 +319,7 @@
 /* WordPress themes usually include this class, but
    we define a fallback in case the theme doesn't. */
 
-.lfuf-stand-banner .screen-reader-text {
+.pkit-stand-banner .screen-reader-text {
     border: 0;
     clip: rect(1px, 1px, 1px, 1px);
     clip-path: inset(50%);
@@ -336,24 +336,24 @@
 
 @media (forced-colors: active) {
 
-    .lfuf-stand-banner__indicator {
+    .pkit-stand-banner__indicator {
         forced-color-adjust: none;
         border: 2px solid LinkText;
     }
 
-    .lfuf-stand-banner__indicator--open {
+    .pkit-stand-banner__indicator--open {
         background: LinkText;
     }
 
-    .lfuf-stand-banner__indicator--closed {
+    .pkit-stand-banner__indicator--closed {
         background: transparent;
     }
 
-    .lfuf-stand-banner {
+    .pkit-stand-banner {
         border-color: CanvasText;
     }
 
-    .lfuf-stand-banner__venmo-link {
+    .pkit-stand-banner__venmo-link {
         border-color: LinkText;
         color: LinkText;
     }

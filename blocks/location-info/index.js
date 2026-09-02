@@ -25,12 +25,12 @@
 
 	function getRestBase() {
 		return (
-			( window.lfufStandSettings || window.lfufSettings || {} )
-				.restBase || '/wp-json/lfuf/v1'
+			( window.pkitStandSettings || window.pkitSettings || {} )
+				.restBase || '/wp-json/producerkit/v1'
 		);
 	}
 
-	registerBlockType( 'lfuf/location-info', {
+	registerBlockType( 'producerkit/location-info', {
 		edit: function EditLocationInfo( props ) {
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
@@ -88,7 +88,7 @@
 				return (
 					select( 'core' ).getEntityRecords(
 						'postType',
-						'lfuf_location',
+						'pkit_location',
 						{
 							per_page: 50,
 							status: 'publish',
@@ -106,7 +106,7 @@
 			} );
 
 			const blockProps = useBlockProps( {
-				className: 'lfuf-location-info',
+				className: 'pkit-location-info',
 			} );
 
 			// Payment methods come enriched from the stand info endpoint.
@@ -150,7 +150,7 @@
 						blockProps,
 						el(
 							'div',
-							{ className: 'lfuf-location-info__loading' },
+							{ className: 'pkit-location-info__loading' },
 							el( Spinner ),
 							' Loading location\u2026'
 						)
@@ -188,10 +188,10 @@
 					// Header: title + status badge.
 					el(
 						'div',
-						{ className: 'lfuf-location-info__header' },
+						{ className: 'pkit-location-info__header' },
 						el(
 							'h3',
-							{ className: 'lfuf-location-info__title' },
+							{ className: 'pkit-location-info__title' },
 							stand.name
 						),
 						showStatus
@@ -199,7 +199,7 @@
 									'span',
 									{
 										className:
-											'lfuf-location-info__status lfuf-location-info__status--' +
+											'pkit-location-info__status pkit-location-info__status--' +
 											( stand.is_open
 												? 'open'
 												: 'closed' ),
@@ -213,7 +213,7 @@
 					stand.location_type
 						? el(
 								'span',
-								{ className: 'lfuf-location-info__type' },
+								{ className: 'pkit-location-info__type' },
 								stand.location_type.charAt( 0 ).toUpperCase() +
 									stand.location_type.slice( 1 )
 						  )
@@ -223,7 +223,7 @@
 					stand.address
 						? el(
 								'p',
-								{ className: 'lfuf-location-info__address' },
+								{ className: 'pkit-location-info__address' },
 								stand.address
 						  )
 						: null,
@@ -232,7 +232,7 @@
 					stand.hours
 						? el(
 								'p',
-								{ className: 'lfuf-location-info__hours' },
+								{ className: 'pkit-location-info__hours' },
 								stand.hours
 						  )
 						: null,
@@ -241,12 +241,12 @@
 					showVenmo && payMethods.length
 						? el(
 								'div',
-								{ className: 'lfuf-location-info__payments' },
+								{ className: 'pkit-location-info__payments' },
 								el(
 									'span',
 									{
 										className:
-											'lfuf-location-info__payments-label',
+											'pkit-location-info__payments-label',
 									},
 									'Payment options:'
 								),
@@ -258,13 +258,13 @@
 											'div',
 											{
 												className:
-													'lfuf-location-info__qr lfuf-location-info__qr--editor',
+													'pkit-location-info__qr pkit-location-info__qr--editor',
 											},
 											el(
 												'div',
 												{
 													className:
-														'lfuf-location-info__qr-code',
+														'pkit-location-info__qr-code',
 													style: {
 														width: '96px',
 														height: '96px',
@@ -287,7 +287,7 @@
 									'ul',
 									{
 										className:
-											'lfuf-location-info__payments-list',
+											'pkit-location-info__payments-list',
 									},
 									payMethods.map( function ( m, i ) {
 										const text =
@@ -306,7 +306,7 @@
 											{
 												key: i,
 												className:
-													'lfuf-location-info__payment lfuf-location-info__payment--' +
+													'pkit-location-info__payment pkit-location-info__payment--' +
 													m.type,
 											},
 											m.is_link
@@ -314,7 +314,7 @@
 														'span',
 														{
 															className:
-																'lfuf-location-info__payment-link',
+																'pkit-location-info__payment-link',
 														},
 														text
 												  )
@@ -322,7 +322,7 @@
 														'span',
 														{
 															className:
-																'lfuf-location-info__payment-badge',
+																'pkit-location-info__payment-badge',
 														},
 														text
 												  )

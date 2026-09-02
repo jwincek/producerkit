@@ -5,16 +5,16 @@
  * Listens to existing plugin hooks and sends email to the site admin.
  * All notifications are filterable:
  *
- *   - 'lfuf_notify_recipients'            → array of email addresses
- *   - 'lfuf_notify_rsvp_added'            → bool, false to suppress
- *   - 'lfuf_notify_rsvp_cancelled'        → bool, false to suppress
- *   - 'lfuf_notify_stand_status_changed'  → bool, false to suppress
- *   - 'lfuf_notify_availability_expired'  → bool, false to suppress (default: suppressed)
+ *   - 'pkit_notify_recipients'            → array of email addresses
+ *   - 'pkit_notify_rsvp_added'            → bool, false to suppress
+ *   - 'pkit_notify_rsvp_cancelled'        → bool, false to suppress
+ *   - 'pkit_notify_stand_status_changed'  → bool, false to suppress
+ *   - 'pkit_notify_availability_expired'  → bool, false to suppress (default: suppressed)
  */
 
 declare(strict_types=1);
 
-namespace Leftfield\Notifications\Email;
+namespace ProducerKit\Notifications\Email;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,7 +35,7 @@ function get_recipients(): array {
 	$recipients  = [ $admin_email ];
 
 	/** @var string[] */
-	return apply_filters( 'lfuf_notify_recipients', $recipients );
+	return apply_filters( 'pkit_notify_recipients', $recipients );
 }
 
 /**
@@ -84,7 +84,7 @@ function send( string $subject, string $body, array $to = [] ): bool {
 	$html .= '<h2 style="color:#065f46;margin-top:0;">🥕 ' . esc_html( $site_name ) . '</h2>';
 	$html .= $body;
 	$html .= '<hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0 12px;">';
-	$html .= '<p style="font-size:12px;color:#9ca3af;">This is an automated notification from the Farm Stand Manager plugin.</p>';
+	$html .= '<p style="font-size:12px;color:#9ca3af;">This is an automated notification from the ProducerKit plugin.</p>';
 	$html .= '</body></html>';
 
 	$headers = [ 'Content-Type: text/html; charset=UTF-8' ];
@@ -109,10 +109,10 @@ function send( string $subject, string $body, array $to = [] ): bool {
  * ─────────────────────────────────────────────── */
 
 add_action(
-	'lfuf_rsvp_added',
+	'pkit_rsvp_added',
 	function ( array $rsvp, int $event_id ): void {
 		/** Allow suppressing this notification. */
-		if ( ! apply_filters( 'lfuf_notify_rsvp_added', true, $rsvp, $event_id ) ) {
+		if ( ! apply_filters( 'pkit_notify_rsvp_added', true, $rsvp, $event_id ) ) {
 			return;
 		}
 
@@ -130,9 +130,9 @@ add_action(
 		// Get current headcount.
 		$headcount = 0;
 		$cap       = 0;
-		if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-			$headcount = \Leftfield\EventManager\RSVP\get_headcount( $event_id );
-			$cap       = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+		if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+			$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $event_id );
+			$cap       = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 		}
 
 		$subject = 'New RSVP: ' . $name . ' → ' . $event_title;
@@ -179,9 +179,9 @@ add_action(
  * ─────────────────────────────────────────────── */
 
 add_action(
-	'lfuf_rsvp_cancelled',
+	'pkit_rsvp_cancelled',
 	function ( array $rsvp, int $event_id ): void {
-		if ( ! apply_filters( 'lfuf_notify_rsvp_cancelled', true, $rsvp, $event_id ) ) {
+		if ( ! apply_filters( 'pkit_notify_rsvp_cancelled', true, $rsvp, $event_id ) ) {
 			return;
 		}
 
@@ -196,9 +196,9 @@ add_action(
 
 		$headcount = 0;
 		$cap       = 0;
-		if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-			$headcount = \Leftfield\EventManager\RSVP\get_headcount( $event_id );
-			$cap       = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+		if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+			$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $event_id );
+			$cap       = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 		}
 
 		$subject = 'RSVP Cancelled: ' . $name . ' → ' . $event_title;
@@ -226,15 +226,15 @@ add_action(
  * ─────────────────────────────────────────────── */
 
 add_action(
-	'lfuf_stand_status_changed',
+	'pkit_stand_status_changed',
 	function ( int $location_id, bool $is_open, string $status_message ): void {
-		if ( ! apply_filters( 'lfuf_notify_stand_status_changed', true, $location_id, $is_open, $status_message ) ) {
+		if ( ! apply_filters( 'pkit_notify_stand_status_changed', true, $location_id, $is_open, $status_message ) ) {
 			return;
 		}
 
 		// Rate limit: skip if this stand was already notified within 5 minutes.
 		// Prevents email floods from repeated toggles (testing, accidents, etc.).
-		$transient_key = 'lfuf_stand_notified_' . $location_id;
+		$transient_key = 'pkit_stand_notified_' . $location_id;
 		if ( get_transient( $transient_key ) ) {
 			return;
 		}
@@ -281,13 +281,13 @@ add_action(
  * Suppressed by default — this is routine database cleanup
  * that requires no operator action. Enable via filter:
  *
- *   add_filter( 'lfuf_notify_availability_expired', '__return_true' );
+ *   add_filter( 'pkit_notify_availability_expired', '__return_true' );
  * ─────────────────────────────────────────────── */
 
 add_action(
-	'lfuf_availability_expired_purged',
+	'pkit_availability_expired_purged',
 	function ( int $count ): void {
-		if ( ! apply_filters( 'lfuf_notify_availability_expired', false, $count ) ) {
+		if ( ! apply_filters( 'pkit_notify_availability_expired', false, $count ) ) {
 			return;
 		}
 
@@ -296,7 +296,7 @@ add_action(
 		$body  = '<p>The daily cleanup removed <strong>' . $count . '</strong> expired availability ';
 		$body .= ( $count === 1 ? 'entry' : 'entries' ) . ' from the database.</p>';
 		$body .= '<p>These were rows with an expiration date in the past. The availability board was already hiding them — this just cleans up the database.</p>';
-		$body .= '<p><a href="' . esc_url( admin_url( 'admin.php?page=lfuf-availability' ) ) . '" style="color:#065f46;">View current availability →</a></p>';
+		$body .= '<p><a href="' . esc_url( admin_url( 'admin.php?page=pkit-availability' ) ) . '" style="color:#065f46;">View current availability →</a></p>';
 
 		send( $subject, $body );
 	},

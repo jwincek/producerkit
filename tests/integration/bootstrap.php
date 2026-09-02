@@ -38,7 +38,7 @@ require_once $_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'muplugins_loaded',
 	function (): void {
-		require dirname( __DIR__, 2 ) . '/farm-stand-manager.php';
+		require dirname( __DIR__, 2 ) . '/producerkit.php';
 	}
 );
 
@@ -48,9 +48,10 @@ tests_add_filter(
 tests_add_filter(
 	'plugins_loaded',
 	function (): void {
-		\Leftfield\Core\Availability\create_table();
-		\Leftfield\EventManager\RSVP\create_table();
-		\Leftfield\PreOrder\Orders\create_table();
+		\ProducerKit\Core\Availability\create_table();
+		\ProducerKit\EventManager\RSVP\create_table();
+		\ProducerKit\PreOrder\Orders\create_table();
+		\ProducerKit\Commissions\Store\create_table();
 	},
 	25
 );

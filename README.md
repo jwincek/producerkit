@@ -1,6 +1,6 @@
-# Farm Stand Manager
+# ProducerKit
 
-Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
+Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support.
 
 Single plugin, modular architecture. No build step required.
 
@@ -8,10 +8,10 @@ Single plugin, modular architecture. No build step required.
 
 1. Clone into `wp-content/plugins/`:
    ```
-   git clone https://github.com/jwincek/farm-stand-manager.git
+   git clone https://github.com/jwincek/producerkit.git
    ```
 2. Activate in WordPress admin.
-3. Go to **🥕 Farm Stand** in the sidebar.
+3. Go to **ProducerKit** in the sidebar.
 4. Click **Load Sample Data** to see the blocks in action with realistic test content.
 5. Read [`GETTING-STARTED.md`](GETTING-STARTED.md) for the full walkthrough.
 
@@ -23,13 +23,15 @@ Single plugin, modular architecture. No build step required.
 ## Architecture
 
 ```
-farm-stand-manager/
-├── farm-stand-manager.php                 # Bootstrap, module loader, block registration
+producerkit/
+├── producerkit.php                 # Bootstrap, module loader, block registration
 ├── includes/
 │   ├── admin-dashboard.php            # Admin dashboard with module status
 │   ├── sample-data.php                # Load/remove sample data toggle
 │   └── sample-data-markers.php        # Front-end "Sample" badges, admin notices
 ├── assets/js/
+│   ├── store.js                       # Shared Interactivity store (one namespace)
+│   └── interactivity/                 # Feature modules; blocks import these
 │   ├── editor-location.js             # Location CPT sidebar panels
 │   ├── editor-product.js              # Product CPT sidebar panels
 │   └── editor-event.js                # Event CPT sidebar panels
@@ -41,16 +43,35 @@ farm-stand-manager/
 │   │       ├── taxonomies.php         # product_type, season, event_type (auto-seeded)
 │   │       ├── meta-fields.php        # All post meta (show_in_rest)
 │   │       ├── availability-table.php # Custom DB table + CRUD + expiration cron
-│   │       ├── rest-api.php           # REST routes under lfuf/v1
+│   │       ├── rest-api.php           # REST routes under producerkit/v1
 │   │       ├── abilities.php          # WP 6.9+ Abilities API
 │   │       ├── single-content.php     # CPT single page meta display
 │   │       ├── single-styles.php      # Front-end styles for single CPTs
 │   │       ├── admin-columns.php      # Custom columns for CPT list tables
 │   │       └── product-import-export.php # CSV import/export for products
+│   ├── producer-profiles/             # Trade vocabulary + optional fields
+│   │   ├── bootstrap.php
+│   │   ├── includes/
+│   │   │   ├── profiles.php           # Registry, lazy per-file loading
+│   │   │   ├── taxonomies.php         # Optional material/finish/component
+│   │   │   └── admin-settings.php     # Profile picker
+│   │   └── profiles/                  # 16 profiles, one file each
+│   ├── commissions/                   # Made-to-order requests
+│   │   ├── bootstrap.php
+│   │   └── includes/
+│   │       ├── commissions-table.php  # Table, status machine, lifecycle
+│   │       ├── rest-extensions.php    # Public submit + tokenized decisions
+│   │       └── admin-commissions.php  # Request queue + quote form
+│   ├── woocommerce/                   # Optional settlement layer
+│   │   ├── bootstrap.php              # Gated on the WooCommerce class
+│   │   └── includes/
+│   │       ├── settlement.php         # Settlement columns on both tables
+│   │       ├── checkout.php           # Product + pending order + pay URL
+│   │       └── order-sync.php         # Order paid -> request settled
 │   ├── stand-status/
 │   │   ├── bootstrap.php
 │   │   └── includes/
-│   │       ├── meta-extensions.php    # _lfuf_ss_* meta on locations
+│   │       ├── meta-extensions.php    # _pkit_ss_* meta on locations
 │   │       ├── rest-extensions.php    # /stand/{id}/status, /stand/{id}/info
 │   │       ├── admin-bar.php          # Admin bar quick-toggle
 │   │       └── abilities.php          # Stand-specific abilities
@@ -63,7 +84,7 @@ farm-stand-manager/
 │   └── event-manager/
 │       ├── bootstrap.php
 │       └── includes/
-│           ├── meta-extensions.php    # _lfuf_em_* meta on events
+│           ├── meta-extensions.php    # _pkit_em_* meta on events
 │           ├── rsvp-table.php         # Custom RSVP table + CRUD + rate limiting
 │           ├── rest-extensions.php    # Event listing, RSVP endpoints
 │           ├── render-helpers.php     # Shared render functions for event blocks
@@ -81,7 +102,8 @@ farm-stand-manager/
 │   ├── stand-hours-schedule/          # Weekly schedule grid (semantic table)
 │   ├── availability-board/            # Interactivity API, client-side filtering
 │   ├── event-list/                    # Interactivity API, inline RSVP
-│   └── event-card/                    # Single event embed with RSVP
+│   ├── event-card/                    # Single event embed with RSVP
+│   └── commission-form/               # Public custom-work request
 ├── languages/
 ├── GETTING-STARTED.md                 # Walkthrough for farm operators
 ├── composer.json
@@ -93,7 +115,74 @@ farm-stand-manager/
 
 ### Core (always active)
 
-The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_source`, `lfuf_location`, `lfuf_event`), three taxonomies with auto-seeded default terms, a custom `{prefix}_lfuf_availability` table for time-sensitive product status with daily expiration cron, 16 REST API endpoints under `lfuf/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
+The shared data layer. Registers four custom post types (`pkit_product`, `pkit_source`, `pkit_location`, `pkit_event`), three always-on taxonomies with auto-seeded default terms (plus three more the producer profile may switch on), a custom `{prefix}_pkit_availability` table for time-sensitive product status with daily expiration cron, 46 REST routes under `producerkit/v1`, Abilities API abilities for AI/automation discoverability, single CPT page enhancements with structured meta tables, custom admin columns for all CPT list tables, a "Needs Attention" dashboard widget that flags missing content, and CSV import/export for bulk product management.
+
+### Admin menu
+
+Three top-level items, not five, and adjacent — **ProducerKit**, **Catalog**, **Calendar** sit together wherever the parent lands.
+
+Adjacency comes from a `menu_order` filter rather than `menu_position`, because a position cannot deliver it: a plugin that sets none is placed at `++$_wp_last_object_menu`, which starts at 25 — the same range any content plugin would choose — so on a busy site a neighbour drops between two of ours whatever number we pick. The reorder is additive: everything else keeps its relative order, and anything missing (a module switched off) is skipped.
+ **Catalog** and **Events** stay top-level because they own taxonomies; **Sources** and **Locations** are nested under **ProducerKit**, because they own none and are configured once rather than worked in daily.
+
+That split is forced by core: `wp-admin/menu.php` skips a post type whose `show_in_menu` is a string, so nesting one drops its "Add New" entry *and* every taxonomy submenu it has. Nesting Catalog would put up to five taxonomies out of reach of the menu entirely.
+
+Both of the obvious names are taken by plugins ProducerKit is likely to sit beside: WooCommerce registers a top-level **Products**, The Events Calendar a top-level **Events**. So the sidebar says **Catalog** and **Calendar** while the content stays Products and Events everywhere the word appears in a sentence. A producer profile can re-word them again — a musician sees *Merch* and *Shows*.
+
+### Producer Profiles
+
+Re-labels the product taxonomies for the trade the site actually practises, and seeds that trade's vocabulary. Sixteen profiles ship: **Farm** (the default), **Bakery**, **Beekeeping**, **Musician**, **Author**, **Comics & Graphic Novels**, **Painting & Drawing**, **Screen Printing**, **Taxidermy**, and seven crafts — Woodworking, Pottery, Jewelry, Metalwork, Fiber Arts, Leather and General.
+
+**General** is the deliberate fallback: all three fields, no vocabulary. A trade whose words we would only be guessing at is better served by a blank slate than by someone else's wrong list.
+
+A profile does two things:
+
+- **Re-labels.** "Material" becomes *Floral Source* for a beekeeper, *Wood Species* for a woodworker, *Clay Body* for a potter. All eleven WordPress labels are derived from one singular/plural pair.
+- **Switches on optional fields.** `pkit_material`, `pkit_finish` and `pkit_component` register only for profiles that ask for them, so a farm never sees them. They render on the Product Card block and the single product page, labelled as the viewer's profile names them — core asks which taxonomies count via the `pkit_detail_taxonomies` filter, so with this module off the templates behave exactly as before.
+
+Switching is **additive** — it seeds new terms and never deletes a term or a product, so changing your mind is safe.
+
+**More than one trade on a site** is supported, and the two halves of a profile behave differently:
+
+- **Structure unions.** Which optional fields exist and which vocabulary is seeded are physical facts about the install, so they combine — a farm that also bakes gets both. Seeding only ever inserts, so there is no conflict to resolve.
+- **Wording resolves per person.** There is one Material field with one label, and "Wood Species" and "Flour" have no sensible merge. But a label is display, so each admin picks which trade's words *they* read: the grower sees Material, the baker sees Flour, over the same field. Logged-out visitors and anyone who hasn't chosen get the first active profile, so the front end stays deterministic.
+
+Both are set under **ProducerKit → Producer Profile** — the site list needs `manage_options`, the personal choice only `edit_posts`.
+
+Core knows nothing about this module: it exposes two filters, `pkit_taxonomy_names` and `pkit_taxonomy_default_terms`, and the module answers them. Deactivate it and core falls back to its own farm vocabulary unchanged.
+
+### Pre-Orders
+
+Cartless reservations for collection. A visitor picks products and a pickup date; no money moves through the plugin, so payment happens at the counter or through one of the location's payment links.
+
+Pickup dates are validated against data other modules already hold — the location's weekly schedule, its season dates, and its blackout dates — so the form cannot offer a day the stand is shut. The **Harvest List** aggregates active orders per pickup date into per-product totals: what to have ready, and how much.
+
+Shares the request substrate in `Core\Requests` with RSVPs and commissions: salted IP hashing, honeypot, spam-guard delegation, token issue.
+
+### Commissions
+
+Made-to-order requests, for makers who take custom work. A customer describes something that does not exist yet; the maker quotes a price and an estimated date; the customer accepts or declines from a link in their email.
+
+Kept as its own table rather than folded into pre-orders, because at submission a commission has no pickup date and no product — the point is that the maker will make one — while `pkit_preorders` requires both.
+
+- **Enforced transitions.** `new → quoted → accepted → in_progress → complete`, with `declined` and `cancelled` as terminal branches. Illegal moves are refused, so a stale admin tab cannot revive a decision the customer already made.
+- **Two tokens.** A long-lived one lets the customer see their own request; a short-lived quote token (30 days) spends itself on accept or decline, so the emailed link cannot be replayed.
+- **Guests, not accounts.** Accept and decline authenticate with the quote token alone, over POST rather than GET, so a link preview or mail-client prefetch cannot accept on the customer's behalf.
+
+Managed under **ProducerKit → Commissions**: the request queue with a status filter, an inline quote form, and one-click moves along the machine. The **Commission Request Form** block puts the public form on any page — its type and material dropdowns come from your producer profile, so a woodworker's customers pick a Wood Species and a beekeeper's pick a Floral Source with no configuration.
+
+No WooCommerce required. Without it, an accepted commission is one the maker arranges payment for directly.
+
+### WooCommerce (optional)
+
+The compatibility layer. Everything else works with no store at all — a pre-order is paid at the stand, a commission is invoiced by the maker — and this module adds the option of settling either one through WooCommerce checkout instead.
+
+Both request tables gain four columns (`settlement`, `wc_order_id`, `wc_product_id`, `settled_at`), added only when the module runs, so a site that never installs WooCommerce never grows them. `settlement` defaults to `direct`, so switching the module on never reclassifies an existing request.
+
+- **A commission becomes** a hidden product at the quoted price plus a pending order, and the customer gets a pay link. Hidden, not published — "Dana's walnut bowl, $185" is not something another customer should be able to find and buy.
+- **A pre-order is priced** from the catalogue. Catalogue prices are free text on purpose ("$4/bunch", "market price"), so any line that does not parse to a clean number **refuses the whole checkout and names the product** rather than guessing — "2 for $5" reads as 2.00, and charging that would undercharge silently.
+- **Payment flows one way.** WooCommerce is the authority on whether money arrived; the request follows. A paid commission moves to In Progress through the same transition table everything else uses, so it cannot resurrect a cancelled one. A refund deliberately does *not* cancel the request — that is a human's call.
+
+Loading is gated on the `WooCommerce` class rather than `is_plugin_active()`, which needs an admin include, reads an option that lies on multisite, and would still be true during the request in which WooCommerce is being deactivated.
 
 ### Stand Status
 
@@ -172,7 +261,7 @@ All blocks follow WCAG 2.1 AA:
 
 ## REST API Endpoints
 
-All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
+All under `producerkit/v1`. 23 custom endpoints plus standard WP REST for each CPT.
 
 ### Core
 | Method | Endpoint | Auth | Purpose |
@@ -183,6 +272,19 @@ All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
 | GET | `/products/{id}/sources` | Public | Sources linked to a product |
 | GET | `/events/{id}/details` | Public | Event + location + products |
 | PATCH | `/locations/{id}/toggle` | Editor+ | Toggle open/closed |
+
+### Commissions
+| Method | Endpoint | Auth | Purpose |
+|--------|----------|------|---------|
+| POST | `/commissions` | Public | Submit a request |
+| GET | `/commissions` | Editor+ | List, optionally by status |
+| GET | `/commissions/token/{token}` | Token | The customer's own view |
+| POST | `/commissions/quote/{token}/accept` | Token | Accept a quote |
+| POST | `/commissions/quote/{token}/decline` | Token | Decline a quote |
+| POST | `/commissions/{id}/quote` | Editor+ | Send a quote |
+| POST | `/commissions/{id}/status` | Editor+ | Move the status on |
+
+The token routes are POST rather than GET so a link preview or a mail client prefetching the URL cannot accept a quote on the customer's behalf.
 
 ### Stand Status
 | Method | Endpoint | Auth | Purpose |
@@ -208,13 +310,13 @@ All under `lfuf/v1`. 16 custom endpoints plus standard WP REST for each CPT.
 
 ## Abilities (WP 6.9+)
 
-10 abilities across 4 categories, registered via `wp_register_ability()` with `function_exists()` guard for backward compatibility.
+14 abilities across 5 categories, registered via `wp_register_ability()` behind a `function_exists()` guard so the plugin still loads below WordPress 6.9.
 
 ## Admin Tools
 
 ### Needs Attention Dashboard
 
-The 🥕 Farm Stand dashboard shows a "Needs Attention" section that flags content gaps: products without photos or prices, events without start dates, locations without addresses, products with stale availability (over a week old), and products not listed on the board at all. Each item links directly to the relevant admin page. The section disappears when everything is filled in.
+The ProducerKit dashboard shows a "Needs Attention" section that flags content gaps: products without photos or prices, events without start dates, locations without addresses, products with stale availability (over a week old), and products not listed on the board at all. Each item links directly to the relevant admin page. The section disappears when everything is filled in.
 
 ### Availability Quick-Entry
 
@@ -222,21 +324,21 @@ The weekly availability update page shows product thumbnails, prices, and a "Cop
 
 ### Product Import / Export
 
-CSV import and export under **🥕 Farm Stand → Product Import**. Export downloads all products with every field. Import creates or updates products matched by title, handles pipe-separated taxonomy terms, resolves source links by title, and optionally sideloads featured images from URLs. A collapsible format reference documents every column.
+CSV import and export under **ProducerKit → Product Import**. Export downloads all products with every field. Import creates or updates products matched by title, handles pipe-separated taxonomy terms, resolves source links by title, and optionally sideloads featured images from URLs. A collapsible format reference documents every column.
 
 ## Automation
 
 ### Availability Expiration Cron
 
-A daily WP-Cron job (`lfuf_availability_cleanup`) runs at 3:00 AM and deletes availability rows with an `expires_date` in the past. The board already hides expired rows via date filtering — the cron just cleans up the database. Self-healing: if the cron event is missing (e.g., after a git pull without reactivation), it re-schedules on the next page load.
+A daily WP-Cron job (`pkit_availability_cleanup`) runs at 3:00 AM and deletes availability rows with an `expires_date` in the past. The board already hides expired rows via date filtering — the cron just cleans up the database. Self-healing: if the cron event is missing (e.g., after a git pull without reactivation), it re-schedules on the next page load.
 
 ### Email Notifications
 
-All filterable via `lfuf_notify_*` hooks. Recipients default to the site admin email and can be extended via the `lfuf_notify_recipients` filter. Individual notifications can be suppressed with `add_filter('lfuf_notify_rsvp_added', '__return_false')`.
+All filterable via `pkit_notify_*` hooks. Recipients default to the site admin email and can be extended via the `pkit_notify_recipients` filter. Individual notifications can be suppressed with `add_filter('pkit_notify_rsvp_added', '__return_false')`.
 
 ## Sample Data
 
-The admin dashboard provides a one-click toggle to load 8 products, 2 locations, 3 events, and availability entries. Sample content is tagged with `_lfuf_sample_data` meta for clean removal. Front-end shows amber "Sample" badges via `the_title` filter.
+The admin dashboard provides a one-click toggle to load 8 products, 2 locations, 3 events, and availability entries. Sample content is tagged with `_pkit_sample_data` meta for clean removal. Front-end shows amber "Sample" badges via `the_title` filter.
 
 ## License
 

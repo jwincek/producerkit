@@ -1,27 +1,27 @@
 <?php
 /**
- * Plugin Name:       Farm Stand Manager
- * Plugin URI:        https://github.com/jwincek/farm-stand-manager
- * Description:       Products, sales locations, real-time availability, stand status, and events for small farms and farm stands — with blocks and Abilities API support.
- * Version:           1.1.0
+ * Plugin Name:       ProducerKit
+ * Plugin URI:        https://github.com/jwincek/producerkit
+ * Description:       Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support.
+ * Version:           2.0.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            Jerome Wincek
  * Author URI:        https://github.com/jwincek
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       farm-stand-manager
+ * Text Domain:       producerkit
  */
 
 declare(strict_types=1);
 
-namespace Leftfield;
+namespace ProducerKit;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION    = '1.1.0';
+const VERSION    = '2.0.0';
 const PLUGIN_DIR = __DIR__;
-const PREFIX     = 'lfuf';
+const PREFIX     = 'pkit';
 
 /* ───────────────────────────────────────────────
  * Module registry
@@ -29,7 +29,7 @@ const PREFIX     = 'lfuf';
  * Each module has a slug, a label (for future admin UI),
  * and a bootstrap file. The core module is always loaded.
  * Feature modules can be toggled via the
- * 'lfuf_active_modules' filter.
+ * 'pkit_active_modules' filter.
  * ─────────────────────────────────────────────── */
 
 /**
@@ -43,12 +43,15 @@ const PREFIX     = 'lfuf';
  */
 function get_module_labels(): array {
 	return [
-		'core'               => __( 'Core Data Layer', 'farm-stand-manager' ),
-		'stand-status'       => __( 'Stand Status', 'farm-stand-manager' ),
-		'availability-board' => __( 'Availability Board', 'farm-stand-manager' ),
-		'event-manager'      => __( 'Event Manager', 'farm-stand-manager' ),
-		'notifications'      => __( 'Notifications', 'farm-stand-manager' ),
-		'pre-order'          => __( 'Pre-Orders', 'farm-stand-manager' ),
+		'core'               => __( 'Core Data Layer', 'producerkit' ),
+		'producer-profiles'  => __( 'Producer Profiles', 'producerkit' ),
+		'stand-status'       => __( 'Stand Status', 'producerkit' ),
+		'availability-board' => __( 'Availability Board', 'producerkit' ),
+		'event-manager'      => __( 'Event Manager', 'producerkit' ),
+		'notifications'      => __( 'Notifications', 'producerkit' ),
+		'pre-order'          => __( 'Pre-Orders', 'producerkit' ),
+		'commissions'        => __( 'Commissions', 'producerkit' ),
+		'woocommerce'        => __( 'WooCommerce Settlement', 'producerkit' ),
 	];
 }
 
@@ -57,6 +60,10 @@ function get_registered_modules(): array {
 		'core'               => [
 			'bootstrap' => PLUGIN_DIR . '/modules/core/bootstrap.php',
 			'required'  => true,
+		],
+		'producer-profiles'  => [
+			'bootstrap' => PLUGIN_DIR . '/modules/producer-profiles/bootstrap.php',
+			'required'  => false,
 		],
 		'stand-status'       => [
 			'bootstrap' => PLUGIN_DIR . '/modules/stand-status/bootstrap.php',
@@ -78,6 +85,14 @@ function get_registered_modules(): array {
 			'bootstrap' => PLUGIN_DIR . '/modules/pre-order/bootstrap.php',
 			'required'  => false,
 		],
+		'commissions'        => [
+			'bootstrap' => PLUGIN_DIR . '/modules/commissions/bootstrap.php',
+			'required'  => false,
+		],
+		'woocommerce'        => [
+			'bootstrap' => PLUGIN_DIR . '/modules/woocommerce/bootstrap.php',
+			'required'  => false,
+		],
 		// Future modules:
 		// 'grain-stories' => [ ... ],
 	];
@@ -96,7 +111,7 @@ function get_active_modules(): array {
 	$defaults   = array_keys( $registered );
 
 	/** @var string[] $active */
-	$active = apply_filters( 'lfuf_active_modules', $defaults );
+	$active = apply_filters( 'pkit_active_modules', $defaults );
 
 	// Ensure required modules are always loaded.
 	foreach ( $registered as $slug => $config ) {
@@ -166,21 +181,21 @@ add_action(
  * Front-end QR support (bundled qrcode-generator, MIT)
  *
  * Registered here, enqueued on demand by blocks that render a
- * [data-lfuf-qr] container (e.g. location-info with showQR on).
+ * [data-pkit-qr] container (e.g. location-info with showQR on).
  * ─────────────────────────────────────────────── */
 
 function register_qr_scripts(): void {
 	wp_register_script(
-		'lfuf-qrcode-vendor',
+		'pkit-qrcode-vendor',
 		plugins_url( 'assets/js/vendor/qrcode.js', __FILE__ ),
 		[],
 		VERSION,
 		true,
 	);
 	wp_register_script(
-		'lfuf-qr',
-		plugins_url( 'assets/js/lfuf-qr.js', __FILE__ ),
-		[ 'lfuf-qrcode-vendor' ],
+		'pkit-qr',
+		plugins_url( 'assets/js/pkit-qr.js', __FILE__ ),
+		[ 'pkit-qrcode-vendor' ],
 		VERSION,
 		true,
 	);
@@ -199,9 +214,9 @@ add_filter(
 		array_unshift(
 			$categories,
 			[
-				'slug'  => 'leftfield',
-				'title' => __( 'Farm Stand Manager', 'farm-stand-manager' ),
-				'icon'  => 'carrot',
+				'slug'  => 'producerkit',
+				'title' => __( 'ProducerKit', 'producerkit' ),
+				'icon'  => 'store',
 			]
 		);
 		return $categories;
@@ -218,10 +233,10 @@ add_action(
 		wp_add_inline_script(
 			'wp-blocks',
 			sprintf(
-				'window.lfufSettings = %s;',
+				'window.pkitSettings = %s;',
 				wp_json_encode(
 					[
-						'restBase'      => esc_url_raw( rest_url( 'lfuf/v1' ) ),
+						'restBase'      => esc_url_raw( rest_url( 'producerkit/v1' ) ),
 						'nonce'         => wp_create_nonce( 'wp_rest' ),
 						'pluginUrl'     => plugins_url( '', __FILE__ ),
 						'activeModules' => get_active_modules(),
@@ -236,14 +251,14 @@ add_action(
 		$post_type = $screen->post_type ?? '';
 
 		$scripts = [
-			'lfuf_location' => 'editor-location.js',
-			'lfuf_product'  => 'editor-product.js',
-			'lfuf_event'    => 'editor-event.js',
+			'pkit_location' => 'editor-location.js',
+			'pkit_product'  => 'editor-product.js',
+			'pkit_event'    => 'editor-event.js',
 		];
 
 		if ( isset( $scripts[ $post_type ] ) ) {
 			wp_enqueue_script(
-				'lfuf-editor-' . $post_type,
+				'pkit-editor-' . $post_type,
 				plugins_url( 'assets/js/' . $scripts[ $post_type ], __FILE__ ),
 				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element' ],
 				filemtime( PLUGIN_DIR . '/assets/js/' . $scripts[ $post_type ] ),
@@ -260,27 +275,27 @@ add_action(
 function activate(): void {
 	// Core module handles table creation.
 	require_once PLUGIN_DIR . '/modules/core/bootstrap.php';
-	\Leftfield\Core\Availability\create_table();
-	\Leftfield\Core\Post_Types\register();
-	\Leftfield\Core\Taxonomies\register();
+	\ProducerKit\Core\Availability\create_table();
+	\ProducerKit\Core\Post_Types\register();
+	\ProducerKit\Core\Taxonomies\register();
 
 	// Event manager RSVP table.
 	require_once PLUGIN_DIR . '/modules/event-manager/includes/rsvp-table.php';
-	\Leftfield\EventManager\RSVP\create_table();
+	\ProducerKit\EventManager\RSVP\create_table();
 
 	// Pre-order table.
 	require_once PLUGIN_DIR . '/modules/pre-order/includes/orders-table.php';
-	\Leftfield\PreOrder\Orders\create_table();
+	\ProducerKit\PreOrder\Orders\create_table();
 
 	// Schedule daily availability cleanup.
-	\Leftfield\Core\Availability\schedule_cleanup();
+	\ProducerKit\Core\Availability\schedule_cleanup();
 
 	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, __NAMESPACE__ . '\\activate' );
 
 function deactivate(): void {
-	\Leftfield\Core\Availability\unschedule_cleanup();
+	\ProducerKit\Core\Availability\unschedule_cleanup();
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\deactivate' );

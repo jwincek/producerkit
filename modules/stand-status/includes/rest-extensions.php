@@ -8,17 +8,17 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus\REST;
+namespace ProducerKit\StandStatus\REST;
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$ns = 'lfuf/v1';
+	$ns = 'producerkit/v1';
 
 	/**
-	 * PATCH /lfuf/v1/stand/{id}/status
+	 * PATCH /producerkit/v1/stand/{id}/status
 	 *
 	 * Enhanced toggle: sets is_open, status_message, and records timestamp.
 	 * Designed to be called from the WP mobile app or admin bar.
@@ -49,7 +49,7 @@ function register_routes(): void {
 	);
 
 	/**
-	 * GET /lfuf/v1/stand/{id}/info
+	 * GET /producerkit/v1/stand/{id}/info
 	 *
 	 * Public, cacheable summary for front-end blocks.
 	 * Returns everything a visitor needs: open/closed, message, hours,
@@ -73,7 +73,7 @@ function register_routes(): void {
 	);
 
 	/**
-	 * GET /lfuf/v1/stands
+	 * GET /producerkit/v1/stands
 	 *
 	 * Public list of all stand-type locations with their current status.
 	 */
@@ -98,16 +98,16 @@ function update_stand_status( \WP_REST_Request $request ): \WP_REST_Response {
 	$status_message = $request->get_param( 'status_message' );
 
 	$post = get_post( $location_id );
-	if ( ! $post || $post->post_type !== 'lfuf_location' ) {
+	if ( ! $post || $post->post_type !== 'pkit_location' ) {
 		return new \WP_REST_Response( [ 'message' => 'Location not found.' ], 404 );
 	}
 
 	// Update core meta.
-	update_post_meta( $location_id, '_lfuf_is_open', $is_open );
+	update_post_meta( $location_id, '_pkit_is_open', $is_open );
 
 	// Update stand-status-specific meta.
-	update_post_meta( $location_id, '_lfuf_ss_status_message', sanitize_text_field( $status_message ) );
-	update_post_meta( $location_id, '_lfuf_ss_last_toggled', gmdate( 'c' ) );
+	update_post_meta( $location_id, '_pkit_ss_status_message', sanitize_text_field( $status_message ) );
+	update_post_meta( $location_id, '_pkit_ss_last_toggled', gmdate( 'c' ) );
 
 	/**
 	 * Fires after the stand status is toggled.
@@ -118,14 +118,14 @@ function update_stand_status( \WP_REST_Request $request ): \WP_REST_Response {
 	 * @param bool   $is_open
 	 * @param string $status_message
 	 */
-	do_action( 'lfuf_stand_status_changed', $location_id, $is_open, $status_message );
+	do_action( 'pkit_stand_status_changed', $location_id, $is_open, $status_message );
 
 	return new \WP_REST_Response(
 		[
 			'id'             => $location_id,
 			'is_open'        => $is_open,
 			'status_message' => $status_message,
-			'last_toggled'   => get_post_meta( $location_id, '_lfuf_ss_last_toggled', true ),
+			'last_toggled'   => get_post_meta( $location_id, '_pkit_ss_last_toggled', true ),
 		],
 		200
 	);
@@ -135,7 +135,7 @@ function get_stand_info( \WP_REST_Request $request ): \WP_REST_Response {
 	$location_id = $request->get_param( 'id' );
 
 	$post = get_post( $location_id );
-	if ( ! $post || $post->post_type !== 'lfuf_location' || $post->post_status !== 'publish' ) {
+	if ( ! $post || $post->post_type !== 'pkit_location' || $post->post_status !== 'publish' ) {
 		return new \WP_REST_Response( [ 'message' => 'Stand not found.' ], 404 );
 	}
 
@@ -145,12 +145,12 @@ function get_stand_info( \WP_REST_Request $request ): \WP_REST_Response {
 function list_stands( \WP_REST_Request $request ): \WP_REST_Response {
 	$locations = get_posts(
 		[
-			'post_type'   => 'lfuf_location',
+			'post_type'   => 'pkit_location',
 			'post_status' => 'publish',
 			'numberposts' => 50,
 			'meta_query'  => [
 				[
-					'key'   => '_lfuf_location_type',
+					'key'   => '_pkit_location_type',
 					'value' => 'stand',
 				],
 			],
@@ -169,9 +169,9 @@ function list_stands( \WP_REST_Request $request ): \WP_REST_Response {
 function build_stand_data( \WP_Post $post ): array {
 	$id = $post->ID;
 
-	$is_open     = (bool) get_post_meta( $id, '_lfuf_is_open', true );
-	$schedule    = get_post_meta( $id, '_lfuf_ss_schedule', true );
-	$auto_toggle = (bool) get_post_meta( $id, '_lfuf_ss_auto_toggle', true );
+	$is_open     = (bool) get_post_meta( $id, '_pkit_is_open', true );
+	$schedule    = get_post_meta( $id, '_pkit_ss_schedule', true );
+	$auto_toggle = (bool) get_post_meta( $id, '_pkit_ss_auto_toggle', true );
 
 	// If auto-toggle is enabled, compute status from schedule.
 	if ( $auto_toggle && $schedule ) {
@@ -179,8 +179,8 @@ function build_stand_data( \WP_Post $post ): array {
 	}
 
 	// Season boundary check.
-	$season_start = get_post_meta( $id, '_lfuf_ss_season_start', true );
-	$season_end   = get_post_meta( $id, '_lfuf_ss_season_end', true );
+	$season_start = get_post_meta( $id, '_pkit_ss_season_start', true );
+	$season_end   = get_post_meta( $id, '_pkit_ss_season_end', true );
 	$in_season    = is_in_season( $season_start, $season_end );
 
 	if ( ! $in_season ) {
@@ -192,17 +192,17 @@ function build_stand_data( \WP_Post $post ): array {
 		'name'            => $post->post_title,
 		'is_open'         => $is_open,
 		'in_season'       => $in_season,
-		'status_message'  => get_post_meta( $id, '_lfuf_ss_status_message', true ),
-		'last_toggled'    => get_post_meta( $id, '_lfuf_ss_last_toggled', true ),
-		'address'         => get_post_meta( $id, '_lfuf_address', true ),
-		'hours'           => get_post_meta( $id, '_lfuf_hours', true ),
+		'status_message'  => get_post_meta( $id, '_pkit_ss_status_message', true ),
+		'last_toggled'    => get_post_meta( $id, '_pkit_ss_last_toggled', true ),
+		'address'         => get_post_meta( $id, '_pkit_address', true ),
+		'hours'           => get_post_meta( $id, '_pkit_hours', true ),
 		'schedule'        => $schedule ? json_decode( $schedule, true ) : null,
 		'season_start'    => $season_start,
 		'season_end'      => $season_end,
-		'venmo_handle'    => get_post_meta( $id, '_lfuf_venmo_handle', true ),
-		'payment_methods' => \Leftfield\Core\Payments\get_payment_methods( $id ),
-		'lat'             => (float) get_post_meta( $id, '_lfuf_lat', true ),
-		'lng'             => (float) get_post_meta( $id, '_lfuf_lng', true ),
+		'venmo_handle'    => get_post_meta( $id, '_pkit_venmo_handle', true ),
+		'payment_methods' => \ProducerKit\Core\Payments\get_payment_methods( $id ),
+		'lat'             => (float) get_post_meta( $id, '_pkit_lat', true ),
+		'lng'             => (float) get_post_meta( $id, '_pkit_lng', true ),
 	];
 }
 
@@ -268,13 +268,13 @@ function compute_next_open( string $schedule_json ): string {
 	$time  = $now->format( 'H:i' );
 
 	$day_names = [
-		0 => __( 'Sunday', 'farm-stand-manager' ),
-		1 => __( 'Monday', 'farm-stand-manager' ),
-		2 => __( 'Tuesday', 'farm-stand-manager' ),
-		3 => __( 'Wednesday', 'farm-stand-manager' ),
-		4 => __( 'Thursday', 'farm-stand-manager' ),
-		5 => __( 'Friday', 'farm-stand-manager' ),
-		6 => __( 'Saturday', 'farm-stand-manager' ),
+		0 => __( 'Sunday', 'producerkit' ),
+		1 => __( 'Monday', 'producerkit' ),
+		2 => __( 'Tuesday', 'producerkit' ),
+		3 => __( 'Wednesday', 'producerkit' ),
+		4 => __( 'Thursday', 'producerkit' ),
+		5 => __( 'Friday', 'producerkit' ),
+		6 => __( 'Saturday', 'producerkit' ),
 	];
 
 	$candidates = [];
@@ -311,11 +311,11 @@ function compute_next_open( string $schedule_json ): string {
 
 	if ( $next['delta'] === 0 ) {
 		/* translators: %s: opening time (e.g. "9:00 AM"). */
-		return sprintf( __( 'Today at %s', 'farm-stand-manager' ), $formatted_time );
+		return sprintf( __( 'Today at %s', 'producerkit' ), $formatted_time );
 	}
 	if ( $next['delta'] === 1 ) {
 		/* translators: %s: opening time (e.g. "9:00 AM"). */
-		return sprintf( __( 'Tomorrow at %s', 'farm-stand-manager' ), $formatted_time );
+		return sprintf( __( 'Tomorrow at %s', 'producerkit' ), $formatted_time );
 	}
 
 	return sprintf( '%s at %s', $day_names[ $next['day'] ], $formatted_time );

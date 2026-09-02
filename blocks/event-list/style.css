@@ -4,54 +4,54 @@
 
 /* ── List container ────────────────────────────── */
 
-.lfuf-event-list {
-    --_lfuf-muted: #4b5563;
+.pkit-event-list {
+    --_pkit-muted: #4b5563;
     color: #1f2937;
     font-family: inherit;
     line-height: 1.5;
 }
 
-.lfuf-event-list__empty {
+.pkit-event-list__empty {
     text-align: center;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     font-style: italic;
     padding: 2rem 1rem;
 }
 
-.lfuf-event-list__loading {
+.pkit-event-list__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 2rem 1rem;
     font-size: 0.9rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
-.lfuf-event-list__section {
+.pkit-event-list__section {
     margin-bottom: 2rem;
 }
 
-.lfuf-event-list__section-title {
+.pkit-event-list__section-title {
     font-size: 1.1rem;
     margin: 0 0 0.75rem;
     padding-bottom: 0.35rem;
     border-bottom: 2px solid #e5e7eb;
 }
 
-.lfuf-event-list__section--past {
+.pkit-event-list__section--past {
     opacity: 0.7;
 }
 
 /* ── Filters ───────────────────────────────────── */
 
-.lfuf-event-list__filters {
+.pkit-event-list__filters {
     display: flex;
     gap: 0.4rem;
     flex-wrap: wrap;
     margin-bottom: 1.25rem;
 }
 
-.lfuf-event-list__filter-btn {
+.pkit-event-list__filter-btn {
     cursor: pointer;
     font-size: 0.8rem;
     font-weight: 600;
@@ -63,11 +63,11 @@
     transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.lfuf-event-list__filter-btn:hover {
+.pkit-event-list__filter-btn:hover {
     border-color: #9ca3af;
 }
 
-.lfuf-event-list__filter-btn--active {
+.pkit-event-list__filter-btn--active {
     background: #374151;
     border-color: #374151;
     color: #fff;
@@ -75,7 +75,7 @@
 
 /* ── Event card ────────────────────────────────── */
 
-.lfuf-event-card {
+.pkit-event-card {
     display: flex;
     gap: 1rem;
     padding: 1rem;
@@ -86,22 +86,22 @@
     transition: box-shadow 0.15s;
 }
 
-.lfuf-event-card:hover {
+.pkit-event-card:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.lfuf-event-card--cancelled {
+.pkit-event-card--cancelled {
     opacity: 0.6;
     border-left: 3px solid #dc2626;
 }
 
 /* ── Image ─────────────────────────────────────── */
 
-.lfuf-event-card__image {
+.pkit-event-card__image {
     flex: 0 0 120px;
 }
 
-.lfuf-event-card__image img {
+.pkit-event-card__image img {
     width: 120px;
     height: 90px;
     object-fit: cover;
@@ -110,19 +110,19 @@
 
 /* ── Body ──────────────────────────────────────── */
 
-.lfuf-event-card__body {
+.pkit-event-card__body {
     flex: 1;
     min-width: 0;
 }
 
-.lfuf-event-card__header {
+.pkit-event-card__header {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     margin-bottom: 0.25rem;
 }
 
-.lfuf-event-card__type-badge {
+.pkit-event-card__type-badge {
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -133,7 +133,7 @@
     color: #5b21b6;
 }
 
-.lfuf-event-card__cancelled-badge {
+.pkit-event-card__cancelled-badge {
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -143,55 +143,55 @@
     color: #991b1b;
 }
 
-.lfuf-event-card__title {
+.pkit-event-card__title {
     margin: 0 0 0.25rem;
     font-size: 1.1rem;
 }
 
-.lfuf-event-card__title a {
+.pkit-event-card__title a {
     text-decoration: none;
     color: inherit;
 }
 
-.lfuf-event-card__title a:hover {
+.pkit-event-card__title a:hover {
     text-decoration: underline;
 }
 
 /* ── Date & time ───────────────────────────────── */
 
-.lfuf-event-card__datetime {
+.pkit-event-card__datetime {
     margin: 0.25rem 0;
     font-size: 0.9rem;
 }
 
-.lfuf-event-card__date {
+.pkit-event-card__date {
     font-weight: 600;
 }
 
-.lfuf-event-card__time {
-    color: var(--_lfuf-muted);
+.pkit-event-card__time {
+    color: var(--_pkit-muted);
     margin-left: 0.25rem;
 }
 
-.lfuf-event-card__time::before {
+.pkit-event-card__time::before {
     content: '·';
     margin-right: 0.25rem;
 }
 
 /* ── Location ──────────────────────────────────── */
 
-.lfuf-event-card__location {
+.pkit-event-card__location {
     margin: 0.25rem 0;
     font-size: 0.85rem;
 }
 
-.lfuf-event-card__address {
-    color: var(--_lfuf-muted);
+.pkit-event-card__address {
+    color: var(--_pkit-muted);
 }
 
 /* ── Excerpt ───────────────────────────────────── */
 
-.lfuf-event-card__excerpt {
+.pkit-event-card__excerpt {
     margin: 0.5rem 0;
     font-size: 0.9rem;
     color: #374151;
@@ -199,7 +199,7 @@
 
 /* ── Details ───────────────────────────────────── */
 
-.lfuf-event-card__details {
+.pkit-event-card__details {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
@@ -207,14 +207,14 @@
     font-size: 0.85rem;
 }
 
-.lfuf-event-card__cost,
-.lfuf-event-card__bring {
-    color: var(--_lfuf-muted);
+.pkit-event-card__cost,
+.pkit-event-card__bring {
+    color: var(--_pkit-muted);
 }
 
 /* ── Donate link ───────────────────────────────── */
 
-.lfuf-event-card__donate-link {
+.pkit-event-card__donate-link {
     display: inline-block;
     margin-top: 0.5rem;
     font-size: 0.8rem;
@@ -227,34 +227,34 @@
     transition: background 0.15s, color 0.15s;
 }
 
-.lfuf-event-card__donate-link:hover {
+.pkit-event-card__donate-link:hover {
     background: #008CFF;
     color: #fff;
 }
 
 /* ── RSVP section ──────────────────────────────── */
 
-.lfuf-event-card__rsvp {
+.pkit-event-card__rsvp {
     margin-top: 0.75rem;
     padding-top: 0.75rem;
     border-top: 1px solid #f3f4f6;
 }
 
-.lfuf-event-card__rsvp-summary {
+.pkit-event-card__rsvp-summary {
     font-size: 0.85rem;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.5rem;
 }
 
-.lfuf-event-card__rsvp-form {
+.pkit-event-card__rsvp-form {
     display: flex;
     gap: 0.4rem;
     flex-wrap: wrap;
     align-items: center;
 }
 
-.lfuf-event-card__rsvp-input {
+.pkit-event-card__rsvp-input {
     flex: 1;
     min-width: 140px;
     padding: 0.4rem 0.6rem;
@@ -263,7 +263,7 @@
     border-radius: 0.375rem;
 }
 
-.lfuf-event-card__rsvp-size {
+.pkit-event-card__rsvp-size {
     width: 55px;
     padding: 0.4rem 0.4rem;
     font-size: 0.85rem;
@@ -272,7 +272,7 @@
     text-align: center;
 }
 
-.lfuf-event-card__rsvp-btn {
+.pkit-event-card__rsvp-btn {
     padding: 0.4rem 0.9rem;
     font-size: 0.85rem;
     font-weight: 600;
@@ -284,31 +284,31 @@
     transition: background 0.15s;
 }
 
-.lfuf-event-card__rsvp-btn:hover {
+.pkit-event-card__rsvp-btn:hover {
     background: #15803d;
 }
 
-.lfuf-event-card__rsvp-btn:disabled {
+.pkit-event-card__rsvp-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.lfuf-event-card__rsvp-error {
+.pkit-event-card__rsvp-error {
     font-size: 0.8rem;
     color: #dc2626;
     margin: 0.35rem 0 0;
 }
 
-.lfuf-event-card__rsvp-success {
+.pkit-event-card__rsvp-success {
     font-size: 0.9rem;
     font-weight: 600;
     color: #16a34a;
     margin: 0 0 0.35rem;
 }
 
-.lfuf-event-card__rsvp-cancel-btn {
+.pkit-event-card__rsvp-cancel-btn {
     font-size: 0.8rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     background: none;
     border: none;
     cursor: pointer;
@@ -316,15 +316,15 @@
     padding: 0;
 }
 
-.lfuf-event-card__rsvp-cancel-btn:hover {
+.pkit-event-card__rsvp-cancel-btn:hover {
     color: #dc2626;
 }
 
-.lfuf-event-card__rsvp-full,
-.lfuf-event-card__rsvp-closed {
+.pkit-event-card__rsvp-full,
+.pkit-event-card__rsvp-closed {
     font-size: 0.85rem;
     font-style: italic;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     margin: 0;
 }
 
@@ -332,26 +332,26 @@
 
 @media (max-width: 480px) {
 
-    .lfuf-event-card {
+    .pkit-event-card {
         flex-direction: column;
     }
 
-    .lfuf-event-card__image {
+    .pkit-event-card__image {
         flex: none;
     }
 
-    .lfuf-event-card__image img {
+    .pkit-event-card__image img {
         width: 100%;
         height: 160px;
     }
 
-    .lfuf-event-card__rsvp-form {
+    .pkit-event-card__rsvp-form {
         flex-direction: column;
     }
 
-    .lfuf-event-card__rsvp-input,
-    .lfuf-event-card__rsvp-size,
-    .lfuf-event-card__rsvp-btn {
+    .pkit-event-card__rsvp-input,
+    .pkit-event-card__rsvp-size,
+    .pkit-event-card__rsvp-btn {
         width: 100%;
     }
 }
@@ -363,7 +363,7 @@
 
 /* ── Honeypot field — hidden from humans ───────── */
 
-.lfuf-event-card__rsvp-hp {
+.pkit-event-card__rsvp-hp {
     position: absolute;
     left: -9999px;
     width: 1px;
@@ -375,9 +375,9 @@
 
 /* ── Screen reader text ────────────────────────── */
 
-.lfuf-event-list .screen-reader-text,
-.lfuf-event-card .screen-reader-text,
-.lfuf-event-card-wrapper .screen-reader-text {
+.pkit-event-list .screen-reader-text,
+.pkit-event-card .screen-reader-text,
+.pkit-event-card-wrapper .screen-reader-text {
     border: 0;
     clip: rect(1px, 1px, 1px, 1px);
     clip-path: inset(50%);
@@ -392,17 +392,17 @@
 
 /* ── Focus styles ──────────────────────────────── */
 
-.lfuf-event-card__title a:focus-visible,
-.lfuf-event-card__donate-link:focus-visible,
-.lfuf-event-card__rsvp-btn:focus-visible,
-.lfuf-event-card__rsvp-cancel-btn:focus-visible,
-.lfuf-event-list__filter-btn:focus-visible {
+.pkit-event-card__title a:focus-visible,
+.pkit-event-card__donate-link:focus-visible,
+.pkit-event-card__rsvp-btn:focus-visible,
+.pkit-event-card__rsvp-cancel-btn:focus-visible,
+.pkit-event-list__filter-btn:focus-visible {
     outline: 2px solid currentcolor;
     outline-offset: 2px;
 }
 
-.lfuf-event-card__rsvp-input:focus-visible,
-.lfuf-event-card__rsvp-size:focus-visible {
+.pkit-event-card__rsvp-input:focus-visible,
+.pkit-event-card__rsvp-size:focus-visible {
     outline: 2px solid #16a34a;
     outline-offset: 1px;
 }
@@ -411,9 +411,9 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-event-card,
-    .lfuf-event-card__rsvp-btn,
-    .lfuf-event-card__donate-link {
+    .pkit-event-card,
+    .pkit-event-card__rsvp-btn,
+    .pkit-event-card__donate-link {
         transition: none;
     }
 }
@@ -422,39 +422,39 @@
 
 @media (forced-colors: active) {
 
-    .lfuf-event-card {
+    .pkit-event-card {
         border-color: CanvasText;
     }
 
-    .lfuf-event-card--cancelled {
+    .pkit-event-card--cancelled {
         border-left-color: LinkText;
     }
 
-    .lfuf-event-card__type-badge,
-    .lfuf-event-card__cancelled-badge {
+    .pkit-event-card__type-badge,
+    .pkit-event-card__cancelled-badge {
         forced-color-adjust: none;
         border: 1px solid CanvasText;
     }
 
-    .lfuf-event-card__title a {
+    .pkit-event-card__title a {
         color: LinkText;
     }
 
-    .lfuf-event-card__rsvp-btn {
+    .pkit-event-card__rsvp-btn {
         forced-color-adjust: none;
         border: 1px solid ButtonText;
     }
 
-    .lfuf-event-card__donate-link {
+    .pkit-event-card__donate-link {
         border-color: LinkText;
         color: LinkText;
     }
 
-    .lfuf-event-list__filter-btn {
+    .pkit-event-list__filter-btn {
         border-color: ButtonText;
     }
 
-    .lfuf-event-list__filter-btn--active {
+    .pkit-event-list__filter-btn--active {
         background: Highlight;
         color: HighlightText;
     }

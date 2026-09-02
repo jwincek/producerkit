@@ -4,13 +4,13 @@
  *
  * Cartless pay-at-pickup pre-orders: custom table, public REST
  * endpoints, Abilities, and an admin management screen. The
- * lfuf/preorder-form block is registered by the main plugin file
+ * producerkit/preorder-form block is registered by the main plugin file
  * alongside the other blocks; its render checks this module is active.
  */
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder;
+namespace ProducerKit\PreOrder;
 
 defined( 'ABSPATH' ) || exit;
 

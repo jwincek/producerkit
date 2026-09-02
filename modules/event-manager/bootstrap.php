@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager;
+namespace ProducerKit\EventManager;
 
 defined( 'ABSPATH' ) || exit;
 

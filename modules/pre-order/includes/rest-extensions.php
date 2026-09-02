@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API for pre-orders (lfuf/v1).
+ * REST API for pre-orders (producerkit/v1).
  *
  *   POST   /preorders            — create (public, rate-limited)
  *   GET    /preorders/{token}    — look up by token (public; token is the secret)
@@ -11,16 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\REST;
+namespace ProducerKit\PreOrder\REST;
 
-use Leftfield\PreOrder\Orders;
+use ProducerKit\PreOrder\Orders;
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'rest_api_init', __NAMESPACE__ . '\\register_routes' );
 
 function register_routes(): void {
-	$ns = 'lfuf/v1';
+	$ns = 'producerkit/v1';
 
 	register_rest_route(
 		$ns,
@@ -167,7 +167,7 @@ function create( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 
 	return new \WP_REST_Response(
 		[
-			'message' => __( 'Pre-order received! We\'ll have it ready for pickup.', 'farm-stand-manager' ),
+			'message' => __( 'Pre-order received! We\'ll have it ready for pickup.', 'producerkit' ),
 			'order'   => $order,
 		],
 		201
@@ -177,7 +177,7 @@ function create( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 function show( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 	$order = Orders\get_order_by_token( (string) $request['token'] );
 	if ( ! $order ) {
-		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ), [ 'status' => 404 ] );
+		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'producerkit' ), [ 'status' => 404 ] );
 	}
 	return new \WP_REST_Response( $order );
 }
@@ -188,7 +188,7 @@ function cancel( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$result->add_data( [ 'status' => $result->get_error_code() === 'not_found' ? 404 : 409 ] );
 		return $result;
 	}
-	return new \WP_REST_Response( [ 'message' => __( 'Pre-order cancelled.', 'farm-stand-manager' ) ] );
+	return new \WP_REST_Response( [ 'message' => __( 'Pre-order cancelled.', 'producerkit' ) ] );
 }
 
 function harvest( \WP_REST_Request $request ): \WP_REST_Response {
@@ -220,5 +220,5 @@ function update_status( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error
 		$result->add_data( [ 'status' => $result->get_error_code() === 'not_found' ? 404 : 400 ] );
 		return $result;
 	}
-	return new \WP_REST_Response( [ 'message' => __( 'Status updated.', 'farm-stand-manager' ) ] );
+	return new \WP_REST_Response( [ 'message' => __( 'Status updated.', 'producerkit' ) ] );
 }

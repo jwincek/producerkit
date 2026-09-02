@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\StandStatus;
+namespace ProducerKit\StandStatus;
 
 defined( 'ABSPATH' ) || exit;
 

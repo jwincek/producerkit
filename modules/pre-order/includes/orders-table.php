@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_preorders
+ * Custom table: {prefix}_pkit_preorders
  *
  * Cartless pre-orders: a visitor picks products and quantities, chooses a
  * pickup date, and pays at pickup (or via the location's payment links).
@@ -15,7 +15,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\PreOrder\Orders;
+namespace ProducerKit\PreOrder\Orders;
+
+use ProducerKit\Core\Requests;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,7 +36,7 @@ const MAX_PICKUP_DAYS = 30;
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_preorder_db_version' ) !== '1.0.0' ) {
+		if ( get_option( 'pkit_preorder_db_version' ) !== '1.0.0' ) {
 			create_table();
 		}
 	},
@@ -43,7 +45,7 @@ add_action(
 
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_preorders';
+	return $wpdb->prefix . 'pkit_preorders';
 }
 
 function create_table(): void {
@@ -75,26 +77,25 @@ function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
-	update_option( 'lfuf_preorder_db_version', '1.0.0' );
+	update_option( 'pkit_preorder_db_version', '1.0.0' );
 }
 
 /**
  * Hash an IP address for storage (privacy-preserving, salted).
- * Local copy so this module stands alone when event-manager is disabled.
+ *
+ * Was a local copy so this module stood alone when event-manager was
+ * disabled; core is always loaded, so it now delegates. Kept as a named
+ * function because callers and tests reference it.
  */
 function hash_ip( string $ip ): string {
-	return hash( 'sha256', $ip . wp_salt( 'auth' ) );
+	return Requests\hash_ip( $ip );
 }
 
 /**
- * Get the client IP (REMOTE_ADDR is sufficient for a small farm site).
+ * Get the client IP.
  */
 function get_client_ip(): string {
-	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
-		return '0.0.0.0';
-	}
-
-	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+	return Requests\get_client_ip();
 }
 
 /**
@@ -110,7 +111,7 @@ function valid_statuses(): array {
 /**
  * Validate and normalize the items payload.
  *
- * Each line must reference a published lfuf_product. A title snapshot is
+ * Each line must reference a published pkit_product. A title snapshot is
  * stored so the order stays readable if the product is later deleted.
  *
  * @return array|\WP_Error
@@ -120,10 +121,10 @@ function normalize_items( mixed $items ): array|\WP_Error {
 		$items = json_decode( $items, true );
 	}
 	if ( ! is_array( $items ) || $items === [] ) {
-		return new \WP_Error( 'items_required', __( 'Please choose at least one product.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'items_required', __( 'Please choose at least one product.', 'producerkit' ) );
 	}
 	if ( count( $items ) > MAX_LINES ) {
-		return new \WP_Error( 'too_many_items', __( 'Too many product lines in one order.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'too_many_items', __( 'Too many product lines in one order.', 'producerkit' ) );
 	}
 
 	$normalized = [];
@@ -135,8 +136,8 @@ function normalize_items( mixed $items ): array|\WP_Error {
 		$qty        = max( 1, min( MAX_QTY, (int) ( $line['qty'] ?? 0 ) ) );
 
 		$product = get_post( $product_id );
-		if ( ! $product || $product->post_type !== 'lfuf_product' || $product->post_status !== 'publish' ) {
-			return new \WP_Error( 'invalid_product', __( 'One of the selected products is unavailable.', 'farm-stand-manager' ) );
+		if ( ! $product || $product->post_type !== 'pkit_product' || $product->post_status !== 'publish' ) {
+			return new \WP_Error( 'invalid_product', __( 'One of the selected products is unavailable.', 'producerkit' ) );
 		}
 
 		// Merge duplicate lines for the same product.
@@ -149,14 +150,14 @@ function normalize_items( mixed $items ): array|\WP_Error {
 			'product_id' => $product_id,
 			'qty'        => $qty,
 			'title'      => $product->post_title,
-			'unit'       => (string) get_post_meta( $product_id, '_lfuf_unit', true ),
-			'price'      => (string) get_post_meta( $product_id, '_lfuf_price', true ),
+			'unit'       => (string) get_post_meta( $product_id, '_pkit_unit', true ),
+			'price'      => (string) get_post_meta( $product_id, '_pkit_price', true ),
 		];
 	}
 
 	return $normalized ? array_values( $normalized ) : new \WP_Error(
 		'items_required',
-		__( 'Please choose at least one product.', 'farm-stand-manager' ),
+		__( 'Please choose at least one product.', 'producerkit' ),
 	);
 }
 
@@ -190,7 +191,7 @@ function pickup_constraints( int $location_id ): array {
 		return $constraints;
 	}
 
-	$schedule = json_decode( (string) get_post_meta( $location_id, '_lfuf_ss_schedule', true ), true );
+	$schedule = json_decode( (string) get_post_meta( $location_id, '_pkit_ss_schedule', true ), true );
 	if ( is_array( $schedule ) && $schedule !== [] ) {
 		$days = array_values(
 			array_unique(
@@ -206,10 +207,10 @@ function pickup_constraints( int $location_id ): array {
 		}
 	}
 
-	$constraints['season_start'] = (string) get_post_meta( $location_id, '_lfuf_ss_season_start', true );
-	$constraints['season_end']   = (string) get_post_meta( $location_id, '_lfuf_ss_season_end', true );
+	$constraints['season_start'] = (string) get_post_meta( $location_id, '_pkit_ss_season_start', true );
+	$constraints['season_end']   = (string) get_post_meta( $location_id, '_pkit_ss_season_end', true );
 
-	$blackouts = json_decode( (string) get_post_meta( $location_id, '_lfuf_pickup_blackouts', true ), true );
+	$blackouts = json_decode( (string) get_post_meta( $location_id, '_pkit_pickup_blackouts', true ), true );
 	if ( is_array( $blackouts ) ) {
 		$constraints['blackouts'] = array_values(
 			array_filter(
@@ -245,7 +246,7 @@ function weekday_names( array $days ): array {
  */
 function validate_pickup_date_for_location( string $date, int $location_id ): bool|\WP_Error {
 	if ( ! validate_pickup_date( $date ) ) {
-		return new \WP_Error( 'invalid_pickup_date', __( 'Please choose a pickup date within the next month.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'invalid_pickup_date', __( 'Please choose a pickup date within the next month.', 'producerkit' ) );
 	}
 
 	$constraints = pickup_constraints( $location_id );
@@ -257,7 +258,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 				'pickup_day_closed',
 				sprintf(
 				/* translators: %s: comma-separated list of weekday names. */
-					__( 'That day isn\'t a pickup day. Pickups are available on: %s.', 'farm-stand-manager' ),
+					__( 'That day isn\'t a pickup day. Pickups are available on: %s.', 'producerkit' ),
 					implode( ', ', weekday_names( $constraints['allowed_days'] ) ),
 				)
 			);
@@ -271,7 +272,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 			'pickup_out_of_season',
 			sprintf(
 			/* translators: 1: season start date, 2: season end date. */
-				__( 'That date is outside our season (%1$s – %2$s).', 'farm-stand-manager' ),
+				__( 'That date is outside our season (%1$s – %2$s).', 'producerkit' ),
 				$constraints['season_start'],
 				$constraints['season_end'],
 			)
@@ -279,7 +280,7 @@ function validate_pickup_date_for_location( string $date, int $location_id ): bo
 	}
 
 	if ( in_array( $date, $constraints['blackouts'], true ) ) {
-		return new \WP_Error( 'pickup_blackout', __( 'We\'re closed that day — please choose another date.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'pickup_blackout', __( 'We\'re closed that day — please choose another date.', 'producerkit' ) );
 	}
 
 	return true;
@@ -314,14 +315,14 @@ function create_order( array $data ): array|\WP_Error {
 
 	$name = sanitize_text_field( $data['name'] ?? '' );
 	if ( $name === '' ) {
-		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'producerkit' ) );
 	}
 
 	$location_id = (int) ( $data['location_id'] ?? 0 );
 	if ( $location_id > 0 ) {
 		$location = get_post( $location_id );
-		if ( ! $location || $location->post_type !== 'lfuf_location' || $location->post_status !== 'publish' ) {
-			return new \WP_Error( 'invalid_location', __( 'Pickup location not found.', 'farm-stand-manager' ) );
+		if ( ! $location || $location->post_type !== 'pkit_location' || $location->post_status !== 'publish' ) {
+			return new \WP_Error( 'invalid_location', __( 'Pickup location not found.', 'producerkit' ) );
 		}
 	}
 
@@ -338,7 +339,7 @@ function create_order( array $data ): array|\WP_Error {
 
 	// ── Rate limiting by IP. ──
 	$ip_hashed = hash_ip( get_client_ip() );
-	$rate_key  = 'lfuf_preorder_rate_' . md5( $ip_hashed );
+	$rate_key  = 'pkit_preorder_rate_' . md5( $ip_hashed );
 
 	/**
 	 * Filters the max pre-orders per IP per hour. Raise for sites whose
@@ -346,11 +347,11 @@ function create_order( array $data ): array|\WP_Error {
 	 *
 	 * @param int $limit Default 3.
 	 */
-	$rate_limit = (int) apply_filters( 'lfuf_preorder_rate_limit', RATE_LIMIT_PER_IP );
+	$rate_limit = (int) apply_filters( 'pkit_preorder_rate_limit', RATE_LIMIT_PER_IP );
 
 	$recent = (int) get_transient( $rate_key );
 	if ( $recent >= $rate_limit ) {
-		return new \WP_Error( 'rate_limited', __( 'Too many pre-orders from this connection. Please try again later.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'rate_limited', __( 'Too many pre-orders from this connection. Please try again later.', 'producerkit' ) );
 	}
 
 	$token = wp_generate_password( 32, false );
@@ -372,7 +373,7 @@ function create_order( array $data ): array|\WP_Error {
 	// would overwrite $wpdb->insert_id.
 	$order_id = (int) $wpdb->insert_id;
 	if ( ! $inserted || ! $order_id ) {
-		return new \WP_Error( 'db_error', __( 'Could not save the pre-order.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'db_error', __( 'Could not save the pre-order.', 'producerkit' ) );
 	}
 
 	set_transient( $rate_key, $recent + 1, HOUR_IN_SECONDS );
@@ -384,7 +385,7 @@ function create_order( array $data ): array|\WP_Error {
 	 *
 	 * @param array $order Public-safe order data including id and token.
 	 */
-	do_action( 'lfuf_preorder_created', $order );
+	do_action( 'pkit_preorder_created', $order );
 
 	return $order;
 }
@@ -430,16 +431,16 @@ function cancel_order_by_token( string $token ): bool|\WP_Error {
 
 	$order = get_order_by_token( $token );
 	if ( ! $order ) {
-		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'producerkit' ) );
 	}
 	if ( ! in_array( $order['status'], [ 'pending', 'confirmed' ], true ) ) {
-		return new \WP_Error( 'not_cancellable', __( 'This pre-order can no longer be cancelled online.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_cancellable', __( 'This pre-order can no longer be cancelled online.', 'producerkit' ) );
 	}
 
 	$updated = (bool) $wpdb->update( table_name(), [ 'status' => 'cancelled' ], [ 'token' => $token ], [ '%s' ], [ '%s' ] );
 	if ( $updated ) {
 		$order['status'] = 'cancelled';
-		do_action( 'lfuf_preorder_cancelled', $order );
+		do_action( 'pkit_preorder_cancelled', $order );
 	}
 	return $updated;
 }
@@ -451,14 +452,14 @@ function update_status( int $id, string $status ): bool|\WP_Error {
 	global $wpdb;
 
 	if ( ! in_array( $status, valid_statuses(), true ) ) {
-		return new \WP_Error( 'invalid_status', __( 'Unknown pre-order status.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'invalid_status', __( 'Unknown pre-order status.', 'producerkit' ) );
 	}
 
 	$table = table_name();
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
 	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1", $id ) );
 	if ( ! $row ) {
-		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'not_found', __( 'Pre-order not found.', 'producerkit' ) );
 	}
 
 	$old = (string) $row->status;
@@ -468,7 +469,7 @@ function update_status( int $id, string $status ): bool|\WP_Error {
 
 	$updated = (bool) $wpdb->update( $table, [ 'status' => $status ], [ 'id' => $id ], [ '%s' ], [ '%d' ] );
 	if ( $updated ) {
-		do_action( 'lfuf_preorder_status_changed', to_public( $row ), $old, $status );
+		do_action( 'pkit_preorder_status_changed', to_public( $row ), $old, $status );
 	}
 	return $updated;
 }

@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Abilities;
+namespace ProducerKit\Core\Abilities;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,26 +39,26 @@ add_action(
 		}
 
 		wp_register_ability_category(
-			'farm-products',
+			'producerkit-products',
 			[
-				'label'       => __( 'Farm Products', 'farm-stand-manager' ),
-				'description' => __( 'Abilities for managing farm products — produce, bread, pantry goods.', 'farm-stand-manager' ),
+				'label'       => __( 'Farm Products', 'producerkit' ),
+				'description' => __( 'Abilities for managing farm products — produce, bread, pantry goods.', 'producerkit' ),
 			]
 		);
 
 		wp_register_ability_category(
-			'farm-availability',
+			'producerkit-availability',
 			[
-				'label'       => __( 'Farm Availability', 'farm-stand-manager' ),
-				'description' => __( 'Abilities for querying and updating product availability at locations.', 'farm-stand-manager' ),
+				'label'       => __( 'Farm Availability', 'producerkit' ),
+				'description' => __( 'Abilities for querying and updating product availability at locations.', 'producerkit' ),
 			]
 		);
 
 		wp_register_ability_category(
-			'farm-locations',
+			'producerkit-locations',
 			[
-				'label'       => __( 'Farm Locations', 'farm-stand-manager' ),
-				'description' => __( 'Abilities for managing sales locations — stand, market, on-farm.', 'farm-stand-manager' ),
+				'label'       => __( 'Farm Locations', 'producerkit' ),
+				'description' => __( 'Abilities for managing sales locations — stand, market, on-farm.', 'producerkit' ),
 			]
 		);
 	}
@@ -86,15 +86,15 @@ add_action(
 function register_product_abilities(): void {
 
 	wp_register_ability(
-		'farm-stand-manager/list-products',
+		'producerkit/list-products',
 		[
-			'label'               => __( 'List Products', 'farm-stand-manager' ),
-			'description'         => __( 'Retrieve a list of all published farm products with their type, season, price, and unit.', 'farm-stand-manager' ),
-			'category'            => 'farm-products',
+			'label'               => __( 'List Products', 'producerkit' ),
+			'description'         => __( 'Retrieve a list of all published farm products with their type, season, price, and unit.', 'producerkit' ),
+			'category'            => 'producerkit-products',
 			'execute_callback'    => function (): array {
 				$products = get_posts(
 					[
-						'post_type'   => 'lfuf_product',
+						'post_type'   => 'pkit_product',
 						'post_status' => 'publish',
 						'numberposts' => 100,
 					]
@@ -102,8 +102,8 @@ function register_product_abilities(): void {
 
 				return array_map(
 					function ( \WP_Post $p ): array {
-						$types   = get_the_terms( $p->ID, 'lfuf_product_type' );
-						$seasons = get_the_terms( $p->ID, 'lfuf_season' );
+						$types   = get_the_terms( $p->ID, 'pkit_product_type' );
+						$seasons = get_the_terms( $p->ID, 'pkit_season' );
 
 						return [
 							'id'      => $p->ID,
@@ -115,8 +115,8 @@ function register_product_abilities(): void {
 							'seasons' => $seasons && ! is_wp_error( $seasons )
 								? wp_list_pluck( $seasons, 'name' )
 								: [],
-							'price'   => get_post_meta( $p->ID, '_lfuf_price', true ),
-							'unit'    => get_post_meta( $p->ID, '_lfuf_unit', true ),
+							'price'   => get_post_meta( $p->ID, '_pkit_price', true ),
+							'unit'    => get_post_meta( $p->ID, '_pkit_unit', true ),
 						];
 					},
 					$products
@@ -171,20 +171,20 @@ function register_product_abilities(): void {
 	);
 
 	wp_register_ability(
-		'farm-stand-manager/get-product-sources',
+		'producerkit/get-product-sources',
 		[
-			'label'               => __( 'Get Product Sources', 'farm-stand-manager' ),
-			'description'         => __( 'Retrieve the grain origins and partner farms linked to a product.', 'farm-stand-manager' ),
-			'category'            => 'farm-products',
+			'label'               => __( 'Get Product Sources', 'producerkit' ),
+			'description'         => __( 'Retrieve the grain origins and partner farms linked to a product.', 'producerkit' ),
+			'category'            => 'producerkit-products',
 			'execute_callback'    => function ( array $input ): array {
-				$source_ids = get_post_meta( $input['product_id'], '_lfuf_source_ids', true );
+				$source_ids = get_post_meta( $input['product_id'], '_pkit_source_ids', true );
 				if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
 					return [];
 				}
 
 				$sources = get_posts(
 					[
-						'post_type'   => 'lfuf_source',
+						'post_type'   => 'pkit_source',
 						'post__in'    => $source_ids,
 						'numberposts' => 20,
 						'post_status' => 'publish',
@@ -195,10 +195,10 @@ function register_product_abilities(): void {
 					fn ( \WP_Post $s ) => [
 						'id'            => $s->ID,
 						'title'         => $s->post_title,
-						'farm_name'     => get_post_meta( $s->ID, '_lfuf_source_farm_name', true ),
-						'location'      => get_post_meta( $s->ID, '_lfuf_source_location', true ),
-						'history'       => get_post_meta( $s->ID, '_lfuf_source_history', true ),
-						'milling_notes' => get_post_meta( $s->ID, '_lfuf_milling_notes', true ),
+						'farm_name'     => get_post_meta( $s->ID, '_pkit_source_farm_name', true ),
+						'location'      => get_post_meta( $s->ID, '_pkit_source_location', true ),
+						'history'       => get_post_meta( $s->ID, '_pkit_source_history', true ),
+						'milling_notes' => get_post_meta( $s->ID, '_pkit_milling_notes', true ),
 					],
 					$sources
 				);
@@ -241,19 +241,19 @@ function register_product_abilities(): void {
 function register_availability_abilities(): void {
 
 	wp_register_ability(
-		'farm-stand-manager/get-availability',
+		'producerkit/get-availability',
 		[
-			'label'               => __( 'Get Current Availability', 'farm-stand-manager' ),
-			'description'         => __( 'Retrieve the current availability status of all products, optionally filtered by product or location.', 'farm-stand-manager' ),
-			'category'            => 'farm-availability',
+			'label'               => __( 'Get Current Availability', 'producerkit' ),
+			'description'         => __( 'Retrieve the current availability status of all products, optionally filtered by product or location.', 'producerkit' ),
+			'category'            => 'producerkit-availability',
 			'execute_callback'    => function ( array $input = [] ): array {
 				$product_id  = (int) ( $input['product_id'] ?? 0 );
 				$location_id = (int) ( $input['location_id'] ?? 0 );
 
 				if ( $product_id > 0 ) {
-					$rows = \Leftfield\Core\Availability\get_current( $product_id, $location_id );
+					$rows = \ProducerKit\Core\Availability\get_current( $product_id, $location_id );
 				} else {
-					$rows = \Leftfield\Core\Availability\get_all_current();
+					$rows = \ProducerKit\Core\Availability\get_all_current();
 				}
 
 				// wpdb returns every column as a string; cast to match the output schema.
@@ -307,13 +307,13 @@ function register_availability_abilities(): void {
 	);
 
 	wp_register_ability(
-		'farm-stand-manager/update-availability',
+		'producerkit/update-availability',
 		[
-			'label'               => __( 'Update Product Availability', 'farm-stand-manager' ),
-			'description'         => __( 'Set the availability status of a product at a location for a given date.', 'farm-stand-manager' ),
-			'category'            => 'farm-availability',
+			'label'               => __( 'Update Product Availability', 'producerkit' ),
+			'description'         => __( 'Set the availability status of a product at a location for a given date.', 'producerkit' ),
+			'category'            => 'producerkit-availability',
 			'execute_callback'    => function ( array $input ): array {
-				$id = \Leftfield\Core\Availability\upsert( $input );
+				$id = \ProducerKit\Core\Availability\upsert( $input );
 				if ( $id === false ) {
 					return [
 						'success' => false,
@@ -382,15 +382,15 @@ function register_availability_abilities(): void {
 function register_location_abilities(): void {
 
 	wp_register_ability(
-		'farm-stand-manager/list-locations',
+		'producerkit/list-locations',
 		[
-			'label'               => __( 'List Locations', 'farm-stand-manager' ),
-			'description'         => __( 'Retrieve all published sales locations with address, type, hours, and open/closed status.', 'farm-stand-manager' ),
-			'category'            => 'farm-locations',
+			'label'               => __( 'List Locations', 'producerkit' ),
+			'description'         => __( 'Retrieve all published sales locations with address, type, hours, and open/closed status.', 'producerkit' ),
+			'category'            => 'producerkit-locations',
 			'execute_callback'    => function (): array {
 				$locations = get_posts(
 					[
-						'post_type'   => 'lfuf_location',
+						'post_type'   => 'pkit_location',
 						'post_status' => 'publish',
 						'numberposts' => 50,
 					]
@@ -400,12 +400,12 @@ function register_location_abilities(): void {
 					fn ( \WP_Post $p ) => [
 						'id'              => $p->ID,
 						'title'           => $p->post_title,
-						'type'            => get_post_meta( $p->ID, '_lfuf_location_type', true ),
-						'address'         => get_post_meta( $p->ID, '_lfuf_address', true ),
-						'hours'           => get_post_meta( $p->ID, '_lfuf_hours', true ),
-						'is_open'         => (bool) get_post_meta( $p->ID, '_lfuf_is_open', true ),
-						'venmo'           => get_post_meta( $p->ID, '_lfuf_venmo_handle', true ),
-						'payment_methods' => \Leftfield\Core\Payments\get_payment_methods( $p->ID ),
+						'type'            => get_post_meta( $p->ID, '_pkit_location_type', true ),
+						'address'         => get_post_meta( $p->ID, '_pkit_address', true ),
+						'hours'           => get_post_meta( $p->ID, '_pkit_hours', true ),
+						'is_open'         => (bool) get_post_meta( $p->ID, '_pkit_is_open', true ),
+						'venmo'           => get_post_meta( $p->ID, '_pkit_venmo_handle', true ),
+						'payment_methods' => \ProducerKit\Core\Payments\get_payment_methods( $p->ID ),
 					],
 					$locations
 				);

@@ -1,15 +1,15 @@
 <?php
 /**
- * Event Manager meta extensions on lfuf_event.
+ * Event Manager meta extensions on pkit_event.
  *
  * Adds fields for RSVP configuration, display options,
  * and event-specific details beyond what core provides.
- * Namespaced with _lfuf_em_ to stay out of core's space.
+ * Namespaced with _pkit_em_ to stay out of core's space.
  */
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\Meta;
+namespace ProducerKit\EventManager\Meta;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,32 +17,32 @@ add_action( 'init', __NAMESPACE__ . '\\register' );
 
 function register(): void {
 	$fields = [
-		'_lfuf_em_rsvp_enabled'  => [
+		'_pkit_em_rsvp_enabled'  => [
 			'type'        => 'boolean',
 			'description' => 'Whether RSVP / headcount is enabled for this event.',
 			'default'     => false,
 		],
-		'_lfuf_em_rsvp_label'    => [
+		'_pkit_em_rsvp_label'    => [
 			'type'        => 'string',
 			'description' => 'Custom RSVP button label (e.g. "I\'m coming!", "Count me in").',
 			'default'     => '',
 		],
-		'_lfuf_em_rsvp_closed'   => [
+		'_pkit_em_rsvp_closed'   => [
 			'type'        => 'boolean',
 			'description' => 'Manually close RSVPs (independent of cap).',
 			'default'     => false,
 		],
-		'_lfuf_em_what_to_bring' => [
+		'_pkit_em_what_to_bring' => [
 			'type'        => 'string',
 			'description' => 'What to bring note (e.g. "a dish to share", "your own bowl").',
 			'default'     => '',
 		],
-		'_lfuf_em_cost_note'     => [
+		'_pkit_em_cost_note'     => [
 			'type'        => 'string',
 			'description' => 'Cost/donation note (e.g. "Donation-based", "$10 suggested").',
 			'default'     => '',
 		],
-		'_lfuf_em_cancelled'     => [
+		'_pkit_em_cancelled'     => [
 			'type'        => 'boolean',
 			'description' => 'Whether this event has been cancelled.',
 			'default'     => false,
@@ -51,7 +51,7 @@ function register(): void {
 
 	foreach ( $fields as $key => $args ) {
 		register_post_meta(
-			'lfuf_event',
+			'pkit_event',
 			$key,
 			[
 				'show_in_rest'      => true,

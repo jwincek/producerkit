@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom table: {prefix}_lfuf_rsvps
+ * Custom table: {prefix}_pkit_rsvps
  *
  * Lightweight RSVP/headcount tracking with security hardening:
  *   - Rate limiting per IP (transient-based)
@@ -12,7 +12,9 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\EventManager\RSVP;
+namespace ProducerKit\EventManager\RSVP;
+
+use ProducerKit\Core\Requests;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,7 +27,7 @@ const MAX_PARTY_SIZE = 10;
 add_action(
 	'plugins_loaded',
 	function (): void {
-		if ( get_option( 'lfuf_rsvp_db_version' ) !== '1.1.0' ) {
+		if ( get_option( 'pkit_rsvp_db_version' ) !== '1.1.0' ) {
 			create_table();
 		}
 	},
@@ -34,7 +36,7 @@ add_action(
 
 function table_name(): string {
 	global $wpdb;
-	return $wpdb->prefix . 'lfuf_rsvps';
+	return $wpdb->prefix . 'pkit_rsvps';
 }
 
 function create_table(): void {
@@ -62,28 +64,21 @@ function create_table(): void {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
-	update_option( 'lfuf_rsvp_db_version', '1.1.0' );
+	update_option( 'pkit_rsvp_db_version', '1.1.0' );
 }
 
 /**
  * Hash an IP address for storage (privacy-preserving).
  */
 function hash_ip( string $ip ): string {
-	// Salted hash so the IP can't be reversed from the DB alone.
-	return hash( 'sha256', $ip . wp_salt( 'auth' ) );
+	return Requests\hash_ip( $ip );
 }
 
 /**
- * Get the client IP (best effort behind proxies).
+ * Get the client IP.
  */
 function get_client_ip(): string {
-	// X-Forwarded-For is deliberately ignored: it is client-controlled unless
-	// a known proxy is in front, and trusting it would defeat rate limiting.
-	if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
-		return '0.0.0.0';
-	}
-
-	return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+	return Requests\get_client_ip();
 }
 
 /**
@@ -117,28 +112,28 @@ function add_rsvp( array $data ): array|\WP_Error {
 	$event_id = (int) ( $data['event_id'] ?? 0 );
 	$event    = get_post( $event_id );
 
-	if ( ! $event || $event->post_type !== 'lfuf_event' || $event->post_status !== 'publish' ) {
-		return new \WP_Error( 'invalid_event', __( 'Event not found.', 'farm-stand-manager' ) );
+	if ( ! $event || $event->post_type !== 'pkit_event' || $event->post_status !== 'publish' ) {
+		return new \WP_Error( 'invalid_event', __( 'Event not found.', 'producerkit' ) );
 	}
 
 	// Check if cancelled.
-	if ( (bool) get_post_meta( $event_id, '_lfuf_em_cancelled', true ) ) {
-		return new \WP_Error( 'event_cancelled', __( 'This event has been cancelled.', 'farm-stand-manager' ) );
+	if ( (bool) get_post_meta( $event_id, '_pkit_em_cancelled', true ) ) {
+		return new \WP_Error( 'event_cancelled', __( 'This event has been cancelled.', 'producerkit' ) );
 	}
 
 	// Check if RSVPs are enabled.
-	if ( ! (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_enabled', true ) ) {
-		return new \WP_Error( 'rsvp_disabled', __( 'RSVPs are not enabled for this event.', 'farm-stand-manager' ) );
+	if ( ! (bool) get_post_meta( $event_id, '_pkit_em_rsvp_enabled', true ) ) {
+		return new \WP_Error( 'rsvp_disabled', __( 'RSVPs are not enabled for this event.', 'producerkit' ) );
 	}
 
 	// Check if manually closed.
-	if ( (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_closed', true ) ) {
-		return new \WP_Error( 'rsvp_closed', __( 'RSVPs are closed for this event.', 'farm-stand-manager' ) );
+	if ( (bool) get_post_meta( $event_id, '_pkit_em_rsvp_closed', true ) ) {
+		return new \WP_Error( 'rsvp_closed', __( 'RSVPs are closed for this event.', 'producerkit' ) );
 	}
 
 	$name = sanitize_text_field( $data['name'] ?? '' );
 	if ( empty( $name ) ) {
-		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'name_required', __( 'Please provide your name.', 'producerkit' ) );
 	}
 
 	// ── Server-side party size cap ──
@@ -147,13 +142,13 @@ function add_rsvp( array $data ): array|\WP_Error {
 	// ── Rate limiting by IP ──
 	$client_ip = get_client_ip();
 	$ip_hashed = hash_ip( $client_ip );
-	$rate_key  = 'lfuf_rsvp_rate_' . md5( $ip_hashed . '_' . $event_id );
+	$rate_key  = 'pkit_rsvp_rate_' . md5( $ip_hashed . '_' . $event_id );
 
 	$recent_count = (int) get_transient( $rate_key );
 	if ( $recent_count >= RATE_LIMIT_PER_IP ) {
 		return new \WP_Error(
 			'rate_limited',
-			__( 'Too many RSVPs from this connection. Please try again later.', 'farm-stand-manager' ),
+			__( 'Too many RSVPs from this connection. Please try again later.', 'producerkit' ),
 		);
 	}
 
@@ -175,13 +170,13 @@ function add_rsvp( array $data ): array|\WP_Error {
 	if ( $existing ) {
 		return new \WP_Error(
 			'duplicate_rsvp',
-			__( 'It looks like you\'ve already RSVP\'d to this event!', 'farm-stand-manager' ),
+			__( 'It looks like you\'ve already RSVP\'d to this event!', 'producerkit' ),
 		);
 	}
 
 	// ── Atomic cap enforcement ──
 	// Use a transaction to prevent race conditions.
-	$cap = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+	$cap = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 	if ( $cap > 0 ) {
 		$wpdb->query( 'START TRANSACTION' );
 
@@ -202,7 +197,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 			$wpdb->query( 'ROLLBACK' );
 			return new \WP_Error(
 				'rsvp_full',
-				__( 'Sorry, this event is at capacity.', 'farm-stand-manager' ),
+				__( 'Sorry, this event is at capacity.', 'producerkit' ),
 			);
 		}
 	}
@@ -227,12 +222,12 @@ function add_rsvp( array $data ): array|\WP_Error {
 			$wpdb->query( 'COMMIT' );
 		} else {
 			$wpdb->query( 'ROLLBACK' );
-			return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'farm-stand-manager' ) );
+			return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'producerkit' ) );
 		}
 	}
 
 	if ( ! $wpdb->insert_id ) {
-		return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'farm-stand-manager' ) );
+		return new \WP_Error( 'db_error', __( 'Could not save RSVP.', 'producerkit' ) );
 	}
 
 	// Increment rate limit counter.
@@ -246,7 +241,7 @@ function add_rsvp( array $data ): array|\WP_Error {
 	 * @param array $row      The RSVP data including id and token.
 	 * @param int   $event_id
 	 */
-	do_action( 'lfuf_rsvp_added', $row, $event_id );
+	do_action( 'pkit_rsvp_added', $row, $event_id );
 
 	return $row;
 }
@@ -273,7 +268,7 @@ function cancel_rsvp( string $token ): bool {
 	$deleted = (bool) $wpdb->delete( $table, [ 'token' => $token ], [ '%s' ] );
 
 	if ( $deleted ) {
-		do_action( 'lfuf_rsvp_cancelled', (array) $rsvp, (int) $rsvp->event_id );
+		do_action( 'pkit_rsvp_cancelled', (array) $rsvp, (int) $rsvp->event_id );
 	}
 
 	return $deleted;
@@ -334,11 +329,11 @@ function get_event_rsvps( int $event_id ): array {
  * Get RSVP summary for an event (public-safe).
  */
 function get_event_rsvp_summary( int $event_id ): array {
-	$cap        = (int) get_post_meta( $event_id, '_lfuf_rsvp_cap', true );
+	$cap        = (int) get_post_meta( $event_id, '_pkit_rsvp_cap', true );
 	$headcount  = get_headcount( $event_id );
 	$rsvp_count = get_rsvp_count( $event_id );
-	$enabled    = (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_enabled', true );
-	$closed     = (bool) get_post_meta( $event_id, '_lfuf_em_rsvp_closed', true );
+	$enabled    = (bool) get_post_meta( $event_id, '_pkit_em_rsvp_enabled', true );
+	$closed     = (bool) get_post_meta( $event_id, '_pkit_em_rsvp_closed', true );
 
 	return [
 		'enabled'    => $enabled,

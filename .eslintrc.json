@@ -4,7 +4,7 @@
 		"browser": true
 	},
 	"globals": {
-		"lfufSettings": "readonly",
+		"pkitSettings": "readonly",
 		"qrcode": "readonly"
 	},
 	// Third-party, vendored verbatim (qrcode-generator, MIT).

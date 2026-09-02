@@ -1,6 +1,6 @@
 <?php
 /**
- * Contract validator for Farm Stand Manager.
+ * Contract validator for ProducerKit.
  *
  * Static analysis — no WordPress, no Composer dependencies. It cross-checks the
  * declarations that are spread across the plugin against the code that consumes
@@ -280,7 +280,7 @@ if ( null !== $main_file ) {
 }
 
 // ── Check 6: block.json integrity ────────────────────────────────────────────
-$block_prefix = 'lfuf/';
+$block_prefix = 'producerkit/';
 foreach ( glob( $root . '/blocks/*/block.json' ) ?: [] as $block_json ) {
 	$dir   = dirname( $block_json );
 	$name  = basename( $dir );
@@ -425,7 +425,35 @@ foreach ( glob( $root . '/blocks/*/render.php' ) ?: [] as $render ) {
 		continue;
 	}
 
-	$js      = (string) file_get_contents( $view );
+	// A block's view.js may be a shim that imports the shared store instead of
+	// defining anything itself, so follow relative imports one level and scan
+	// what they pull in too. Without this the check reports every method in a
+	// consolidated store as undefined — which is exactly what it did the first
+	// time the stores were merged.
+	$sources = [ $view ];
+	$queue   = [ $view ];
+	$seen    = [ realpath( $view ) => true ];
+
+	while ( $queue ) {
+		$current = array_shift( $queue );
+		$text    = (string) file_get_contents( $current );
+
+		if ( ! preg_match_all( '/^\s*import\s+(?:[^\'"]*\bfrom\s+)?[\'"](\.[^\'"]+)[\'"]/m', $text, $im ) ) {
+			continue;
+		}
+
+		foreach ( $im[1] as $spec ) {
+			$path = realpath( dirname( $current ) . '/' . $spec );
+			if ( false === $path || isset( $seen[ $path ] ) || ! str_starts_with( $path, $root ) ) {
+				continue;
+			}
+			$seen[ $path ] = true;
+			$sources[]     = $path;
+			$queue[]       = $path;
+		}
+	}
+
+	$js      = implode( "\n", array_map( static fn ( string $f ): string => (string) file_get_contents( $f ), $sources ) );
 	$defined = [];
 
 	// Method shorthand `name( args ) {` and generator `*name() {`.

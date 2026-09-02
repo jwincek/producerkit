@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/availability-board",
-    "version": "1.1.0",
+    "name": "producerkit/availability-board",
+    "version": "2.0.0",
     "title": "Availability Board",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "grid-view",
-    "description": "A live board showing what's currently available at the farm, grouped by product type with status badges and optional filtering. Uses the Interactivity API for reactive updates.",
-    "textdomain": "farm-stand-manager",
+    "description": "A live board showing what's currently currently available, grouped by product type with status badges and optional filtering. Uses the Interactivity API for reactive updates.",
+    "textdomain": "producerkit",
     "attributes": {
         "showFilters": {
             "type": "boolean",

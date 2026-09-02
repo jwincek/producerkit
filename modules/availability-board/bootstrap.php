@@ -3,14 +3,14 @@
  * Availability Board module bootstrap.
  *
  * Weekly "what's available" board for the farm website.
- * Reads from the shared lfuf_availability table, adds a
+ * Reads from the shared pkit_availability table, adds a
  * grouped REST endpoint, an admin quick-entry page, and
  * a front-end board block with Interactivity API filtering.
  */
 
 declare(strict_types=1);
 
-namespace Leftfield\AvailabilityBoard;
+namespace ProducerKit\AvailabilityBoard;
 
 defined( 'ABSPATH' ) || exit;
 

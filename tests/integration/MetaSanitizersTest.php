@@ -15,13 +15,13 @@ final class MetaSanitizersTest extends WP_UnitTestCase {
 		parent::set_up();
 		$this->location = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 			]
 		);
 		$this->event    = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_event',
+				'post_type'   => 'pkit_event',
 				'post_status' => 'publish',
 			]
 		);
@@ -29,8 +29,8 @@ final class MetaSanitizersTest extends WP_UnitTestCase {
 
 	/** @dataProvider handle_provider */
 	public function test_venmo_handle( string $input, string $expected ): void {
-		update_post_meta( $this->location, '_lfuf_venmo_handle', $input );
-		$this->assertSame( $expected, get_post_meta( $this->location, '_lfuf_venmo_handle', true ) );
+		update_post_meta( $this->location, '_pkit_venmo_handle', $input );
+		$this->assertSame( $expected, get_post_meta( $this->location, '_pkit_venmo_handle', true ) );
 	}
 
 	public function handle_provider(): array {
@@ -45,8 +45,8 @@ final class MetaSanitizersTest extends WP_UnitTestCase {
 
 	/** @dataProvider url_provider */
 	public function test_donation_link( string $input, string $expected ): void {
-		update_post_meta( $this->event, '_lfuf_donation_link', $input );
-		$this->assertSame( $expected, get_post_meta( $this->event, '_lfuf_donation_link', true ) );
+		update_post_meta( $this->event, '_pkit_donation_link', $input );
+		$this->assertSame( $expected, get_post_meta( $this->event, '_pkit_donation_link', true ) );
 	}
 
 	public function url_provider(): array {
@@ -60,15 +60,15 @@ final class MetaSanitizersTest extends WP_UnitTestCase {
 	}
 
 	public function test_pickup_blackouts_drop_junk_and_sort(): void {
-		update_post_meta( $this->location, '_lfuf_pickup_blackouts', [ '2026-12-25', 'not-a-date', '<script>', '2026-11-26', '2026-12-25' ] );
+		update_post_meta( $this->location, '_pkit_pickup_blackouts', [ '2026-12-25', 'not-a-date', '<script>', '2026-11-26', '2026-12-25' ] );
 		$this->assertSame(
 			'["2026-11-26","2026-12-25"]',
-			get_post_meta( $this->location, '_lfuf_pickup_blackouts', true ),
+			get_post_meta( $this->location, '_pkit_pickup_blackouts', true ),
 		);
 	}
 
 	public function test_pickup_blackouts_accept_json_string_input(): void {
-		update_post_meta( $this->location, '_lfuf_pickup_blackouts', '["2027-01-01",""]' );
-		$this->assertSame( '["2027-01-01"]', get_post_meta( $this->location, '_lfuf_pickup_blackouts', true ) );
+		update_post_meta( $this->location, '_pkit_pickup_blackouts', '["2027-01-01",""]' );
+		$this->assertSame( '["2027-01-01"]', get_post_meta( $this->location, '_pkit_pickup_blackouts', true ) );
 	}
 }

@@ -1,4 +1,4 @@
-# Getting Started with Farm Stand Manager
+# Getting Started with ProducerKit
 
 Welcome! This guide walks you through setting up your website's farm tools — the stand status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.
 
@@ -6,7 +6,7 @@ Welcome! This guide walks you through setting up your website's farm tools — t
 
 ## First Things First
 
-After the plugin is activated, you'll see a **🥕 Farm Stand** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
+After the plugin is activated, you'll see a **ProducerKit** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
 
 The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked Good, Pantry Good, Seedling), Seasons (Spring, Summer, Fall, Winter), and Event Types (Pizza Night, Potluck, Farm Dinner, Workshop, Farm Tour, Seed Exchange, Mini Market). You can use these as-is or rename them.
 
@@ -18,11 +18,11 @@ The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked
 
 **QR code**: in the Location Info block's settings, turn on **Show payment QR code**. Visitors scan it to open your first payment link — and if you print the page, the code enlarges for stand signage.
 
-**Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **Farm Stand → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically. Pickup dates respect the location's weekly schedule and season, and you can block specific dates (holidays, closures) under **Schedule & Season → Closed Dates** when editing the location.
+**Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **ProducerKit → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically. Pickup dates respect the location's weekly schedule and season, and you can block specific dates (holidays, closures) under **Schedule & Season → Closed Dates** when editing the location.
 
 **Harvest list**: on the Pre-Orders screen, click **Harvest List** for per-pickup-date totals of everything to have ready — print it and take it to the field.
 
-**Fresh Sheet**: under **Farm Stand → Fresh Sheet**, print a one-pager of today's availability with prices, your hours, payment options, and a payment QR code — the morning sign for the stand.
+**Fresh Sheet**: under **ProducerKit → Fresh Sheet**, print a one-pager of today's availability with prices, your hours, payment options, and a payment QR code — the morning sign for the stand.
 
 ---
 
@@ -70,7 +70,7 @@ Repeat for each product. Don't worry about getting them all in at once — you c
 
 **Tip**: The Products list table shows price and availability status at a glance. You can sort by price.
 
-**Bulk import**: If you have many products to add at once, go to **🥕 Farm Stand → Product Import**. You can download a CSV template (or export your existing products), edit it in a spreadsheet, and upload it to create or update products in bulk. The format reference on the page explains every column.
+**Bulk import**: If you have many products to add at once, go to **ProducerKit → Product Import**. You can download a CSV template (or export your existing products), edit it in a spreadsheet, and upload it to create or update products in bulk. The format reference on the page explains every column.
 
 ---
 
@@ -78,7 +78,7 @@ Repeat for each product. Don't worry about getting them all in at once — you c
 
 This is the task you'll do most often — probably every Saturday morning.
 
-1. Go to **🥕 Farm Stand → Availability** in the sidebar.
+1. Go to **ProducerKit → Availability** in the sidebar.
 2. You'll see all your products in a table with thumbnails and prices. For each one:
    - Pick a **Status**: Abundant, Available, Limited, Sold Out, or leave it blank (not listed).
    - Add a **Quantity Note** if helpful (e.g., `~3 bunches left`, `Last 2 loaves`).
@@ -92,7 +92,7 @@ That's it — the availability board on your website updates immediately.
 
 ## Step 4: Place Blocks on Your Pages
 
-Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **Farm Stand Manager** category:
+Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **ProducerKit** category:
 
 ### Homepage (recommended blocks)
 
@@ -171,12 +171,12 @@ You can now set availability per-location on the Availability page, and the boar
 |------|-------|-----------|
 | Open/close the stand | Admin bar dot (any page) | Every stand day |
 | Set a status message | Admin bar → "Set Status Message…" | As needed |
-| Update availability | 🥕 Farm Stand → Availability | Weekly (Saturday morning) |
+| Update availability | ProducerKit → Availability | Weekly (Saturday morning) |
 | Add a new product | Products → Add New | As new crops/items come in |
-| Bulk add products | 🥕 Farm Stand → Product Import | Start of season |
+| Bulk add products | ProducerKit → Product Import | Start of season |
 | Create an event | Events → Add New | When planning events |
 | Check RSVPs | Events list → RSVP column | Before each event |
-| Check for content gaps | 🥕 Farm Stand dashboard | Occasionally |
+| Check for content gaps | ProducerKit dashboard | Occasionally |
 
 ---
 
@@ -184,7 +184,7 @@ You can now set availability per-location on the Availability page, and the boar
 
 If you want to see how everything looks with example products, events, and availability before entering your real data:
 
-1. Go to **🥕 Farm Stand** dashboard.
+1. Go to **ProducerKit** dashboard.
 2. Click **Load Sample Data**.
 3. Explore the blocks on your pages to see how they look.
 4. When you're ready, click **Remove Sample Data** to clear it all out.

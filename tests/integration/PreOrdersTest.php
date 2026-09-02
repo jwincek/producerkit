@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-use function Leftfield\PreOrder\Orders\cancel_order_by_token;
-use function Leftfield\PreOrder\Orders\create_order;
-use function Leftfield\PreOrder\Orders\get_order_by_token;
-use function Leftfield\PreOrder\Orders\get_orders;
-use function Leftfield\PreOrder\Orders\update_status;
+use function ProducerKit\PreOrder\Orders\cancel_order_by_token;
+use function ProducerKit\PreOrder\Orders\create_order;
+use function ProducerKit\PreOrder\Orders\get_order_by_token;
+use function ProducerKit\PreOrder\Orders\get_orders;
+use function ProducerKit\PreOrder\Orders\update_status;
 
 final class PreOrdersTest extends WP_UnitTestCase {
 
@@ -20,18 +20,18 @@ final class PreOrdersTest extends WP_UnitTestCase {
 		parent::set_up();
 		$this->product = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 				'post_title'  => 'Kale',
 			]
 		);
-		update_post_meta( $this->product, '_lfuf_unit', 'bunch' );
-		update_post_meta( $this->product, '_lfuf_price', '$4' );
+		update_post_meta( $this->product, '_pkit_unit', 'bunch' );
+		update_post_meta( $this->product, '_pkit_price', '$4' );
 	}
 
 	/** Most tests create several orders; lift the per-IP limit for them. */
 	private function allow_many_orders(): void {
-		add_filter( 'lfuf_preorder_rate_limit', fn () => 100 );
+		add_filter( 'pkit_preorder_rate_limit', fn () => 100 );
 	}
 
 	private function tomorrow(): string {
@@ -79,7 +79,7 @@ final class PreOrdersTest extends WP_UnitTestCase {
 		$this->assertSame( 'bunch', $order['items'][0]['unit'] );
 		$this->assertGreaterThan( 0, $order['id'], 'insert id must survive the rate-limit transient write' );
 		$this->assertSame( 32, strlen( $order['token'] ) );
-		$this->assertSame( 1, did_action( 'lfuf_preorder_created' ) );
+		$this->assertSame( 1, did_action( 'pkit_preorder_created' ) );
 	}
 
 	public function test_create_rejects_bad_inputs(): void {
@@ -134,7 +134,7 @@ final class PreOrdersTest extends WP_UnitTestCase {
 		$order = create_order( $this->valid_order() );
 		update_status( $order['id'], 'confirmed' );
 		$this->assertTrue( cancel_order_by_token( $order['token'] ), 'confirmed orders are cancellable' );
-		$this->assertSame( 1, did_action( 'lfuf_preorder_cancelled' ) );
+		$this->assertSame( 1, did_action( 'pkit_preorder_cancelled' ) );
 
 		$order2 = create_order( $this->valid_order( [ 'name' => 'Second' ] ) );
 		update_status( $order2['id'], 'ready' );
@@ -148,7 +148,7 @@ final class PreOrdersTest extends WP_UnitTestCase {
 
 		$this->assertTrue( update_status( $order['id'], 'confirmed' ) );
 		$this->assertTrue( update_status( $order['id'], 'ready' ) );
-		$this->assertSame( 2, did_action( 'lfuf_preorder_status_changed' ) );
+		$this->assertSame( 2, did_action( 'pkit_preorder_status_changed' ) );
 		$this->assertSame( 'ready', get_order_by_token( $order['token'] )['status'] );
 
 		$bad = update_status( $order['id'], 'teleported' );
@@ -160,7 +160,7 @@ final class PreOrdersTest extends WP_UnitTestCase {
 	}
 
 	public function test_rest_create_lookup_and_cancel_by_token(): void {
-		$request = new WP_REST_Request( 'POST', '/lfuf/v1/preorders' );
+		$request = new WP_REST_Request( 'POST', '/producerkit/v1/preorders' );
 		$request->set_body_params(
 			[
 				'name'        => 'Rest Customer',
@@ -177,18 +177,18 @@ final class PreOrdersTest extends WP_UnitTestCase {
 		$this->assertSame( 201, $created->get_status() );
 		$token = $created->get_data()['order']['token'];
 
-		$this->assertSame( 200, rest_do_request( new WP_REST_Request( 'GET', "/lfuf/v1/preorders/{$token}" ) )->get_status() );
+		$this->assertSame( 200, rest_do_request( new WP_REST_Request( 'GET', "/producerkit/v1/preorders/{$token}" ) )->get_status() );
 
-		$cancelled = rest_do_request( new WP_REST_Request( 'DELETE', "/lfuf/v1/preorders/{$token}" ) );
+		$cancelled = rest_do_request( new WP_REST_Request( 'DELETE', "/producerkit/v1/preorders/{$token}" ) );
 		$this->assertSame( 200, $cancelled->get_status() );
 		$this->assertSame( 'cancelled', get_order_by_token( $token )['status'] );
 	}
 
 	public function test_rest_staff_routes_refuse_anonymous(): void {
 		wp_set_current_user( 0 );
-		$this->assertSame( 401, rest_do_request( new WP_REST_Request( 'GET', '/lfuf/v1/preorders' ) )->get_status() );
+		$this->assertSame( 401, rest_do_request( new WP_REST_Request( 'GET', '/producerkit/v1/preorders' ) )->get_status() );
 
-		$status = new WP_REST_Request( 'POST', '/lfuf/v1/preorders/1/status' );
+		$status = new WP_REST_Request( 'POST', '/producerkit/v1/preorders/1/status' );
 		$status->set_body_params( [ 'status' => 'confirmed' ] );
 		$this->assertSame( 401, rest_do_request( $status )->get_status() );
 	}
@@ -197,11 +197,11 @@ final class PreOrdersTest extends WP_UnitTestCase {
 		$order = create_order( $this->valid_order() );
 		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
 
-		$list = rest_do_request( new WP_REST_Request( 'GET', '/lfuf/v1/preorders' ) );
+		$list = rest_do_request( new WP_REST_Request( 'GET', '/producerkit/v1/preorders' ) );
 		$this->assertSame( 200, $list->get_status() );
 		$this->assertSame( 1, $list->get_data()['total'] );
 
-		$status = new WP_REST_Request( 'POST', "/lfuf/v1/preorders/{$order['id']}/status" );
+		$status = new WP_REST_Request( 'POST', "/producerkit/v1/preorders/{$order['id']}/status" );
 		$status->set_body_params( [ 'status' => 'confirmed' ] );
 		$this->assertSame( 200, rest_do_request( $status )->get_status() );
 	}

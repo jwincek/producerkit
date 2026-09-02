@@ -2,36 +2,36 @@
  * Stand Hours Schedule — front + editor styles.
  */
 
-.lfuf-stand-schedule {
-    --_lfuf-muted: #4b5563;
+.pkit-stand-schedule {
+    --_pkit-muted: #4b5563;
     color: #1f2937;
     font-family: inherit;
     line-height: 1.5;
 }
 
-.lfuf-stand-schedule__loading {
+.pkit-stand-schedule__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
 }
 
-.lfuf-stand-schedule__fallback {
+.pkit-stand-schedule__fallback {
     font-size: 0.95rem;
     margin: 0;
 }
 
-.lfuf-stand-schedule__empty {
+.pkit-stand-schedule__empty {
     font-size: 0.9rem;
-    color: var(--_lfuf-muted);
+    color: var(--_pkit-muted);
     font-style: italic;
     margin: 0;
 }
 
 /* ── Table ─────────────────────────────────────── */
 
-.lfuf-stand-schedule__table {
+.pkit-stand-schedule__table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #e5e7eb;
@@ -39,24 +39,24 @@
     overflow: hidden;
 }
 
-.lfuf-stand-schedule__day {
+.pkit-stand-schedule__day {
     border-bottom: 1px solid #f3f4f6;
     transition: background 0.15s;
 }
 
-.lfuf-stand-schedule__day:last-child {
+.pkit-stand-schedule__day:last-child {
     border-bottom: none;
 }
 
-.lfuf-stand-schedule__day-label,
-.lfuf-stand-schedule__day-hours {
+.pkit-stand-schedule__day-label,
+.pkit-stand-schedule__day-hours {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
     font-weight: 400;
     text-align: left;
 }
 
-.lfuf-stand-schedule__day-label {
+.pkit-stand-schedule__day-label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -64,30 +64,30 @@
     font-weight: 500;
 }
 
-.lfuf-stand-schedule__day-hours {
+.pkit-stand-schedule__day-hours {
     text-align: right;
     color: #374151;
 }
 
-.lfuf-stand-schedule__day--closed {
+.pkit-stand-schedule__day--closed {
     opacity: 0.5;
 }
 
-.lfuf-stand-schedule__day--closed .lfuf-stand-schedule__day-hours {
+.pkit-stand-schedule__day--closed .pkit-stand-schedule__day-hours {
     color: #9ca3af;
     font-style: italic;
 }
 
-.lfuf-stand-schedule__day--today {
+.pkit-stand-schedule__day--today {
     background: #f0fdf4;
     opacity: 1;
 }
 
-.lfuf-stand-schedule__day--today .lfuf-stand-schedule__day-label {
+.pkit-stand-schedule__day--today .pkit-stand-schedule__day-label {
     font-weight: 600;
 }
 
-.lfuf-stand-schedule__today-badge {
+.pkit-stand-schedule__today-badge {
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -101,7 +101,7 @@
 
 /* ── Accessibility ─────────────────────────────── */
 
-.lfuf-stand-schedule .screen-reader-text {
+.pkit-stand-schedule .screen-reader-text {
     border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%);
     height: 1px; margin: -1px; overflow: hidden; padding: 0;
     position: absolute; width: 1px; word-wrap: normal !important;
@@ -109,18 +109,18 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-    .lfuf-stand-schedule__day { transition: none; }
+    .pkit-stand-schedule__day { transition: none; }
 }
 
 @media (forced-colors: active) {
 
-    .lfuf-stand-schedule__table { border-color: CanvasText; }
+    .pkit-stand-schedule__table { border-color: CanvasText; }
 
-    .lfuf-stand-schedule__day { border-bottom-color: CanvasText; }
+    .pkit-stand-schedule__day { border-bottom-color: CanvasText; }
 
-    .lfuf-stand-schedule__day--today { background: Highlight; color: HighlightText; }
+    .pkit-stand-schedule__day--today { background: Highlight; color: HighlightText; }
 
-    .lfuf-stand-schedule__today-badge {
+    .pkit-stand-schedule__today-badge {
         forced-color-adjust: none;
         border: 1px solid HighlightText;
     }
@@ -131,18 +131,18 @@
 
 @media (max-width: 480px) {
 
-    .lfuf-stand-schedule__day-label,
-    .lfuf-stand-schedule__day-hours {
+    .pkit-stand-schedule__day-label,
+    .pkit-stand-schedule__day-hours {
         display: block;
         padding: 0.3rem 0.75rem;
         text-align: left;
     }
 
-    .lfuf-stand-schedule__day-label {
+    .pkit-stand-schedule__day-label {
         padding-bottom: 0;
     }
 
-    .lfuf-stand-schedule__day-hours {
+    .pkit-stand-schedule__day-hours {
         padding-top: 0;
         font-size: 0.85rem;
     }

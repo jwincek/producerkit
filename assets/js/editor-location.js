@@ -1,5 +1,5 @@
 /**
- * Location Editor Sidebar — custom panels for lfuf_location meta.
+ * Location Editor Sidebar — custom panels for pkit_location meta.
  *
  * Registers two sidebar panels:
  *   1. Location Details — address, type, hours, Venmo, coordinates
@@ -28,11 +28,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_location' ) {
+		if ( postType !== 'pkit_location' ) {
 			return null;
 		}
 
-		const _address = useEntityProp( 'postType', 'lfuf_location', 'meta' );
+		const _address = useEntityProp( 'postType', 'pkit_location', 'meta' );
 		const meta = _address[ 0 ];
 		const setMeta = _address[ 1 ];
 
@@ -45,7 +45,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-location-details',
+				name: 'pkit-location-details',
 				title: 'Location Details',
 				initialOpen: true,
 				icon: 'store',
@@ -53,7 +53,7 @@
 
 			el( SelectControl, {
 				label: 'Location Type',
-				value: meta._lfuf_location_type || 'stand',
+				value: meta._pkit_location_type || 'stand',
 				options: [
 					{ label: 'Farm Stand', value: 'stand' },
 					{ label: 'Farmers Market', value: 'market' },
@@ -61,16 +61,16 @@
 					{ label: 'Other', value: 'other' },
 				],
 				onChange( val ) {
-					updateMeta( '_lfuf_location_type', val );
+					updateMeta( '_pkit_location_type', val );
 				},
 				help: 'What kind of location is this?',
 			} ),
 
 			el( TextControl, {
 				label: 'Address',
-				value: meta._lfuf_address || '',
+				value: meta._pkit_address || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_address', val );
+					updateMeta( '_pkit_address', val );
 				},
 				placeholder: '123 Farm Road, Yourtown, ST 00000',
 				help: 'Full street address shown to visitors.',
@@ -78,9 +78,9 @@
 
 			el( TextControl, {
 				label: 'Hours',
-				value: meta._lfuf_hours || '',
+				value: meta._pkit_hours || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_hours', val );
+					updateMeta( '_pkit_hours', val );
 				},
 				placeholder: 'Saturdays 1:00 – 4:00 PM, May – December',
 				help: 'Displayed on the front end. Free-form text.',
@@ -88,9 +88,9 @@
 
 			el( TextControl, {
 				label: 'Venmo Handle',
-				value: meta._lfuf_venmo_handle || '',
+				value: meta._pkit_venmo_handle || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_venmo_handle', val.replace( /^@/, '' ) );
+					updateMeta( '_pkit_venmo_handle', val.replace( /^@/, '' ) );
 				},
 				placeholder: 'examplefarm',
 				help: 'Without the @. Used to generate the Venmo payment link.',
@@ -103,9 +103,9 @@
 					label: 'Latitude',
 					type: 'number',
 					step: 'any',
-					value: meta._lfuf_lat || '',
+					value: meta._pkit_lat || '',
 					onChange( val ) {
-						updateMeta( '_lfuf_lat', parseFloat( val ) || 0 );
+						updateMeta( '_pkit_lat', parseFloat( val ) || 0 );
 					},
 					style: { flex: 1 },
 				} ),
@@ -113,9 +113,9 @@
 					label: 'Longitude',
 					type: 'number',
 					step: 'any',
-					value: meta._lfuf_lng || '',
+					value: meta._pkit_lng || '',
 					onChange( val ) {
-						updateMeta( '_lfuf_lng', parseFloat( val ) || 0 );
+						updateMeta( '_pkit_lng', parseFloat( val ) || 0 );
 					},
 					style: { flex: 1 },
 				} )
@@ -123,19 +123,19 @@
 
 			el( ToggleControl, {
 				label: 'Currently Open',
-				checked: !! meta._lfuf_is_open,
+				checked: !! meta._pkit_is_open,
 				onChange( val ) {
-					updateMeta( '_lfuf_is_open', val );
+					updateMeta( '_pkit_is_open', val );
 				},
 				help: 'Toggle this location open or closed right now.',
 			} ),
 
-			meta._lfuf_ss_status_message !== undefined
+			meta._pkit_ss_status_message !== undefined
 				? el( TextControl, {
 						label: 'Status Message',
-						value: meta._lfuf_ss_status_message || '',
+						value: meta._pkit_ss_status_message || '',
 						onChange( val ) {
-							updateMeta( '_lfuf_ss_status_message', val );
+							updateMeta( '_pkit_ss_status_message', val );
 						},
 						placeholder: 'Back at 2 PM',
 						help: 'Optional message shown alongside open/closed status.',
@@ -163,11 +163,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_location' ) {
+		if ( postType !== 'pkit_location' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_location', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_location', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
@@ -178,7 +178,7 @@
 		}
 
 		// Parse schedule JSON into array.
-		const scheduleRaw = meta._lfuf_ss_schedule || '[]';
+		const scheduleRaw = meta._pkit_ss_schedule || '[]';
 		let schedule;
 		try {
 			schedule = JSON.parse( scheduleRaw );
@@ -190,7 +190,7 @@
 		}
 
 		function updateSchedule( newSchedule ) {
-			updateMeta( '_lfuf_ss_schedule', JSON.stringify( newSchedule ) );
+			updateMeta( '_pkit_ss_schedule', JSON.stringify( newSchedule ) );
 		}
 
 		function addDay() {
@@ -231,8 +231,8 @@
 		}
 
 		// Season date handling.
-		const seasonStart = meta._lfuf_ss_season_start || '';
-		const seasonEnd = meta._lfuf_ss_season_end || '';
+		const seasonStart = meta._pkit_ss_season_start || '';
+		const seasonEnd = meta._pkit_ss_season_end || '';
 
 		// Pickup blackout dates (JSON array of YYYY-MM-DD in meta).
 		const blackouts = parseBlackouts();
@@ -240,7 +240,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-stand-schedule',
+				name: 'pkit-stand-schedule',
 				title: 'Schedule & Season',
 				initialOpen: false,
 				icon: 'clock',
@@ -275,7 +275,7 @@
 					type: 'date',
 					value: seasonStart,
 					onChange( val ) {
-						updateMeta( '_lfuf_ss_season_start', val );
+						updateMeta( '_pkit_ss_season_start', val );
 					},
 					style: { flex: 1 },
 				} ),
@@ -284,7 +284,7 @@
 					type: 'date',
 					value: seasonEnd,
 					onChange( val ) {
-						updateMeta( '_lfuf_ss_season_end', val );
+						updateMeta( '_pkit_ss_season_end', val );
 					},
 					style: { flex: 1 },
 				} )
@@ -293,9 +293,9 @@
 			// Auto-toggle.
 			el( ToggleControl, {
 				label: 'Auto-toggle from schedule',
-				checked: !! meta._lfuf_ss_auto_toggle,
+				checked: !! meta._pkit_ss_auto_toggle,
 				onChange( val ) {
-					updateMeta( '_lfuf_ss_auto_toggle', val );
+					updateMeta( '_pkit_ss_auto_toggle', val );
 				},
 				help: 'Automatically open/close based on the weekly schedule below.',
 			} ),
@@ -469,7 +469,7 @@
 		function parseBlackouts() {
 			try {
 				const parsed = JSON.parse(
-					meta._lfuf_pickup_blackouts || '[]'
+					meta._pkit_pickup_blackouts || '[]'
 				);
 				return Array.isArray( parsed ) ? parsed : [];
 			} catch ( e ) {
@@ -480,7 +480,7 @@
 		function saveBlackouts( next ) {
 			// Empty rows stay while editing; the server-side sanitizer
 			// drops anything that isn't a valid date on save.
-			updateMeta( '_lfuf_pickup_blackouts', JSON.stringify( next ) );
+			updateMeta( '_pkit_pickup_blackouts', JSON.stringify( next ) );
 		}
 
 		function addBlackout() {
@@ -508,7 +508,7 @@
 	 * Panel 3: Payment Options
 	 * ───────────────────────────────────────────── */
 
-	// Mirrors Leftfield\Core\Payments\method_types(). kind: handle | url | badge.
+	// Mirrors ProducerKit\Core\Payments\method_types(). kind: handle | url | badge.
 	const PAYMENT_TYPES = [
 		{ value: 'venmo', label: 'Venmo', kind: 'handle' },
 		{ value: 'cashapp', label: 'Cash App', kind: 'handle' },
@@ -536,15 +536,15 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_location' ) {
+		if ( postType !== 'pkit_location' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_location', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_location', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
-		const methodsRaw = meta._lfuf_payment_methods || '[]';
+		const methodsRaw = meta._pkit_payment_methods || '[]';
 		let methods;
 		try {
 			methods = JSON.parse( methodsRaw );
@@ -557,7 +557,7 @@
 
 		function updateMethods( next ) {
 			const updated = {};
-			updated._lfuf_payment_methods = JSON.stringify( next );
+			updated._pkit_payment_methods = JSON.stringify( next );
 			setMeta( Object.assign( {}, meta, updated ) );
 		}
 
@@ -598,7 +598,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-payment-options',
+				name: 'pkit-payment-options',
 				title: 'Payment Options',
 				initialOpen: false,
 				icon: 'money-alt',
@@ -727,17 +727,17 @@
 	 * Register
 	 * ───────────────────────────────────────────── */
 
-	registerPlugin( 'lfuf-location-details', {
+	registerPlugin( 'pkit-location-details', {
 		render: LocationDetailsPanel,
 		icon: 'store',
 	} );
 
-	registerPlugin( 'lfuf-stand-schedule', {
+	registerPlugin( 'pkit-stand-schedule', {
 		render: StandSchedulePanel,
 		icon: 'clock',
 	} );
 
-	registerPlugin( 'lfuf-payment-options', {
+	registerPlugin( 'pkit-payment-options', {
 		render: PaymentOptionsPanel,
 		icon: 'money-alt',
 	} );

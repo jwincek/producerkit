@@ -8,19 +8,19 @@
  * weekly schedule, and accepted payment methods.
  *
  * Filter the final array (or return [] to suppress) via
- * 'lfuf_structured_data'.
+ * 'pkit_structured_data'.
  */
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\StructuredData;
+namespace ProducerKit\Core\StructuredData;
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_head', __NAMESPACE__ . '\\print_json_ld' );
 
 function print_json_ld(): void {
-	if ( ! is_singular( [ 'lfuf_product', 'lfuf_location' ] ) ) {
+	if ( ! is_singular( [ 'pkit_product', 'pkit_location' ] ) ) {
 		return;
 	}
 
@@ -29,7 +29,7 @@ function print_json_ld(): void {
 		return;
 	}
 
-	$data = $post->post_type === 'lfuf_product'
+	$data = $post->post_type === 'pkit_product'
 		? product_data( $post )
 		: location_data( $post );
 
@@ -40,7 +40,7 @@ function print_json_ld(): void {
 	 * @param array    $data Schema.org data.
 	 * @param \WP_Post $post The queried post.
 	 */
-	$data = apply_filters( 'lfuf_structured_data', $data, $post );
+	$data = apply_filters( 'pkit_structured_data', $data, $post );
 	if ( ! $data ) {
 		return;
 	}
@@ -96,7 +96,7 @@ function product_data( \WP_Post $post ): array {
 	}
 
 	// Offer: only when the display price parses to a number.
-	$price = parse_price( (string) get_post_meta( $post->ID, '_lfuf_price', true ) );
+	$price = parse_price( (string) get_post_meta( $post->ID, '_pkit_price', true ) );
 	if ( $price !== null ) {
 		$offer = [
 			'@type'         => 'Offer',
@@ -106,11 +106,11 @@ function product_data( \WP_Post $post ): array {
 			 *
 			 * @param string $currency ISO 4217 code. Default 'USD'.
 			 */
-			'priceCurrency' => apply_filters( 'lfuf_structured_data_currency', 'USD' ),
+			'priceCurrency' => apply_filters( 'pkit_structured_data_currency', 'USD' ),
 			'url'           => get_permalink( $post ),
 		];
 
-		$rows = \Leftfield\Core\Availability\get_current( $post->ID );
+		$rows = \ProducerKit\Core\Availability\get_current( $post->ID );
 		if ( $rows ) {
 			$availability = availability_url( (string) $rows[0]->status );
 			if ( $availability ) {
@@ -132,13 +132,13 @@ function location_data( \WP_Post $post ): array {
 		'url'      => get_permalink( $post ),
 	];
 
-	$address = (string) get_post_meta( $post->ID, '_lfuf_address', true );
+	$address = (string) get_post_meta( $post->ID, '_pkit_address', true );
 	if ( $address !== '' ) {
 		$data['address'] = $address;
 	}
 
-	$lat = (float) get_post_meta( $post->ID, '_lfuf_lat', true );
-	$lng = (float) get_post_meta( $post->ID, '_lfuf_lng', true );
+	$lat = (float) get_post_meta( $post->ID, '_pkit_lat', true );
+	$lng = (float) get_post_meta( $post->ID, '_pkit_lng', true );
 	if ( $lat !== 0.0 || $lng !== 0.0 ) {
 		$data['geo'] = [
 			'@type'     => 'GeoCoordinates',
@@ -148,7 +148,7 @@ function location_data( \WP_Post $post ): array {
 	}
 
 	// Weekly schedule → schema openingHours ("Sa 09:00-16:00").
-	$schedule = json_decode( (string) get_post_meta( $post->ID, '_lfuf_ss_schedule', true ), true );
+	$schedule = json_decode( (string) get_post_meta( $post->ID, '_pkit_ss_schedule', true ), true );
 	if ( is_array( $schedule ) && $schedule ) {
 		$abbrev = [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ];
 		$hours  = [];
@@ -163,7 +163,7 @@ function location_data( \WP_Post $post ): array {
 		}
 	}
 
-	$methods = \Leftfield\Core\Payments\get_payment_methods( $post->ID );
+	$methods = \ProducerKit\Core\Payments\get_payment_methods( $post->ID );
 	if ( $methods ) {
 		$data['paymentAccepted'] = implode( ', ', array_column( $methods, 'label' ) );
 	}

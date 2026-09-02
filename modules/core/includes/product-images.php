@@ -3,7 +3,7 @@
  * Product image resolution.
  *
  * A product with no featured image falls back to a muted illustration chosen
- * by its lfuf_product_type term, so the availability board and product cards
+ * by its pkit_product_type term, so the availability board and product cards
  * stay visually even on a site that has not uploaded photos yet.
  *
  * The placeholders are deliberately flat and low-contrast: they should read as
@@ -16,7 +16,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\Product_Images;
+namespace ProducerKit\Core\Product_Images;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,14 +29,14 @@ defined( 'ABSPATH' ) || exit;
  * the repository).
  */
 function assets_url(): string {
-	return plugin_dir_url( \Leftfield\PLUGIN_DIR . '/.' ) . 'assets/img/';
+	return plugin_dir_url( \ProducerKit\PLUGIN_DIR . '/.' ) . 'assets/img/';
 }
 
 /**
  * The product type slug used to pick a placeholder, or '' if none applies.
  */
 function type_slug( int $product_id ): string {
-	$terms = get_the_terms( $product_id, 'lfuf_product_type' );
+	$terms = get_the_terms( $product_id, 'pkit_product_type' );
 
 	if ( ! is_array( $terms ) || ! $terms ) {
 		return '';
@@ -64,7 +64,7 @@ function placeholder_url( int $product_id ): string {
 	if ( $slug ) {
 		$file = 'assets/img/placeholder-' . $slug . '.svg';
 
-		if ( is_file( \Leftfield\PLUGIN_DIR . '/' . $file ) ) {
+		if ( is_file( \ProducerKit\PLUGIN_DIR . '/' . $file ) ) {
 			$url = assets_url() . 'placeholder-' . $slug . '.svg';
 		}
 	}
@@ -78,7 +78,7 @@ function placeholder_url( int $product_id ): string {
 	 * @param int    $product_id Product post ID.
 	 * @param string $slug       Resolved product type slug, or ''.
 	 */
-	return (string) apply_filters( 'lfuf_product_placeholder_url', $url, $product_id, $slug );
+	return (string) apply_filters( 'pkit_product_placeholder_url', $url, $product_id, $slug );
 }
 
 /**

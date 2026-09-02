@@ -5,9 +5,9 @@
 
 declare(strict_types=1);
 
-use function Leftfield\PreOrder\Orders\cancel_order_by_token;
-use function Leftfield\PreOrder\Orders\create_order;
-use function Leftfield\PreOrder\Orders\get_harvest_list;
+use function ProducerKit\PreOrder\Orders\cancel_order_by_token;
+use function ProducerKit\PreOrder\Orders\create_order;
+use function ProducerKit\PreOrder\Orders\get_harvest_list;
 
 final class HarvestListTest extends WP_UnitTestCase {
 
@@ -19,26 +19,26 @@ final class HarvestListTest extends WP_UnitTestCase {
 
 	public function set_up(): void {
 		parent::set_up();
-		add_filter( 'lfuf_preorder_rate_limit', fn () => 100 );
+		add_filter( 'pkit_preorder_rate_limit', fn () => 100 );
 
 		$this->kale = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 				'post_title'  => 'Kale',
 			]
 		);
-		update_post_meta( $this->kale, '_lfuf_unit', 'bunch' );
+		update_post_meta( $this->kale, '_pkit_unit', 'bunch' );
 		$this->bread    = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_product',
+				'post_type'   => 'pkit_product',
 				'post_status' => 'publish',
 				'post_title'  => 'Bread',
 			]
 		);
 		$this->location = self::factory()->post->create(
 			[
-				'post_type'   => 'lfuf_location',
+				'post_type'   => 'pkit_location',
 				'post_status' => 'publish',
 				'post_title'  => 'Stand',
 			]
@@ -161,10 +161,10 @@ final class HarvestListTest extends WP_UnitTestCase {
 		$this->seed_orders();
 
 		wp_set_current_user( 0 );
-		$this->assertSame( 401, rest_do_request( new WP_REST_Request( 'GET', '/lfuf/v1/preorders/harvest' ) )->get_status() );
+		$this->assertSame( 401, rest_do_request( new WP_REST_Request( 'GET', '/producerkit/v1/preorders/harvest' ) )->get_status() );
 
 		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
-		$response = rest_do_request( new WP_REST_Request( 'GET', '/lfuf/v1/preorders/harvest' ) );
+		$response = rest_do_request( new WP_REST_Request( 'GET', '/producerkit/v1/preorders/harvest' ) );
 		$this->assertSame( 200, $response->get_status() );
 		$this->assertCount( 2, $response->get_data() );
 	}

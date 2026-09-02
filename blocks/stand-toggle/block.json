@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/stand-toggle",
-    "version": "1.1.0",
+    "name": "producerkit/stand-toggle",
+    "version": "2.0.0",
     "title": "Stand Quick Toggle",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "controls-repeat",
     "description": "A quick-toggle control panel that renders in the editor for switching stand status. Shows a live toggle + message field. Renders nothing on the front end (admin tool only).",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "locationId": {
             "type": "number",

@@ -1,0 +1,94 @@
+/**
+ * Commission Request Form.
+ *
+ * Deliberately restrained: inherits the theme's type and colour, and only
+ * lays the fields out. The one non-negotiable rule is the honeypot, which
+ * must be invisible to people without being display:none — some bots skip
+ * fields that are.
+ */
+
+.pkit-commission-form__heading {
+	margin-block-end: 0.25em;
+}
+
+.pkit-commission-form__intro {
+	margin-block-end: 1.5em;
+}
+
+.pkit-commission-form__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35em;
+	margin-block-end: 1.1em;
+}
+
+.pkit-commission-form__field label {
+	font-weight: 600;
+}
+
+.pkit-commission-form__field input,
+.pkit-commission-form__field select,
+.pkit-commission-form__field textarea {
+	width: 100%;
+	max-width: 34em;
+	padding: 0.5em 0.65em;
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+}
+
+.pkit-commission-form__field textarea {
+	resize: vertical;
+}
+
+.pkit-commission-form__hint {
+	font-size: 0.85em;
+	opacity: 0.75;
+}
+
+/*
+ * Off-canvas rather than display:none — a bot that skips hidden inputs would
+ * otherwise never trip it, which defeats the point.
+ */
+.pkit-commission-form__hp {
+	position: absolute !important;
+	left: -9999px !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.pkit-commission-form__actions {
+	margin-block-start: 1.5em;
+}
+
+.pkit-commission-form__submit[disabled] {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+.pkit-commission-form__message:empty {
+	display: none;
+}
+
+.pkit-commission-form__message {
+	margin-block-start: 1em;
+	padding: 0.75em 1em;
+	border-inline-start: 4px solid currentcolor;
+}
+
+.pkit-commission-form__message.is-success {
+	border-color: #1a6b1a;
+}
+
+.pkit-commission-form__message.is-error {
+	border-color: #d63638;
+}
+
+.pkit-commission-form__notice {
+	padding: 0.75em 1em;
+	border: 1px dashed currentcolor;
+	opacity: 0.8;
+}

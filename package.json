@@ -1,6 +1,6 @@
 {
-	"name": "farm-stand-manager",
-	"version": "1.1.0",
+	"name": "producerkit",
+	"version": "2.0.0",
 	"description": "Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.",
 	"private": true,
 	"scripts": {

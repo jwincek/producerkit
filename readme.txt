@@ -1,18 +1,18 @@
-=== Farm Stand Manager ===
+=== ProducerKit ===
 Contributors: jeromewincek
-Tags: farm stand, farmers market, availability, products, events
+Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
-Tested up to: 7.0
-Stable tag: 1.1.0
+Tested up to: 7.1
+Stable tag: 2.0.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.
+Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers.
 
 == Description ==
 
-Farm Stand Manager gives small farms, farm stands, and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and donation-friendly farm events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
+ProducerKit gives small farms, makers, beekeepers and market gardeners a complete toolkit for running their web presence: a product catalog, sales locations, a live availability board, an open/closed stand banner, and events with RSVPs — all managed from the WordPress admin, with no build step and no external services.
 
 = Products and sources =
 
@@ -61,9 +61,9 @@ Farm Stand Manager gives small farms, farm stands, and market gardeners a comple
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/farm-stand-manager`, or install through the WordPress plugins screen.
+1. Upload the plugin files to `/wp-content/plugins/producerkit`, or install through the WordPress plugins screen.
 2. Activate the plugin.
-3. Go to **Farm Stand** in the admin sidebar and click **Load Sample Data** to explore the blocks with realistic content (remove it any time with one click).
+3. Go to **ProducerKit** in the admin sidebar and click **Load Sample Data** to explore the blocks with realistic content (remove it any time with one click).
 4. Create your real **Locations** and **Products**, then add the blocks to your pages.
 
 == Frequently Asked Questions ==
@@ -78,11 +78,11 @@ The availability board and stand status banner are server-rendered and then kept
 
 = Can I turn off features I don't use? =
 
-Yes. Feature modules (stand status, availability board, event manager, notifications, pre-orders) can be disabled via the `lfuf_active_modules` filter; only the core data layer is required.
+Yes. Feature modules (stand status, availability board, event manager, notifications, pre-orders) can be disabled via the `pkit_active_modules` filter; only the core data layer is required.
 
 = What are Abilities? =
 
-The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. Farm Stand Manager registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`.
+The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`.
 
 = Does the RSVP feature store personal data? =
 
@@ -106,8 +106,17 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 2.0.0 =
+* **Breaking: no upgrade path from 1.x.** Every stored identifier was renamed and nothing is migrated. Content saved by 1.x is not read by 2.0.0. Do not update a site with real data — export first, or stay on 1.1.0.
+* Producer profiles: sixteen trades, each re-labelling the product fields and seeding that trade's vocabulary. A site can run more than one, and each person chooses which trade's wording they see.
+* Commissions: made-to-order requests with a quote sent by email, accept or decline by link, an admin queue, and a request form block.
+* Optional WooCommerce module, so requests can settle through a store when one is present and directly when it is not.
+* Admin menu consolidated to three items, with the catalogue and events renamed Catalog and Calendar so they do not collide with WooCommerce and The Events Calendar.
+* Fixed: an RSVP placed through an Event Card never recorded that the event had filled.
+* Fixed: commission rate limiting hashed visitor IP addresses with an unsalted digest.
+
 = 1.1.0 =
-* Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `lfuf_product_placeholder_url` to override or disable.
+* Products without a photo now show a muted illustration based on their product type, so the availability board and product cards no longer have gaps. Filter `pkit_product_placeholder_url` to override or disable.
 
 = 1.0.2 =
 * Fixed the availability table not being created at all on MySQL servers using STRICT_TRANS_TABLES (the default since MySQL 5.7), which left the availability board, quick entry, Fresh Sheet and REST endpoints with no data.
@@ -129,8 +138,11 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Upgrade Notice ==
 
+= 2.0.0 =
+Do not update an existing site without exporting first. This release renames every stored identifier — post types, taxonomies, meta keys and database tables — and provides no migration, so content created by 1.x will not be visible. It is safe on a new install.
+
 = 1.1.0 =
-Products without a photo now show a type-based placeholder image. Filter `lfuf_product_placeholder_url` and return an empty string to keep the previous behaviour.
+Products without a photo now show a type-based placeholder image. Filter `pkit_product_placeholder_url` and return an empty string to keep the previous behaviour.
 
 = 1.0.2 =
 Important if your host runs MySQL in strict mode: the availability table was never created. This release fixes the schema and repairs existing sites automatically.

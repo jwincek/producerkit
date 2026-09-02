@@ -1,5 +1,5 @@
 /**
- * Event Editor Sidebar — custom panels for lfuf_event meta.
+ * Event Editor Sidebar — custom panels for pkit_event meta.
  *
  * Panels:
  *   1. Event Details   — date/time pickers, location, donation link
@@ -60,11 +60,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_event' ) {
+		if ( postType !== 'pkit_event' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_event', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_event', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
@@ -75,15 +75,15 @@
 		}
 
 		// Parse start/end into date + time.
-		const start = splitDatetime( meta._lfuf_start_datetime );
-		const end = splitDatetime( meta._lfuf_end_datetime );
+		const start = splitDatetime( meta._pkit_start_datetime );
+		const end = splitDatetime( meta._pkit_end_datetime );
 
 		// Fetch locations for the selector.
 		const locations = useSelect( function ( select ) {
 			return (
 				select( 'core' ).getEntityRecords(
 					'postType',
-					'lfuf_location',
+					'pkit_location',
 					{
 						per_page: 50,
 						status: 'publish',
@@ -105,12 +105,12 @@
 		);
 
 		// Validation.
-		const noStartDate = ! meta._lfuf_start_datetime;
+		const noStartDate = ! meta._pkit_start_datetime;
 
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-event-details',
+				name: 'pkit-event-details',
 				title: 'Event Details',
 				initialOpen: true,
 				icon: 'calendar-alt',
@@ -149,7 +149,7 @@
 					value: start.date,
 					onChange( val ) {
 						updateMeta(
-							'_lfuf_start_datetime',
+							'_pkit_start_datetime',
 							joinDatetime( val, start.time )
 						);
 					},
@@ -161,7 +161,7 @@
 					value: start.time,
 					onChange( val ) {
 						updateMeta(
-							'_lfuf_start_datetime',
+							'_pkit_start_datetime',
 							joinDatetime( start.date, val )
 						);
 					},
@@ -190,7 +190,7 @@
 					value: end.date || start.date, // Default to same day.
 					onChange( val ) {
 						updateMeta(
-							'_lfuf_end_datetime',
+							'_pkit_end_datetime',
 							joinDatetime( val, end.time )
 						);
 					},
@@ -202,7 +202,7 @@
 					value: end.time,
 					onChange( val ) {
 						updateMeta(
-							'_lfuf_end_datetime',
+							'_pkit_end_datetime',
 							joinDatetime( end.date || start.date, val )
 						);
 					},
@@ -213,11 +213,11 @@
 			// Location.
 			el( SelectControl, {
 				label: 'Location',
-				value: meta._lfuf_event_location_id || 0,
+				value: meta._pkit_event_location_id || 0,
 				options: locationOptions,
 				onChange( val ) {
 					updateMeta(
-						'_lfuf_event_location_id',
+						'_pkit_event_location_id',
 						parseInt( val, 10 )
 					);
 				},
@@ -227,9 +227,9 @@
 			// Donation link.
 			el( TextControl, {
 				label: 'Donation / Payment Link',
-				value: meta._lfuf_donation_link || '',
+				value: meta._pkit_donation_link || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_donation_link', val );
+					updateMeta( '_pkit_donation_link', val );
 				},
 				placeholder: 'https://venmo.com/examplefarm',
 				help: 'Venmo link or other payment URL.',
@@ -247,11 +247,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_event' ) {
+		if ( postType !== 'pkit_event' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_event', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_event', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
@@ -261,12 +261,12 @@
 			setMeta( Object.assign( {}, meta, updated ) );
 		}
 
-		const rsvpEnabled = !! meta._lfuf_em_rsvp_enabled;
+		const rsvpEnabled = !! meta._pkit_em_rsvp_enabled;
 
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-event-rsvp',
+				name: 'pkit-event-rsvp',
 				title: 'RSVP Settings',
 				initialOpen: false,
 				icon: 'groups',
@@ -276,7 +276,7 @@
 				label: 'Enable RSVPs',
 				checked: rsvpEnabled,
 				onChange( val ) {
-					updateMeta( '_lfuf_em_rsvp_enabled', val );
+					updateMeta( '_pkit_em_rsvp_enabled', val );
 				},
 				help: 'Allow visitors to RSVP on the front end.',
 			} ),
@@ -287,9 +287,9 @@
 						null,
 						el( RangeControl, {
 							label: 'RSVP Cap',
-							value: meta._lfuf_rsvp_cap || 0,
+							value: meta._pkit_rsvp_cap || 0,
 							onChange( val ) {
-								updateMeta( '_lfuf_rsvp_cap', val );
+								updateMeta( '_pkit_rsvp_cap', val );
 							},
 							min: 0,
 							max: 200,
@@ -298,9 +298,9 @@
 
 						el( TextControl, {
 							label: 'Button Label',
-							value: meta._lfuf_em_rsvp_label || '',
+							value: meta._pkit_em_rsvp_label || '',
 							onChange( val ) {
-								updateMeta( '_lfuf_em_rsvp_label', val );
+								updateMeta( '_pkit_em_rsvp_label', val );
 							},
 							placeholder: "I'm coming!",
 							help: 'Custom text for the RSVP button.',
@@ -308,9 +308,9 @@
 
 						el( ToggleControl, {
 							label: 'Manually Close RSVPs',
-							checked: !! meta._lfuf_em_rsvp_closed,
+							checked: !! meta._pkit_em_rsvp_closed,
 							onChange( val ) {
-								updateMeta( '_lfuf_em_rsvp_closed', val );
+								updateMeta( '_pkit_em_rsvp_closed', val );
 							},
 							help: 'Close RSVPs regardless of the cap.',
 						} )
@@ -328,11 +328,11 @@
 			return select( 'core/editor' ).getCurrentPostType();
 		}, [] );
 
-		if ( postType !== 'lfuf_event' ) {
+		if ( postType !== 'pkit_event' ) {
 			return null;
 		}
 
-		const _meta = useEntityProp( 'postType', 'lfuf_event', 'meta' );
+		const _meta = useEntityProp( 'postType', 'pkit_event', 'meta' );
 		const meta = _meta[ 0 ];
 		const setMeta = _meta[ 1 ];
 
@@ -345,7 +345,7 @@
 		return el(
 			PluginDocumentSettingPanel,
 			{
-				name: 'lfuf-event-info',
+				name: 'pkit-event-info',
 				title: 'Event Info',
 				initialOpen: false,
 				icon: 'info-outline',
@@ -353,9 +353,9 @@
 
 			el( TextControl, {
 				label: 'Cost / Donation Note',
-				value: meta._lfuf_em_cost_note || '',
+				value: meta._pkit_em_cost_note || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_em_cost_note', val );
+					updateMeta( '_pkit_em_cost_note', val );
 				},
 				placeholder: 'Donation-based — suggested $10/person',
 				help: 'Shown on the event card.',
@@ -363,9 +363,9 @@
 
 			el( TextControl, {
 				label: 'What to Bring',
-				value: meta._lfuf_em_what_to_bring || '',
+				value: meta._pkit_em_what_to_bring || '',
 				onChange( val ) {
-					updateMeta( '_lfuf_em_what_to_bring', val );
+					updateMeta( '_pkit_em_what_to_bring', val );
 				},
 				placeholder: 'A side dish or dessert to share',
 				help: 'Shown on the event card with a 🧺 icon.',
@@ -373,14 +373,14 @@
 
 			el( ToggleControl, {
 				label: 'Event Cancelled',
-				checked: !! meta._lfuf_em_cancelled,
+				checked: !! meta._pkit_em_cancelled,
 				onChange( val ) {
-					updateMeta( '_lfuf_em_cancelled', val );
+					updateMeta( '_pkit_em_cancelled', val );
 				},
 				help: 'Mark this event as cancelled. It will show a cancelled badge.',
 			} ),
 
-			!! meta._lfuf_em_cancelled
+			!! meta._pkit_em_cancelled
 				? el(
 						Notice,
 						{
@@ -397,17 +397,17 @@
 	 * Register
 	 * ───────────────────────────────────────────── */
 
-	registerPlugin( 'lfuf-event-details', {
+	registerPlugin( 'pkit-event-details', {
 		render: EventDetailsPanel,
 		icon: 'calendar-alt',
 	} );
 
-	registerPlugin( 'lfuf-event-rsvp', {
+	registerPlugin( 'pkit-event-rsvp', {
 		render: EventRsvpPanel,
 		icon: 'groups',
 	} );
 
-	registerPlugin( 'lfuf-event-info', {
+	registerPlugin( 'pkit-event-info', {
 		render: EventInfoPanel,
 		icon: 'info-outline',
 	} );

@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lfuf/stand-hours-schedule",
-    "version": "1.1.0",
+    "name": "producerkit/stand-hours-schedule",
+    "version": "2.0.0",
     "title": "Stand Hours Schedule",
-    "category": "leftfield",
+    "category": "producerkit",
     "icon": "clock",
     "description": "Display the stand's weekly schedule with visual indicators for today's hours. Reads from the stand's schedule meta.",
-    "textdomain": "farm-stand-manager",
+    "textdomain": "producerkit",
     "attributes": {
         "locationId": {
             "type": "number",

@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace Leftfield\Core\AdminColumns;
+namespace ProducerKit\Core\AdminColumns;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,15 +22,15 @@ defined( 'ABSPATH' ) || exit;
  * ─────────────────────────────────────────────── */
 
 add_filter(
-	'manage_lfuf_product_posts_columns',
+	'manage_pkit_product_posts_columns',
 	function ( array $columns ): array {
 		$new = [];
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			// Insert after title.
 			if ( $key === 'title' ) {
-				$new['lfuf_price']        = __( 'Price', 'farm-stand-manager' );
-				$new['lfuf_availability'] = __( 'Availability', 'farm-stand-manager' );
+				$new['pkit_price']        = __( 'Price', 'producerkit' );
+				$new['pkit_availability'] = __( 'Availability', 'producerkit' );
 			}
 		}
 		// Remove the default date column — not useful for products.
@@ -40,12 +40,12 @@ add_filter(
 );
 
 add_action(
-	'manage_lfuf_product_posts_custom_column',
+	'manage_pkit_product_posts_custom_column',
 	function ( string $column, int $post_id ): void {
 		switch ( $column ) {
-			case 'lfuf_price':
-				$price = get_post_meta( $post_id, '_lfuf_price', true );
-				$unit  = get_post_meta( $post_id, '_lfuf_unit', true );
+			case 'pkit_price':
+				$price = get_post_meta( $post_id, '_pkit_price', true );
+				$unit  = get_post_meta( $post_id, '_pkit_unit', true );
 				if ( $price ) {
 					echo esc_html( $price );
 					if ( $unit ) {
@@ -56,8 +56,8 @@ add_action(
 				}
 				break;
 
-			case 'lfuf_availability':
-				$rows = \Leftfield\Core\Availability\get_current( $post_id );
+			case 'pkit_availability':
+				$rows = \ProducerKit\Core\Availability\get_current( $post_id );
 				if ( ! empty( $rows ) ) {
 					$row         = $rows[0];
 					$status_text = ucfirst( str_replace( '_', ' ', $row->status ) );
@@ -99,9 +99,9 @@ add_action(
 
 // Make price column sortable.
 add_filter(
-	'manage_edit-lfuf_product_sortable_columns',
+	'manage_edit-pkit_product_sortable_columns',
 	function ( array $columns ): array {
-		$columns['lfuf_price'] = 'lfuf_price';
+		$columns['pkit_price'] = 'pkit_price';
 		return $columns;
 	}
 );
@@ -112,8 +112,8 @@ add_action(
 		if ( ! is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
-		if ( $query->get( 'orderby' ) === 'lfuf_price' ) {
-			$query->set( 'meta_key', '_lfuf_price' );
+		if ( $query->get( 'orderby' ) === 'pkit_price' ) {
+			$query->set( 'meta_key', '_pkit_price' );
 			$query->set( 'orderby', 'meta_value' );
 		}
 	}
@@ -124,15 +124,15 @@ add_action(
  * ─────────────────────────────────────────────── */
 
 add_filter(
-	'manage_lfuf_event_posts_columns',
+	'manage_pkit_event_posts_columns',
 	function ( array $columns ): array {
 		$new = [];
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( $key === 'title' ) {
-				$new['lfuf_event_date']     = __( 'Event Date', 'farm-stand-manager' );
-				$new['lfuf_event_location'] = __( 'Location', 'farm-stand-manager' );
-				$new['lfuf_event_rsvp']     = __( 'RSVPs', 'farm-stand-manager' );
+				$new['pkit_event_date']     = __( 'Event Date', 'producerkit' );
+				$new['pkit_event_location'] = __( 'Location', 'producerkit' );
+				$new['pkit_event_rsvp']     = __( 'RSVPs', 'producerkit' );
 			}
 		}
 		unset( $new['date'] );
@@ -141,12 +141,12 @@ add_filter(
 );
 
 add_action(
-	'manage_lfuf_event_posts_custom_column',
+	'manage_pkit_event_posts_custom_column',
 	function ( string $column, int $post_id ): void {
 		switch ( $column ) {
-			case 'lfuf_event_date':
-				$start = get_post_meta( $post_id, '_lfuf_start_datetime', true );
-				$end   = get_post_meta( $post_id, '_lfuf_end_datetime', true );
+			case 'pkit_event_date':
+				$start = get_post_meta( $post_id, '_pkit_start_datetime', true );
+				$end   = get_post_meta( $post_id, '_pkit_end_datetime', true );
 
 				if ( $start ) {
 					$start_ts = strtotime( $start );
@@ -167,13 +167,13 @@ add_action(
 				}
 
 				// Cancelled badge.
-				if ( (bool) get_post_meta( $post_id, '_lfuf_em_cancelled', true ) ) {
+				if ( (bool) get_post_meta( $post_id, '_pkit_em_cancelled', true ) ) {
 					echo '<br><span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:11px;font-weight:600;background:#fee2e2;color:#991b1b">Cancelled</span>';
 				}
 				break;
 
-			case 'lfuf_event_location':
-				$location_id = (int) get_post_meta( $post_id, '_lfuf_event_location_id', true );
+			case 'pkit_event_location':
+				$location_id = (int) get_post_meta( $post_id, '_pkit_event_location_id', true );
 				if ( $location_id > 0 ) {
 					$location = get_post( $location_id );
 					if ( $location ) {
@@ -190,17 +190,17 @@ add_action(
 				}
 				break;
 
-			case 'lfuf_event_rsvp':
-				$enabled = (bool) get_post_meta( $post_id, '_lfuf_em_rsvp_enabled', true );
+			case 'pkit_event_rsvp':
+				$enabled = (bool) get_post_meta( $post_id, '_pkit_em_rsvp_enabled', true );
 				if ( ! $enabled ) {
 					echo '<span style="opacity:0.4">Off</span>';
 					break;
 				}
 
-				if ( function_exists( 'Leftfield\\EventManager\\RSVP\\get_headcount' ) ) {
-					$headcount = \Leftfield\EventManager\RSVP\get_headcount( $post_id );
-					$cap       = (int) get_post_meta( $post_id, '_lfuf_rsvp_cap', true );
-					$closed    = (bool) get_post_meta( $post_id, '_lfuf_em_rsvp_closed', true );
+				if ( function_exists( 'ProducerKit\\EventManager\\RSVP\\get_headcount' ) ) {
+					$headcount = \ProducerKit\EventManager\RSVP\get_headcount( $post_id );
+					$cap       = (int) get_post_meta( $post_id, '_pkit_rsvp_cap', true );
+					$closed    = (bool) get_post_meta( $post_id, '_pkit_em_rsvp_closed', true );
 
 					echo '<strong>' . (int) $headcount . '</strong>';
 					if ( $cap > 0 ) {
@@ -225,9 +225,9 @@ add_action(
 
 // Make event date sortable.
 add_filter(
-	'manage_edit-lfuf_event_sortable_columns',
+	'manage_edit-pkit_event_sortable_columns',
 	function ( array $columns ): array {
-		$columns['lfuf_event_date'] = 'lfuf_event_date';
+		$columns['pkit_event_date'] = 'pkit_event_date';
 		return $columns;
 	}
 );
@@ -238,8 +238,8 @@ add_action(
 		if ( ! is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
-		if ( $query->get( 'orderby' ) === 'lfuf_event_date' ) {
-			$query->set( 'meta_key', '_lfuf_start_datetime' );
+		if ( $query->get( 'orderby' ) === 'pkit_event_date' ) {
+			$query->set( 'meta_key', '_pkit_start_datetime' );
 			$query->set( 'orderby', 'meta_value' );
 		}
 	}
@@ -252,10 +252,10 @@ add_action(
 		if (
 		is_admin()
 		&& $query->is_main_query()
-		&& $query->get( 'post_type' ) === 'lfuf_event'
+		&& $query->get( 'post_type' ) === 'pkit_event'
 		&& ! $query->get( 'orderby' )
 		) {
-			$query->set( 'meta_key', '_lfuf_start_datetime' );
+			$query->set( 'meta_key', '_pkit_start_datetime' );
 			$query->set( 'orderby', 'meta_value' );
 			$query->set( 'order', 'ASC' );
 		}
@@ -267,15 +267,15 @@ add_action(
  * ─────────────────────────────────────────────── */
 
 add_filter(
-	'manage_lfuf_location_posts_columns',
+	'manage_pkit_location_posts_columns',
 	function ( array $columns ): array {
 		$new = [];
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( $key === 'title' ) {
-				$new['lfuf_loc_type']    = __( 'Type', 'farm-stand-manager' );
-				$new['lfuf_loc_status']  = __( 'Status', 'farm-stand-manager' );
-				$new['lfuf_loc_address'] = __( 'Address', 'farm-stand-manager' );
+				$new['pkit_loc_type']    = __( 'Type', 'producerkit' );
+				$new['pkit_loc_status']  = __( 'Status', 'producerkit' );
+				$new['pkit_loc_address'] = __( 'Address', 'producerkit' );
 			}
 		}
 		unset( $new['date'] );
@@ -284,16 +284,16 @@ add_filter(
 );
 
 add_action(
-	'manage_lfuf_location_posts_custom_column',
+	'manage_pkit_location_posts_custom_column',
 	function ( string $column, int $post_id ): void {
 		switch ( $column ) {
-			case 'lfuf_loc_type':
-				$type = get_post_meta( $post_id, '_lfuf_location_type', true );
+			case 'pkit_loc_type':
+				$type = get_post_meta( $post_id, '_pkit_location_type', true );
 				echo $type ? esc_html( ucfirst( $type ) ) : '<span style="opacity:0.4">—</span>';
 				break;
 
-			case 'lfuf_loc_status':
-				$is_open = (bool) get_post_meta( $post_id, '_lfuf_is_open', true );
+			case 'pkit_loc_status':
+				$is_open = (bool) get_post_meta( $post_id, '_pkit_is_open', true );
 				if ( $is_open ) {
 					echo '<span style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:12px;font-weight:600;background:#d1fae5;color:#065f46">Open</span>';
 				} else {
@@ -301,8 +301,8 @@ add_action(
 				}
 				break;
 
-			case 'lfuf_loc_address':
-				$address = get_post_meta( $post_id, '_lfuf_address', true );
+			case 'pkit_loc_address':
+				$address = get_post_meta( $post_id, '_pkit_address', true );
 				echo $address ? esc_html( $address ) : '<span style="opacity:0.4">—</span>';
 				break;
 		}
@@ -313,9 +313,9 @@ add_action(
 
 // Make type column sortable.
 add_filter(
-	'manage_edit-lfuf_location_sortable_columns',
+	'manage_edit-pkit_location_sortable_columns',
 	function ( array $columns ): array {
-		$columns['lfuf_loc_type'] = 'lfuf_loc_type';
+		$columns['pkit_loc_type'] = 'pkit_loc_type';
 		return $columns;
 	}
 );
@@ -326,8 +326,8 @@ add_action(
 		if ( ! is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
-		if ( $query->get( 'orderby' ) === 'lfuf_loc_type' ) {
-			$query->set( 'meta_key', '_lfuf_location_type' );
+		if ( $query->get( 'orderby' ) === 'pkit_loc_type' ) {
+			$query->set( 'meta_key', '_pkit_location_type' );
 			$query->set( 'orderby', 'meta_value' );
 		}
 	}
