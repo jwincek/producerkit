@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for producerkit/event-list.
+ * Server-side render for producerkit.
  *
  * Renders upcoming events with Interactivity API directives
  * for type filtering and inline RSVP form submission.
@@ -58,7 +58,7 @@ $has_events = ! empty( $upcoming ) || ! empty( $past );
 
 // Interactivity API state + context.
 wp_interactivity_state(
-	'producerkit/event-list',
+	'producerkit',
 	[
 		'activeTypeFilter' => '',
 	]
@@ -78,7 +78,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 
 <div
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
-	data-wp-interactive="producerkit/event-list"
+	data-wp-interactive="producerkit"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
 	<?php if ( ! $has_events ) : ?>
@@ -91,20 +91,20 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<button
 					type="button"
 					class="pkit-event-list__filter-btn pkit-event-list__filter-btn--active"
-					data-wp-on--click="actions.setTypeFilter"
+					data-wp-on--click="actions.setEventTypeFilter"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => '' ] ) ); ?>'
-					data-wp-class--pkit-event-list__filter-btn--active="state.isCurrentTypeActive"
-					data-wp-bind--aria-pressed="state.isCurrentTypeActive"
+					data-wp-class--pkit-event-list__filter-btn--active="state.isEventTypeActive"
+					data-wp-bind--aria-pressed="state.isEventTypeActive"
 					aria-pressed="true"
 				><?php esc_html_e( 'All Events', 'producerkit' ); ?></button>
 				<?php foreach ( $filter_types as $ft ) : ?>
 					<button
 						type="button"
 						class="pkit-event-list__filter-btn"
-						data-wp-on--click="actions.setTypeFilter"
+						data-wp-on--click="actions.setEventTypeFilter"
 						data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => $ft['slug'] ] ) ); ?>'
-						data-wp-class--pkit-event-list__filter-btn--active="state.isCurrentTypeActive"
-						data-wp-bind--aria-pressed="state.isCurrentTypeActive"
+						data-wp-class--pkit-event-list__filter-btn--active="state.isEventTypeActive"
+						data-wp-bind--aria-pressed="state.isEventTypeActive"
 						aria-pressed="false"
 					><?php echo esc_html( $ft['label'] ); ?></button>
 				<?php endforeach; ?>

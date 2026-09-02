@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for producerkit/preorder-form.
+ * Server-side render for producerkit.
  *
  * Lists orderable products with quantity steppers, contact fields, and a
  * pickup date, submitting to POST /producerkit/v1/preorders via the Interactivity
@@ -102,7 +102,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
 	aria-label="<?php esc_attr_e( 'Pre-order form', 'producerkit' ); ?>"
-	data-wp-interactive="producerkit/preorder-form"
+	data-wp-interactive="producerkit"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
 	<form data-wp-bind--hidden="context.submitted" data-wp-on--submit="actions.submit">

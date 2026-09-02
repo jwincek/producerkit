@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for producerkit/stand-status-banner.
+ * Server-side render for producerkit-banner.
  *
  * Accessibility improvements:
  *   - <section> landmark with aria-label for navigation
@@ -145,7 +145,7 @@ $section_label = sprintf(
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
 	aria-label="<?php echo esc_attr( $section_label ); ?>"
-	data-wp-interactive="producerkit/stand-status"
+	data-wp-interactive="producerkit"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 	data-wp-init="callbacks.initPolling"
 	data-wp-class--pkit-stand-banner--open="context.isOpen"

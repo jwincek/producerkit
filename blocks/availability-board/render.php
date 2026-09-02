@@ -1,6 +1,6 @@
 <?php
 /**
- * Server-side render for producerkit/availability-board.
+ * Server-side render for producerkit.
  *
  * activeStatuses is now an object map { "abundant": true, "available": true }
  * instead of an array, because the Interactivity API reactive proxy
@@ -53,7 +53,7 @@ foreach ( $groups as $group ) {
 }
 
 wp_interactivity_state(
-	'producerkit/availability-board',
+	'producerkit',
 	[
 		'activeStatuses' => $status_map,
 		'allStatuses'    => array_values( $statuses ),
@@ -78,7 +78,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 <section
 	<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>
 	aria-label="<?php esc_attr_e( 'Product Availability', 'producerkit' ); ?>"
-	data-wp-interactive="producerkit/availability-board"
+	data-wp-interactive="producerkit"
 	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns a pre-escaped data-wp-context attribute. ?>
 >
 	<?php if ( $total === 0 ) : ?>
@@ -126,10 +126,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						<button
 							type="button"
 							class="pkit-avail-board__filter-btn pkit-avail-board__filter-btn--active"
-							data-wp-on--click="actions.setTypeFilter"
+							data-wp-on--click="actions.setProductTypeFilter"
 							data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => '' ] ) ); ?>'
-							data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentTypeActive"
-							data-wp-bind--aria-pressed="state.isCurrentTypeActive"
+							data-wp-class--pkit-avail-board__filter-btn--active="state.isProductTypeActive"
+							data-wp-bind--aria-pressed="state.isProductTypeActive"
 							data-type-slug=""
 							aria-pressed="true"
 						><?php esc_html_e( 'All', 'producerkit' ); ?></button>
@@ -137,10 +137,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 							<button
 								type="button"
 								class="pkit-avail-board__filter-btn"
-								data-wp-on--click="actions.setTypeFilter"
+								data-wp-on--click="actions.setProductTypeFilter"
 								data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'filterType' => $ft['slug'] ] ) ); ?>'
-								data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentTypeActive"
-								data-wp-bind--aria-pressed="state.isCurrentTypeActive"
+								data-wp-class--pkit-avail-board__filter-btn--active="state.isProductTypeActive"
+								data-wp-bind--aria-pressed="state.isProductTypeActive"
 								data-type-slug="<?php echo esc_attr( $ft['slug'] ); ?>"
 								aria-pressed="false"
 							><?php echo esc_html( $ft['label'] ); ?></button>

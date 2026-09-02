@@ -30,6 +30,8 @@ producerkit/
 │   ├── sample-data.php                # Load/remove sample data toggle
 │   └── sample-data-markers.php        # Front-end "Sample" badges, admin notices
 ├── assets/js/
+│   ├── store.js                       # Shared Interactivity store (one namespace)
+│   └── interactivity/                 # Feature modules; blocks import these
 │   ├── editor-location.js             # Location CPT sidebar panels
 │   ├── editor-product.js              # Product CPT sidebar panels
 │   └── editor-event.js                # Event CPT sidebar panels
