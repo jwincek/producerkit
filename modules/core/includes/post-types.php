@@ -27,6 +27,57 @@ function nested_post_types(): array {
 // gating it behind is_admin() would buy nothing and cost a test.
 add_filter( 'parent_file', __NAMESPACE__ . '\\keep_parent_open' );
 
+add_filter( 'custom_menu_order', '__return_true' );
+add_filter( 'menu_order', __NAMESPACE__ . '\\group_menu_items' );
+
+/**
+ * The plugin's top-level menu items, in the order they should appear.
+ *
+ * @return string[]
+ */
+function grouped_menu_items(): array {
+	return [
+		'farm-stand-dashboard',
+		'edit.php?post_type=lfuf_product',
+		'edit.php?post_type=lfuf_event',
+	];
+}
+
+/**
+ * Keep this plugin's top-level items together.
+ *
+ * menu_position cannot do this. A plugin that does not set one is placed at
+ * ++$_wp_last_object_menu, which starts at 25 — the same range any sensible
+ * choice for a content plugin lands in — so on a busy site a neighbour drops
+ * between Catalog and Calendar and there is nothing a number can do about it.
+ * Reordering after the fact is the only approach that actually holds.
+ *
+ * Additive: items not ours keep their relative order, and anything we cannot
+ * find (a module switched off, a post type unregistered) is simply skipped.
+ *
+ * @param string[] $order Top-level menu slugs.
+ * @return string[]
+ */
+function group_menu_items( array $order ): array {
+	$ours = array_values( array_intersect( grouped_menu_items(), $order ) );
+
+	// Nothing to do if the parent is absent — without an anchor there is no
+	// meaningful place to gather them.
+	if ( count( $ours ) < 2 || ! in_array( 'farm-stand-dashboard', $ours, true ) ) {
+		return $order;
+	}
+
+	$rest   = array_values( array_diff( $order, $ours ) );
+	$anchor = array_search( 'farm-stand-dashboard', $order, true );
+
+	// Re-insert the group where the parent already sat, so this respects the
+	// parent's menu_position rather than overriding it.
+	$before = array_slice( $rest, 0, count( array_filter( array_slice( $order, 0, (int) $anchor ), static fn ( $slug ) => ! in_array( $slug, $ours, true ) ) ) );
+	$after  = array_slice( $rest, count( $before ) );
+
+	return array_merge( $before, $ours, $after );
+}
+
 /**
  * Keep the ProducerKit menu highlighted on a nested type's add/edit screens.
  *
@@ -243,7 +294,7 @@ function register_event(): void {
 				'with_front' => false,
 			],
 			'menu_icon'      => 'dashicons-calendar-alt',
-			'menu_position'  => 29,
+			'menu_position'  => 27,
 			'supports'       => [ 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ],
 			'show_in_rest'   => true,
 			'rest_base'      => 'events',

@@ -117,7 +117,10 @@ The shared data layer. Registers four custom post types (`lfuf_product`, `lfuf_s
 
 ### Admin menu
 
-Three top-level items, not five. **Catalog** and **Events** stay top-level because they own taxonomies; **Sources** and **Locations** are nested under **ProducerKit**, because they own none and are configured once rather than worked in daily.
+Three top-level items, not five, and adjacent — **ProducerKit**, **Catalog**, **Calendar** sit together wherever the parent lands.
+
+Adjacency comes from a `menu_order` filter rather than `menu_position`, because a position cannot deliver it: a plugin that sets none is placed at `++$_wp_last_object_menu`, which starts at 25 — the same range any content plugin would choose — so on a busy site a neighbour drops between two of ours whatever number we pick. The reorder is additive: everything else keeps its relative order, and anything missing (a module switched off) is skipped.
+ **Catalog** and **Events** stay top-level because they own taxonomies; **Sources** and **Locations** are nested under **ProducerKit**, because they own none and are configured once rather than worked in daily.
 
 That split is forced by core: `wp-admin/menu.php` skips a post type whose `show_in_menu` is a string, so nesting one drops its "Add New" entry *and* every taxonomy submenu it has. Nesting Catalog would put up to five taxonomies out of reach of the menu entirely.
 

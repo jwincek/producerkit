@@ -31,7 +31,10 @@ function register_dashboard_page(): void {
 		'farm-stand-dashboard',
 		__NAMESPACE__ . '\\render_dashboard',
 		'dashicons-store',
-		3,
+		// Sits with its own content types (26, 27) rather than above Posts.
+		// add_menu_page() nudges by a fraction on collision, so landing on
+		// Comments' 25 puts this directly beneath it rather than replacing it.
+		25,
 	);
 }
 

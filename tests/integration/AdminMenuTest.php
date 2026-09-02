@@ -87,6 +87,93 @@ final class AdminMenuTest extends WP_UnitTestCase {
 		$pagenow = 'index.php';
 	}
 
+	/* ── Grouping ─────────────────────────────────────────────── */
+
+	/**
+	 * A busy sidebar, ordered the way a real one was: a neighbour had landed
+	 * between Catalog and Calendar.
+	 *
+	 * @return string[]
+	 */
+	private function busy_sidebar(): array {
+		return [
+			'index.php',
+			'edit.php',
+			'edit.php?post_type=tribe_events',
+			'edit-comments.php',
+			'shelterkit-donations',
+			'farm-stand-dashboard',
+			'edit.php?post_type=lfuf_product',
+			'edit.php?post_type=shelterkit_pet',
+			'edit.php?post_type=lfuf_event',
+			'woocommerce',
+		];
+	}
+
+	/**
+	 * menu_position cannot deliver this. A plugin that sets none is placed at
+	 * ++$_wp_last_object_menu, which starts at 25 — the same range any content
+	 * plugin would pick — so neighbours land in the middle whatever number we
+	 * choose.
+	 */
+	public function test_the_plugins_items_end_up_adjacent(): void {
+		$after = Post_Types\group_menu_items( $this->busy_sidebar() );
+
+		$positions = [
+			array_search( 'farm-stand-dashboard', $after, true ),
+			array_search( 'edit.php?post_type=lfuf_product', $after, true ),
+			array_search( 'edit.php?post_type=lfuf_event', $after, true ),
+		];
+
+		$this->assertSame( [ $positions[0], $positions[0] + 1, $positions[0] + 2 ], $positions );
+	}
+
+	public function test_grouping_neither_drops_nor_duplicates_anything(): void {
+		$before = $this->busy_sidebar();
+		$after  = Post_Types\group_menu_items( $before );
+
+		$this->assertCount( count( $before ), $after );
+		$this->assertSame( $after, array_unique( $after ) );
+		sort( $before );
+		$sorted = $after;
+		sort( $sorted );
+		$this->assertSame( $before, $sorted );
+	}
+
+	public function test_other_plugins_keep_their_relative_order(): void {
+		$after = Post_Types\group_menu_items( $this->busy_sidebar() );
+
+		$others = array_values(
+			array_filter( $after, static fn ( $slug ) => ! str_contains( $slug, 'lfuf' ) && 'farm-stand-dashboard' !== $slug )
+		);
+
+		$this->assertSame(
+			[ 'index.php', 'edit.php', 'edit.php?post_type=tribe_events', 'edit-comments.php', 'shelterkit-donations', 'edit.php?post_type=shelterkit_pet', 'woocommerce' ],
+			$others
+		);
+	}
+
+	/**
+	 * Without the parent there is no anchor, so the safe move is to leave the
+	 * sidebar exactly as found rather than invent a position.
+	 */
+	public function test_grouping_is_a_no_op_without_the_parent_menu(): void {
+		$order = [ 'index.php', 'edit.php?post_type=lfuf_product', 'woocommerce', 'edit.php?post_type=lfuf_event' ];
+
+		$this->assertSame( $order, Post_Types\group_menu_items( $order ) );
+	}
+
+	public function test_grouping_skips_items_that_are_not_there(): void {
+		// Events module off, so only two of the three exist.
+		$order = [ 'index.php', 'farm-stand-dashboard', 'woocommerce', 'edit.php?post_type=lfuf_product' ];
+		$after = Post_Types\group_menu_items( $order );
+
+		$this->assertSame(
+			[ 'index.php', 'farm-stand-dashboard', 'edit.php?post_type=lfuf_product', 'woocommerce' ],
+			$after
+		);
+	}
+
 	/* ── Telling it apart from WooCommerce ────────────────────── */
 
 	/**
