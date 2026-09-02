@@ -69,7 +69,7 @@ final class ProducerProfilesTest extends WP_UnitTestCase {
 			$this->assertContains( $craft, $slugs, "Craft profile '{$craft}' was not ported." );
 		}
 
-		foreach ( [ 'bakery', 'author', 'painting', 'screen-printing', 'taxidermy' ] as $added ) {
+		foreach ( [ 'bakery', 'author', 'painting', 'screen-printing', 'taxidermy', 'comics' ] as $added ) {
 			$this->assertContains( $added, $slugs, "Profile '{$added}' is missing." );
 		}
 
