@@ -84,6 +84,11 @@ function handle_save(): void {
 		}
 	}
 
+	// ── Site: what happens to the data if the plugin is deleted. ──
+	if ( current_user_can( 'manage_options' ) ) {
+		update_option( 'pkit_delete_data_on_uninstall', isset( $_POST['delete_on_uninstall'] ) ? 1 : 0 );
+	}
+
 	// ── Personal: whose words this person reads. ──
 	$mine = isset( $_POST['my_profile'] ) ? sanitize_key( wp_unslash( $_POST['my_profile'] ) ) : '';
 
@@ -191,6 +196,36 @@ function render_page(): void {
 							</td>
 						</tr>
 					<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
+
+			<?php if ( $can_site ) : ?>
+				<h2><?php esc_html_e( 'If you delete this plugin', 'producerkit' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tbody>
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Your data', 'producerkit' ); ?></th>
+							<td>
+								<label for="pkit-delete-on-uninstall">
+									<input
+										type="checkbox"
+										name="delete_on_uninstall"
+										id="pkit-delete-on-uninstall"
+										value="1"
+										<?php checked( (bool) get_option( 'pkit_delete_data_on_uninstall' ) ); ?>
+									>
+									<?php esc_html_e( 'Delete everything when the plugin is deleted', 'producerkit' ); ?>
+								</label>
+								<p class="description" style="max-width:44em">
+									<?php esc_html_e( 'Off by default, because deleting a plugin to troubleshoot something should not destroy a catalogue. Version numbers, scheduled jobs and rate-limit records are always cleaned up either way; this decides the rest — products, sources, locations, events, and the RSVPs, pre-orders and commissions that go with them.', 'producerkit' ); ?>
+								</p>
+								<p class="description" style="max-width:44em">
+									<strong><?php esc_html_e( 'There is no undo.', 'producerkit' ); ?></strong>
+									<?php esc_html_e( 'Deactivating the plugin never deletes anything; only deleting it does, and only with this ticked.', 'producerkit' ); ?>
+								</p>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			<?php endif; ?>

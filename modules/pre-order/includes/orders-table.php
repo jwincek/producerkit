@@ -99,6 +99,30 @@ function get_client_ip(): string {
 }
 
 /**
+ * Remove pre-orders for a pickup location being permanently deleted.
+ *
+ * An order whose location is gone cannot be collected and cannot be shown; it
+ * just keeps a customer's name, email and phone number indefinitely.
+ *
+ * Deliberately not hooked for pkit_product: an order's line items snapshot the
+ * product title and price when it was placed, so a deleted product leaves the
+ * order readable rather than dangling, and cancelling someone's whole order
+ * because one item was tidied away would be worse than the orphan.
+ */
+function on_post_delete( int $post_id, \WP_Post $post ): void {
+	global $wpdb;
+
+	if ( 'pkit_location' !== $post->post_type ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table; no cache to invalidate.
+	$wpdb->delete( table_name(), [ 'location_id' => $post_id ], [ '%d' ] );
+}
+
+add_action( 'before_delete_post', __NAMESPACE__ . '\\on_post_delete', 10, 2 );
+
+/**
  * Order lifecycle. Staff move orders forward; customers may cancel while
  * the order is still pending or confirmed.
  *

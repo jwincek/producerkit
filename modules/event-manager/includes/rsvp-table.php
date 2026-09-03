@@ -82,6 +82,30 @@ function get_client_ip(): string {
 }
 
 /**
+ * Remove RSVPs for an event being permanently deleted.
+ *
+ * These rows hold attendee names, email addresses and notes. Left behind they
+ * point at a post id that no longer exists, are invisible in the admin, and
+ * outlive the event indefinitely — the availability table has cleaned up after
+ * itself this way since it was written; RSVPs never did.
+ *
+ * before_delete_post, not trash: a trashed event can be restored, and its
+ * guest list should come back with it.
+ */
+function on_post_delete( int $post_id, \WP_Post $post ): void {
+	global $wpdb;
+
+	if ( 'pkit_event' !== $post->post_type ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table; no cache to invalidate.
+	$wpdb->delete( table_name(), [ 'event_id' => $post_id ], [ '%d' ] );
+}
+
+add_action( 'before_delete_post', __NAMESPACE__ . '\\on_post_delete', 10, 2 );
+
+/**
  * Add an RSVP to an event with full validation and rate limiting.
  *
  * @param array{
