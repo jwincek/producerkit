@@ -6,6 +6,28 @@ import { store, getContext } from '@wordpress/interactivity';
 import { NAMESPACE } from '../store.js';
 
 store( NAMESPACE, {
+	state: {
+		/**
+		 * Where the customer can view or cancel this order.
+		 *
+		 * Empty until the order comes back, because the token is what makes
+		 * the link work — the success panel previously printed that token as
+		 * a bare "cancellation code" with nowhere to use it.
+		 */
+		get orderUrl() {
+			const ctx = getContext();
+
+			if ( ! ctx.token || ! ctx.orderUrlTemplate ) {
+				return '';
+			}
+
+			return ctx.orderUrlTemplate.replace(
+				'__TOKEN__',
+				encodeURIComponent( ctx.token )
+			);
+		},
+	},
+
 	actions: {
 		updateQty( event ) {
 			const ctx = getContext();

@@ -74,22 +74,30 @@ $days_label  = $constraints['allowed_days'] !== null
 	: '';
 
 $context = [
-	'restBase'     => esc_url_raw( rest_url( 'producerkit/v1' ) ),
-	'locationId'   => $location_id,
-	'items'        => (object) [],
-	'name'         => '',
-	'email'        => '',
-	'phone'        => '',
-	'pickupDate'   => '',
-	'allowedDays'  => $constraints['allowed_days'],
-	'allowedLabel' => $days_label,
-	'blackouts'    => $constraints['blackouts'],
-	'note'         => '',
-	'_hp'          => '',
-	'submitting'   => false,
-	'submitted'    => false,
-	'error'        => '',
-	'token'        => '',
+	'restBase'         => esc_url_raw( rest_url( 'producerkit/v1' ) ),
+	'locationId'       => $location_id,
+	'items'            => (object) [],
+	'name'             => '',
+	'email'            => '',
+	'phone'            => '',
+	'pickupDate'       => '',
+	'allowedDays'      => $constraints['allowed_days'],
+	'allowedLabel'     => $days_label,
+	'blackouts'        => $constraints['blackouts'],
+	'note'             => '',
+	'_hp'              => '',
+	'submitting'       => false,
+	'submitted'        => false,
+	'error'            => '',
+	'token'            => '',
+	// Template for the "view or cancel" link. The token is only known once the
+	// order comes back, so the store substitutes it; the URL has to be built
+	// in PHP because home_url() is not available to the view module.
+	//
+	// A placeholder rather than a bare prefix: add_query_arg() drops the "="
+	// for an empty value, so concatenating onto url_for( '' ) would produce
+	// ?pkit_preorderTOKEN. Underscores survive URL encoding; % does not.
+	'orderUrlTemplate' => \ProducerKit\PreOrder\OrderResponse\url_for( '__TOKEN__' ),
 ];
 
 $wrapper_attrs = get_block_wrapper_attributes(
@@ -198,8 +206,8 @@ $wrapper_attrs = get_block_wrapper_attributes(
 	<div class="pkit-preorder-form__success" role="status" data-wp-bind--hidden="!context.submitted" hidden>
 		<h3><?php esc_html_e( 'Pre-order received!', 'producerkit' ); ?></h3>
 		<p>
-			<?php esc_html_e( 'We\'ll have it ready on your pickup date. Keep this cancellation code in case your plans change:', 'producerkit' ); ?>
-			<code data-wp-text="context.token"></code>
+			<?php esc_html_e( 'We\'ll have it ready on your pickup date. If your plans change, you can view or cancel it here:', 'producerkit' ); ?>
+			<a data-wp-bind--href="state.orderUrl" data-wp-text="state.orderUrl" href="#"></a>
 		</p>
 
 		<?php if ( $payment_methods ) : ?>

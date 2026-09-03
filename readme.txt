@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -120,6 +120,15 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 2.2.0 =
+* **Every request can now be reached by the person who made it.** Commission quotes, RSVPs and pre-orders each open from a link showing what was booked, with the one action that makes sense.
+* Added: RSVP guests receive a confirmation email. Previously every notification went to the site admin and the guest received nothing — and could not cancel once they closed the tab, which silently held a seat at a capped event.
+* Added: the pre-order confirmation now carries a link to view or cancel the order. The form had been asking people to keep a "cancellation code" that had nowhere to go.
+* Added: an RSVPs admin screen with the guest list, headcount, spots left, one-click cancellation and CSV export. The plugin had been collecting names and email addresses with no way to read them.
+* Added: `uninstall.php`. Plugin bookkeeping is always cleaned up; your content only if you ask, under ProducerKit → Producer Profile.
+* Changed: deleting an event or a pickup location now removes the RSVPs and pre-orders attached to it. Trashing still keeps them.
+* Changed: reading a guest list now requires the Editor role rather than Contributor.
+
 = 2.1.0 =
 * **Commissions now work.** In 2.0.0 a maker could send a quote and no customer could accept it: the emailed link was a GET to a POST-only endpoint and returned a 404. Quote links now open a confirmation page showing the price and terms, with accept and decline buttons.
 * Fixed: pre-orders could be undercharged. A price written "2 for $5" was charged as $2.00, and "$1,200.00" as $1.00. Any price that is not one unambiguous amount now stops the checkout and names the product.
@@ -160,6 +169,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+Recommended. RSVP guests now get a confirmation and can cancel; pre-order customers can finally use the cancellation code the form asks them to keep; and there is at last a screen showing who has RSVP'd.
 
 = 2.1.0 =
 Recommended for anyone on 2.0.0. The commission workflow did not work in that release — quote links returned a 404 — and pre-orders could be charged less than their listed price. Also fixes a case where a customer's name and request were publicly readable.
