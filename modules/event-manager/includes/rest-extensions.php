@@ -128,7 +128,9 @@ function register_routes(): void {
 		[
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => __NAMESPACE__ . '\\get_event_rsvps',
-			'permission_callback' => fn () => current_user_can( 'edit_posts' ),
+			// Same capability as the admin screen: a guest list is names and
+			// email addresses however you reach it.
+			'permission_callback' => fn () => current_user_can( RSVP\manage_cap() ),
 			'args'                => [
 				'id' => [
 					'type'              => 'integer',

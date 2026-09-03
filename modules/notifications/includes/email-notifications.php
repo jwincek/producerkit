@@ -108,6 +108,76 @@ function send( string $subject, string $body, array $to = [] ): bool {
  * RSVP Added
  * ─────────────────────────────────────────────── */
 
+/* ── New RSVP → the guest ──────────────────────────
+ *
+ * This did not exist. Every notification in this file went to the site admin,
+ * so a visitor RSVP'd, saw a message on the page, and received nothing — no
+ * record, no event date, and no way back to a booking they could then never
+ * cancel once the tab was closed.
+ */
+
+add_action(
+	'pkit_rsvp_added',
+	function ( array $rsvp, int $event_id ): void {
+		// The honeypot's fake-success receipt has id 0 and was never stored.
+		if ( 0 === (int) ( $rsvp['id'] ?? 0 ) ) {
+			return;
+		}
+
+		$email = (string) ( $rsvp['email'] ?? '' );
+		if ( ! is_email( $email ) ) {
+			// Email is optional on the form, so this is a normal path, not an
+			// error — that guest simply has no way to cancel remotely.
+			return;
+		}
+
+		if ( ! apply_filters( 'pkit_notify_rsvp_confirmation', true, $rsvp, $event_id ) ) {
+			return;
+		}
+
+		$title = get_the_title( $event_id );
+		$start = (string) get_post_meta( $event_id, '_pkit_start_datetime', true );
+
+		$body = '<p>' . sprintf(
+			/* translators: 1: guest name, 2: event title. */
+			esc_html__( 'Thanks %1$s — you are on the list for %2$s.', 'producerkit' ),
+			esc_html( (string) $rsvp['name'] ),
+			'<strong>' . esc_html( $title ) . '</strong>'
+		) . '</p>';
+
+		if ( '' !== $start ) {
+			$body .= '<p>' . esc_html(
+				wp_date(
+					(string) get_option( 'date_format' ) . ', ' . (string) get_option( 'time_format' ),
+					(int) strtotime( $start )
+				)
+			) . '</p>';
+		}
+
+		$party = (int) ( $rsvp['party_size'] ?? 1 );
+		$body .= '<p>' . sprintf(
+			/* translators: %d: number of people in the party. */
+			esc_html( _n( 'Party of %d.', 'Party of %d.', $party, 'producerkit' ) ),
+			$party
+		) . '</p>';
+
+		$body .= '<p>' . esc_html__( 'Plans change — you can cancel here, which gives your place back to someone else:', 'producerkit' ) . '<br>';
+		$body .= esc_url( \ProducerKit\EventManager\RSVPResponse\url_for( (string) $rsvp['token'] ) ) . '</p>';
+
+		send(
+			sprintf(
+				/* translators: %s: event title. */
+				__( 'You are booked for %s', 'producerkit' ),
+				$title
+			),
+			$body,
+			[ $email ]
+		);
+	},
+	10,
+	2
+);
+
 add_action(
 	'pkit_rsvp_added',
 	function ( array $rsvp, int $event_id ): void {
