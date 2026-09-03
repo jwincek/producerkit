@@ -1,6 +1,6 @@
 {
 	"name": "producerkit",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Products, sales locations, real-time availability, stand status, and events for small farms and farm stands.",
 	"private": true,
 	"scripts": {
