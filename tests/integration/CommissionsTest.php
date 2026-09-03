@@ -279,4 +279,166 @@ final class CommissionsTest extends WP_UnitTestCase {
 		$this->assertTrue( Store\attach_product( $c['id'], $product ) );
 		$this->assertSame( $product, (int) Store\get( $c['id'] )['product_id'] );
 	}
+
+	/* ── The flow that could not complete ─────────────────────── */
+
+	/**
+	 * Quoting needs a price and a token that only send_quote() produces.
+	 * Allowing it here left rows marked quoted with a NULL price and an empty
+	 * token, and since the quote form only rendered for a new commission,
+	 * that state could not be recovered from.
+	 */
+	public function test_status_cannot_be_set_to_quoted_directly(): void {
+		$c = $this->a_commission();
+
+		$result = Store\set_status( $c['id'], 'quoted' );
+
+		$this->assertWPError( $result );
+		$this->assertSame( 'use_send_quote', $result->get_error_code() );
+		$this->assertSame( 'new', Store\get( $c['id'] )['status'], 'The row must be left alone.' );
+	}
+
+	/**
+	 * A quote expires after 30 days and the customer is told to ask for a new
+	 * one; without quoted -> quoted the maker had no way to grant that.
+	 */
+	public function test_a_quote_can_be_revised(): void {
+		$c = $this->a_commission();
+
+		$first = Store\send_quote( $c['id'], 100.00, '', 'First pass.' );
+		$this->assertNotWPError( $first );
+
+		$second = Store\send_quote( $c['id'], 125.00, '', 'Revised after we spoke.' );
+		$this->assertNotWPError( $second );
+		$this->assertSame( 125.00, $second['quoted_price'] );
+		$this->assertNotSame(
+			$first['quote_token'],
+			$second['quote_token'],
+			'A revision must invalidate the old link.'
+		);
+	}
+
+	/**
+	 * set_status() must not emit pkit_commission_quoted: its payload has the
+	 * token stripped, and the notification built a URL with an empty token in
+	 * it when both emitters existed behind one hook name.
+	 */
+	public function test_only_send_quote_emits_the_quoted_action(): void {
+		$payloads = [];
+		$spy      = static function ( array $commission ) use ( &$payloads ): void {
+			$payloads[] = $commission;
+		};
+
+		add_action( 'pkit_commission_quoted', $spy );
+		$c = $this->a_commission();
+		Store\send_quote( $c['id'], 80.00 );
+		Store\set_status( $c['id'], 'accepted' );
+		remove_action( 'pkit_commission_quoted', $spy );
+
+		$this->assertCount( 1, $payloads, 'Exactly one emitter.' );
+		$this->assertNotEmpty( $payloads[0]['quote_token'] ?? '', 'And it carries the token its listeners need.' );
+	}
+
+	/* ── What leaves the building ─────────────────────────────── */
+
+	/**
+	 * to_public() shapes a row that reaches an unauthenticated caller. It used
+	 * to denylist over SELECT *, so the settlement columns the WooCommerce
+	 * module ALTERs in were already flowing out.
+	 */
+	public function test_public_output_is_an_allowlist(): void {
+		$row = Store\to_public(
+			[
+				'id'            => 7,
+				'name'          => 'Dana',
+				'ip_hash'       => 'secret',
+				'quote_token'   => 'secret',
+				'wc_order_id'   => 42,
+				'wc_product_id' => 43,
+				'settled_at'    => '2026-01-01 00:00:00',
+				'invented_col'  => 'whatever a later module adds',
+			]
+		);
+
+		foreach ( [ 'ip_hash', 'quote_token', 'wc_order_id', 'wc_product_id', 'settled_at', 'invented_col' ] as $leaked ) {
+			$this->assertArrayNotHasKey( $leaked, $row, "{$leaked} must not reach a public caller." );
+		}
+
+		$this->assertSame( 'Dana', $row['name'] );
+	}
+
+	public function test_the_quote_token_is_included_only_when_asked_for(): void {
+		$row = Store\to_public(
+			[
+				'id'          => 1,
+				'quote_token' => 'tok',
+			],
+			true
+		);
+		$this->assertSame( 'tok', $row['quote_token'] );
+	}
+
+	/* ── Stored values ───────────────────────────────────────── */
+
+	public function test_an_unknown_term_slug_is_dropped_rather_than_stored(): void {
+		$this->assertSame( '', Store\known_term_slug( 'not-a-real-term', 'pkit_product_type' ) );
+	}
+
+	public function test_a_stored_slug_is_displayed_as_words(): void {
+		$term = self::factory()->term->create_and_get(
+			[
+				'taxonomy' => 'pkit_product_type',
+				'name'     => 'Live Edge Table',
+			]
+		);
+
+		$this->assertSame( $term->slug, Store\known_term_slug( $term->slug, 'pkit_product_type' ) );
+		$this->assertSame( 'Live Edge Table', Store\term_label( $term->slug, 'pkit_product_type' ) );
+	}
+
+	public function test_counts_come_back_grouped(): void {
+		$a = $this->a_commission();
+		$b = $this->a_commission();
+		Store\set_status( $b['id'], 'declined' );
+
+		$counts = Store\count_by_status();
+
+		$this->assertSame( 1, $counts['new'] ?? 0 );
+		$this->assertSame( 1, $counts['declined'] ?? 0 );
+	}
+
+	/**
+	 * Reading these rows means reading a customer's name, email, phone and
+	 * request; quoting sets a price the business is held to. edit_posts is
+	 * Contributor, which is neither.
+	 */
+	public function test_management_requires_more_than_contributor(): void {
+		$cap = Store\manage_cap();
+
+		$contributor = self::factory()->user->create( [ 'role' => 'contributor' ] );
+		$editor      = self::factory()->user->create( [ 'role' => 'editor' ] );
+
+		$this->assertFalse( user_can( $contributor, $cap ) );
+		$this->assertTrue( user_can( $editor, $cap ) );
+	}
+
+	/**
+	 * @return array Public-safe commission.
+	 */
+	private function a_commission(): array {
+		$c = Store\create(
+			[
+				'name'        => 'Dana',
+				'email'       => 'dana@example.com',
+				'description' => 'A walnut bowl, about 30cm.',
+			]
+		);
+
+		$this->assertNotWPError( $c );
+
+		// create() rate-limits per IP; clear it so a test can make several.
+		delete_transient( 'pkit_commission_rate_' . md5( \ProducerKit\Core\Requests\hash_ip( \ProducerKit\Core\Requests\get_client_ip() ) ) );
+
+		return $c;
+	}
 }

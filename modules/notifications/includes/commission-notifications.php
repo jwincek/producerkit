@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace ProducerKit\Notifications\Commissions;
 
+use ProducerKit\Commissions\QuoteResponse;
+use ProducerKit\Commissions\Store;
+
 use function ProducerKit\Notifications\Email\send;
 
 defined( 'ABSPATH' ) || exit;
@@ -34,7 +37,11 @@ defined( 'ABSPATH' ) || exit;
  * always present.
  */
 function decision_url( array $commission, string $decision ): string {
-	$url = rest_url( 'producerkit/v1/commissions/quote/' . rawurlencode( (string) ( $commission['quote_token'] ?? '' ) ) . '/' . $decision );
+	// The confirmation page, not the REST route. That route is POST-only on
+	// purpose — a mail client prefetching a link must not be able to accept a
+	// quote — and a click is a GET, so linking straight at it 404'd every
+	// customer who tried.
+	$url = QuoteResponse\url_for( (string) ( $commission['quote_token'] ?? '' ) );
 
 	/**
 	 * Filters the accept/decline URL sent to the customer.
@@ -136,8 +143,8 @@ add_action(
 			$body .= '<p>' . nl2br( esc_html( (string) $commission['maker_note'] ) ) . '</p>';
 		}
 
-		$body .= '<p>Accept: ' . esc_url( decision_url( $commission, 'accept' ) ) . '<br>';
-		$body .= 'Decline: ' . esc_url( decision_url( $commission, 'decline' ) ) . '</p>';
+		$body .= '<p>' . esc_html__( 'To accept or decline, open:', 'producerkit' ) . '<br>';
+		$body .= esc_url( decision_url( $commission, 'accept' ) ) . '</p>';
 		$body .= '<p style="color:#6b7280;">This quote is good for 30 days.</p>';
 
 		send( 'Your quote is ready', $body, [ $email ] );

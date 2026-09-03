@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-02
+
+Commissions did not work in 2.0.0. A maker could send a quote and no customer
+could accept it. This release makes the feature function and fixes the money
+handling around it.
+
+### Added
+
+- **A quote confirmation page.** The accept/decline route is POST-only so that
+  a mail client prefetching a link cannot accept a quote on a customer's
+  behalf — but the email could only send a clickable link, which is a GET, so
+  every customer who clicked got a 404. The link now opens a page showing the
+  price, the estimated date and what was asked for, with buttons that post the
+  decision. Served at `?pkit_quote=<token>`, `noindex`, and `no-referrer` so a
+  quote link cannot travel further than the person it was sent to.
+- **Re-quoting.** A quote can be revised, or reissued after the 30-day expiry.
+  Previously the customer was told to ask for a new link and the maker had no
+  way to send one.
+- **Pagination** on the commissions screen, which stopped at 100 rows.
+
+### Fixed
+
+- **Pre-orders could be undercharged.** The checkout guard used a schema.org
+  price heuristic that reads the first run of digits: "2 for $5" became 2.00
+  and "$1,200.00" became 1.00. Any line that is not one unambiguous amount now
+  refuses the checkout and names the product.
+- **Customer details were publicly readable.** The hidden product raised for a
+  commission was saved with WordPress's default published status, so the
+  customer's name and their verbatim request were served at `/?p=<id>` to
+  anyone who guessed the id. Now private, and the description no longer
+  carries the customer's words at all.
+- **One admin click could permanently break a commission**, leaving it marked
+  quoted with no price and no token, in a state the quote form would not
+  reopen.
+- **An accepted commission never produced a payment link**, because the code
+  that raises the order had no caller.
+- **Paying an order could settle nothing**, because the link between order and
+  request was not checked before a payment URL was handed out.
+- Settlement ran twice per payment, overwriting the payment time with the
+  fulfilment time.
+- Reading customer records and issuing binding quotes required only
+  Contributor. Now Editor, filterable via `pkit_commission_manage_cap`.
+- The public commission endpoint returned database columns added by the
+  WooCommerce module.
+- Retrying a failed checkout created a duplicate hidden product each time.
+- Commission rate limiting hashed visitor IP addresses without a salt.
+- A commission's type and material displayed as raw slugs
+  ("live-edge-walnut") in the admin and in emails.
+- Settlement columns could never be added on a site that enabled the
+  commissions module after the WooCommerce one, and a failed table creation
+  was never retried.
+- Around twenty database queries were run to draw the commission screen's
+  filter row, and four per order status change store-wide.
+
+
 ## [2.0.0] - 2026-09-02
 
 A breaking release. **There is no upgrade path from 1.x.** Every stored

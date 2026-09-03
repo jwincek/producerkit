@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,15 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 2.1.0 =
+* **Commissions now work.** In 2.0.0 a maker could send a quote and no customer could accept it: the emailed link was a GET to a POST-only endpoint and returned a 404. Quote links now open a confirmation page showing the price and terms, with accept and decline buttons.
+* Fixed: pre-orders could be undercharged. A price written "2 for $5" was charged as $2.00, and "$1,200.00" as $1.00. Any price that is not one unambiguous amount now stops the checkout and names the product.
+* Fixed: the hidden product raised for a commission was publicly readable, exposing the customer's name and their request to anyone who guessed its URL.
+* Fixed: one click on the commissions screen could put a request into a state it could not be recovered from.
+* Fixed: an accepted commission never produced a payment link.
+* Fixed: reading customer details and issuing quotes required only the Contributor role. It now requires Editor.
+* Added: quotes can be revised or reissued after they expire, and the commissions screen paginates past 100 requests.
+
 = 2.0.0 =
 * **Breaking: no upgrade path from 1.x.** Every stored identifier was renamed and nothing is migrated. Content saved by 1.x is not read by 2.0.0. Do not update a site with real data — export first, or stay on 1.1.0.
 * Producer profiles: sixteen trades, each re-labelling the product fields and seeding that trade's vocabulary. A site can run more than one, and each person chooses which trade's wording they see.
@@ -137,6 +146,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+Recommended for anyone on 2.0.0. The commission workflow did not work in that release — quote links returned a 404 — and pre-orders could be charged less than their listed price. Also fixes a case where a customer's name and request were publicly readable.
 
 = 2.0.0 =
 Do not update an existing site without exporting first. This release renames every stored identifier — post types, taxonomies, meta keys and database tables — and provides no migration, so content created by 1.x will not be visible. It is safe on a new install.

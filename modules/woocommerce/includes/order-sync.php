@@ -31,7 +31,12 @@ function on_paid( int $order_id ): void {
 		return;
 	}
 
-	Settlement\mark_settled( $request['type'], $request['id'] );
+	// False means it was already settled — the second of the processing /
+	// completed pair, or a status flapped by hand. Everything below is
+	// once-only, so stop here rather than re-running it.
+	if ( ! Settlement\mark_settled( $request['type'], $request['id'] ) ) {
+		return;
+	}
 
 	if ( 'commission' === $request['type'] ) {
 		// A paid commission is work to start. set_status() enforces the

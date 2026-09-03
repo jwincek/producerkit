@@ -20,12 +20,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_menu', __NAMESPACE__ . '\\register_page' );
 
 function register_page(): void {
-	$open  = Store\list_commissions(
-		[
-			'status' => 'new',
-			'limit'  => 1,
-		]
-	)['total'];
+	$open  = Store\count_by_status()['new'] ?? 0;
 	$badge = $open > 0
 		? sprintf( ' <span class="awaiting-mod"><span class="pending-count">%d</span></span>', $open )
 		: '';
@@ -34,7 +29,7 @@ function register_page(): void {
 		'producerkit',
 		__( 'Commissions', 'producerkit' ),
 		__( 'Commissions', 'producerkit' ) . $badge,
-		'edit_posts',
+		Store\manage_cap(),
 		'producerkit-commissions',
 		__NAMESPACE__ . '\\render_page'
 	);
@@ -74,7 +69,7 @@ function status_color( string $status ): string {
 }
 
 function render_page(): void {
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! current_user_can( Store\manage_cap() ) ) {
 		wp_die( esc_html__( 'You do not have permission to view commissions.', 'producerkit' ), 403 );
 	}
 
@@ -85,10 +80,20 @@ function render_page(): void {
 		$filter = '';
 	}
 
+	// One grouped query for every filter count, rather than a COUNT plus a
+	// discarded SELECT * per status — that was about twenty queries to draw a
+	// row of links.
+	$by_status = Store\count_by_status();
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only paging.
+	$paged    = max( 1, isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1 );
+	$per_page = 50;
+
 	$list  = Store\list_commissions(
 		[
 			'status' => $filter,
-			'limit'  => 100,
+			'limit'  => $per_page,
+			'offset' => ( $paged - 1 ) * $per_page,
 		]
 	);
 	$base  = admin_url( 'admin.php?page=producerkit-commissions' );
@@ -101,21 +106,13 @@ function render_page(): void {
 			<li>
 				<a href="<?php echo esc_url( $base ); ?>" class="<?php echo '' === $filter ? 'current' : ''; ?>">
 					<?php esc_html_e( 'All', 'producerkit' ); ?>
-					<span class="count">(<?php echo (int) Store\list_commissions( [ 'limit' => 1 ] )['total']; ?>)</span>
+					<span class="count">(<?php echo (int) array_sum( $by_status ); ?>)</span>
 				</a>
 			</li>
 			<?php
-			// An empty status is hidden unless it is the one being viewed, so
-			// the filter row stays short on a site with two commissions.
 			$counts = [];
 			foreach ( status_labels() as $slug => $label ) {
-				$count = Store\list_commissions(
-					[
-						'status' => $slug,
-						'limit'  => 1,
-					]
-				)['total'];
-
+				$count = $by_status[ $slug ] ?? 0;
 				if ( $count > 0 || $slug === $filter ) {
 					$counts[ $slug ] = [ $label, $count ];
 				}
@@ -150,14 +147,22 @@ function render_page(): void {
 				<tbody>
 				<?php foreach ( $list['commissions'] as $c ) : ?>
 					<?php
-					$id      = (int) $c['id'];
-					$status  = (string) $c['status'];
-					$onward  = Store\transitions()[ $status ] ?? [];
+					$id     = (int) $c['id'];
+					$status = (string) $c['status'];
+					// 'quoted' is deliberately not offered as a plain status
+					// button: quoting needs a price, and the quote form below
+					// is the only thing that can supply one. set_status()
+					// refuses it too, but an unusable button is still a trap.
+					$onward = array_values(
+						array_diff( Store\transitions()[ $status ] ?? [], [ 'quoted' ] )
+					);
+					// Stored as slugs; shown as words. "live-edge-walnut" is not
+					// what the customer typed and not what the maker reads.
 					$details = array_filter(
 						[
-							(string) ( $c['product_type'] ?? '' ),
-							(string) ( $c['material'] ?? '' ),
-							(string) ( $c['budget_range'] ?? '' ),
+							Store\term_label( (string) ( $c['product_type'] ?? '' ), 'pkit_product_type' ),
+							Store\term_label( (string) ( $c['material'] ?? '' ), 'pkit_material' ),
+							(string) ( Store\budget_ranges()[ $c['budget_range'] ?? '' ] ?? '' ),
 						]
 					);
 					?>
@@ -194,6 +199,25 @@ function render_page(): void {
 							</span>
 						</td>
 						<td>
+							<?php
+							$pay_url   = get_transient( 'pkit_pay_url_' . $id );
+							$pay_error = get_transient( 'pkit_settlement_error_' . $id );
+							?>
+							<?php if ( $pay_error ) : ?>
+								<p style="margin:0 0 .4em;color:#d63638;font-size:12px;">
+									<?php
+									printf(
+										/* translators: %s: reason the order could not be raised. */
+										esc_html__( 'Payment link failed: %s', 'producerkit' ),
+										esc_html( (string) $pay_error )
+									);
+									?>
+								</p>
+							<?php elseif ( $pay_url ) : ?>
+								<p style="margin:0 0 .4em;font-size:12px;">
+									<a href="<?php echo esc_url( (string) $pay_url ); ?>"><?php esc_html_e( 'Payment link', 'producerkit' ); ?></a>
+								</p>
+							<?php endif; ?>
 							<?php if ( null !== ( $c['quoted_price'] ?? null ) ) : ?>
 								<strong><?php echo esc_html( $money . number_format( (float) $c['quoted_price'], 2 ) ); ?></strong>
 								<?php if ( ! empty( $c['estimated_date'] ) ) : ?>
@@ -204,7 +228,7 @@ function render_page(): void {
 							<?php endif; ?>
 						</td>
 						<td>
-							<?php if ( 'new' === $status ) : ?>
+							<?php if ( in_array( $status, [ 'new', 'quoted' ], true ) ) : ?>
 								<div class="pkit-quote-form" style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
 									<input type="number" step="0.01" min="0.01" class="pkit-price small-text"
 										placeholder="<?php esc_attr_e( 'Price', 'producerkit' ); ?>"
@@ -212,7 +236,11 @@ function render_page(): void {
 									<input type="date" class="pkit-date"
 										aria-label="<?php esc_attr_e( 'Estimated ready date', 'producerkit' ); ?>">
 									<button type="button" class="button button-primary pkit-send-quote">
-										<?php esc_html_e( 'Send quote', 'producerkit' ); ?>
+										<?php
+										echo 'quoted' === $status
+											? esc_html__( 'Re-quote', 'producerkit' )
+											: esc_html__( 'Send quote', 'producerkit' );
+										?>
 									</button>
 								</div>
 							<?php endif; ?>
@@ -232,6 +260,39 @@ function render_page(): void {
 				<?php endforeach; ?>
 				</tbody>
 			</table>
+
+			<?php
+			$total_pages = (int) ceil( $list['total'] / $per_page );
+			if ( $total_pages > 1 ) :
+				?>
+				<div class="tablenav bottom">
+					<div class="tablenav-pages">
+						<span class="displaying-num">
+							<?php
+							printf(
+								/* translators: %d: number of commissions. */
+								esc_html( _n( '%d item', '%d items', (int) $list['total'], 'producerkit' ) ),
+								(int) $list['total']
+							);
+							?>
+						</span>
+						<?php
+						echo wp_kses_post(
+							paginate_links(
+								[
+									'base'      => add_query_arg( 'paged', '%#%' ),
+									'format'    => '',
+									'prev_text' => '&laquo;',
+									'next_text' => '&raquo;',
+									'total'     => $total_pages,
+									'current'   => $paged,
+								]
+							)
+						);
+						?>
+					</div>
+				</div>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div>
 	<?php

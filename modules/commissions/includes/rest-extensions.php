@@ -45,7 +45,7 @@ function register_routes(): void {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => __NAMESPACE__ . '\\index',
-				'permission_callback' => fn () => current_user_can( 'edit_posts' ),
+				'permission_callback' => fn () => current_user_can( Store\manage_cap() ),
 			],
 		]
 	);
@@ -76,7 +76,7 @@ function register_routes(): void {
 		[
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => __NAMESPACE__ . '\\quote',
-			'permission_callback' => fn () => current_user_can( 'edit_posts' ),
+			'permission_callback' => fn () => current_user_can( Store\manage_cap() ),
 		]
 	);
 
@@ -86,7 +86,7 @@ function register_routes(): void {
 		[
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => __NAMESPACE__ . '\\status',
-			'permission_callback' => fn () => current_user_can( 'edit_posts' ),
+			'permission_callback' => fn () => current_user_can( Store\manage_cap() ),
 		]
 	);
 }
@@ -124,12 +124,36 @@ function create_args(): array {
 	);
 }
 
+/**
+ * A manually registered arg gets no validate_callback by default, so `type`
+ * alone is documentation rather than enforcement: {"name":{"a":1}} reached
+ * (string) and stored the row as the literal "Array".
+ */
+function is_scalar_param( mixed $value ): bool|\WP_Error {
+	if ( is_scalar( $value ) || null === $value ) {
+		return true;
+	}
+
+	return new \WP_Error( 'rest_invalid_param', __( 'That field must be a single value.', 'producerkit' ), [ 'status' => 400 ] );
+}
+
+/**
+ * Map an error code to a status, preserving one the error already carries.
+ */
 function error_status( \WP_Error $error ): int {
+	// The spam guard sets its own status (403) and names its codes after the
+	// guard that fired, so a fixed map cannot cover them. Honour what the
+	// error already says before falling back.
+	$existing = $error->get_error_data();
+	if ( is_array( $existing ) && isset( $existing['status'] ) ) {
+		return (int) $existing['status'];
+	}
+
 	return [
 		'rate_limited'       => 429,
-		'spam_rejected'      => 429,
 		'not_found'          => 404,
 		'invalid_transition' => 409,
+		'use_send_quote'     => 409,
 		'db_error'           => 500,
 	][ $error->get_error_code() ] ?? 400;
 }
