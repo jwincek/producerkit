@@ -49,11 +49,11 @@ final class ProductImagesTest extends WP_UnitTestCase {
 	/** Mirrors the defaults seeded in modules/core/includes/taxonomies.php. */
 	public function default_type_provider(): array {
 		return [
-			'produce'      => [ 'produce' ],
-			'bread'        => [ 'bread' ],
-			'baked good'   => [ 'baked-good' ],
-			'pantry good'  => [ 'pantry-good' ],
-			'seedling'     => [ 'seedling' ],
+			'produce'     => [ 'produce' ],
+			'bread'       => [ 'bread' ],
+			'baked good'  => [ 'baked-good' ],
+			'pantry good' => [ 'pantry-good' ],
+			'seedling'    => [ 'seedling' ],
 		];
 	}
 

@@ -23,6 +23,42 @@ defined( 'ABSPATH' ) || exit;
 /** Meta linking a generated product back to the request it came from. */
 const REQUEST_META = '_pkit_request';
 
+// The confirmation page fires this when a customer accepts. Without a listener
+// checkout_for_commission() had no caller at all outside the tests, so an
+// accepted commission never produced a pay link and nothing ever wrote
+// product_id — which is why the reuse guard's wrong meta key went unnoticed.
+add_action( 'pkit_quote_accepted_onsite', __NAMESPACE__ . '\\on_quote_accepted' );
+
+/**
+ * Raise an order for a freshly accepted commission and remember its pay link.
+ *
+ * Failure is deliberately soft: the commission is already accepted and that
+ * must stand whatever WooCommerce does. The maker sees the problem in the
+ * admin and can still arrange payment directly, which is how a maker without
+ * WooCommerce works anyway.
+ *
+ * @param array $commission Public-safe commission data.
+ */
+function on_quote_accepted( array $commission ): void {
+	$id = (int) ( $commission['id'] ?? 0 );
+	if ( $id < 1 || ! function_exists( 'wc_create_order' ) ) {
+		return;
+	}
+
+	$checkout = checkout_for_commission( $id );
+
+	if ( is_wp_error( $checkout ) ) {
+		// Surfaced on the commissions screen rather than swallowed: the
+		// customer has agreed and is waiting for a way to pay, so the maker
+		// needs to know the order was not raised.
+		set_transient( 'pkit_settlement_error_' . $id, $checkout->get_error_message(), WEEK_IN_SECONDS );
+		return;
+	}
+
+	delete_transient( 'pkit_settlement_error_' . $id );
+	set_transient( 'pkit_pay_url_' . $id, $checkout['pay_url'], WEEK_IN_SECONDS );
+}
+
 /**
  * Create the hidden product a commission is paid through.
  *

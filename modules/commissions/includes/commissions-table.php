@@ -32,6 +32,24 @@ const DB_VERSION = '1.0.0';
 /** Max commission requests from one IP per hour. */
 const RATE_LIMIT_PER_IP = 3;
 
+/**
+ * Capability required to read commissions and issue quotes.
+ *
+ * Not edit_posts. That is Contributor, and these rows hold a customer's name,
+ * email, phone and the text of what they asked for — and quoting sets a price
+ * the business is then held to. Editor is the floor for both.
+ *
+ * @return string
+ */
+function manage_cap(): string {
+	/**
+	 * Filters the capability that gates commission management.
+	 *
+	 * @param string $cap Default 'edit_others_posts'.
+	 */
+	return (string) apply_filters( 'pkit_commission_manage_cap', 'edit_others_posts' );
+}
+
 /** How long an accept/decline link stays good, in days. */
 const QUOTE_TTL_DAYS = 30;
 
@@ -96,8 +114,20 @@ function schema_sql( string $table ): string {
 }
 
 function create_table(): void {
+	global $wpdb;
+
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( schema_sql( table_name() ) );
+
+	// Only claim the version once the table is actually there. Stamping it
+	// unconditionally means a CREATE rejected by the server — strict mode, a
+	// permissions problem — is never retried, and every read afterwards fails
+	// against a table that does not exist. The availability table taught this.
+	$table = table_name();
+	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+		return;
+	}
+
 	update_option( 'pkit_commissions_db_version', DB_VERSION );
 }
 
@@ -124,7 +154,10 @@ function valid_statuses(): array {
 function transitions(): array {
 	return [
 		'new'         => [ 'quoted', 'declined', 'cancelled' ],
-		'quoted'      => [ 'accepted', 'declined', 'cancelled' ],
+		// 'quoted' -> 'quoted' is a re-quote: a revised price, or a fresh token
+		// after the old one expired. Without it the customer is told to ask for
+		// a new link and the maker has no way to issue one.
+		'quoted'      => [ 'quoted', 'accepted', 'declined', 'cancelled' ],
 		'accepted'    => [ 'in_progress', 'cancelled' ],
 		'in_progress' => [ 'complete', 'cancelled' ],
 		'complete'    => [],
@@ -266,8 +299,11 @@ function create( array $data ): array|\WP_Error {
 		'email'        => $email,
 		'phone'        => sanitize_text_field( $data['phone'] ?? '' ),
 		'description'  => $description,
-		'product_type' => sanitize_title( $data['product_type'] ?? '' ),
-		'material'     => sanitize_title( $data['material'] ?? '' ),
+		// Stored as the slug the form submitted, but only when it names a real
+		// term — an unknown slug is dropped rather than kept to be displayed
+		// raw later. term_label() turns it back into words for output.
+		'product_type' => known_term_slug( $data['product_type'] ?? '', 'pkit_product_type' ),
+		'material'     => known_term_slug( $data['material'] ?? '', 'pkit_material' ),
 		'budget_range' => $budget,
 		'deadline'     => '' !== $deadline ? $deadline : null,
 		'status'       => 'new',
@@ -418,6 +454,32 @@ function list_commissions( array $args = [] ): array {
 	];
 }
 
+/**
+ * How many commissions sit at each status.
+ *
+ * One grouped query. The admin screen previously asked list_commissions() per
+ * status just to read its total, which ran a COUNT and then a full SELECT it
+ * threw away — about twenty queries to draw a row of filter links.
+ *
+ * @return array<string, int> Status => count, statuses with none omitted.
+ */
+function count_by_status(): array {
+	global $wpdb;
+
+	$table = table_name();
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier and the query takes no user input.
+	$rows = $wpdb->get_results( "SELECT status, COUNT(*) AS total FROM {$table} GROUP BY status", ARRAY_A );
+	// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	$out = [];
+	foreach ( (array) $rows as $row ) {
+		$out[ (string) $row['status'] ] = (int) $row['total'];
+	}
+
+	return $out;
+}
+
 /* ───────────────────────────────────────────────
  * Lifecycle
  * ─────────────────────────────────────────────── */
@@ -497,6 +559,18 @@ function set_status( int $id, string $status ): array|\WP_Error {
 		return new \WP_Error( 'invalid_status', __( 'Unknown commission status.', 'producerkit' ) );
 	}
 
+	// Quoting is not a status you can simply set: it needs a price, an
+	// estimated date and a fresh token, and send_quote() is the only thing
+	// that produces them. Allowing it here left rows marked quoted with a NULL
+	// price and an empty token — and since the quote form only renders for a
+	// new commission, that state could not be recovered from.
+	if ( 'quoted' === $status ) {
+		return new \WP_Error(
+			'use_send_quote',
+			__( 'Send a quote with a price rather than setting the status directly.', 'producerkit' )
+		);
+	}
+
 	$commission = get( $id );
 	if ( null === $commission ) {
 		return new \WP_Error( 'not_found', __( 'Commission not found.', 'producerkit' ) );
@@ -547,6 +621,12 @@ function set_status( int $id, string $status ): array|\WP_Error {
 	/**
 	 * Fires on the specific transition, for notification listeners.
 	 *
+	 * Note that `pkit_commission_quoted` is NOT emitted here — send_quote()
+	 * owns it, and its listeners need the quote token, which to_public()
+	 * strips from this payload. Two emitters with different payload shapes
+	 * behind one hook name is how the quote email came to build a URL with an
+	 * empty token in it.
+	 *
 	 * @param array $commission Public-safe commission data.
 	 */
 	do_action( 'pkit_commission_' . $status, $fresh );
@@ -573,6 +653,36 @@ function attach_product( int $id, int $product_id ): bool {
  * Helpers
  * ─────────────────────────────────────────────── */
 
+/**
+ * Keep a submitted slug only if it names a term that exists.
+ *
+ * The form offers a select built from the taxonomy, so anything else is either
+ * stale or made up, and storing it means showing "live-edge-walnut" to the
+ * maker later as though it were the customer's words.
+ */
+function known_term_slug( mixed $value, string $taxonomy ): string {
+	$slug = sanitize_title( (string) $value );
+
+	if ( '' === $slug || ! taxonomy_exists( $taxonomy ) ) {
+		return '';
+	}
+
+	return get_term_by( 'slug', $slug, $taxonomy ) ? $slug : '';
+}
+
+/**
+ * The human name for a stored slug, falling back to the slug itself.
+ */
+function term_label( string $slug, string $taxonomy ): string {
+	if ( '' === $slug ) {
+		return '';
+	}
+
+	$term = taxonomy_exists( $taxonomy ) ? get_term_by( 'slug', $slug, $taxonomy ) : null;
+
+	return $term instanceof \WP_Term ? $term->name : $slug;
+}
+
 function valid_date( string $date ): bool {
 	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ) {
 		return false;
@@ -592,11 +702,37 @@ function valid_date( string $date ): bool {
  * @param array $row
  */
 function to_public( array $row, bool $with_quote_token = false ): array {
-	unset( $row['ip_hash'] );
+	// An allowlist, not a denylist. This shapes a row that reaches an
+	// unauthenticated caller through show_by_token(), and the table gains
+	// columns from outside this module — the WooCommerce module ALTERs in
+	// wc_order_id, wc_product_id and settled_at — so anything not named here
+	// would leak the moment someone else added it.
+	$public = [
+		'id',
+		'token',
+		'name',
+		'email',
+		'phone',
+		'description',
+		'product_type',
+		'material',
+		'budget_range',
+		'deadline',
+		'status',
+		'quoted_price',
+		'estimated_date',
+		'maker_note',
+		'quote_expires',
+		'product_id',
+		'created_at',
+		'updated_at',
+	];
 
-	if ( ! $with_quote_token ) {
-		unset( $row['quote_token'] );
+	if ( $with_quote_token ) {
+		$public[] = 'quote_token';
 	}
+
+	$row = array_intersect_key( $row, array_flip( $public ) );
 
 	$row['id']         = (int) ( $row['id'] ?? 0 );
 	$row['product_id'] = (int) ( $row['product_id'] ?? 0 );
