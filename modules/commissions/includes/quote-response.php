@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace ProducerKit\Commissions\QuoteResponse;
 
 use ProducerKit\Commissions\Store;
+use ProducerKit\Core\TokenPage;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -46,7 +47,7 @@ function register_query_var( array $vars ): array {
  * The address to put in a quote email.
  */
 function url_for( string $quote_token ): string {
-	return add_query_arg( QUERY_VAR, rawurlencode( $quote_token ), home_url( '/' ) );
+	return TokenPage\url_for( QUERY_VAR, $quote_token );
 }
 
 /**
@@ -64,7 +65,7 @@ function maybe_render(): void {
 	// find_by_quote_token() returns null for an unknown token and for an
 	// expired one alike, so neither tells a guesser which they hit.
 	if ( null === $commission ) {
-		render_page(
+		TokenPage\render(
 			__( 'This quote link is no longer valid', 'producerkit' ),
 			'<p>' . esc_html__( 'It may have already been used, or it may have expired. Please get in touch and we will send you a new one.', 'producerkit' ) . '</p>'
 		);
@@ -73,7 +74,7 @@ function maybe_render(): void {
 	$decision = handle_post( $token, (array) $commission );
 
 	if ( null !== $decision ) {
-		render_page( $decision['title'], $decision['body'] );
+		TokenPage\render( $decision['title'], $decision['body'] );
 	}
 
 	render_confirmation( $token, (array) $commission );
@@ -186,49 +187,5 @@ function render_confirmation( string $token, array $commission ): void {
 		</button>
 	</form>
 	<?php
-	render_page( __( 'Your quote', 'producerkit' ), (string) ob_get_clean() );
-}
-
-/**
- * Render a standalone page and stop.
- *
- * Uses the theme's own header and footer so the page looks like the rest of
- * the site rather than a bare plugin screen.
- *
- * $body is echoed as-is rather than through wp_kses_post(). It is markup this
- * file builds, with every interpolated value escaped at the point it goes in —
- * and kses is for filtering *submitted* content. Running it here stripped the
- * <form> and the hidden nonce input, which are not in the post allowlist,
- * leaving two buttons that posted nothing and a decision no customer could
- * make. Escaping in the wrong context is not extra safety; it is a bug.
- */
-function render_page( string $title, string $body ): void {
-	status_header( 200 );
-	nocache_headers();
-
-	// The token sits in the URL, and the theme will echo that URL back in a
-	// canonical link. Keep the page out of indexes, and out of the Referer
-	// header on any outbound click, so a quote link cannot travel further than
-	// the person it was sent to.
-	add_filter( 'wp_robots', 'wp_robots_no_robots' );
-	add_action(
-		'wp_head',
-		static function (): void {
-			echo '<meta name="referrer" content="no-referrer">' . "\n";
-		},
-		1
-	);
-
-	get_header();
-	?>
-	<main class="pkit-quote wp-block-group is-layout-constrained" style="max-width:38rem;margin:4rem auto;padding:0 1rem;">
-		<h1><?php echo esc_html( $title ); ?></h1>
-		<?php
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built above; every interpolated value is escaped at its own site. See the note in this docblock on why kses is wrong here.
-		echo $body;
-		?>
-	</main>
-	<?php
-	get_footer();
-	exit;
+	TokenPage\render( __( 'Your quote', 'producerkit' ), (string) ob_get_clean() );
 }

@@ -271,6 +271,71 @@ function add_rsvp( array $data ): array|\WP_Error {
 }
 
 /**
+ * Capability required to read or manage a guest list.
+ *
+ * Not edit_posts. These rows hold names and email addresses, and Contributor
+ * is too low a bar for that. Defined here rather than on the admin screen so
+ * the REST route and the screen cannot drift apart — which they immediately
+ * did when this lived in an is_admin()-gated file and the route kept its own
+ * looser check.
+ */
+function manage_cap(): string {
+	/**
+	 * Filters the capability required to view RSVPs.
+	 *
+	 * @param string $cap Default 'edit_others_posts'.
+	 */
+	return (string) apply_filters( 'pkit_rsvp_manage_cap', 'edit_others_posts' );
+}
+
+/**
+ * Defuse a cell a spreadsheet would treat as a formula.
+ *
+ * A guest controls their own name and note. A value starting = + - @ or a
+ * control character executes on open in Excel and Sheets, where HYPERLINK and
+ * WEBSERVICE can send the rest of the sheet elsewhere — so exporting a guest
+ * list is a real injection sink. Numbers are left alone so numeric columns
+ * still import as numbers.
+ */
+function esc_csv_field( string $value ): string {
+	if ( '' === $value || is_numeric( $value ) ) {
+		return $value;
+	}
+
+	return preg_match( '/^[=+\-@\t\r]/', $value ) ? "'" . $value : $value;
+}
+
+/**
+ * Find one RSVP by its token.
+ *
+ * The token is the guest's only credential — they have no account — so this is
+ * how the confirmation page resolves a booking before showing or cancelling
+ * it. Returns null for an unknown token rather than distinguishing "no such
+ * booking" from "already cancelled", which tells a guesser nothing.
+ *
+ * @return array|null Row as an associative array, or null.
+ */
+function find_by_token( string $token ): ?array {
+	global $wpdb;
+
+	if ( '' === $token ) {
+		return null;
+	}
+
+	$table = table_name();
+	$row   = $wpdb->get_row(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
+			"SELECT * FROM {$table} WHERE token = %s LIMIT 1",
+			$token,
+		),
+		ARRAY_A
+	);
+
+	return $row ?: null;
+}
+
+/**
  * Cancel an RSVP by its token.
  */
 function cancel_rsvp( string $token ): bool {

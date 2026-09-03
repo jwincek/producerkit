@@ -14,6 +14,11 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/meta-extensions.php';
 require_once __DIR__ . '/includes/rsvp-table.php';
+require_once __DIR__ . '/includes/rsvp-response.php';
+
+if ( is_admin() ) {
+	require_once __DIR__ . '/includes/admin-rsvps.php';
+}
 require_once __DIR__ . '/includes/rest-extensions.php';
 require_once __DIR__ . '/includes/render-helpers.php';
 require_once __DIR__ . '/includes/abilities.php';
