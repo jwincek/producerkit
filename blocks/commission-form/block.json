@@ -5,7 +5,7 @@
     "version": "2.2.0",
     "title": "Commission Request Form",
     "category": "producerkit",
-    "icon": "hammer",
+    "icon": "clipboard",
     "description": "Let visitors ask for a custom piece. You quote a price; they accept or decline by email. Requires the Commissions module.",
     "textdomain": "producerkit",
     "attributes": {

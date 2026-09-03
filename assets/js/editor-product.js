@@ -93,7 +93,7 @@
 				name: 'pkit-product-details',
 				title: 'Product Details',
 				initialOpen: true,
-				icon: 'carrot',
+				icon: 'tag',
 			},
 
 			el( TextControl, {
@@ -451,7 +451,7 @@
 
 	registerPlugin( 'pkit-product-details', {
 		render: ProductDetailsPanel,
-		icon: 'carrot',
+		icon: 'tag',
 	} );
 
 	registerPlugin( 'pkit-product-sources', {

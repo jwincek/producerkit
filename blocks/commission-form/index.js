@@ -98,7 +98,7 @@
 					el(
 						Placeholder,
 						{
-							icon: 'hammer',
+							icon: 'clipboard',
 							label: __(
 								'Commission Request Form',
 								'producerkit'
