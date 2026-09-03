@@ -22,7 +22,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 
 = Availability =
 
-* **Availability board block** — a live, filterable board of what's available right now, grouped by product type, with status badges (abundant, available, limited, sold out).
+* **Availability board block** — a live, filterable board of what's available right now, grouped by product type, with status badges (abundant, available, limited, sold out, unavailable).
 * **Quick entry screen** — batch-update availability for every product from one admin page. Statuses can carry a note ("~3 bunches left") and expire automatically.
 * **Availability badge block** — an inline status badge for any single product.
 
@@ -33,6 +33,18 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * **Pre-orders** — visitors reserve products for a pickup date and pay at the stand. Orders are rate-limited and spam-protected, staff manage them from a dedicated admin screen (pending → confirmed → ready → picked up), and email notifications keep both sides informed. No payment processing, no checkout.
 * **Harvest list** — active pre-orders aggregated into per-pickup-date totals of each product to have ready. Print it and take it to the field.
 * **Smart pickup dates** — pre-order dates are validated against the location's weekly schedule, season dates, and a per-location closed-dates list, so nobody orders for a day the stand is shut.
+
+= Producer profiles =
+
+* **Sixteen trades** — farm, bakery, beekeeping, musician, author, comics, painting, screen printing, taxidermy, and seven crafts. Each re-labels the product fields for the trade you actually practise: a potter's Material is a Clay Body, a beekeeper's is a Floral Source, a printer's is a Substrate.
+* **Optional fields switch on per trade** — Material, Finish and Component exist only for profiles that ask for them, so a farm never sees them, and they render on the product card and single product page under your own labels.
+* **More than one trade on a site** — a farm that also bakes, or two people sharing an install. Which fields exist and which vocabulary is seeded combine; the wording resolves per person, so each of you reads the same field in your own trade's words.
+
+= Commissions =
+
+* **Made-to-order requests** — a customer describes what they want, you quote a price and a date, and they accept or decline from a link in their email. The confirmation page shows the terms before anything is agreed.
+* **A request form block** whose type and material options come from your producer profile.
+* **An admin queue** with an enforced status flow, quotes that can be revised or reissued, and five emails.
 
 = Print and search =
 
@@ -54,8 +66,8 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 
 = Built for the modern block editor =
 
-* Ten blocks under a dedicated category, server-rendered with live front-end updates via the WordPress Interactivity API.
-* REST API endpoints for products, availability, locations, stand status, and events.
+* Eleven blocks under a dedicated category, server-rendered with live front-end updates via the WordPress Interactivity API.
+* REST API endpoints for products, sources, taxonomies, availability, locations, stand status, events, RSVPs, pre-orders and commissions.
 * **Abilities API** — on WordPress 6.9+, fourteen operations (list products, get/update availability, toggle stand status, RSVP to an event, create and manage pre-orders, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
 * Modular architecture — disable feature modules you don't need with a single filter.
 
@@ -78,11 +90,11 @@ The availability board and stand status banner are server-rendered and then kept
 
 = Can I turn off features I don't use? =
 
-Yes. Feature modules (stand status, availability board, event manager, notifications, pre-orders) can be disabled via the `pkit_active_modules` filter; only the core data layer is required.
+Yes. Feature modules — producer profiles, stand status, availability board, event manager, notifications, pre-orders, commissions and WooCommerce — can each be disabled via the `pkit_active_modules` filter. Only the core data layer is required.
 
 = What are Abilities? =
 
-The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`.
+The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`, except commission management, which requires `edit_others_posts` because those records hold customer contact details and a quote is binding.
 
 = Does the RSVP feature store personal data? =
 
@@ -90,7 +102,9 @@ RSVPs store the name, optional email, party size, and note a visitor submits, in
 
 = Do pre-orders process payments? =
 
-No. A pre-order is a reservation: products, quantities, a pickup date, and contact details. Payment happens at pickup — the confirmation shows the location's accepted payment methods (including any payment links). If you need online card payments, use a dedicated e-commerce plugin.
+Not on their own. A pre-order is a reservation: products, quantities, a pickup date, and contact details, with payment happening at pickup — the confirmation shows the location's accepted payment methods, including any payment links.
+
+If WooCommerce is active you can additionally enable the WooCommerce module, which raises a pending order for a request and hands the customer a payment link. That is opt-in; with the module off, or WooCommerce absent, nothing about the plugin touches payment processing.
 
 = Where do the QR codes come from? =
 

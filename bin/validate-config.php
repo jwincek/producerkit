@@ -31,6 +31,8 @@
  *                      genuine access-control hole.
  *   9. interactivity — actions.X / callbacks.X referenced by a block's
  *                      render.php resolve to a method in that block's view.js.
+ *  12. doc-counts     — numbers the docs assert about the plugin (how many
+ *                      blocks, abilities, profiles) match what is on disk.
  *
  * Usage:
  *   php bin/validate-config.php [--format=human|json]
@@ -589,6 +591,100 @@ foreach ( $php_files_in( 'modules' ) as $path ) {
 		}
 
 		$add( 'error', 'schema', "$rel:" . ( $n + 1 ) . " declares column '{$m[1]}' as {$m[2]} with a DEFAULT — MySQL forbids defaults on those types, and under STRICT_TRANS_TABLES the CREATE TABLE fails outright." );
+	}
+}
+
+// ── Check 12: documented counts match reality ────────────────────────────────
+// Every one of these had already drifted. README claimed 10 abilities when
+// there were 14 and 16 REST endpoints when there were 46; readme.txt claimed
+// ten blocks the day an eleventh shipped. Prose does not fail a test suite, so
+// it silently stops being true unless something counts it.
+//
+// Claims are named explicitly rather than found by pattern. A general "<number>
+// blocks" search cannot tell a claim about the whole plugin from a true
+// statement about one module's three blocks — and a missing claim matters as
+// much as a wrong one, so a pattern that no longer matches is itself reported.
+$number_words = [
+	1  => 'one',
+	2  => 'two',
+	3  => 'three',
+	4  => 'four',
+	5  => 'five',
+	6  => 'six',
+	7  => 'seven',
+	8  => 'eight',
+	9  => 'nine',
+	10 => 'ten',
+	11 => 'eleven',
+	12 => 'twelve',
+	13 => 'thirteen',
+	14 => 'fourteen',
+	15 => 'fifteen',
+	16 => 'sixteen',
+	17 => 'seventeen',
+	18 => 'eighteen',
+	19 => 'nineteen',
+	20 => 'twenty',
+];
+
+$ability_names = [];
+foreach ( glob( $root . '/modules/*/includes/abilities.php' ) ?: [] as $abilities_file ) {
+	if ( preg_match_all( "/'producerkit\/[a-z0-9-]+'/", (string) file_get_contents( $abilities_file ), $am ) ) {
+		$ability_names = array_merge( $ability_names, $am[0] );
+	}
+}
+
+$documented_counts = [
+	[
+		'doc'     => 'readme.txt',
+		'pattern' => '/^\* (\S+) blocks under a dedicated category/mi',
+		'actual'  => count( glob( $root . '/blocks/*/block.json' ) ?: [] ),
+		'label'   => 'blocks',
+	],
+	[
+		'doc'     => 'readme.txt',
+		'pattern' => '/on WordPress 6\.9\+, (\S+) operations/i',
+		'actual'  => count( array_unique( $ability_names ) ),
+		'label'   => 'abilities',
+	],
+	[
+		'doc'     => 'readme.txt',
+		'pattern' => '/\*\*(\S+) trades\*\*/i',
+		'actual'  => count( glob( $root . '/modules/producer-profiles/profiles/*.php' ) ?: [] ),
+		'label'   => 'producer profiles',
+	],
+	[
+		'doc'     => 'README.md',
+		'pattern' => '/(\S+) profiles ship/i',
+		'actual'  => count( glob( $root . '/modules/producer-profiles/profiles/*.php' ) ?: [] ),
+		'label'   => 'producer profiles',
+	],
+];
+
+foreach ( $documented_counts as $claim ) {
+	$text = $read( $claim['doc'] );
+	if ( '' === $text ) {
+		continue;
+	}
+
+	if ( ! preg_match( $claim['pattern'], $text, $cm ) ) {
+		$add(
+			'warning',
+			'doc-counts',
+			"{$claim['doc']} no longer states how many {$claim['label']} there are — the sentence this check reads was reworded or removed."
+		);
+		continue;
+	}
+
+	$claimed = strtolower( trim( $cm[1] ) );
+	$value   = ctype_digit( $claimed ) ? (int) $claimed : (int) array_search( $claimed, $number_words, true );
+
+	if ( $value !== $claim['actual'] ) {
+		$add(
+			'error',
+			'doc-counts',
+			"{$claim['doc']} says \"{$cm[1]} {$claim['label']}\" but there are {$claim['actual']}."
+		);
 	}
 }
 
