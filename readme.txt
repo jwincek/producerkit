@@ -30,7 +30,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 
 * **Payment options per location** — list every way customers can pay: Venmo, Cash App, PayPal, a custom payment link, plus accepted-payment badges for cash, check, SNAP/EBT, and WIC/Senior FMNP market vouchers.
 * **QR codes** — show a scannable code for your payment link right in the location card; the print stylesheet enlarges it for stand signage. Generated locally by a bundled library — no external service.
-* **Pre-orders** — visitors reserve products for a pickup date and pay at the stand. Orders are rate-limited and spam-protected, staff manage them from a dedicated admin screen (pending → confirmed → ready → picked up), and email notifications keep both sides informed. No payment processing, no checkout.
+* **Pre-orders** — visitors reserve products for a pickup date and pay at the stand, and can view or cancel their own order from a link in the confirmation. Orders are rate-limited and spam-protected, staff manage them from a dedicated admin screen (pending → confirmed → ready → picked up), and email notifications keep both sides informed. No payment processing, no checkout.
 * **Harvest list** — active pre-orders aggregated into per-pickup-date totals of each product to have ready. Print it and take it to the field.
 * **Smart pickup dates** — pre-order dates are validated against the location's weekly schedule, season dates, and a per-location closed-dates list, so nobody orders for a day the stand is shut.
 
@@ -61,7 +61,8 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 = Events =
 
 * **Farm events** — pizza nights, potlucks, workshops, tours — with event types, schedules, and optional donation links.
-* **RSVPs** — visitors can RSVP with a party size; each RSVP gets a cancellation token. Rate-limited, with optional email notifications.
+* **RSVPs** — visitors RSVP with a party size and get a confirmation email with a link to their booking, which they can cancel themselves. Rate-limited and spam-protected.
+* **Guest list screen** — see who is coming to each event with a headcount and spots remaining, cancel a booking on someone's behalf, and download the list as CSV to take to the door.
 * **Event list and event card blocks** for upcoming and past events.
 
 = Built for the modern block editor =
@@ -70,6 +71,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * REST API endpoints for products, sources, taxonomies, availability, locations, stand status, events, RSVPs, pre-orders and commissions.
 * **Abilities API** — on WordPress 6.9+, fourteen operations (list products, get/update availability, toggle stand status, RSVP to an event, create and manage pre-orders, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
 * Modular architecture — disable feature modules you don't need with a single filter.
+* **Your data stays yours.** Deleting an event or a location removes the bookings attached to it rather than leaving names and addresses behind, and deleting the plugin only removes your content if you have asked it to.
 
 == Installation ==
 
@@ -99,6 +101,8 @@ The WordPress Abilities API (WordPress 6.9+) lets plugins register operations th
 = Does the RSVP feature store personal data? =
 
 RSVPs store the name, optional email, party size, and note a visitor submits, in a table on your own site. Nothing is sent to any external service.
+
+A guest who leaves an email address gets a link to their own booking and can cancel it themselves. Deleting an event removes its RSVPs. If you delete the plugin, you choose under **ProducerKit → Producer Profile** whether your content goes with it; the default is to leave it alone.
 
 = Do pre-orders process payments? =
 
