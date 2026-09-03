@@ -5,7 +5,7 @@
     "version": "2.2.0",
     "title": "Product Card",
     "category": "producerkit",
-    "icon": "carrot",
+    "icon": "tag",
     "description": "Display a single product with its availability status and source info.",
     "textdomain": "producerkit",
     "attributes": {

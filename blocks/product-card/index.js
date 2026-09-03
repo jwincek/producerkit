@@ -244,7 +244,7 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'carrot', label: 'Product Card' },
+							{ icon: 'tag', label: 'Product Card' },
 							el( ComboboxControl, {
 								label: 'Select a product',
 								value: '',

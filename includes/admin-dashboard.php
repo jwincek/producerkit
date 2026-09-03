@@ -56,11 +56,11 @@ function render_dashboard(): void {
 	$cpt_map    = [
 		'pkit_product'  => [
 			'label' => __( 'Products', 'producerkit' ),
-			'icon'  => '🥬',
+			'icon'  => '🏷️',
 		],
 		'pkit_source'   => [
 			'label' => __( 'Sources', 'producerkit' ),
-			'icon'  => '🌾',
+			'icon'  => '📇',
 		],
 		'pkit_location' => [
 			'label' => __( 'Locations', 'producerkit' ),
