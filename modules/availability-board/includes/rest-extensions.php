@@ -197,9 +197,19 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 			'product_types'   => array_values( $type_names ),
 			'product_slugs'   => array_values( $type_slugs ),
 			'seasons'         => array_values( $season_names ),
+			// Trade fields the active producer profile switched on — a
+			// potter's Clay Body, a printer's Ink. Keyed by taxonomy so the
+			// board can offer one filter row per field without knowing which
+			// fields exist.
+			'traits'          => trait_slugs( $pid ),
 			'permalink'       => get_permalink( $pid ),
 		];
 	}
+
+	// Filter rows for the trade fields, built from what is actually on the
+	// board rather than the whole taxonomy: offering "Cone 10 Gas" when
+	// nothing on the board is fired that way is a dead end.
+	$filter_traits = collect_trait_filters( $items );
 
 	// Group by primary product type for the board layout.
 	$grouped = [];
@@ -238,11 +248,12 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 
 	return new \WP_REST_Response(
 		[
-			'groups'       => array_values( $grouped ),
-			'total_items'  => count( $items ),
-			'filter_types' => $filter_types,
-			'statuses'     => \ProducerKit\Core\Availability\valid_statuses(),
-			'generated_at' => current_time( 'c' ),
+			'groups'        => array_values( $grouped ),
+			'total_items'   => count( $items ),
+			'filter_types'  => $filter_types,
+			'filter_traits' => $filter_traits,
+			'statuses'      => \ProducerKit\Core\Availability\valid_statuses(),
+			'generated_at'  => current_time( 'c' ),
 		],
 		200
 	);
@@ -266,4 +277,85 @@ function get_last_updated( \WP_REST_Request $request ): \WP_REST_Response {
 		],
 		200
 	);
+}
+
+/**
+ * The trade-field terms on one product, keyed by taxonomy.
+ *
+ * Empty when the producer-profiles module is off, or when no active profile
+ * asks for any of these fields — which is how a farm sees no extra filters.
+ *
+ * @return array<string, string[]> Taxonomy => term slugs.
+ */
+function trait_slugs( int $product_id ): array {
+	$out = [];
+
+	// The same filter core uses to avoid knowing that profiles exist.
+	foreach ( (array) apply_filters( 'pkit_detail_taxonomies', [], $product_id ) as $taxonomy ) {
+		if ( ! is_string( $taxonomy ) || ! taxonomy_exists( $taxonomy ) ) {
+			continue;
+		}
+
+		$terms = get_the_terms( $product_id, $taxonomy );
+		if ( $terms && ! is_wp_error( $terms ) ) {
+			$out[ $taxonomy ] = array_values( wp_list_pluck( $terms, 'slug' ) );
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Build one filter row per trade field, from the terms actually on the board.
+ *
+ * Not from the whole taxonomy: offering "Cone 10 Gas" when nothing on the
+ * board is fired that way is a dead end, and a row with a single option
+ * filters nothing, so both are dropped.
+ *
+ * Labelled as the *current viewer* names them, which under multi-profile is
+ * not the same for everyone — the grower reads Material where the baker reads
+ * Flour, over the same field.
+ *
+ * @param array[] $items
+ * @return array<int, array{taxonomy: string, label: string, terms: array<int, array{slug: string, label: string}>}>
+ */
+function collect_trait_filters( array $items ): array {
+	$present = [];
+
+	foreach ( $items as $item ) {
+		foreach ( (array) ( $item['traits'] ?? [] ) as $taxonomy => $slugs ) {
+			foreach ( $slugs as $slug ) {
+				$present[ $taxonomy ][ $slug ] = true;
+			}
+		}
+	}
+
+	$out = [];
+
+	foreach ( $present as $taxonomy => $slugs ) {
+		if ( ! taxonomy_exists( $taxonomy ) || count( $slugs ) < 2 ) {
+			continue;
+		}
+
+		$terms = [];
+		foreach ( array_keys( $slugs ) as $slug ) {
+			$term = get_term_by( 'slug', $slug, $taxonomy );
+			if ( $term instanceof \WP_Term ) {
+				$terms[] = [
+					'slug'  => $term->slug,
+					'label' => $term->name,
+				];
+			}
+		}
+
+		usort( $terms, static fn ( array $a, array $b ): int => strcasecmp( $a['label'], $b['label'] ) );
+
+		$out[] = [
+			'taxonomy' => $taxonomy,
+			'label'    => get_taxonomy( $taxonomy )->labels->singular_name,
+			'terms'    => $terms,
+		];
+	}
+
+	return $out;
 }

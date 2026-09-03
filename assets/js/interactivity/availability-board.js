@@ -50,6 +50,19 @@ const { state } = store( NAMESPACE, {
 			return state.activeType === ctx.filterType;
 		},
 
+		/**
+		 * Whether this trade-field button is the selected one for its field.
+		 *
+		 * Each field filters independently — a potter narrowing to Stoneware
+		 * has not also chosen a glaze — so the selection is a map keyed by
+		 * taxonomy rather than one active value.
+		 */
+		get isCurrentTraitActive() {
+			const ctx = getContext();
+			const selected = state.activeTraits[ ctx.filterTaxonomy ] || '';
+			return selected === ctx.filterTraitSlug;
+		},
+
 		get isCurrentItemHidden() {
 			const ctx = getContext();
 
@@ -62,6 +75,23 @@ const { state } = store( NAMESPACE, {
 
 			if ( state.activeType && ctx.itemType !== state.activeType ) {
 				return true;
+			}
+
+			// Trade fields narrow together: choosing Stoneware AND Ash Glaze
+			// shows only what is both, which is what a person picking through
+			// a shelf means by it.
+			const traits = state.activeTraits;
+			for ( const taxonomy in traits ) {
+				const wanted = traits[ taxonomy ];
+				if ( ! wanted ) {
+					continue;
+				}
+
+				const on =
+					( ctx.itemTraits && ctx.itemTraits[ taxonomy ] ) || [];
+				if ( ! on.includes( wanted ) ) {
+					return true;
+				}
 			}
 
 			return false;
@@ -138,6 +168,26 @@ const { state } = store( NAMESPACE, {
 				return;
 			}
 			state.activeStatuses[ status ] = ! state.activeStatuses[ status ];
+		},
+
+		/**
+		 * Select a term within one trade field, or clear it by re-clicking.
+		 */
+		setTraitFilter() {
+			const ctx = getContext();
+			const taxonomy = ctx.filterTaxonomy;
+			const slug = ctx.filterTraitSlug;
+
+			if ( ! taxonomy ) {
+				return;
+			}
+
+			// A fresh object rather than a mutation, so the proxy sees it.
+			state.activeTraits = {
+				...state.activeTraits,
+				[ taxonomy ]:
+					state.activeTraits[ taxonomy ] === slug ? '' : slug,
+			};
 		},
 
 		setProductTypeFilter() {

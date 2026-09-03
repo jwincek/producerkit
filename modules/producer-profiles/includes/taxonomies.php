@@ -43,7 +43,7 @@ function register(): void {
 				'hierarchical'      => false,
 				'public'            => true,
 				'show_in_rest'      => true,
-				'rest_base'         => str_replace( [ 'pkit_', '_' ], [ '', '-' ], $taxonomy ) . 's',
+				'rest_base'         => rest_base_for( $taxonomy ),
 				'rest_namespace'    => 'producerkit/v1',
 				'rewrite'           => [
 					'slug'       => str_replace( 'pkit_', '', $taxonomy ),
@@ -81,6 +81,22 @@ function filter_names( array $names, string $taxonomy ): array {
 	}
 
 	return [ (string) $override[0], (string) $override[1] ];
+}
+
+/**
+ * The REST base for one of the optional taxonomies.
+ *
+ * Appending "s" gave `finishs`, which would have been a public route name and
+ * awkward to change once anything consumed it. Spelled out rather than
+ * pluralised by rule: there are three of them, and a rule that handles
+ * "finish" correctly will meet "batch" or "wash" next.
+ */
+function rest_base_for( string $taxonomy ): string {
+	return [
+		'pkit_material'  => 'materials',
+		'pkit_finish'    => 'finishes',
+		'pkit_component' => 'components',
+	][ $taxonomy ] ?? str_replace( [ 'pkit_', '_' ], [ '', '-' ], $taxonomy );
 }
 
 /**
