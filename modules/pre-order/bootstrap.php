@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/orders-table.php';
 require_once __DIR__ . '/includes/rest-extensions.php';
+require_once __DIR__ . '/includes/order-response.php';
 require_once __DIR__ . '/includes/abilities.php';
 
 if ( is_admin() ) {

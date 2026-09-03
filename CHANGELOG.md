@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-09-03
+
+Every request this plugin takes from a visitor can now be reached again by the
+person who made it. Previously none of them could: a commission quote link
+404'd, an RSVP was unreachable once the tab closed, and a pre-order handed out
+a "cancellation code" with nowhere to enter it.
+
+### Added
+
+- **A page behind every request.** Commission quotes, RSVPs and pre-orders each
+  open from a link with the visitor's own token, showing what they booked and
+  offering the one action that makes sense — accept or decline, cancel, cancel.
+  Actions are POSTs with a nonce, never GETs, so a mail client prefetching a
+  link cannot cancel someone's booking.
+- **Guest confirmation emails for RSVPs**, which did not exist at all: every
+  notification went to the site admin. The confirmation carries the event, the
+  date, the party size and the link to the booking.
+- **A cancellation link in the pre-order confirmation.** The form asked people
+  to keep a code and the email left it out.
+- **An RSVPs admin screen** — the guest list per event with headcount and spots
+  left, one-click cancellation, and CSV export for working the door. Cells that
+  a spreadsheet would execute as formulas are escaped; a guest controls their
+  own name.
+
+### Changed
+
+- Reading a guest list requires `edit_others_posts` rather than `edit_posts`,
+  matching commissions. Filterable via `pkit_rsvp_manage_cap`.
+- Deleting an event or a pickup location now removes the RSVPs and pre-orders
+  that belonged to it, rather than leaving names and email addresses pointing
+  at a post that no longer exists. Trashing still keeps them, since a trashed
+  event can be restored.
+
+### Added (housekeeping)
+
+- **`uninstall.php`**, which did not exist. Schema versions, the cron hook and
+  rate-limit records always go; products, locations, events and the requests
+  attached to them only when the site has ticked a box under ProducerKit →
+  Producer Profile. Off by default, because deleting a plugin to troubleshoot
+  should not destroy a catalogue.
+
+
 ## [2.1.0] - 2026-09-02
 
 Commissions did not work in 2.0.0. A maker could send a quote and no customer

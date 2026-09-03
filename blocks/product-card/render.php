@@ -32,8 +32,8 @@ $thumbnail     = get_the_post_thumbnail( $product_id, 'medium', [ 'alt' => '' ] 
 // No featured image: fall back to the product type's placeholder. Still empty
 // when the type has no bundled art, in which case no image renders at all.
 $placeholder = $thumbnail ? '' : \ProducerKit\Core\Product_Images\placeholder_url( $product_id );
-$types         = get_the_terms( $product_id, 'pkit_product_type' );
-$seasons       = get_the_terms( $product_id, 'pkit_season' );
+$types       = get_the_terms( $product_id, 'pkit_product_type' );
+$seasons     = get_the_terms( $product_id, 'pkit_season' );
 
 // Trade-specific terms the active producer profiles switched on — a potter's
 // Clay Body, a printer's Ink. Empty when no profile asks for any.

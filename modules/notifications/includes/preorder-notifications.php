@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace ProducerKit\Notifications\PreOrder;
 
+use ProducerKit\PreOrder\OrderResponse;
+
 use function ProducerKit\Notifications\Email\send;
 
 defined( 'ABSPATH' ) || exit;
@@ -68,6 +70,13 @@ add_action(
 			$confirm        .= $order['location_name'] ? ' at <strong>' . esc_html( $order['location_name'] ) . '</strong>.</p>' : '.</p>';
 			$confirm        .= items_html( $order );
 			$confirm        .= '<p>Payment is at pickup. We\'ll email you when your order is ready.</p>';
+
+			// The token was previously shown once on the success panel and left
+			// out of this email entirely, so a customer who closed the tab had
+			// the "cancellation code" the form told them to keep, and nowhere
+			// to use it.
+			$confirm .= '<p>' . esc_html__( 'Plans change — you can view or cancel this order here:', 'producerkit' ) . '<br>';
+			$confirm .= esc_url( OrderResponse\url_for( (string) $order['token'] ) ) . '</p>';
 
 			send( $confirm_subject, $confirm, [ $order['email'] ] );
 		}
