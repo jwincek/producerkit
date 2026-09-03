@@ -31,8 +31,13 @@ $board    = $response->get_data();
 
 $groups       = $board['groups'] ?? [];
 $filter_types = $board['filter_types'] ?? [];
-$statuses     = $board['statuses'] ?? [];
-$total        = $board['total_items'] ?? 0;
+
+// One row per trade field the active producer profile switched on, built from
+// the terms actually present on this board. Empty for a farm, which asks for
+// none of them.
+$filter_traits = $board['filter_traits'] ?? [];
+$statuses      = $board['statuses'] ?? [];
+$total         = $board['total_items'] ?? 0;
 
 // Build activeStatuses as an object map: { "abundant": true, "available": true, ... }
 $active_list = array_filter( array_map( 'trim', explode( ',', $default_status ) ) );
@@ -58,6 +63,10 @@ wp_interactivity_state(
 		'activeStatuses' => $status_map,
 		'allStatuses'    => array_values( $statuses ),
 		'activeType'     => '',
+		// One selection per trade field, seeded empty. Declared here rather
+		// than in the store's `state:` block, which would overwrite whatever
+		// the server sent.
+		'activeTraits'   => (object) [],
 		'totalItems'     => $total,
 		'allItems'       => $all_items,
 	]
@@ -147,6 +156,48 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
+
+				<?php foreach ( $filter_traits as $trait ) : ?>
+					<div
+						class="pkit-avail-board__filter-group"
+						role="toolbar"
+						aria-label="
+						<?php
+						printf(
+							/* translators: %s: trade field name, e.g. Clay Body. */
+							esc_attr__( 'Filter by %s', 'producerkit' ),
+							esc_attr( $trait['label'] )
+						);
+						?>
+						"
+					>
+						<span class="pkit-avail-board__filter-label">
+							<?php echo esc_html( $trait['label'] ); ?>:
+						</span>
+						<?php foreach ( $trait['terms'] as $term ) : ?>
+							<button
+								type="button"
+								class="pkit-avail-board__filter-btn"
+								data-wp-on--click="actions.setTraitFilter"
+								data-wp-context='
+								<?php
+								echo esc_attr(
+									(string) wp_json_encode(
+										[
+											'filterTaxonomy'  => $trait['taxonomy'],
+											'filterTraitSlug' => $term['slug'],
+										]
+									)
+								);
+								?>
+													'
+								data-wp-class--pkit-avail-board__filter-btn--active="state.isCurrentTraitActive"
+								data-wp-bind--aria-pressed="state.isCurrentTraitActive"
+								aria-pressed="false"
+							><?php echo esc_html( $term['label'] ); ?></button>
+						<?php endforeach; ?>
+					</div>
+				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>
 
@@ -205,6 +256,10 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						$item_context = [
 							'itemStatus' => $item['status'],
 							'itemType'   => $item['product_slugs'][0] ?? '',
+							// Keyed by taxonomy so the store can test each
+							// trade field independently without knowing which
+							// fields this site has.
+							'itemTraits' => (object) ( $item['traits'] ?? [] ),
 						];
 						?>
 						<article
