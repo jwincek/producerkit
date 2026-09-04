@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -197,9 +199,15 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'store', label: 'Stand Status Banner' },
+							{
+								icon: 'store',
+								label: __(
+									'Stand Status Banner',
+									'producerkit'
+								),
+							},
 							el( ComboboxControl, {
-								label: 'Select a location',
+								label: __( 'Select a location', 'producerkit' ),
 								value: '',
 								options,
 								onChange( val ) {
@@ -243,7 +251,7 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Stand Status Banner',
+							label: __( 'Stand Status Banner', 'producerkit' ),
 							instructions:
 								error ||
 								'Stand data unavailable. Check that this location is still published.',
@@ -421,9 +429,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Stand Selection', initialOpen: true },
+						{
+							title: __( 'Stand Selection', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Location',
+							label: __( 'Location', 'producerkit' ),
 							value: locationId || '',
 							options,
 							onChange( val ) {
@@ -435,42 +446,54 @@
 					),
 					el(
 						PanelBody,
-						{ title: 'Display Options', initialOpen: true },
+						{
+							title: __( 'Display Options', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( SelectControl, {
-							label: 'Layout',
+							label: __( 'Layout', 'producerkit' ),
 							value: layout,
 							options: [
-								{ label: 'Full Banner', value: 'banner' },
-								{ label: 'Compact Strip', value: 'compact' },
-								{ label: 'Card', value: 'card' },
+								{
+									label: __( 'Full Banner', 'producerkit' ),
+									value: 'banner',
+								},
+								{
+									label: __( 'Compact Strip', 'producerkit' ),
+									value: 'compact',
+								},
+								{
+									label: __( 'Card', 'producerkit' ),
+									value: 'card',
+								},
 							],
 							onChange( val ) {
 								setAttributes( { layout: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show address',
+							label: __( 'Show address', 'producerkit' ),
 							checked: showAddress,
 							onChange( val ) {
 								setAttributes( { showAddress: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show hours',
+							label: __( 'Show hours', 'producerkit' ),
 							checked: showHours,
 							onChange( val ) {
 								setAttributes( { showHours: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show Venmo link',
+							label: __( 'Show Venmo link', 'producerkit' ),
 							checked: showVenmo,
 							onChange( val ) {
 								setAttributes( { showVenmo: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show season dates',
+							label: __( 'Show season dates', 'producerkit' ),
 							checked: showSeasonDates,
 							onChange( val ) {
 								setAttributes( { showSeasonDates: val } );
@@ -479,9 +502,15 @@
 					),
 					el(
 						PanelBody,
-						{ title: 'Live Updates', initialOpen: false },
+						{
+							title: __( 'Live Updates', 'producerkit' ),
+							initialOpen: false,
+						},
 						el( ToggleControl, {
-							label: 'Auto-refresh status (polls every 60s)',
+							label: __(
+								'Auto-refresh status (polls every 60s)',
+								'producerkit'
+							),
 							checked: pollingEnabled,
 							onChange( val ) {
 								setAttributes( { pollingEnabled: val } );
@@ -497,5 +526,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

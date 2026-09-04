@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -123,9 +125,12 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'store', label: 'Location Info' },
+							{
+								icon: 'store',
+								label: __( 'Location Info', 'producerkit' ),
+							},
 							el( ComboboxControl, {
-								label: 'Select a location',
+								label: __( 'Select a location', 'producerkit' ),
 								value: '',
 								options,
 								onChange( val ) {
@@ -169,8 +174,13 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Location Info',
-							instructions: error || 'Location data unavailable.',
+							label: __( 'Location Info', 'producerkit' ),
+							instructions:
+								error ||
+								__(
+									'Location data unavailable.',
+									'producerkit'
+								),
 						} )
 					)
 				);
@@ -340,9 +350,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Location Settings', initialOpen: true },
+						{
+							title: __( 'Location Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Select Location',
+							label: __( 'Select Location', 'producerkit' ),
 							value: locationId || '',
 							options,
 							onChange( val ) {
@@ -352,27 +365,36 @@
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show open/closed status',
+							label: __(
+								'Show open/closed status',
+								'producerkit'
+							),
 							checked: showStatus,
 							onChange( val ) {
 								setAttributes( { showStatus: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show payment options',
+							label: __( 'Show payment options', 'producerkit' ),
 							checked: showVenmo,
 							onChange( val ) {
 								setAttributes( { showVenmo: val } );
 							},
-							help: 'Links and accepted-payment badges from the location\u2019s Payment Options panel.',
+							help: __(
+								'Links and accepted-payment badges from the location\u2019s Payment Options panel.',
+								'producerkit'
+							),
 						} ),
 						el( ToggleControl, {
-							label: 'Show payment QR code',
+							label: __( 'Show payment QR code', 'producerkit' ),
 							checked: !! showQR,
 							onChange( val ) {
 								setAttributes( { showQR: val } );
 							},
-							help: 'A scannable code for the first payment link \u2014 handy for signage at the stand.',
+							help: __(
+								'A scannable code for the first payment link \u2014 handy for signage at the stand.',
+								'producerkit'
+							),
 						} )
 					)
 				);
@@ -384,5 +406,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

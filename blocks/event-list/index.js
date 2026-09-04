@@ -4,11 +4,13 @@
  * @param element
  * @param blockEditor
  * @param components
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components ) {
+( function ( blocks, element, blockEditor, components, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -173,7 +175,7 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Event List',
+							label: __( 'Event List', 'producerkit' ),
 							instructions: error,
 						} )
 					)
@@ -491,7 +493,10 @@
 													type: 'text',
 													className:
 														'pkit-event-card__rsvp-input',
-													placeholder: 'Your name',
+													placeholder: __(
+														'Your name',
+														'producerkit'
+													),
 													disabled: true,
 												} ),
 												el( 'input', {
@@ -527,9 +532,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Event List Settings', initialOpen: true },
+						{
+							title: __( 'Event List Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( RangeControl, {
-							label: 'Events to show',
+							label: __( 'Events to show', 'producerkit' ),
 							value: perPage,
 							onChange( val ) {
 								setAttributes( { perPage: val } );
@@ -538,21 +546,24 @@
 							max: 50,
 						} ),
 						el( ToggleControl, {
-							label: 'Show past events',
+							label: __( 'Show past events', 'producerkit' ),
 							checked: showPastEvents,
 							onChange( val ) {
 								setAttributes( { showPastEvents: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show event type filters',
+							label: __(
+								'Show event type filters',
+								'producerkit'
+							),
 							checked: showTypeFilters,
 							onChange( val ) {
 								setAttributes( { showTypeFilters: val } );
 							},
 						} ),
 						el( TextControl, {
-							label: 'Empty state message',
+							label: __( 'Empty state message', 'producerkit' ),
 							value: attributes.emptyMessage,
 							onChange( val ) {
 								setAttributes( { emptyMessage: val } );
@@ -561,23 +572,26 @@
 					),
 					el(
 						PanelBody,
-						{ title: 'Display Options', initialOpen: false },
+						{
+							title: __( 'Display Options', 'producerkit' ),
+							initialOpen: false,
+						},
 						el( ToggleControl, {
-							label: 'Show event images',
+							label: __( 'Show event images', 'producerkit' ),
 							checked: showImages,
 							onChange( val ) {
 								setAttributes( { showImages: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show RSVP forms',
+							label: __( 'Show RSVP forms', 'producerkit' ),
 							checked: showRsvp,
 							onChange( val ) {
 								setAttributes( { showRsvp: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show location details',
+							label: __( 'Show location details', 'producerkit' ),
 							checked: showLocation,
 							onChange( val ) {
 								setAttributes( { showLocation: val } );
@@ -592,5 +606,6 @@
 	window.wp.blocks,
 	window.wp.element,
 	window.wp.blockEditor,
-	window.wp.components
+	window.wp.components,
+	window.wp.i18n
 );

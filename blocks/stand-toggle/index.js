@@ -8,11 +8,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
 	const useCallback = element.useCallback;
@@ -166,9 +168,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Stand Selection', initialOpen: true },
+						{
+							title: __( 'Stand Selection', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Location',
+							label: __( 'Location', 'producerkit' ),
 							value: locationId || '',
 							options,
 							onChange( val ) {
@@ -185,9 +190,14 @@
 					! locationId
 						? el( components.Placeholder, {
 								icon: 'controls-repeat',
-								label: 'Stand Quick Toggle',
-								instructions:
+								label: __(
+									'Stand Quick Toggle',
+									'producerkit'
+								),
+								instructions: __(
 									'Select a location in the sidebar.',
+									'producerkit'
+								),
 						  } )
 						: ! loaded
 						? el(
@@ -223,13 +233,18 @@
 									},
 								} ),
 								el( TextControl, {
-									label: 'Status message (optional)',
+									label: __(
+										'Status message (optional)',
+										'producerkit'
+									),
 									value: message,
 									onChange( val ) {
 										setMessage( val );
 									},
-									placeholder:
+									placeholder: __(
 										'e.g. "Back at 2 PM" or "Sold out for today"',
+										'producerkit'
+									),
 								} ),
 								el(
 									'div',
@@ -274,5 +289,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -136,7 +138,10 @@
 			}, [] );
 
 			const locationOptions = [
-				{ value: 0, label: '\u2014 All locations \u2014' },
+				{
+					value: 0,
+					label: __( '\u2014 All locations \u2014', 'producerkit' ),
+				},
 			].concat(
 				locations.map( function ( l ) {
 					return {
@@ -180,8 +185,10 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Availability Board',
-							instructions: error || 'Board data unavailable.',
+							label: __( 'Availability Board', 'producerkit' ),
+							instructions:
+								error ||
+								__( 'Board data unavailable.', 'producerkit' ),
 						} )
 					)
 				);
@@ -486,20 +493,29 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Board Settings', initialOpen: true },
+						{
+							title: __( 'Board Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( SelectControl, {
-							label: 'Layout',
+							label: __( 'Layout', 'producerkit' ),
 							value: layout,
 							options: [
-								{ label: 'Grid', value: 'grid' },
-								{ label: 'List', value: 'list' },
+								{
+									label: __( 'Grid', 'producerkit' ),
+									value: 'grid',
+								},
+								{
+									label: __( 'List', 'producerkit' ),
+									value: 'list',
+								},
 							],
 							onChange( val ) {
 								setAttributes( { layout: val } );
 							},
 						} ),
 						el( ComboboxControl, {
-							label: 'Location filter',
+							label: __( 'Location filter', 'producerkit' ),
 							value: locationId || '',
 							options: locationOptions,
 							onChange( val ) {
@@ -509,7 +525,7 @@
 							},
 						} ),
 						el( TextControl, {
-							label: 'Empty state message',
+							label: __( 'Empty state message', 'producerkit' ),
 							value: attributes.emptyMessage,
 							onChange( val ) {
 								setAttributes( { emptyMessage: val } );
@@ -518,7 +534,10 @@
 					),
 					el(
 						PanelBody,
-						{ title: 'Default Visibility', initialOpen: true },
+						{
+							title: __( 'Default Visibility', 'producerkit' ),
+							initialOpen: true,
+						},
 						ALL_STATUSES.map( function ( status ) {
 							return el( CheckboxControl, {
 								key: status,
@@ -547,30 +566,33 @@
 					),
 					el(
 						PanelBody,
-						{ title: 'Display Options', initialOpen: false },
+						{
+							title: __( 'Display Options', 'producerkit' ),
+							initialOpen: false,
+						},
 						el( ToggleControl, {
-							label: 'Show filter controls',
+							label: __( 'Show filter controls', 'producerkit' ),
 							checked: showFilters,
 							onChange( val ) {
 								setAttributes( { showFilters: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show product images',
+							label: __( 'Show product images', 'producerkit' ),
 							checked: showImages,
 							onChange( val ) {
 								setAttributes( { showImages: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show prices',
+							label: __( 'Show prices', 'producerkit' ),
 							checked: showPrices,
 							onChange( val ) {
 								setAttributes( { showPrices: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show quantity notes',
+							label: __( 'Show quantity notes', 'producerkit' ),
 							checked: showQuantityNotes,
 							onChange( val ) {
 								setAttributes( { showQuantityNotes: val } );
@@ -586,5 +608,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

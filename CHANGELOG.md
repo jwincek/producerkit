@@ -29,6 +29,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the store witnessed, and inventing an order to represent it would make its
   takings wrong.
 
+### Fixed
+
+- Editor-facing JavaScript is now translatable. The PHP side of this plugin
+  has always been fully translated, and every control sitting beside it — the
+  three CPT sidebar panels and ten of the eleven blocks — was hard-coded
+  English. 161 strings a translator simply could not reach, because
+  `wp i18n make-pot` only sees what is wrapped. Running it before and after:
+  685 strings and 26 JavaScript references become 858 and 241.
+
+  Wrapping alone would not have been enough for the sidebar panels. They are
+  not blocks, so nothing registered a translation catalogue against their
+  handles, and their `__()` calls would have run and resolved to themselves.
+  Blocks get that for free from `block.json`'s `textdomain`, which
+  `WP_Scripts::set_translations()` honours by also adding the `wp-i18n`
+  dependency.
+
+  Option values, class names, icons and CSS stay untranslated, which matters
+  more than the wrapping: a translated `value` is not a cosmetic bug but a
+  broken control, and it would break only in locales nobody here tests in. A
+  test asserts both directions.
+
+  One Placeholder message was assembled by string concatenation and is now
+  built with `sprintf`, since word order differs by language and the fragments
+  could not be reassembled correctly.
+
 ### Changed
 
 - Made-to-order requests are now worded per producer profile. "Commission" is
