@@ -54,7 +54,8 @@
 			const productOptions = products.map( function ( p ) {
 				return {
 					value: p.id,
-					label: p.title?.rendered || '(untitled)',
+					label:
+						p.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -64,7 +65,9 @@
 				locations.map( function ( l ) {
 					return {
 						value: l.id,
-						label: l.title?.rendered || '(untitled)',
+						label:
+							l.title?.rendered ||
+							__( '(untitled)', 'producerkit' ),
 					};
 				} )
 			);
@@ -124,7 +127,7 @@
 									className:
 										'pkit-availability-badge pkit-availability-badge--available',
 								},
-								'Available (preview)'
+								__( 'Available (preview)', 'producerkit' )
 						  )
 				)
 			);

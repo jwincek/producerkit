@@ -12,6 +12,7 @@
 
 	const el = element.createElement;
 	const __ = i18n.__;
+	const sprintf = i18n.sprintf;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -129,7 +130,12 @@
 							setLoading( false );
 						} )
 						.catch( function () {
-							setError( 'Could not load stand data.' );
+							setError(
+								__(
+									'Could not load stand data.',
+									'producerkit'
+								)
+							);
 							setStand( null );
 							setLoading( false );
 						} );
@@ -155,7 +161,8 @@
 			const options = locations.map( function ( l ) {
 				return {
 					value: l.id,
-					label: l.title?.rendered || '(untitled)',
+					label:
+						l.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -167,8 +174,8 @@
 				: 'closed';
 			const statusLabel = stand
 				? stand.is_open
-					? 'Open Now'
-					: 'Closed'
+					? __( 'Open Now', 'producerkit' )
+					: __( 'Closed', 'producerkit' )
 				: '';
 			const timeAgo = stand ? formatTimeAgo( stand.last_toggled ) : '';
 			const venmoUrl =
@@ -254,7 +261,10 @@
 							label: __( 'Stand Status Banner', 'producerkit' ),
 							instructions:
 								error ||
-								'Stand data unavailable. Check that this location is still published.',
+								__(
+									'Stand data unavailable. Check that this location is still published.',
+									'producerkit'
+								),
 						} )
 					)
 				);
@@ -309,14 +319,22 @@
 										className:
 											'pkit-stand-banner__next-open',
 									},
-									'Next open: ' + stand.next_open
+									sprintf(
+										/* translators: %s: the next date the stand opens. */
+										__( 'Next open: %s', 'producerkit' ),
+										stand.next_open
+									)
 							  )
 							: null,
 						timeAgo
 							? el(
 									'span',
 									{ className: 'pkit-stand-banner__updated' },
-									'Updated ' + timeAgo
+									sprintf(
+										/* translators: %s: a relative time, e.g. "4 hours ago". */
+										__( 'Updated %s', 'producerkit' ),
+										timeAgo
+									)
 							  )
 							: null
 					),
@@ -333,14 +351,18 @@
 										className:
 											'pkit-stand-banner__off-season',
 									},
-									'Our season runs ' +
+									sprintf(
+										/* translators: 1: season start date, 2: season end date. */
+										__(
+											'Our season runs %1$s – %2$s. See you then!',
+											'producerkit'
+										),
 										formatDate(
 											stand.season_start,
 											'long'
-										) +
-										' – ' +
-										formatDate( stand.season_end, 'long' ) +
-										'. See you then!'
+										),
+										formatDate( stand.season_end, 'long' )
+									)
 							  )
 							: null,
 						// In-season note.
@@ -351,13 +373,18 @@
 										className:
 											'pkit-stand-banner__season-note',
 									},
-									'Season: ' +
+									sprintf(
+										/* translators: 1: season start date, 2: season end date. */
+										__(
+											'Season: %1$s – %2$s',
+											'producerkit'
+										),
 										formatDate(
 											stand.season_start,
 											'short'
-										) +
-										' – ' +
+										),
 										formatDate( stand.season_end, 'short' )
+									)
 							  )
 							: null,
 						// Address.
@@ -411,9 +438,14 @@
 										},
 										'\uD83D\uDCB8'
 									),
-									'Pay with Venmo (@' +
-										stand.venmo_handle.replace( /^@/, '' ) +
-										')'
+									sprintf(
+										/* translators: %s: a Venmo handle without the @. */
+										__(
+											'Pay with Venmo (@%s)',
+											'producerkit'
+										),
+										stand.venmo_handle.replace( /^@/, '' )
+									)
 							  )
 							: null
 					)

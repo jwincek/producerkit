@@ -99,7 +99,9 @@
 		].concat(
 			locations.map( function ( loc ) {
 				return {
-					label: loc.title?.rendered || '(untitled)',
+					label:
+						loc.title?.rendered ||
+						__( '(untitled)', 'producerkit' ),
 					value: loc.id,
 				};
 			} )
@@ -125,7 +127,10 @@
 							isDismissible: false,
 							style: { marginBottom: '12px' },
 						},
-						'Set a start date before publishing.'
+						__(
+							'Set a start date before publishing.',
+							'producerkit'
+						)
 				  )
 				: null,
 
@@ -133,7 +138,7 @@
 			el(
 				'p',
 				{ style: { fontWeight: 600, marginBottom: '4px' } },
-				'Start'
+				__( 'Start', 'producerkit' )
 			),
 			el(
 				'div',
@@ -174,7 +179,7 @@
 			el(
 				'p',
 				{ style: { fontWeight: 600, marginBottom: '4px' } },
-				'End'
+				__( 'End', 'producerkit' )
 			),
 			el(
 				'div',
@@ -415,7 +420,10 @@
 							status: 'error',
 							isDismissible: false,
 						},
-						'This event is marked as cancelled. It will display with a cancelled badge on the front end.'
+						__(
+							'This event is marked as cancelled. It will display with a cancelled badge on the front end.',
+							'producerkit'
+						)
 				  )
 				: null
 		);

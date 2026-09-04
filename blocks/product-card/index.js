@@ -29,11 +29,11 @@
 	const useSelect = data.useSelect;
 
 	const STATUS_LABELS = {
-		abundant: 'Abundant',
-		available: 'Available',
-		limited: 'Limited',
-		sold_out: 'Sold out',
-		unavailable: 'Unavailable',
+		abundant: __( 'Abundant', 'producerkit' ),
+		available: __( 'Available', 'producerkit' ),
+		limited: __( 'Limited', 'producerkit' ),
+		sold_out: __( 'Sold out', 'producerkit' ),
+		unavailable: __( 'Unavailable', 'producerkit' ),
 	};
 
 	function getRestBase() {
@@ -154,7 +154,12 @@
 							}
 						} )
 						.catch( function () {
-							setError( 'Could not load product data.' );
+							setError(
+								__(
+									'Could not load product data.',
+									'producerkit'
+								)
+							);
 							setProduct( null );
 							setLoading( false );
 						} );
@@ -180,7 +185,10 @@
 			const options = products.map( function ( p ) {
 				return {
 					value: p.id,
-					label: p.title?.rendered || p.title?.raw || '(untitled)',
+					label:
+						p.title?.rendered ||
+						p.title?.raw ||
+						__( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -439,7 +447,10 @@
 											className:
 												'pkit-availability-badge pkit-availability-badge--unavailable',
 										},
-										'No availability set'
+										__(
+											'No availability set',
+											'producerkit'
+										)
 									)
 							  )
 							: null,

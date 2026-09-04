@@ -77,7 +77,12 @@
 							setLoading( false );
 						} )
 						.catch( function () {
-							setError( 'Could not load location data.' );
+							setError(
+								__(
+									'Could not load location data.',
+									'producerkit'
+								)
+							);
 							setStand( null );
 							setLoading( false );
 						} );
@@ -103,7 +108,8 @@
 			const options = locations.map( function ( l ) {
 				return {
 					value: l.id,
-					label: l.title?.rendered || '(untitled)',
+					label:
+						l.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -214,7 +220,9 @@
 												? 'open'
 												: 'closed' ),
 									},
-									stand.is_open ? 'Open Now' : 'Closed'
+									stand.is_open
+										? __( 'Open Now', 'producerkit' )
+										: __( 'Closed', 'producerkit' )
 							  )
 							: null
 					),
@@ -258,7 +266,7 @@
 										className:
 											'pkit-location-info__payments-label',
 									},
-									'Payment options:'
+									__( 'Payment options:', 'producerkit' )
 								),
 								showQR &&
 									payMethods.some( function ( m ) {
@@ -289,7 +297,10 @@
 														textAlign: 'center',
 													},
 												},
-												'QR renders on the front end'
+												__(
+													'QR renders on the front end',
+													'producerkit'
+												)
 											)
 									  )
 									: null,

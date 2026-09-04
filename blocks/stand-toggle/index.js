@@ -15,6 +15,7 @@
 
 	const el = element.createElement;
 	const __ = i18n.__;
+	const sprintf = i18n.sprintf;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
 	const useCallback = element.useCallback;
@@ -92,7 +93,8 @@
 			const options = locations.map( function ( l ) {
 				return {
 					value: l.id,
-					label: l.title?.rendered || '(untitled)',
+					label:
+						l.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -144,9 +146,13 @@
 						.then( function ( payload ) {
 							setSaving( false );
 							setNotice(
-								'Stand is now ' +
-									( payload.is_open ? 'OPEN' : 'CLOSED' ) +
-									'.'
+								sprintf(
+									/* translators: %s: OPEN or CLOSED. */
+									__( 'Stand is now %s.', 'producerkit' ),
+									payload.is_open
+										? __( 'OPEN', 'producerkit' )
+										: __( 'CLOSED', 'producerkit' )
+								)
 							);
 							setTimeout( function () {
 								setNotice( '' );
@@ -154,7 +160,12 @@
 						} )
 						.catch( function () {
 							setSaving( false );
-							setNotice( 'Error updating stand status.' );
+							setNotice(
+								__(
+									'Error updating stand status.',
+									'producerkit'
+								)
+							);
 						} );
 				},
 				[ locationId, isOpen, message ]
@@ -221,12 +232,20 @@
 										'strong',
 										null,
 										isOpen
-											? 'Stand is OPEN'
-											: 'Stand is CLOSED'
+											? __(
+													'Stand is OPEN',
+													'producerkit'
+											  )
+											: __(
+													'Stand is CLOSED',
+													'producerkit'
+											  )
 									)
 								),
 								el( ToggleControl, {
-									label: isOpen ? 'Open' : 'Closed',
+									label: isOpen
+										? __( 'Open', 'producerkit' )
+										: __( 'Closed', 'producerkit' ),
 									checked: isOpen,
 									onChange( val ) {
 										setIsOpen( val );
@@ -258,8 +277,11 @@
 											disabled: saving,
 										},
 										saving
-											? 'Saving…'
-											: 'Update Stand Status'
+											? __( 'Saving…', 'producerkit' )
+											: __(
+													'Update Stand Status',
+													'producerkit'
+											  )
 									)
 								),
 								notice
@@ -267,7 +289,7 @@
 											Notice,
 											{
 												status: notice.includes(
-													'Error'
+													__( 'Error', 'producerkit' )
 												)
 													? 'error'
 													: 'success',

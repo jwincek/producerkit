@@ -260,7 +260,10 @@
 					className: 'components-base-control__help',
 					style: { marginTop: 0 },
 				},
-				'Link this product to grain origins or partner farms.'
+				__(
+					'Link this product to grain origins or partner farms.',
+					'producerkit'
+				)
 			),
 
 			// Linked sources.
@@ -287,7 +290,8 @@
 								el(
 									'span',
 									null,
-									source.title?.rendered || '(untitled)'
+									source.title?.rendered ||
+										__( '(untitled)', 'producerkit' )
 								),
 								el( Button, {
 									isSmall: true,
@@ -315,7 +319,9 @@
 						].concat(
 							availableSources.map( function ( s ) {
 								return {
-									label: s.title?.rendered || '(untitled)',
+									label:
+										s.title?.rendered ||
+										__( '(untitled)', 'producerkit' ),
 									value: s.id,
 								};
 							} )
@@ -336,7 +342,10 @@
 								fontSize: '13px',
 							},
 						},
-						'No sources created yet. Add them under Sources in the sidebar.'
+						__(
+							'No sources created yet. Add them under Sources in the sidebar.',
+							'producerkit'
+						)
 				  )
 				: null
 		);
@@ -540,8 +549,14 @@
 				},
 				help:
 					mode === 'none'
-						? 'No money changes hands online. This is the default.'
-						: 'Raises a pending WooCommerce order and emails the customer a payment link.',
+						? __(
+								'No money changes hands online. This is the default.',
+								'producerkit'
+						  )
+						: __(
+								'Raises a pending WooCommerce order and emails the customer a payment link.',
+								'producerkit'
+						  ),
 			} ),
 		];
 
@@ -578,8 +593,8 @@
 					key: 'value',
 					label:
 						kind === 'percent'
-							? 'Percent to take now'
-							: 'Amount per item',
+							? __( 'Percent to take now', 'producerkit' )
+							: __( 'Amount per item', 'producerkit' ),
 					type: 'number',
 					min: 0,
 					step: kind === 'percent' ? 1 : 0.01,
@@ -592,8 +607,14 @@
 					},
 					help:
 						kind === 'percent'
-							? 'A deposit above 100% is charged as the full amount.'
-							: 'Multiplied by quantity — $50 on two items takes $100. A deposit above the item price is charged as the full amount.',
+							? __(
+									'A deposit above 100% is charged as the full amount.',
+									'producerkit'
+							  )
+							: __(
+									'Multiplied by quantity — $50 on two items takes $100. A deposit above the item price is charged as the full amount.',
+									'producerkit'
+							  ),
 				} )
 			);
 		}

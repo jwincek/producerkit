@@ -132,7 +132,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 = Unreleased =
 * Added: your producer profile now names the fields too, not just the categories. A beekeeper's source is an Apiary with Forage Notes; a musician's is a Label with a Studio and Mastering Notes. The help text under each field follows the label.
 * Added: sources now have an editor panel. Their four fields were shown on the front end and returned by the API but there was nowhere in the editor to enter them.
-* Fixed: the plugin's editor panels and block controls are now translatable. The PHP was fully translated and the JavaScript beside it was hard-coded English — 161 strings a translator could not reach.
+* Fixed: the plugin's editor panels and block controls are now translatable throughout. The PHP was fully translated and the JavaScript beside it was hard-coded English — around 270 strings a translator could not reach.
 * Changed: made-to-order requests are now called what your trade calls them. "Commission" is right for a potter and wrong for a beekeeper answering an enquiry about bulk honey, or a grower taking a special order — the wording now follows your producer profile everywhere a customer or you can see it.
 * Added: per-product deposits on pre-orders — take a fixed amount, a percentage, or the full price up front, and leave the rest for pickup. The balance can be collected with a payment link or taken in person and marked paid.
 * Fixed: pre-orders could never actually be paid for through WooCommerce. The pricing and the order-raising both existed but were never joined up, so the payment link this plugin promised for "a request" only ever appeared for commissions.

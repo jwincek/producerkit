@@ -181,13 +181,13 @@
 	 * ───────────────────────────────────────────── */
 
 	const DAY_LABELS = [
-		'Sunday',
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday',
+		__( 'Sunday', 'producerkit' ),
+		__( 'Monday', 'producerkit' ),
+		__( 'Tuesday', 'producerkit' ),
+		__( 'Wednesday', 'producerkit' ),
+		__( 'Thursday', 'producerkit' ),
+		__( 'Friday', 'producerkit' ),
+		__( 'Saturday', 'producerkit' ),
 	];
 
 	function StandSchedulePanel() {
@@ -282,7 +282,7 @@
 			el(
 				'p',
 				{ style: { fontWeight: 600, marginBottom: '4px' } },
-				'Season Dates'
+				__( 'Season Dates', 'producerkit' )
 			),
 			el(
 				'p',
@@ -290,7 +290,7 @@
 					className: 'components-base-control__help',
 					style: { marginTop: 0, marginBottom: '8px' },
 				},
-				'Leave blank if open year-round.'
+				__( 'Leave blank if open year-round.', 'producerkit' )
 			),
 
 			el(
@@ -345,7 +345,7 @@
 						marginTop: '12px',
 					},
 				},
-				'Weekly Schedule'
+				__( 'Weekly Schedule', 'producerkit' )
 			),
 
 			schedule.length === 0
@@ -358,7 +358,7 @@
 								fontSize: '13px',
 							},
 						},
-						'No schedule set. Add a day below.'
+						__( 'No schedule set. Add a day below.', 'producerkit' )
 				  )
 				: null,
 
@@ -378,7 +378,7 @@
 						},
 					},
 					el( SelectControl, {
-						label: i === 0 ? 'Day' : '',
+						label: i === 0 ? __( 'Day', 'producerkit' ) : '',
 						value: entry.day,
 						options: DAY_LABELS.map( function ( label, d ) {
 							return { label, value: d };
@@ -390,7 +390,7 @@
 						__nextHasNoMarginBottom: true,
 					} ),
 					el( TextControl, {
-						label: i === 0 ? 'Open' : '',
+						label: i === 0 ? __( 'Open', 'producerkit' ) : '',
 						type: 'time',
 						value: entry.open || '09:00',
 						onChange( val ) {
@@ -399,7 +399,7 @@
 						style: { flex: 1 },
 					} ),
 					el( TextControl, {
-						label: i === 0 ? 'Close' : '',
+						label: i === 0 ? __( 'Close', 'producerkit' ) : '',
 						type: 'time',
 						value: entry.close || '16:00',
 						onChange( val ) {
@@ -430,7 +430,7 @@
 							onClick: addDay,
 							style: { marginTop: '4px' },
 						},
-						'Add Day'
+						__( 'Add Day', 'producerkit' )
 				  )
 				: null,
 
@@ -444,7 +444,7 @@
 						marginTop: '16px',
 					},
 				},
-				'Closed Dates'
+				__( 'Closed Dates', 'producerkit' )
 			),
 			el(
 				'p',
@@ -452,7 +452,10 @@
 					className: 'components-base-control__help',
 					style: { marginTop: 0, marginBottom: '8px' },
 				},
-				'Specific dates with no pickups — holidays, closures. Pre-orders for these dates are refused.'
+				__(
+					'Specific dates with no pickups — holidays, closures. Pre-orders for these dates are refused.',
+					'producerkit'
+				)
 			),
 
 			blackouts.map( function ( date, i ) {
@@ -497,7 +500,7 @@
 					onClick: addBlackout,
 					style: { marginTop: '4px' },
 				},
-				'Add Closed Date'
+				__( 'Add Closed Date', 'producerkit' )
 			)
 		);
 
@@ -674,7 +677,10 @@
 								fontSize: '13px',
 							},
 						},
-						'No payment options set. Add one below.'
+						__(
+							'No payment options set. Add one below.',
+							'producerkit'
+						)
 				  )
 				: null,
 
@@ -775,7 +781,7 @@
 					onClick: addMethod,
 					style: { marginTop: '4px' },
 				},
-				'Add Payment Option'
+				__( 'Add Payment Option', 'producerkit' )
 			)
 		);
 	}

@@ -126,7 +126,10 @@
 						setEv( match );
 						if ( ! match ) {
 							setError(
-								'Event not found. It may be unpublished or not yet scheduled.'
+								__(
+									'Event not found. It may be unpublished or not yet scheduled.',
+									'producerkit'
+								)
 							);
 						}
 						setLoading( false );
@@ -153,7 +156,8 @@
 			const options = events.map( function ( e ) {
 				return {
 					value: e.id,
-					label: e.title?.rendered || '(untitled)',
+					label:
+						e.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -289,7 +293,7 @@
 												className:
 													'pkit-event-card__cancelled-badge',
 											},
-											'Cancelled'
+											__( 'Cancelled', 'producerkit' )
 									  )
 									: null
 							),
@@ -425,7 +429,10 @@
 														className:
 															'pkit-event-card__rsvp-full',
 													},
-													'This event is full!'
+													__(
+														'This event is full!',
+														'producerkit'
+													)
 											  )
 											: rsvp.closed
 											? el(
@@ -434,7 +441,10 @@
 														className:
 															'pkit-event-card__rsvp-closed',
 													},
-													'RSVPs are closed.'
+													__(
+														'RSVPs are closed.',
+														'producerkit'
+													)
 											  )
 											: el(
 													'div',
