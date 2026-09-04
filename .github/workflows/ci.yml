@@ -110,8 +110,26 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # setup-node's own cache only holds the npm tarball cache, so `npm ci`
+      # still deletes node_modules and rebuilds 1,073 packages from scratch
+      # every run. That took 7m 5s, to then lint for 3 seconds.
+      #
+      # Caching the built tree instead skips the install entirely on a hit.
+      # Keyed on the lockfile, so it invalidates exactly when the tree would
+      # actually change.
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-node20-${{ hashFiles('package-lock.json') }}
+
+      # Only on a miss. --ignore-scripts is deliberately NOT used: unrs-resolver
+      # is a native module eslint's import resolver needs, and skipping its
+      # install would trade a slow job for a broken one.
       - name: Install dependencies
-        run: npm ci
+        if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --no-fund
 
       - name: Lint JavaScript
         run: npm run lint:js
