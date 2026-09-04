@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Recurring events generate real occurrences. A weekly market is now a series
+  post carrying the rule, and one `pkit_event` per Saturday parented to it —
+  so RSVPs, capacity, guest lists and cancellation work on an occurrence
+  unchanged, with no new concepts. That is the expensive shape and the right
+  one: occurrences expanded at read time would have meant a single capacity
+  pool shared across fifty-two Saturdays.
+
+  **A single occurrence can be edited or cancelled and stays that way.** Move
+  one week's start time, or cancel the Saturday that falls on a holiday, and
+  the next regeneration leaves it alone — an occurrence a person has saved is
+  marked, and the generator never writes to a marked occurrence again.
+  Untouched ones still follow the series, so renaming the market renames all
+  the Saturdays nobody has touched.
+
+  Changing the rule so a date disappears deletes an untouched occurrence and
+  **detaches** an edited one, which survives as an ordinary one-off event with
+  its bookings intact. Throwing away someone's work because they shortened a
+  season would be worse than leaving a stray event behind.
+
+  Deleting a series takes its occurrences with it. `wp_delete_post()` only
+  re-parents children of hierarchical post types and `pkit_event` is not one,
+  so without this they would linger on the site pointing at a post that no
+  longer exists.
+
+  Occurrences are kept out of the events list by default — fifty-two
+  near-identical rows a year would bury every one-off event — and reached
+  through a link on the series row, which is also where a Recurrence column
+  marks which rows are a series and which occurrences have been edited.
+
+  Second of three steps. What remains is the rolling horizon: an unbounded
+  rule currently generates 400 days ahead when saved and does not yet extend
+  itself on a schedule.
+
 - A recurrence-rule reader, and a refusal for the rules it cannot honour.
   `_pkit_recurrence_rule` had stored an RFC 5545 RRULE since it was registered
   and nothing ever read it — worse than an unused field, because

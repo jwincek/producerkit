@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-04T22:40:57+00:00\n"
+"POT-Creation-Date: 2026-09-04T23:09:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -2129,6 +2129,44 @@ msgstr ""
 #: modules/event-manager/includes/rsvp-table.php:249
 #: modules/event-manager/includes/rsvp-table.php:254
 msgid "Could not save RSVP."
+msgstr ""
+
+#: modules/event-manager/includes/series.php:121
+msgid "That is not an event."
+msgstr ""
+
+#: modules/event-manager/includes/series.php:125
+msgid "That event has no recurrence rule."
+msgstr ""
+
+#: modules/event-manager/includes/series.php:134
+msgid "A recurring event needs a start date and time before its occurrences can be worked out."
+msgstr ""
+
+#. translators: %d: number of occurrences.
+#: modules/event-manager/includes/series.php:594
+#, php-format
+msgid "%d occurrence"
+msgid_plural "%d occurrences"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/event-manager/includes/series.php:615
+msgid "Recurrence"
+msgstr ""
+
+#: modules/event-manager/includes/series.php:634
+msgid "Series"
+msgstr ""
+
+#. translators: %s: the series this occurrence belongs to.
+#: modules/event-manager/includes/series.php:650
+#, php-format
+msgid "One of %s"
+msgstr ""
+
+#: modules/event-manager/includes/series.php:655
+msgid "Edited — the series will not overwrite it"
 msgstr ""
 
 #: modules/notifications/includes/commission-notifications.php:64
