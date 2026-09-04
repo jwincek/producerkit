@@ -127,6 +127,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= Unreleased =
+* Added: ProducerKit now identifies itself to WooCommerce as an extension, and declares compatibility with High-Performance Order Storage and the Cart & Checkout Blocks. Without this a store could be prevented from turning HPOS on.
+
 = 2.3.0 =
 * Added: filter the availability board by your trade's own fields — clay body, glaze, ink, format. The fields narrow together, and a farm profile, which uses none of them, sees no extra filters.
 * Added: a **Trade Details** panel in the product editor, so those fields sit beside price and unit instead of in WordPress's generic taxonomy boxes further down the page.
