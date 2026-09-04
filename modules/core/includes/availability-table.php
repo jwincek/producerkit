@@ -247,6 +247,122 @@ add_action( 'before_delete_post', __NAMESPACE__ . '\\on_post_delete', 10, 2 );
  * ─────────────────────────────────────────────── */
 
 /**
+ * Everything currently available at one location.
+ *
+ * The inverse of get_current(), which answers "where is this product". A shop
+ * page needs the other direction: what is on the shelf here.
+ *
+ * Rows whose location_id is 0 mean "everywhere" and are included, because a
+ * product available generally is available here too.
+ *
+ * @param int  $location_id      Location post ID.
+ * @param bool $include_sold_out Whether to keep sold-out rows, which a "we
+ *                               had this last week" list may want and a
+ *                               "walk here now" list does not.
+ * @return array<int, object> Rows joined to their product, newest first.
+ */
+function get_for_location( int $location_id, bool $include_sold_out = false ): array {
+	global $wpdb;
+
+	if ( $location_id < 1 ) {
+		return [];
+	}
+
+	$table = table_name();
+	$today = current_time( 'Y-m-d' );
+
+	$status_clause = $include_sold_out
+		? ''
+		: " AND a.status NOT IN ( 'sold_out', 'unavailable' )";
+
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier and the status clause is one of two literals chosen above; neither is user input. The location and dates are bound.
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT a.*, p.post_title AS product_name, p.ID AS product_post_id
+			 FROM {$table} a
+			 INNER JOIN {$wpdb->posts} p ON p.ID = a.product_id
+			 WHERE ( a.location_id = %d OR a.location_id = 0 )
+			   AND p.post_type = 'pkit_product'
+			   AND p.post_status = 'publish'
+			   AND a.effective_date <= %s
+			   AND ( a.expires_date IS NULL OR a.expires_date >= %s )
+			   {$status_clause}
+			 ORDER BY a.effective_date DESC, p.post_title ASC",
+			$location_id,
+			$today,
+			$today
+		)
+	);
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	// One row per product: the most recent statement wins, so a correction
+	// made today replaces last week's rather than appearing beside it.
+	$seen = [];
+	$out  = [];
+	foreach ( (array) $rows as $row ) {
+		if ( isset( $seen[ $row->product_id ] ) ) {
+			continue;
+		}
+		$seen[ $row->product_id ] = true;
+		$out[]                    = $row;
+	}
+
+	return $out;
+}
+
+/**
+ * Which locations currently have this product.
+ *
+ * The "stocked by" view: a customer looking at a jar of wildflower honey
+ * wants to know which shop to walk to.
+ *
+ * @return array<int, object> Rows with location_id and status.
+ */
+function get_locations_for_product( int $product_id, bool $include_sold_out = false ): array {
+	global $wpdb;
+
+	if ( $product_id < 1 ) {
+		return [];
+	}
+
+	$table = table_name();
+	$today = current_time( 'Y-m-d' );
+
+	$status_clause = $include_sold_out
+		? ''
+		: " AND a.status NOT IN ( 'sold_out', 'unavailable' )";
+
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier and the status clause is one of two literals chosen above; neither is user input. The product and dates are bound.
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT a.* FROM {$table} a
+			 WHERE a.product_id = %d
+			   AND a.location_id > 0
+			   AND a.effective_date <= %s
+			   AND ( a.expires_date IS NULL OR a.expires_date >= %s )
+			   {$status_clause}
+			 ORDER BY a.effective_date DESC",
+			$product_id,
+			$today,
+			$today
+		)
+	);
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	$seen = [];
+	$out  = [];
+	foreach ( (array) $rows as $row ) {
+		if ( isset( $seen[ $row->location_id ] ) ) {
+			continue;
+		}
+		$seen[ $row->location_id ] = true;
+		$out[]                     = $row;
+	}
+
+	return $out;
+}
+
+/**
  * Purge expired availability rows.
  *
  * Deletes any row where expires_date is in the past.

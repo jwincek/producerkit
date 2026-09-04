@@ -127,7 +127,7 @@ function register_location_meta(): void {
 		],
 		'_pkit_location_type'    => [
 			'type'        => 'string',
-			'description' => 'Type: stand, market, on-farm, other.',
+			'description' => 'Type: stand, market, on-farm, retailer, other.',
 			'default'     => 'stand',
 		],
 		'_pkit_venmo_handle'     => [

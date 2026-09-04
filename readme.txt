@@ -25,6 +25,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * **Availability board block** — a live, filterable board of what's available right now, grouped by product type, with status badges (abundant, available, limited, sold out, unavailable).
 * **Quick entry screen** — batch-update availability for every product from one admin page. Statuses can carry a note ("~3 bunches left") and expire automatically.
 * **Availability badge block** — an inline status badge for any single product.
+* **Shops that carry your goods** — mark a location as a **Retailer** and record what they have in stock. Their page gains an "Available here" list, and every product page gains a "Where to find it" line naming the shops that currently have it. Sold-out items drop off both, so nobody makes a wasted trip. Retailers need no accounts — you update it from your own delivery notes.
 
 = Payments (at the stand, not online) =
 
