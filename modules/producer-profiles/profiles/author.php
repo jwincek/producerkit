@@ -23,6 +23,12 @@ return [
 	'post_type_names' => [
 		'pkit_product' => [ __( 'Title', 'producerkit' ), __( 'Titles', 'producerkit' ), __( 'Titles', 'producerkit' ) ],
 	],
+	'request_names'   => [
+		'singular' => __( 'Request', 'producerkit' ),
+		'plural'   => __( 'Requests', 'producerkit' ),
+		'menu'     => __( 'Requests', 'producerkit' ),
+		'action'   => __( 'Request a signed copy or an appearance', 'producerkit' ),
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Novel', 'Novella', 'Short Stories', 'Poetry', 'Chapbook', 'Zine', 'Anthology', 'Non-fiction', 'Illustrated', 'Childrens' ],
 		'pkit_material'     => [ 'Hardcover', 'Trade Paperback', 'Mass Market', 'Perfect Bound', 'Saddle Stitched', 'Hand Sewn', 'Spiral Bound' ],

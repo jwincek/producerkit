@@ -78,7 +78,12 @@
 						tagName: 'h2',
 						value: attributes.heading,
 						allowedFormats: [],
-						placeholder: __( 'Commission a piece', 'producerkit' ),
+						placeholder:
+							( window.pkitSettings &&
+							window.pkitSettings.requestWords
+								? window.pkitSettings.requestWords.action
+								: null ) ||
+							__( 'Commission a piece', 'producerkit' ),
 						onChange( value ) {
 							setAttributes( { heading: value } );
 						},

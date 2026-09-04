@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace ProducerKit\Commissions\Admin;
 
 use ProducerKit\Commissions\Store;
+use ProducerKit\Commissions\Vocabulary;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,8 +28,8 @@ function register_page(): void {
 
 	add_submenu_page(
 		'producerkit',
-		__( 'Commissions', 'producerkit' ),
-		__( 'Commissions', 'producerkit' ) . $badge,
+		Vocabulary\menu(),
+		Vocabulary\menu() . $badge,
 		Store\manage_cap(),
 		'producerkit-commissions',
 		__NAMESPACE__ . '\\render_page'
@@ -70,7 +71,16 @@ function status_color( string $status ): string {
 
 function render_page(): void {
 	if ( ! current_user_can( Store\manage_cap() ) ) {
-		wp_die( esc_html__( 'You do not have permission to view commissions.', 'producerkit' ), 403 );
+		wp_die(
+			esc_html(
+				sprintf(
+					/* translators: %s: this trade's word for commissions, lowercase plural. */
+					__( 'You do not have permission to view %s.', 'producerkit' ),
+					Vocabulary\plural_lower()
+				)
+			),
+			403
+		);
 	}
 
 	// Read-only view selector; no state changes happen on this request.
@@ -100,7 +110,7 @@ function render_page(): void {
 	$money = html_entity_decode( get_woocommerce_currency_symbol_safe() );
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Commissions', 'producerkit' ); ?></h1>
+		<h1><?php echo esc_html( Vocabulary\plural() ); ?></h1>
 
 		<ul class="subsubsub">
 			<li>
@@ -132,7 +142,13 @@ function render_page(): void {
 
 		<?php if ( ! $list['commissions'] ) : ?>
 			<div class="notice notice-info inline"><p>
-				<?php esc_html_e( 'No commission requests yet. Add the request form to a page so customers can send one.', 'producerkit' ); ?>
+				<?php
+				printf(
+					/* translators: %s: this trade's word for commissions, lowercase plural. */
+					esc_html__( 'No %s yet. Add the request form to a page so customers can send one.', 'producerkit' ),
+					esc_html( Vocabulary\plural_lower() )
+				);
+				?>
 			</p></div>
 		<?php else : ?>
 			<table class="wp-list-table widefat striped">

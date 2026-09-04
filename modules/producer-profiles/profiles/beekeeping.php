@@ -21,6 +21,12 @@ return [
 		'pkit_finish'    => [ __( 'Style', 'producerkit' ), __( 'Styles', 'producerkit' ) ],
 		'pkit_component' => [ __( 'Container', 'producerkit' ), __( 'Containers', 'producerkit' ) ],
 	],
+	'request_names'   => [
+		'singular' => __( 'Enquiry', 'producerkit' ),
+		'plural'   => __( 'Enquiries', 'producerkit' ),
+		'menu'     => __( 'Enquiries', 'producerkit' ),
+		'action'   => __( 'Ask about bulk orders', 'producerkit' ),
+	],
 	'terms'       => [
 		'pkit_product_type' => [ 'Honey', 'Comb Honey', 'Creamed Honey', 'Infused Honey', 'Beeswax', 'Candle', 'Soap', 'Lip Balm', 'Pollen', 'Propolis', 'Nucleus Colony', 'Mated Queen', 'Package Bees' ],
 		'pkit_material'     => [ 'Wildflower', 'Clover', 'Orange Blossom', 'Buckwheat', 'Tulip Poplar', 'Sourwood', 'Goldenrod', 'Basswood', 'Alfalfa', 'Knotweed' ],

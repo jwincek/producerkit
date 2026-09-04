@@ -17,6 +17,12 @@ return [
 	// A farm sells what it grew; material/finish/component add nothing.
 	'taxonomies'  => [],
 	'names'       => [],
+	'request_names'   => [
+		'singular' => __( 'Special Order', 'producerkit' ),
+		'plural'   => __( 'Special Orders', 'producerkit' ),
+		'menu'     => __( 'Special Orders', 'producerkit' ),
+		'action'   => __( 'Request a special order', 'producerkit' ),
+	],
 	'terms'       => [
 		'pkit_product_type' => [ 'Produce', 'Bread', 'Baked Good', 'Pantry Good', 'Seedling' ],
 		'pkit_season'       => [ 'Spring', 'Summer', 'Fall', 'Winter' ],
