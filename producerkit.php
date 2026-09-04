@@ -6,6 +6,8 @@
  * Version:           2.3.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
+ * WC requires at least: 8.2
+ * WC tested up to:   11.1
  * Author:            Jerome Wincek
  * Author URI:        https://github.com/jwincek
  * License:           GPL-2.0-or-later
@@ -203,6 +205,54 @@ function register_qr_scripts(): void {
 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\register_qr_scripts' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\register_qr_scripts' );
+
+/* ───────────────────────────────────────────────
+ * WooCommerce feature compatibility
+ * ─────────────────────────────────────────────── */
+
+/**
+ * Declare compatibility with WooCommerce's optional features.
+ *
+ * WooCommerce treats silence as incompatibility. An undeclared active plugin
+ * does not merely earn a warning: FeaturesController disables the HPOS radio
+ * outright, so the store cannot turn High-Performance Order Storage on at all
+ * while this plugin is active. Both claims below are true today —
+ *
+ *   custom_order_tables  Nothing here reads or writes order storage directly.
+ *                        The settlement module keeps its own order_id mapping
+ *                        in its own table, and the checkout module goes
+ *                        through $order CRUD, both of which are storage
+ *                        agnostic. The one update_post_meta() call in that
+ *                        module is on a product, which is still a post.
+ *
+ *   cart_checkout_blocks The four woocommerce_order_status_* transitions are
+ *                        the entire integration surface. Nothing hooks the
+ *                        cart, registers a gateway, or adds checkout fields,
+ *                        so there is nothing for the block checkout to break.
+ *                        Payment goes through an order's own pay-for-order
+ *                        URL rather than the cart, which sidesteps the
+ *                        classic/blocks split entirely.
+ *
+ * Declared unconditionally rather than from the WooCommerce module, which is
+ * optional: a site that has switched that module off integrates with nothing
+ * and is trivially compatible, and must not be blocking HPOS either.
+ *
+ * declare_compatibility() insists on being called inside
+ * before_woocommerce_init and returns false with a _doing_it_wrong() notice
+ * anywhere else, so the hook is not decorative.
+ */
+add_action(
+	'before_woocommerce_init',
+	function (): void {
+		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			return;
+		}
+
+		foreach ( [ 'custom_order_tables', 'cart_checkout_blocks' ] as $feature ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( $feature, __FILE__, true );
+		}
+	}
+);
 
 /* ───────────────────────────────────────────────
  * Block category

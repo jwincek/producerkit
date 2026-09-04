@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- WooCommerce feature-compatibility declarations for High-Performance Order
+  Storage (`custom_order_tables`) and Cart & Checkout Blocks
+  (`cart_checkout_blocks`), plus the `WC requires at least` and
+  `WC tested up to` plugin headers that make WooCommerce recognise this as an
+  extension in the first place.
+
+  The two halves have to ship together. WooCommerce only inspects plugins
+  carrying a `WC tested up to` header, so without it ProducerKit was invisible
+  to the compatibility screen — it appeared in no bucket at all. But adding
+  that header alone is worse than omitting it: `custom_order_tables` defaults
+  to treating undeclared plugins as incompatible, and WooCommerce then greys
+  out the HPOS setting for the whole store. Verified on WooCommerce 11.1.0 —
+  header without declaration put the plugin in the blocking list; header with
+  declaration cleared it.
+
+  Both claims are true rather than aspirational. Nothing here reads or writes
+  order storage directly: settlement keeps its own `order_id` mapping in its
+  own table and checkout goes through `$order` CRUD, and the entire WooCommerce
+  surface is four `woocommerce_order_status_*` transitions, which behave
+  identically under HPOS and under the block checkout. A test pins that surface
+  so a future cart or gateway hook cannot quietly falsify the declaration.
+
 ## [2.3.0] - 2026-09-04
 
 The trade fields a producer profile switches on now do something everywhere
