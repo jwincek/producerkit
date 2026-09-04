@@ -290,6 +290,11 @@ add_action(
 						'nonce'         => wp_create_nonce( 'wp_rest' ),
 						'pluginUrl'     => plugins_url( '', __FILE__ ),
 						'activeModules' => get_active_modules(),
+						// Distinct from the module being active: a site can have
+						// the module switched on with WooCommerce uninstalled,
+						// in which case its bootstrap returns early and any
+						// payment control would be inert.
+						'hasWooCommerce' => class_exists( '\\WooCommerce' ),
 					]
 				),
 			),

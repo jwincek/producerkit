@@ -30,6 +30,12 @@ if ( ! function_exists( 'add_action' ) ) {
 	}
 }
 
+if ( ! function_exists( 'number_format_i18n' ) ) {
+	function number_format_i18n( float $number, int $decimals = 0 ): string {
+		return number_format( $number, $decimals );
+	}
+}
+
 if ( ! function_exists( 'apply_filters' ) ) {
 	function apply_filters( string $hook, $value, ...$args ) {
 		return $value;
@@ -41,3 +47,4 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 // Files under unit test (pure helpers only are exercised).
 require_once dirname( __DIR__ ) . '/modules/core/includes/payments.php';
 require_once dirname( __DIR__ ) . '/modules/core/includes/structured-data.php';
+require_once dirname( __DIR__ ) . '/modules/core/includes/deposits.php';

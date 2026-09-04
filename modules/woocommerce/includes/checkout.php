@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace ProducerKit\WooCommerce\Checkout;
 
+use ProducerKit\Core\Deposits;
+
 use ProducerKit\Commissions\Store as Commissions;
 use ProducerKit\WooCommerce\Settlement;
 
@@ -202,8 +204,10 @@ function chargeable_price( string $display ): ?float {
  * @return array{lines: array<int, array{product_id: int, qty: int, title: string, price: float}>, total: float}|\WP_Error
  */
 function price_preorder( array $order ): array|\WP_Error {
-	$lines = [];
-	$total = 0.0;
+	$lines   = [];
+	$total   = 0.0;
+	$due_now = 0.0;
+	$balance = 0.0;
 
 	foreach ( (array) ( $order['items'] ?? [] ) as $item ) {
 		$parsed = chargeable_price( (string) ( $item['price'] ?? '' ) );
@@ -219,14 +223,32 @@ function price_preorder( array $order ): array|\WP_Error {
 			);
 		}
 
-		$qty     = max( 1, (int) ( $item['qty'] ?? 1 ) );
-		$each    = (float) $parsed;
-		$total  += $each * $qty;
-		$lines[] = [
-			'product_id' => (int) ( $item['product_id'] ?? 0 ),
+		$qty        = max( 1, (int) ( $item['qty'] ?? 1 ) );
+		$each       = (float) $parsed;
+		$product_id = (int) ( $item['product_id'] ?? 0 );
+		$line_total = round( $each * $qty, 2 );
+
+		// Fixed deposits are quoted per item, so they scale with quantity
+		// before the split; percentages are proportional either way.
+		$policy = Deposits\for_product( $product_id );
+		if ( Deposits\MODE_DEPOSIT === $policy['mode'] && 'fixed' === $policy['kind'] ) {
+			$policy['value'] = round( $policy['value'] * $qty, 2 );
+		}
+
+		$split = Deposits\split_line( $line_total, $policy );
+
+		$total     += $line_total;
+		$due_now   += $split['due_now'];
+		$balance   += $split['balance'];
+		$lines[]    = [
+			'product_id' => $product_id,
 			'qty'        => $qty,
 			'title'      => (string) ( $item['title'] ?? '' ),
 			'price'      => $each,
+			'line_total' => $line_total,
+			'due_now'    => $split['due_now'],
+			'balance'    => $split['balance'],
+			'mode'       => $split['mode'],
 		];
 	}
 
@@ -235,9 +257,33 @@ function price_preorder( array $order ): array|\WP_Error {
 	}
 
 	return [
-		'lines' => $lines,
-		'total' => round( $total, 2 ),
+		'lines'   => $lines,
+		'total'   => round( $total, 2 ),
+		'due_now' => round( $due_now, 2 ),
+		'balance' => round( $balance, 2 ),
 	];
+}
+
+/**
+ * What one charged line is called on the customer's order.
+ *
+ * A deposit line has to say so on the receipt and in the payment confirmation,
+ * because the amount on its own looks like an underpayment — someone glancing
+ * at "$100.00" against a $400 order will reasonably think something is wrong.
+ */
+function line_name( array $line, float $due_now, float $full ): string {
+	$title = (string) ( $line['title'] ?? '' );
+
+	if ( abs( $due_now - $full ) < 0.005 ) {
+		return $title;
+	}
+
+	return sprintf(
+		/* translators: 1: product name, 2: full line amount. */
+		__( 'Deposit — %1$s (of %2$s)', 'producerkit' ),
+		$title,
+		\ProducerKit\Core\Deposits\money( $full )
+	);
 }
 
 /**
@@ -262,22 +308,47 @@ function create_order( string $type, int $id, array $args ): array|\WP_Error {
 		return $order;
 	}
 
-	foreach ( $args['lines'] as $line ) {
-		$product = isset( $line['wc_product_id'] ) ? wc_get_product( (int) $line['wc_product_id'] ) : null;
+	$charged = 0;
 
-		if ( $product ) {
-			$order->add_product( $product, (int) ( $line['qty'] ?? 1 ) );
+	foreach ( $args['lines'] as $line ) {
+		$qty = max( 1, (int) ( $line['qty'] ?? 1 ) );
+
+		// A line priced but not charged up front — reserve-only — belongs on
+		// the pre-order record and not on this order. Charging zero for it
+		// would put a $0.00 row on the customer's receipt for something they
+		// still owe for in full.
+		$full    = round( (float) ( $line['line_total'] ?? (float) $line['price'] * $qty ), 2 );
+		$due_now = round( (float) ( $line['due_now'] ?? $full ), 2 );
+
+		if ( $due_now <= 0 ) {
 			continue;
 		}
 
-		// No WooCommerce product behind this line — a catalogue item that was
-		// never mirrored — so add it as a fee-style line at the parsed price.
+		++$charged;
+
+		$product = isset( $line['wc_product_id'] ) ? wc_get_product( (int) $line['wc_product_id'] ) : null;
+
+		// add_product() prices the line from the product, which is right only
+		// when the whole thing is being charged. A deposit has to state its
+		// own total, so it takes the explicit path below.
+		if ( $product && abs( $due_now - $full ) < 0.005 ) {
+			$order->add_product( $product, $qty );
+			continue;
+		}
+
 		$item = new \WC_Order_Item_Product();
-		$item->set_name( (string) $line['title'] );
-		$item->set_quantity( (int) ( $line['qty'] ?? 1 ) );
-		$item->set_subtotal( (string) ( (float) $line['price'] * (int) ( $line['qty'] ?? 1 ) ) );
-		$item->set_total( (string) ( (float) $line['price'] * (int) ( $line['qty'] ?? 1 ) ) );
+		$item->set_name( line_name( $line, $due_now, $full ) );
+		$item->set_quantity( $qty );
+		$item->set_subtotal( (string) $due_now );
+		$item->set_total( (string) $due_now );
 		$order->add_item( $item );
+	}
+
+	if ( 0 === $charged ) {
+		return new \WP_Error(
+			'nothing_due',
+			__( 'Nothing on this order is payable up front, so no payment is needed.', 'producerkit' )
+		);
 	}
 
 	if ( ! empty( $args['email'] ) ) {
@@ -355,4 +426,172 @@ function checkout_for_commission( int $commission_id ): array|\WP_Error {
 			],
 		]
 	);
+}
+
+/**
+ * Raise a payment for a pre-order and hand back the pay URL.
+ *
+ * This is the join that was missing. price_preorder() has computed lines and
+ * totals since the module was written and create_order() has known how to
+ * raise an order for either request type, but nothing ever called the two
+ * together for a pre-order — so the readme's promise of a payment link for
+ * "a request" was only ever true for commissions.
+ *
+ * Returns null, not an error, when the order is reserve-only. That is the
+ * ordinary case and the overwhelmingly common one: no product on the order
+ * asks for money up front, so there is nothing to pay and the caller should
+ * carry on rather than show a failure.
+ *
+ * @param array $order A pre-order row as Orders\get() returns it.
+ * @return array{order_id: int, pay_url: string, due_now: float, balance: float}|null|\WP_Error
+ */
+function checkout_for_preorder( array $order ): array|null|\WP_Error {
+	$id = (int) ( $order['id'] ?? 0 );
+	if ( $id < 1 ) {
+		return new \WP_Error( 'bad_request', __( 'That pre-order does not exist.', 'producerkit' ) );
+	}
+
+	$priced = price_preorder( $order );
+	if ( is_wp_error( $priced ) ) {
+		return $priced;
+	}
+
+	if ( $priced['due_now'] <= 0 ) {
+		return null;
+	}
+
+	$result = create_order(
+		'preorder',
+		$id,
+		[
+			'name'  => (string) ( $order['name'] ?? '' ),
+			'email' => (string) ( $order['email'] ?? '' ),
+			'lines' => $priced['lines'],
+		]
+	);
+
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	Settlement\record_split( 'preorder', $id, $priced['due_now'], $priced['balance'] );
+
+	return $result + [
+		'due_now' => $priced['due_now'],
+		'balance' => $priced['balance'],
+	];
+}
+
+/**
+ * Raise the second, balance-paying order for a request.
+ *
+ * The producer's choice, made per pre-order rather than baked into the
+ * product: some customers are standing at the table with a card, some want a
+ * link the night before. take_balance_directly() is the other half of the
+ * same decision.
+ *
+ * Refuses rather than duplicates if a balance order already exists, because
+ * two live pay links for the same balance is how a customer pays twice.
+ *
+ * @return array{order_id: int, pay_url: string}|\WP_Error
+ */
+function balance_checkout( string $type, int $id, array $customer = [] ): array|\WP_Error {
+	$row = Settlement\get_split( $type, $id );
+
+	if ( null === $row ) {
+		return new \WP_Error( 'bad_request', __( 'That request does not exist.', 'producerkit' ) );
+	}
+
+	if ( null !== $row['balance_settled_at'] ) {
+		return new \WP_Error( 'already_paid', __( 'The balance on this has already been paid.', 'producerkit' ) );
+	}
+
+	if ( $row['balance_order_id'] > 0 ) {
+		return new \WP_Error(
+			'already_raised',
+			__( 'A balance payment link already exists for this. Cancel that order first if you need a new one.', 'producerkit' )
+		);
+	}
+
+	if ( $row['balance_due'] <= 0 ) {
+		return new \WP_Error( 'nothing_due', __( 'There is no balance outstanding on this.', 'producerkit' ) );
+	}
+
+	if ( ! function_exists( 'wc_create_order' ) ) {
+		return new \WP_Error( 'no_woocommerce', __( 'WooCommerce is not available.', 'producerkit' ) );
+	}
+
+	$order = wc_create_order();
+	if ( is_wp_error( $order ) ) {
+		return $order;
+	}
+
+	$item = new \WC_Order_Item_Product();
+	$item->set_name( __( 'Balance due at pickup', 'producerkit' ) );
+	$item->set_quantity( 1 );
+	$item->set_subtotal( (string) $row['balance_due'] );
+	$item->set_total( (string) $row['balance_due'] );
+	$order->add_item( $item );
+
+	if ( ! empty( $customer['email'] ) ) {
+		$order->set_billing_email( (string) $customer['email'] );
+	}
+	if ( ! empty( $customer['name'] ) ) {
+		$parts = explode( ' ', trim( (string) $customer['name'] ), 2 );
+		$order->set_billing_first_name( $parts[0] );
+		$order->set_billing_last_name( $parts[1] ?? '' );
+	}
+
+	$order->update_meta_data( REQUEST_META, $type . ':' . $id . ':balance' );
+	$order->calculate_totals();
+	$order->set_status( 'pending', __( 'Awaiting the balance on a ProducerKit request.', 'producerkit' ) );
+	$order->save();
+
+	$order_id = (int) $order->get_id();
+
+	if ( ! Settlement\attach_balance_order( $type, $id, $order_id ) ) {
+		// Same reasoning as the deposit leg: an unlinked order is one the
+		// customer can pay while nothing records that they did.
+		$order->set_status( 'cancelled', __( 'Could not link this balance order to its request.', 'producerkit' ) );
+		$order->save();
+
+		return new \WP_Error(
+			'not_linked',
+			__( 'Could not link the balance order to this request, so it was cancelled rather than left unpayable. Please try again.', 'producerkit' )
+		);
+	}
+
+	return [
+		'order_id' => $order_id,
+		'pay_url'  => (string) $order->get_checkout_payment_url(),
+	];
+}
+
+/**
+ * Record that the producer took the balance in person.
+ *
+ * The other half of the per-request choice. No WooCommerce order is involved,
+ * which is deliberate: money handed over at a pickup table is not a thing
+ * WooCommerce witnessed, and inventing an order to represent it would make the
+ * store's takings wrong.
+ */
+function take_balance_directly( string $type, int $id ): bool|\WP_Error {
+	$row = Settlement\get_split( $type, $id );
+
+	if ( null === $row ) {
+		return new \WP_Error( 'bad_request', __( 'That request does not exist.', 'producerkit' ) );
+	}
+
+	if ( null !== $row['balance_settled_at'] ) {
+		return new \WP_Error( 'already_paid', __( 'The balance on this has already been paid.', 'producerkit' ) );
+	}
+
+	if ( ! Settlement\mark_balance_settled( $type, $id, Settlement\DIRECT ) ) {
+		return new \WP_Error( 'not_recorded', __( 'Could not record that payment. Please reload and try again.', 'producerkit' ) );
+	}
+
+	/** This is the same event as a paid balance order, by a different route. */
+	do_action( 'pkit_request_balance_settled', $type, $id, 0 );
+
+	return true;
 }
