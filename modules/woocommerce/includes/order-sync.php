@@ -31,6 +31,27 @@ function on_paid( int $order_id ): void {
 		return;
 	}
 
+	// A balance payment is the second leg of a request that was already
+	// settled once. Routing it through mark_settled() would find settled_at
+	// already stamped, return false, and drop the payment on the floor — the
+	// customer would have paid the balance with nothing recording it.
+	if ( Settlement\LEG_BALANCE === ( $request['leg'] ?? Settlement\LEG_DEPOSIT ) ) {
+		if ( ! Settlement\mark_balance_settled( $request['type'], $request['id'], Settlement\VIA_WC ) ) {
+			return;
+		}
+
+		/**
+		 * Fires when the balance on a part-paid request has been paid.
+		 *
+		 * @param string $type     'preorder' or 'commission'.
+		 * @param int    $id       Request id.
+		 * @param int    $order_id WooCommerce order id of the balance order.
+		 */
+		do_action( 'pkit_request_balance_settled', $request['type'], $request['id'], $order_id );
+
+		return;
+	}
+
 	// False means it was already settled — the second of the processing /
 	// completed pair, or a status flapped by hand. Everything below is
 	// once-only, so stop here rather than re-running it.

@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Per-product deposits on pre-orders. A product can now take a fixed amount
+  per item, a percentage of the line, or the full price up front, with
+  everything else left for pickup — and reserve-only stays the default, so an
+  existing catalogue does not start charging when this ships.
+
+  A fixed deposit scales with quantity, because "$50 per nuc" means $100 for
+  two. A deposit larger than the line it sits on is charged as the full amount
+  rather than raised as an order that owes the customer money, and a deposit of
+  zero is treated as a reservation instead of a $0.00 order. The two halves of
+  a split always sum to the line exactly: the balance is derived by
+  subtraction, since two independently rounded figures can miss by a cent and
+  a customer quoted $50.00 now and $149.99 later on a $200.00 line will notice.
+
+  The balance is collected either way, chosen per pre-order rather than baked
+  into the product: raise a second order and send a payment link, or take the
+  money at the pickup table and mark it paid. The in-person route deliberately
+  creates no WooCommerce order — money handed over at a table is not something
+  the store witnessed, and inventing an order to represent it would make its
+  takings wrong.
+
+### Fixed
+
+- Pre-orders could never be paid for through WooCommerce. `price_preorder()`
+  had computed lines and totals since the module was written, and
+  `create_order()` had known how to raise an order for either request type,
+  but nothing ever called the two together — the only caller was
+  `checkout_for_commission()`. The pricing function's sole references outside
+  the module were in its own tests, which is why it looked finished. The
+  readme meanwhile promised a payment link for "a request", which is a
+  pre-order or a commission; it was only ever true for commissions.
+
+  Same shape as the commissions bug in 2.0.0: two individually-correct halves
+  with nothing joining them, and tests on each half that made the whole look
+  done.
+
 - WooCommerce feature-compatibility declarations for High-Performance Order
   Storage (`custom_order_tables`) and Cart & Checkout Blocks
   (`cart_checkout_blocks`), plus the `WC requires at least` and

@@ -33,6 +33,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * **QR codes** — show a scannable code for your payment link right in the location card; the print stylesheet enlarges it for stand signage. Generated locally by a bundled library — no external service.
 * **Pre-orders** — visitors reserve products for a pickup date and pay at the stand, and can view or cancel their own order from a link in the confirmation. Orders are rate-limited and spam-protected, staff manage them from a dedicated admin screen (pending → confirmed → ready → picked up), and email notifications keep both sides informed. No payment processing, no checkout.
 * **Harvest list** — active pre-orders aggregated into per-pickup-date totals of each product to have ready. Print it and take it to the field.
+* **Deposits, per product** — some things a producer will not hold without money down. Mark a product to take a deposit (a fixed amount per item, or a percentage) or the full amount when someone pre-orders it, and leave everything else as a reservation. A $50 deposit on a nucleus colony takes $100 for two and leaves $300 for pickup; the jars in the same order ask for nothing. The balance is yours to collect either way — send a payment link, or take it at the table and mark it paid. Requires the WooCommerce module.
 * **Smart pickup dates** — pre-order dates are validated against the location's weekly schedule, season dates, and a per-location closed-dates list, so nobody orders for a day the stand is shut.
 
 = Producer profiles =
@@ -111,7 +112,7 @@ A guest who leaves an email address gets a link to their own booking and can can
 
 Not on their own. A pre-order is a reservation: products, quantities, a pickup date, and contact details, with payment happening at pickup — the confirmation shows the location's accepted payment methods, including any payment links.
 
-If WooCommerce is active you can additionally enable the WooCommerce module, which raises a pending order for a request and hands the customer a payment link. That is opt-in; with the module off, or WooCommerce absent, nothing about the plugin touches payment processing.
+If WooCommerce is active you can additionally enable the WooCommerce module, which raises a pending order and hands the customer a payment link — for an accepted commission, and for a pre-order of anything you have marked as taking a deposit or full payment up front. That is opt-in and off by default; with the module off, or WooCommerce absent, nothing about the plugin touches payment processing, and a pre-order stays a reservation paid at pickup.
 
 = Where do the QR codes come from? =
 
@@ -128,6 +129,8 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Added: per-product deposits on pre-orders — take a fixed amount, a percentage, or the full price up front, and leave the rest for pickup. The balance can be collected with a payment link or taken in person and marked paid.
+* Fixed: pre-orders could never actually be paid for through WooCommerce. The pricing and the order-raising both existed but were never joined up, so the payment link this plugin promised for "a request" only ever appeared for commissions.
 * Added: ProducerKit now identifies itself to WooCommerce as an extension, and declares compatibility with High-Performance Order Storage and the Cart & Checkout Blocks. Without this a store could be prevented from turning HPOS on.
 
 = 2.3.0 =

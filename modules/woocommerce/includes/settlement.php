@@ -32,6 +32,10 @@ const OPTION     = 'pkit_wc_settlement_db_version';
 const DIRECT = 'direct';
 const VIA_WC = 'wc';
 
+/** Which half of a two-part payment an order represents. */
+const LEG_DEPOSIT = 'deposit';
+const LEG_BALANCE = 'balance';
+
 /**
  * The request tables that gain settlement columns.
  *
@@ -62,6 +66,17 @@ function columns(): array {
 		'wc_order_id'   => 'BIGINT UNSIGNED NOT NULL DEFAULT 0',
 		'wc_product_id' => 'BIGINT UNSIGNED NOT NULL DEFAULT 0',
 		'settled_at'    => 'DATETIME DEFAULT NULL',
+
+		// The balance leg. A request may be paid in two goes — a deposit now
+		// and the rest at pickup — and the producer decides per pre-order
+		// whether that second leg is taken in person or through a second
+		// order, so both a link and a hand-marked settlement have to be
+		// recordable.
+		'deposit_due'        => 'DECIMAL(10,2) NOT NULL DEFAULT 0.00',
+		'balance_due'        => 'DECIMAL(10,2) NOT NULL DEFAULT 0.00',
+		'balance_order_id'   => 'BIGINT UNSIGNED NOT NULL DEFAULT 0',
+		'balance_settled_at' => 'DATETIME DEFAULT NULL',
+		'balance_method'     => "VARCHAR(20) NOT NULL DEFAULT ''",
 	];
 }
 
@@ -233,6 +248,121 @@ function mark_settled( string $type, int $id ): bool {
 }
 
 /**
+ * Record what this request takes now and what it leaves for pickup.
+ *
+ * Stored rather than recomputed because a product's deposit can be edited
+ * after an order is placed, and the customer is owed the split they agreed
+ * to, not the one the settings would produce today.
+ */
+function record_split( string $type, int $id, float $due_now, float $balance ): bool {
+	global $wpdb;
+
+	$table = table_for( $type );
+	if ( null === $table || $id < 1 ) {
+		return false;
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table.
+	return false !== $wpdb->update(
+		$table,
+		[
+			'deposit_due' => round( max( 0.0, $due_now ), 2 ),
+			'balance_due' => round( max( 0.0, $balance ), 2 ),
+		],
+		[ 'id' => $id ]
+	);
+}
+
+/**
+ * Attach the second, balance-paying order to a request.
+ */
+function attach_balance_order( string $type, int $id, int $order_id ): bool {
+	global $wpdb;
+
+	$table = table_for( $type );
+	if ( null === $table || $id < 1 || $order_id < 1 ) {
+		return false;
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table.
+	return false !== $wpdb->update( $table, [ 'balance_order_id' => $order_id ], [ 'id' => $id ] );
+}
+
+/**
+ * Record that the balance has been paid.
+ *
+ * $method distinguishes the two routes the producer may take — 'wc' when a
+ * second order was raised and paid, 'direct' when they took cash at the table
+ * and said so. Both are settlements; only one of them WooCommerce knows about.
+ *
+ * Like mark_settled(), the NULL check lives in the WHERE clause so two
+ * concurrent transitions cannot both claim the settlement, and a repeat call
+ * reports false rather than overwriting the original time.
+ */
+function mark_balance_settled( string $type, int $id, string $method = VIA_WC ): bool {
+	global $wpdb;
+
+	$table = table_for( $type );
+	if ( null === $table || $id < 1 ) {
+		return false;
+	}
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; values are bound. Disabled rather than ignored because the interpolation sits on a different line from the call.
+	$updated = $wpdb->query(
+		$wpdb->prepare(
+			"UPDATE {$table} SET balance_settled_at = %s, balance_method = %s
+			 WHERE id = %d AND balance_settled_at IS NULL",
+			current_time( 'mysql', true ),
+			VIA_WC === $method ? VIA_WC : DIRECT,
+			$id
+		)
+	);
+	// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	return (int) $updated > 0;
+}
+
+/**
+ * The payment split recorded against one request.
+ *
+ * Returns null when the request is gone or its table never gained the balance
+ * columns, so callers can tell "no balance owed" from "cannot answer".
+ *
+ * @return array{deposit_due: float, balance_due: float, balance_order_id: int, balance_settled_at: ?string, balance_method: string}|null
+ */
+function get_split( string $type, int $id ): ?array {
+	global $wpdb;
+
+	$table = table_for( $type );
+	if ( null === $table || $id < 1 || ! has_column( $table, 'balance_due' ) ) {
+		return null;
+	}
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; the id is bound. Disabled rather than ignored because the interpolation sits on a different line from the call.
+	$row = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT deposit_due, balance_due, balance_order_id, balance_settled_at, balance_method
+			 FROM {$table} WHERE id = %d",
+			$id
+		),
+		ARRAY_A
+	);
+	// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	if ( ! $row ) {
+		return null;
+	}
+
+	return [
+		'deposit_due'        => (float) $row['deposit_due'],
+		'balance_due'        => (float) $row['balance_due'],
+		'balance_order_id'   => (int) $row['balance_order_id'],
+		'balance_settled_at' => $row['balance_settled_at'],
+		'balance_method'     => (string) $row['balance_method'],
+	];
+}
+
+/**
  * Find the request an order was raised for.
  *
  * @return array{type: string, id: int}|null
@@ -262,6 +392,28 @@ function find_by_order( int $order_id ): ?array {
 			return [
 				'type' => $type,
 				'id'   => $id,
+				'leg'  => LEG_DEPOSIT,
+			];
+		}
+
+		// The same order id cannot be both legs, so this is only reached when
+		// the first lookup missed. A pre-order whose balance was taken through
+		// a second order settles here.
+		if ( ! has_column( $table, 'balance_order_id' ) ) {
+			continue;
+		}
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is an internal identifier; the order id is bound. Disabled rather than ignored because the interpolation sits on a different line from the call.
+		$id = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT id FROM {$table} WHERE balance_order_id = %d LIMIT 1", $order_id )
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		if ( $id > 0 ) {
+			return [
+				'type' => $type,
+				'id'   => $id,
+				'leg'  => LEG_BALANCE,
 			];
 		}
 	}

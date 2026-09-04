@@ -446,6 +446,114 @@
 	}
 
 	/* ─────────────────────────────────────────────
+	 * Panel 4: Pre-Order Payment
+	 *
+	 * Only rendered when the WooCommerce module is active. Without a store
+	 * there is nothing to collect a deposit with, and a control that silently
+	 * does nothing is worse than an absent one.
+	 * ───────────────────────────────────────────── */
+
+	function ProductPaymentPanel() {
+		const postType = useSelect( function ( select ) {
+			return select( 'core/editor' ).getCurrentPostType();
+		}, [] );
+
+		const settings = window.pkitSettings || {};
+		const modules = settings.activeModules || [];
+		const hasStore =
+			settings.hasWooCommerce && modules.indexOf( 'woocommerce' ) !== -1;
+
+		if ( postType !== 'pkit_product' || ! hasStore ) {
+			return null;
+		}
+
+		const _meta = useEntityProp( 'postType', 'pkit_product', 'meta' );
+		const meta = _meta[ 0 ];
+		const setMeta = _meta[ 1 ];
+
+		function updateMeta( key, value ) {
+			const updated = {};
+			updated[ key ] = value;
+			setMeta( Object.assign( {}, meta, updated ) );
+		}
+
+		const mode = meta._pkit_payment_mode || 'none';
+		const kind = meta._pkit_deposit_kind || 'fixed';
+
+		const children = [
+			el( SelectControl, {
+				key: 'mode',
+				label: 'When a customer pre-orders this',
+				value: mode,
+				options: [
+					{ label: 'Reserve only — pay at pickup', value: 'none' },
+					{ label: 'Take a deposit now', value: 'deposit' },
+					{ label: 'Take the full amount now', value: 'full' },
+				],
+				onChange( value ) {
+					updateMeta( '_pkit_payment_mode', value );
+				},
+				help:
+					mode === 'none'
+						? 'No money changes hands online. This is the default.'
+						: 'Raises a pending WooCommerce order and emails the customer a payment link.',
+			} ),
+		];
+
+		if ( mode === 'deposit' ) {
+			children.push(
+				el( SelectControl, {
+					key: 'kind',
+					label: 'Deposit is',
+					value: kind,
+					options: [
+						{ label: 'A fixed amount per item', value: 'fixed' },
+						{ label: 'A percentage of the line', value: 'percent' },
+					],
+					onChange( value ) {
+						updateMeta( '_pkit_deposit_kind', value );
+					},
+				} )
+			);
+
+			children.push(
+				el( TextControl, {
+					key: 'value',
+					label:
+						kind === 'percent'
+							? 'Percent to take now'
+							: 'Amount per item',
+					type: 'number',
+					min: 0,
+					step: kind === 'percent' ? 1 : 0.01,
+					value: meta._pkit_deposit_value || 0,
+					onChange( value ) {
+						updateMeta(
+							'_pkit_deposit_value',
+							parseFloat( value ) || 0
+						);
+					},
+					help:
+						kind === 'percent'
+							? 'A deposit above 100% is charged as the full amount.'
+							: 'Multiplied by quantity — $50 on two items takes $100. A deposit above the item price is charged as the full amount.',
+				} )
+			);
+		}
+
+		return el(
+			PluginDocumentSettingPanel,
+			{
+				name: 'pkit-product-payment',
+				title: 'Pre-Order Payment',
+				initialOpen: false,
+				icon: 'money-alt',
+			},
+			children
+		);
+	}
+
+	/* ─────────────────────────────────────────────
 	 * Register
 	 * ───────────────────────────────────────────── */
 
@@ -462,5 +570,10 @@
 	registerPlugin( 'pkit-product-trade-fields', {
 		render: ProductTradeFieldsPanel,
 		icon: 'admin-appearance',
+	} );
+
+	registerPlugin( 'pkit-product-payment', {
+		render: ProductPaymentPanel,
+		icon: 'money-alt',
 	} );
 } )();

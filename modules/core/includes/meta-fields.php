@@ -45,6 +45,24 @@ function register_product_meta(): void {
 			'description' => 'Brief growing / baking notes shown on front end.',
 			'default'     => '',
 		],
+		'_pkit_payment_mode'  => [
+			'type'        => 'string',
+			'description' => 'What a pre-order collects up front: none (reserve only), deposit, or full.',
+			'default'     => 'none',
+			'sanitize'    => __NAMESPACE__ . '\\sanitize_payment_mode',
+		],
+		'_pkit_deposit_kind'  => [
+			'type'        => 'string',
+			'description' => 'Whether the deposit is a fixed amount per unit or a percentage of the line.',
+			'default'     => 'fixed',
+			'sanitize'    => __NAMESPACE__ . '\\sanitize_deposit_kind',
+		],
+		'_pkit_deposit_value' => [
+			'type'        => 'number',
+			'description' => 'Deposit amount per unit, or percent of the line when the kind is percent.',
+			'default'     => 0,
+			'sanitize'    => __NAMESPACE__ . '\\sanitize_deposit_value',
+		],
 	];
 
 	foreach ( $fields as $key => $args ) {
@@ -64,11 +82,59 @@ function register_product_meta(): void {
 				'type'              => $args['type'],
 				'description'       => $args['description'],
 				'default'           => $args['default'],
-				'sanitize_callback' => $args['type'] === 'array' ? __NAMESPACE__ . '\\sanitize_int_array' : 'sanitize_text_field',
+				'sanitize_callback' => $args['sanitize'] ?? ( 'array' === $args['type'] ? __NAMESPACE__ . '\\sanitize_int_array' : 'sanitize_text_field' ),
 				'auth_callback'     => fn () => current_user_can( 'edit_posts' ),
 			]
 		);
 	}
+}
+
+/* ───────────────────────────────────────────────
+ * Deposit sanitisers
+ * ─────────────────────────────────────────────── */
+
+/**
+ * What a pre-order for this product collects up front.
+ *
+ * Anything unrecognised falls back to 'none'. Getting this wrong in the
+ * permissive direction would charge a customer for something the producer
+ * never meant to charge for, so an unknown value must not be treated as an
+ * instruction to take money.
+ */
+function sanitize_payment_mode( mixed $value ): string {
+	$value = is_string( $value ) ? strtolower( trim( $value ) ) : '';
+
+	return in_array( $value, [ 'none', 'deposit', 'full' ], true ) ? $value : 'none';
+}
+
+/**
+ * Fixed amount per unit, or a percentage of the line.
+ */
+function sanitize_deposit_kind( mixed $value ): string {
+	$value = is_string( $value ) ? strtolower( trim( $value ) ) : '';
+
+	return 'percent' === $value ? 'percent' : 'fixed';
+}
+
+/**
+ * The deposit figure itself.
+ *
+ * Never negative: absint() would turn -50 into 50 and quietly charge a
+ * deposit the producer was trying to remove, so a negative is clamped to zero
+ * rather than flipped. Not capped at 100 here even though a percentage above
+ * that is meaningless — the cap belongs where the kind is known, and
+ * Deposits\split_line() never lets a deposit exceed the line total anyway.
+ */
+function sanitize_deposit_value( mixed $value ): float {
+	if ( is_string( $value ) ) {
+		$value = str_replace( [ ',', '$', ' ' ], '', $value );
+	}
+
+	if ( ! is_numeric( $value ) ) {
+		return 0.0;
+	}
+
+	return max( 0.0, round( (float) $value, 2 ) );
 }
 
 /* ───────────────────────────────────────────────
