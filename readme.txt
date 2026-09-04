@@ -130,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Added: recurring events are now understood — weekly markets, first-Saturday classes, the last day of the month. Rules the plugin cannot honour exactly are refused rather than quietly expanded to the wrong dates.
 * Added: pick the products you are featuring at an event. The field was already returned by the API but there was no way to set it, so it was always empty.
 
 = 2.4.0 =

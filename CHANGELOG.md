@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A recurrence-rule reader, and a refusal for the rules it cannot honour.
+  `_pkit_recurrence_rule` had stored an RFC 5545 RRULE since it was registered
+  and nothing ever read it — worse than an unused field, because
+  `/events/upcoming` filters on the single start date, so a weekly market that
+  began eight weeks ago is absent from the upcoming feed and present in the
+  past one. As far as the API is concerned the market is over.
+
+  This is a deliberate subset: `FREQ` (daily, weekly, monthly, yearly),
+  `INTERVAL`, `COUNT`, `UNTIL`, `BYDAY` including ordinals like `1SA` and
+  `-1SU`, `BYMONTHDAY` including `-1` for the last day, and `BYMONTH`.
+  Anything else is refused **by name**. A rule carrying `BYSETPOS` that
+  expanded without it would produce confidently wrong dates, and a producer
+  would find out when nobody came.
+
+  Expansion works in the site's timezone rather than on timestamps, so a
+  market that opens at 09:00 still opens at 09:00 the week the clocks change.
+  Monthly rules step from the first of the month, because PHP's own
+  `+1 month` on 31 January gives 3 March — which would skip February and land
+  twice in March. A month with no 31st simply does not fire, as RFC 5545 says.
+
+  An invalid rule can no longer be saved. Note the limit: a REST write of a
+  bad rule returns 200 with the value dropped, because a `sanitize_callback`
+  is handed no object id and `register_post_meta()` has no validate hook. The
+  editor panel that explains why comes with the generator.
+
+  This is the first of three steps. It reads and refuses rules; it does not
+  yet create anything. Occurrences become real event posts — so RSVPs,
+  capacity and guest lists work unchanged — in the step after next.
+
 - Featured products on an event. `_pkit_featured_product_ids` had been
   returned by two REST readers since it was registered and written by
   nothing, so a client could read the key and always get an empty array —
