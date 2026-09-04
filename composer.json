@@ -33,6 +33,8 @@
         "lint": "phpcs",
         "lint:fix": "phpcbf",
         "validate:config": "php bin/validate-config.php",
+        "make-pot": "bin/make-pot.sh",
+        "make-pot:check": "bin/make-pot.sh --check",
         "build": "bin/build-dist.sh --zip",
         "test": [
             "@test:unit",

@@ -130,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Added: a translation template ships with the plugin, so it can be translated into another language without waiting for the WordPress.org listing.
 * Added: your producer profile now names the fields too, not just the categories. A beekeeper's source is an Apiary with Forage Notes; a musician's is a Label with a Studio and Mastering Notes. The help text under each field follows the label.
 * Added: sources now have an editor panel. Their four fields were shown on the front end and returned by the API but there was nowhere in the editor to enter them.
 * Fixed: the plugin's editor panels and block controls are now translatable throughout. The PHP was fully translated and the JavaScript beside it was hard-coded English — around 270 strings a translator could not reach.

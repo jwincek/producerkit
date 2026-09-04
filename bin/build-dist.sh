@@ -94,7 +94,8 @@ fi
 
 # Likewise, a missing runtime file would ship a broken plugin.
 MISSING=()
-for f in "$SLUG.php" readme.txt LICENSE includes modules blocks assets; do
+for f in "$SLUG.php" readme.txt LICENSE includes modules blocks assets \
+         "languages/$SLUG.pot"; do
 	[[ -e "$DEST/$f" ]] || MISSING+=("$f")
 done
 if (( ${#MISSING[@]} )); then

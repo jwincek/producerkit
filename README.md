@@ -340,6 +340,32 @@ All filterable via `pkit_notify_*` hooks. Recipients default to the site admin e
 
 The admin dashboard provides a one-click toggle to load 8 products, 2 locations, 3 events, and availability entries. Sample content is tagged with `_pkit_sample_data` meta for clean removal. Front-end shows amber "Sample" badges via `the_title` filter.
 
+## Translations
+
+`languages/producerkit.pot` is committed, so a translator can start from the
+repository without a WordPress checkout, and a diff shows which strings a
+change added or removed — which is the cheapest way to notice a control that
+shipped hard-coded.
+
+Regenerate it whenever user-visible strings change, and after a version bump,
+because the version is embedded in the template's `Project-Id-Version` header:
+
+```sh
+composer make-pot          # regenerate
+composer make-pot:check    # exit 1 if the committed file is stale
+```
+
+Both need [wp-cli](https://wp-cli.org). CI runs the check and distinguishes
+its two failure modes: strings appearing or vanishing is translation work,
+while source references moving because a line shifted is a one-command fix
+that loses nothing.
+
+`bin/validate-config.php` separately fails if the template is missing, was
+generated for another text domain, or declares a version other than the
+plugin's — a stale template still loads and still translates, just without
+anything added since, so nothing looks broken until a translator asks where
+the new labels went.
+
 ## License
 
 GPL-2.0-or-later
