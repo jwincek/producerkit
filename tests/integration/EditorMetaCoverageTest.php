@@ -40,11 +40,12 @@ final class EditorMetaCoverageTest extends WP_UnitTestCase {
 		// ability. A control would let someone falsify it.
 		'_pkit_ss_last_toggled'      => 'written by the stand toggle, never by hand',
 
-		// Both are read by two REST responses and written nowhere — the same
-		// shape as the sources bug, tracked separately rather than fixed in
-		// the change that found them.
-		'_pkit_featured_product_ids' => 'issue #37',
-		'_pkit_recurrence_rule'      => 'issue #37 — and nothing interprets the RRULE yet',
+		// Read by two REST responses and written nowhere, the same shape as
+		// the sources bug. Unlike the others it is not a missing control:
+		// nothing in the plugin interprets the RRULE, so a control would let
+		// a producer type FREQ=WEEKLY, watch it save, and get one event.
+		// Implement or remove, not a UI.
+		'_pkit_recurrence_rule'      => 'issue #37 — nothing interprets the RRULE yet',
 	];
 
 	/**

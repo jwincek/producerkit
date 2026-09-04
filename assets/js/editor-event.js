@@ -20,6 +20,7 @@
 	const ToggleControl = wp.components.ToggleControl;
 	const RangeControl = wp.components.RangeControl;
 	const Notice = wp.components.Notice;
+	const Button = wp.components.Button;
 
 	/* ─────────────────────────────────────────────
 	 * Helpers
@@ -430,6 +431,185 @@
 	}
 
 	/* ─────────────────────────────────────────────
+	 * Panel 4: Featured Products
+	 *
+	 * _pkit_featured_product_ids has been returned by two REST responses
+	 * since it was registered and written by nothing, so a client could read
+	 * an array that was always empty. This is the writer.
+	 * ───────────────────────────────────────────── */
+
+	function EventFeaturedProductsPanel() {
+		const postType = useSelect( function ( select ) {
+			return select( 'core/editor' ).getCurrentPostType();
+		}, [] );
+
+		const _meta = useEntityProp( 'postType', 'pkit_event', 'meta' );
+		const meta = _meta[ 0 ] || {};
+		const setMeta = _meta[ 1 ];
+
+		const featuredIds = meta._pkit_featured_product_ids || [];
+
+		// Extracted so the dependency is a plain value the linter can check;
+		// an expression inline in the array cannot be verified statically.
+		const featuredKey = featuredIds.join( ',' );
+
+		const allProducts = useSelect( function ( select ) {
+			return (
+				select( 'core' ).getEntityRecords( 'postType', 'pkit_product', {
+					per_page: 50,
+					status: 'publish',
+					_fields: 'id,title',
+				} ) || []
+			);
+		}, [] );
+
+		// Kept separate from allProducts: a featured product beyond the first
+		// fifty, or one since unpublished, still has to render as a row the
+		// producer can remove rather than vanishing from the panel while
+		// staying in the meta.
+		const featuredProducts = useSelect(
+			function ( select ) {
+				if ( ! featuredIds.length ) {
+					return [];
+				}
+
+				return featuredIds
+					.map( function ( id ) {
+						return select( 'core' ).getEntityRecord(
+							'postType',
+							'pkit_product',
+							id
+						);
+					} )
+					.filter( Boolean );
+			},
+			[ featuredKey ]
+		);
+
+		if ( postType !== 'pkit_event' ) {
+			return null;
+		}
+
+		function setFeatured( ids ) {
+			setMeta(
+				Object.assign( {}, meta, { _pkit_featured_product_ids: ids } )
+			);
+		}
+
+		const available = allProducts.filter( function ( product ) {
+			return featuredIds.indexOf( product.id ) === -1;
+		} );
+
+		return el(
+			PluginDocumentSettingPanel,
+			{
+				name: 'pkit-event-featured-products',
+				title: __( 'Featured Products', 'producerkit' ),
+				initialOpen: false,
+				icon: 'tag',
+			},
+
+			el(
+				'p',
+				{
+					className: 'components-base-control__help',
+					style: { marginTop: 0 },
+				},
+				__(
+					'What you are bringing to this one. Shown on the event in the API, so a booth listing can name the three things worth the trip.',
+					'producerkit'
+				)
+			),
+
+			featuredProducts.length > 0
+				? el(
+						'div',
+						{ style: { marginBottom: '12px' } },
+						featuredProducts.map( function ( product ) {
+							return el(
+								'div',
+								{
+									key: product.id,
+									style: {
+										display: 'flex',
+										justifyContent: 'space-between',
+										alignItems: 'center',
+										padding: '6px 8px',
+										background: '#f0fdf4',
+										borderRadius: '4px',
+										marginBottom: '4px',
+										fontSize: '13px',
+									},
+								},
+								el(
+									'span',
+									null,
+									product.title?.rendered ||
+										__( '(untitled)', 'producerkit' )
+								),
+								el( Button, {
+									isSmall: true,
+									isDestructive: true,
+									icon: 'no-alt',
+									label: __( 'Remove', 'producerkit' ),
+									onClick() {
+										setFeatured(
+											featuredIds.filter(
+												function ( id ) {
+													return id !== product.id;
+												}
+											)
+										);
+									},
+								} )
+							);
+						} )
+				  )
+				: null,
+
+			available.length > 0
+				? el( SelectControl, {
+						value: '',
+						options: [
+							{
+								label: __( '— Add a product —', 'producerkit' ),
+								value: '',
+							},
+						].concat(
+							available.map( function ( product ) {
+								return {
+									label:
+										product.title?.rendered ||
+										__( '(untitled)', 'producerkit' ),
+									value: product.id,
+								};
+							} )
+						),
+						onChange( value ) {
+							const id = parseInt( value, 10 );
+
+							if ( id && featuredIds.indexOf( id ) === -1 ) {
+								setFeatured( featuredIds.concat( [ id ] ) );
+							}
+						},
+				  } )
+				: el(
+						'p',
+						{ className: 'components-base-control__help' },
+						allProducts.length === 0
+							? __(
+									'No products created yet. Add them under Catalog in the sidebar.',
+									'producerkit'
+							  )
+							: __(
+									'Every product is already featured.',
+									'producerkit'
+							  )
+				  )
+		);
+	}
+
+	/* ─────────────────────────────────────────────
 	 * Register
 	 * ───────────────────────────────────────────── */
 
@@ -441,6 +621,11 @@
 	registerPlugin( 'pkit-event-rsvp', {
 		render: EventRsvpPanel,
 		icon: 'groups',
+	} );
+
+	registerPlugin( 'pkit-event-featured-products', {
+		render: EventFeaturedProductsPanel,
+		icon: 'tag',
 	} );
 
 	registerPlugin( 'pkit-event-info', {
