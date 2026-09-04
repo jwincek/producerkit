@@ -21,6 +21,12 @@ return [
 		'pkit_finish'    => [ __( 'Ink', 'producerkit' ), __( 'Inks', 'producerkit' ) ],
 		'pkit_component' => [ __( 'Colours', 'producerkit' ), __( 'Colours', 'producerkit' ) ],
 	],
+	'meta_labels'     => [
+		'_pkit_source_farm_name' => [ __( 'Blank Supplier', 'producerkit' ), __( 'Who supplied the blanks. Falls back to the post title on the front end if left empty.', 'producerkit' ) ],
+		'_pkit_source_history' => [ __( 'Background', 'producerkit' ), __( 'The story behind this blank or supplier.', 'producerkit' ) ],
+		'_pkit_milling_notes' => [ __( 'Printing Notes', 'producerkit' ), __( 'Inks, mesh, cure — how it was printed.', 'producerkit' ) ],
+		'_pkit_growing_notes' => [ __( 'Printing Notes', 'producerkit' ), __( 'Shown on the product page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'       => [
 		'pkit_product_type' => [ 'T-Shirt', 'Long Sleeve', 'Hoodie', 'Crewneck', 'Tote Bag', 'Poster', 'Art Print', 'Tea Towel', 'Patch', 'Sticker' ],
 		'pkit_material'     => [ 'Ring-Spun Cotton', 'Heavyweight Cotton', 'Tri-Blend', 'Poly-Cotton', 'Organic Cotton', 'Canvas', 'Cover Stock', 'French Paper', 'Newsprint' ],

@@ -24,6 +24,9 @@ return [
 	'post_type_names' => [
 		'pkit_product' => [ __( 'Work', 'producerkit' ), __( 'Works', 'producerkit' ), __( 'Works', 'producerkit' ) ],
 	],
+	'meta_labels'     => [
+		'_pkit_growing_notes' => [ __( 'Making Notes', 'producerkit' ), __( 'Shown on the product page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Painting', 'Drawing', 'Study', 'Sketch', 'Giclee Print', 'Screen Print', 'Miniature', 'Diptych', 'Sketchbook' ],
 		'pkit_material'     => [ 'Oil', 'Acrylic', 'Watercolour', 'Gouache', 'Graphite', 'Charcoal', 'Ink', 'Soft Pastel', 'Coloured Pencil', 'Mixed Media' ],

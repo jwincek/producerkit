@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Producer profiles now re-word fields, not just taxonomies and post types.
+  A musician cataloguing a release read "Farm / Origin Name", "Location",
+  "History" and "Milling / Process Notes"; they now read Label, Studio,
+  Background and Mastering Notes. A beekeeper reads Apiary, Yard Location,
+  Forage Notes and Extraction Notes.
+
+  The data model was already right — who this came from, where, and what was
+  done to it in between are the right three questions for a record label, a
+  tannery or a mill. Only the words were wrong, so the meta keys are
+  untouched and a test asserts data survives a profile switch.
+
+  Help text moves with the label, because re-labelling a field and leaving
+  the sentence under it talking about grind and cure is the same mistake one
+  line further down. A profile may override either half of the pair.
+
+  Fourteen profiles carry wording; the rest keep the farm defaults. Labels
+  reach the editor through the same inline settings object that already
+  carries the request vocabulary, so no new REST route was needed.
+
+  This also settles a disagreement nobody had noticed: the front-end template
+  said "Farm" and "Milling Notes" where the sidebar said "Farm / Origin Name"
+  and "Milling / Process Notes", for the same two fields. Both now read from
+  one source, and a test fails if either stops.
+
 - An editor panel for sources. The `pkit_source` post type registered four
   fields — origin name, location, history and milling notes — rendered them
   on the front end, returned them from REST and reported them through the

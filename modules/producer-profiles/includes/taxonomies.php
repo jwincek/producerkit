@@ -159,6 +159,45 @@ function filter_commission_names( array $words ): array {
 }
 
 /**
+ * Re-word trade-specific meta fields from the active profile.
+ *
+ * Like the commission wording and unlike taxonomy names, this is resolved
+ * once for the site rather than per object, so the labelling profile decides.
+ *
+ * A profile may override the label, the help text, or both: the pair is
+ * merged slot by slot, so re-wording a label does not silently blank the
+ * sentence underneath it.
+ *
+ * @param array<string, array{0: string, 1: string}> $labels
+ * @return array<string, array{0: string, 1: string}>
+ */
+function filter_meta_labels( array $labels ): array {
+	$profile = Profiles\labelling_profile();
+
+	if ( null === $profile || ! isset( $profile['meta_labels'] ) ) {
+		return $labels;
+	}
+
+	foreach ( (array) $profile['meta_labels'] as $key => $pair ) {
+		// An unknown key is ignored rather than added: a typo in a profile
+		// should not invent a label nothing reads.
+		if ( ! array_key_exists( $key, $labels ) ) {
+			continue;
+		}
+
+		$pair = (array) $pair;
+
+		foreach ( [ 0, 1 ] as $slot ) {
+			if ( isset( $pair[ $slot ] ) && '' !== trim( (string) $pair[ $slot ] ) ) {
+				$labels[ $key ][ $slot ] = (string) $pair[ $slot ];
+			}
+		}
+	}
+
+	return $labels;
+}
+
+/**
  * Replace a taxonomy's seeded default terms with the active profiles'.
  *
  * Unions across every profile the site runs, because seeding is additive by

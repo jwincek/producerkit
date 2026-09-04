@@ -30,6 +30,11 @@ return [
 		'menu'     => __( 'Special Orders', 'producerkit' ),
 		'action'   => __( 'Order something special', 'producerkit' ),
 	],
+	'meta_labels'     => [
+		'_pkit_source_farm_name' => [ __( 'Mill / Farm', 'producerkit' ), __( 'Who grew or milled it. Falls back to the post title on the front end if left empty.', 'producerkit' ) ],
+		'_pkit_milling_notes' => [ __( 'Milling Notes', 'producerkit' ), __( 'Grind, extraction rate, how fresh it was milled.', 'producerkit' ) ],
+		'_pkit_growing_notes' => [ __( 'Baking Notes', 'producerkit' ), __( 'Shown on the product page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Sourdough', 'Baguette', 'Focaccia', 'Bagel', 'Croissant', 'Rye Loaf', 'Brioche', 'Pastry', 'Cookie', 'Scone' ],
 		'pkit_material'     => [ 'Bread Flour', 'Whole Wheat', 'Rye', 'Spelt', 'Einkorn', 'Semolina', 'All-Purpose' ],

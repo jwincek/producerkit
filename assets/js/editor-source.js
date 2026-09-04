@@ -12,11 +12,10 @@
  * key/value box knowing the meta keys — which is the absence of a feature
  * rather than one.
  *
- * The labels below are the farm-and-mill wording the fields were named for.
- * They are the right three questions for a record label or a tannery too —
- * who, where, and what was done in between — but not in these words. Issue
- * #22 covers letting a producer profile re-word them, which is a change to
- * this file once a panel exists to re-word.
+ * The labels are not fixed. Who this came from, where, and what was done to
+ * it in between are the right three questions for a record label or a tannery
+ * as much as a mill — but not in the same words, so the active producer
+ * profile supplies them and the strings below are only the fallback.
  */
 ( function () {
 	'use strict';
@@ -29,6 +28,25 @@
 	const useSelect = wp.data.useSelect;
 	const TextControl = wp.components.TextControl;
 	const TextareaControl = wp.components.TextareaControl;
+
+	/**
+	 * The wording this trade uses for a field.
+	 *
+	 * Resolved server-side from the active producer profile, so the label a
+	 * beekeeper sees says Apiary and a musician's says Label. Falls back to
+	 * the farm-and-mill defaults if the blob is missing, which is what a
+	 * cached page or a stripped settings object looks like.
+	 *
+	 * @param key
+	 * @param slot
+	 * @param fallback
+	 */
+	function fieldText( key, slot, fallback ) {
+		const labels =
+			( window.pkitSettings && window.pkitSettings.metaLabels ) || {};
+
+		return ( labels[ key ] && labels[ key ][ slot ] ) || fallback;
+	}
 
 	/**
 	 * Shared setup for both panels.
@@ -90,26 +108,42 @@
 			},
 
 			el( TextControl, {
-				label: __( 'Farm / Origin Name', 'producerkit' ),
+				label: fieldText(
+					'_pkit_source_farm_name',
+					'label',
+					__( 'Farm / Origin Name', 'producerkit' )
+				),
 				value: source.meta._pkit_source_farm_name || '',
 				onChange( value ) {
 					updateMeta( '_pkit_source_farm_name', value );
 				},
-				help: __(
-					'Who this came from. Falls back to the post title on the front end if left empty.',
-					'producerkit'
+				help: fieldText(
+					'_pkit_source_farm_name',
+					'help',
+					__(
+						'Who this came from. Falls back to the post title on the front end if left empty.',
+						'producerkit'
+					)
 				),
 			} ),
 
 			el( TextControl, {
-				label: __( 'Location', 'producerkit' ),
+				label: fieldText(
+					'_pkit_source_location',
+					'label',
+					__( 'Location', 'producerkit' )
+				),
 				value: source.meta._pkit_source_location || '',
 				onChange( value ) {
 					updateMeta( '_pkit_source_location', value );
 				},
-				help: __(
-					'County and state, or however you would say where.',
-					'producerkit'
+				help: fieldText(
+					'_pkit_source_location',
+					'help',
+					__(
+						'County and state, or however you would say where.',
+						'producerkit'
+					)
 				),
 			} )
 		);
@@ -138,28 +172,44 @@
 			},
 
 			el( TextareaControl, {
-				label: __( 'History', 'producerkit' ),
+				label: fieldText(
+					'_pkit_source_history',
+					'label',
+					__( 'History', 'producerkit' )
+				),
 				value: source.meta._pkit_source_history || '',
 				rows: 4,
 				onChange( value ) {
 					updateMeta( '_pkit_source_history', value );
 				},
-				help: __(
-					'Heritage notes — the story behind this ingredient or variety.',
-					'producerkit'
+				help: fieldText(
+					'_pkit_source_history',
+					'help',
+					__(
+						'Heritage notes — the story behind this ingredient or variety.',
+						'producerkit'
+					)
 				),
 			} ),
 
 			el( TextareaControl, {
-				label: __( 'Milling / Process Notes', 'producerkit' ),
+				label: fieldText(
+					'_pkit_milling_notes',
+					'label',
+					__( 'Milling / Process Notes', 'producerkit' )
+				),
 				value: source.meta._pkit_milling_notes || '',
 				rows: 4,
 				onChange( value ) {
 					updateMeta( '_pkit_milling_notes', value );
 				},
-				help: __(
-					'What was done to it in between — grind, cure, age, finish.',
-					'producerkit'
+				help: fieldText(
+					'_pkit_milling_notes',
+					'help',
+					__(
+						'What was done to it in between — grind, cure, age, finish.',
+						'producerkit'
+					)
 				),
 			} )
 		);
