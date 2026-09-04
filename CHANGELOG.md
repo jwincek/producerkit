@@ -29,6 +29,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the store witnessed, and inventing an order to represent it would make its
   takings wrong.
 
+### Changed
+
+- Made-to-order requests are now worded per producer profile. "Commission" is
+  the right word for a potter, a painter or a taxidermist, and the wrong one
+  for most other people this plugin serves: a beekeeper asked about bulk
+  honey, mated queens or wax answers an enquiry, and a grower takes a special
+  order. Showing a beekeeper's customer the word "commission" makes the form
+  read as though it belongs to someone else's business.
+
+  Post types and taxonomies already re-labelled themselves through
+  `pkit_post_type_names` and `pkit_taxonomy_names`. Commissions are rows in a
+  custom table rather than posts, so they flowed through neither and were left
+  speaking one trade's language to everybody. A new `pkit_commission_names`
+  filter closes that gap, with four slots rather than the usual triple —
+  the concept also needs a verb, since "Commission a piece" and "Ask about
+  bulk orders" are not the same sentence with a noun swapped.
+
+  Six profiles now override it: beekeeping (Enquiry), farm and bakery (Special
+  Order), musician (Booking), author and comics (Request). The craft profiles
+  keep "Commission", because for them it is correct.
+
+  Only wording moved. The `'commission'` type string, the table, the REST
+  routes, the hook names, the four ability names and the block name are all
+  identifiers other people build against, and a test asserts each one is
+  unchanged. The request form block's inserter title is now the trade-neutral
+  "Request Form".
+
 ### Fixed
 
 - Pre-orders could never be paid for through WooCommerce. `price_preorder()`

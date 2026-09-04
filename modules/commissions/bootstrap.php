@@ -19,6 +19,7 @@ namespace ProducerKit\Commissions;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once __DIR__ . '/includes/vocabulary.php';
 require_once __DIR__ . '/includes/commissions-table.php';
 require_once __DIR__ . '/includes/rest-extensions.php';
 require_once __DIR__ . '/includes/quote-response.php';

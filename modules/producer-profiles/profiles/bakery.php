@@ -24,6 +24,12 @@ return [
 	'post_type_names' => [
 		'pkit_product' => [ '', '', __( 'Bakery', 'producerkit' ) ],
 	],
+	'request_names'   => [
+		'singular' => __( 'Special Order', 'producerkit' ),
+		'plural'   => __( 'Special Orders', 'producerkit' ),
+		'menu'     => __( 'Special Orders', 'producerkit' ),
+		'action'   => __( 'Order something special', 'producerkit' ),
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Sourdough', 'Baguette', 'Focaccia', 'Bagel', 'Croissant', 'Rye Loaf', 'Brioche', 'Pastry', 'Cookie', 'Scone' ],
 		'pkit_material'     => [ 'Bread Flour', 'Whole Wheat', 'Rye', 'Spelt', 'Einkorn', 'Semolina', 'All-Purpose' ],

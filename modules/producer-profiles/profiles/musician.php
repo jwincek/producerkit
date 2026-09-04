@@ -33,6 +33,12 @@ return [
 		'pkit_finish'    => [ __( 'Edition', 'producerkit' ), __( 'Editions', 'producerkit' ) ],
 		'pkit_component' => [ __( 'Packaging', 'producerkit' ), __( 'Packaging', 'producerkit' ) ],
 	],
+	'request_names'   => [
+		'singular' => __( 'Booking', 'producerkit' ),
+		'plural'   => __( 'Bookings', 'producerkit' ),
+		'menu'     => __( 'Bookings', 'producerkit' ),
+		'action'   => __( 'Enquire about a booking', 'producerkit' ),
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Vinyl LP', 'Vinyl 7"', 'Cassette', 'CD', 'Digital Download', 'T-Shirt', 'Hoodie', 'Poster', 'Sticker', 'Patch', 'Tote Bag', 'Songbook' ],
 		'pkit_material'     => [ 'Black Vinyl', '180g Black Vinyl', 'Colored Vinyl', 'Splatter Vinyl', 'Picture Disc', 'Cassette', 'Compact Disc', 'Digital' ],

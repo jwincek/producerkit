@@ -35,6 +35,12 @@ return [
 	'post_type_names' => [
 		'pkit_product' => [ '', '', __( 'Comics', 'producerkit' ) ],
 	],
+	'request_names'   => [
+		'singular' => __( 'Request', 'producerkit' ),
+		'plural'   => __( 'Requests', 'producerkit' ),
+		'menu'     => __( 'Requests', 'producerkit' ),
+		'action'   => __( 'Request a commission or a sketch', 'producerkit' ),
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Graphic Novel', 'Single Issue', 'Trade Paperback', 'Mini-Comic', 'Ashcan', 'Zine', 'Anthology', 'Art Book', 'Sketchbook', 'Original Page', 'Print', 'Sticker', 'Pin' ],
 		'pkit_material'     => [ 'Offset', 'Risograph', 'Digital', 'Photocopy', 'Screen Printed', 'Letterpress' ],

@@ -295,6 +295,12 @@ add_action(
 						// in which case its bootstrap returns early and any
 						// payment control would be inert.
 						'hasWooCommerce' => class_exists( '\\WooCommerce' ),
+						// What this trade calls a quote-then-make job, so the
+						// request form's placeholder does not tell a beekeeper
+						// to "commission a piece".
+						'requestWords'   => function_exists( '\\ProducerKit\\Commissions\\Vocabulary\\words' )
+							? \ProducerKit\Commissions\Vocabulary\words()
+							: null,
 					]
 				),
 			),

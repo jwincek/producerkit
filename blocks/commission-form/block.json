@@ -3,10 +3,10 @@
     "apiVersion": 3,
     "name": "producerkit/commission-form",
     "version": "2.3.0",
-    "title": "Commission Request Form",
+    "title": "Request Form",
     "category": "producerkit",
     "icon": "clipboard",
-    "description": "Let visitors ask for a custom piece. You quote a price; they accept or decline by email. Requires the Commissions module.",
+    "description": "Let visitors ask for something you make to order. You quote a price; they accept or decline by email. Requires the Commissions module.",
     "textdomain": "producerkit",
     "attributes": {
         "heading": {

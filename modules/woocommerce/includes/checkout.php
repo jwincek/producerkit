@@ -93,8 +93,9 @@ function product_for_commission( int $commission_id ): int|\WP_Error {
 	$product = new \WC_Product_Simple();
 	$product->set_name(
 		sprintf(
-			/* translators: %s: customer name. */
-			__( 'Commission for %s', 'producerkit' ),
+			/* translators: 1: this trade's word for a commission, 2: customer name. */
+			__( '%1$s for %2$s', 'producerkit' ),
+			\ProducerKit\Commissions\Vocabulary\singular(),
 			(string) $commission['name']
 		)
 	);
@@ -112,8 +113,9 @@ function product_for_commission( int $commission_id ): int|\WP_Error {
 	// The admin queue is where the maker reads the request.
 	$product->set_description(
 		sprintf(
-			/* translators: %d: commission reference number. */
-			__( 'Commission #%d — agreed at the quoted price.', 'producerkit' ),
+			/* translators: 1: this trade's word for a commission, 2: request id. */
+			__( '%1$s #%2$d — agreed at the quoted price.', 'producerkit' ),
+			\ProducerKit\Commissions\Vocabulary\singular(),
 			$commission_id
 		)
 	);

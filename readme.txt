@@ -42,9 +42,10 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * **Optional fields switch on per trade** — Material, Finish and Component exist only for profiles that ask for them, so a farm never sees them, and they render on the product card and single product page under your own labels.
 * **More than one trade on a site** — a farm that also bakes, or two people sharing an install. Which fields exist and which vocabulary is seeded combine; the wording resolves per person, so each of you reads the same field in your own trade's words.
 
-= Commissions =
+= Made-to-order requests =
 
-* **Made-to-order requests** — a customer describes what they want, you quote a price and a date, and they accept or decline from a link in their email. The confirmation page shows the terms before anything is agreed.
+* **Ask, quote, agree** — a customer describes what they want, you quote a price and a date, and they accept or decline from a link in their email. The confirmation page shows the terms before anything is agreed.
+* **Called what your trade calls it.** A potter takes commissions; a beekeeper asked about bulk honey, queens or wax answers an enquiry, and a grower takes a special order. The form, the emails, the confirmation page and the admin menu all follow your producer profile, so nobody's customer is asked to "commission a piece" of honey.
 * **A request form block** whose type and material options come from your producer profile.
 * **An admin queue** with an enforced status flow, quotes that can be revised or reissued, and five emails.
 
@@ -129,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Changed: made-to-order requests are now called what your trade calls them. "Commission" is right for a potter and wrong for a beekeeper answering an enquiry about bulk honey, or a grower taking a special order — the wording now follows your producer profile everywhere a customer or you can see it.
 * Added: per-product deposits on pre-orders — take a fixed amount, a percentage, or the full price up front, and leave the rest for pickup. The balance can be collected with a payment link or taken in person and marked paid.
 * Fixed: pre-orders could never actually be paid for through WooCommerce. The pricing and the order-raising both existed but were never joined up, so the payment link this plugin promised for "a request" only ever appeared for commissions.
 * Added: ProducerKit now identifies itself to WooCommerce as an extension, and declares compatibility with High-Performance Order Storage and the Cart & Checkout Blocks. Without this a store could be prevented from turning HPOS on.

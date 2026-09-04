@@ -130,6 +130,35 @@ function filter_post_type_names( array $names, string $post_type ): array {
 }
 
 /**
+ * Re-word the commission concept from the active profile.
+ *
+ * Unlike taxonomies and post types, this is not per-object: a site has one
+ * word for the job regardless of how many profiles it runs. Where profiles
+ * disagree, the labelling profile wins, which is the same rule the admin
+ * screens already use for every other name.
+ *
+ * @param array{singular: string, plural: string, menu: string, action: string} $words
+ * @return array{singular: string, plural: string, menu: string, action: string}
+ */
+function filter_commission_names( array $words ): array {
+	$profile = Profiles\labelling_profile();
+
+	if ( null === $profile || ! isset( $profile['request_names'] ) ) {
+		return $words;
+	}
+
+	foreach ( (array) $profile['request_names'] as $slot => $value ) {
+		// An unknown slot is ignored rather than added: a typo in a profile
+		// should not invent a word nothing reads.
+		if ( array_key_exists( $slot, $words ) && '' !== (string) $value ) {
+			$words[ $slot ] = (string) $value;
+		}
+	}
+
+	return $words;
+}
+
+/**
  * Replace a taxonomy's seeded default terms with the active profiles'.
  *
  * Unions across every profile the site runs, because seeding is additive by

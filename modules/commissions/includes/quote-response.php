@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace ProducerKit\Commissions\QuoteResponse;
 
+use ProducerKit\Commissions\Vocabulary;
+
 use ProducerKit\Commissions\Store;
 use ProducerKit\Core\TokenPage;
 
@@ -137,12 +139,22 @@ function handle_post( string $token, array $commission ): ?array {
 	 */
 	$body = (string) apply_filters(
 		'pkit_quote_accepted_message',
-		'<p>' . esc_html__( 'Thank you — your commission is confirmed. We will be in touch about payment and timing.', 'producerkit' ) . '</p>',
+		'<p>' . esc_html(
+			sprintf(
+				/* translators: %s: this trade's word for a commission, lowercase singular. */
+				__( 'Thank you — your %s is confirmed. We will be in touch about payment and timing.', 'producerkit' ),
+				Vocabulary\singular_lower()
+			)
+		) . '</p>',
 		$result
 	);
 
 	return [
-		'title' => __( 'Your commission is confirmed', 'producerkit' ),
+		'title' => sprintf(
+			/* translators: %s: this trade's word for a commission, lowercase singular. */
+			__( 'Your %s is confirmed', 'producerkit' ),
+			Vocabulary\singular_lower()
+		),
 		'body'  => $body,
 	];
 }
