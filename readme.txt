@@ -69,7 +69,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 
 * Eleven blocks under a dedicated category, server-rendered with live front-end updates via the WordPress Interactivity API.
 * REST API endpoints for products, sources, taxonomies, availability, locations, stand status, events, RSVPs, pre-orders and commissions.
-* **Abilities API** — on WordPress 6.9+, fourteen operations (list products, get/update availability, toggle stand status, RSVP to an event, create and manage pre-orders, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
+* **Abilities API** — on WordPress 6.9+, twenty operations (list products, get/update availability, toggle stand status, RSVP to an event, read a guest list, create and manage pre-orders and commissions, send a quote, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
 * Modular architecture — disable feature modules you don't need with a single filter.
 * **Your data stays yours.** Deleting an event or a location removes the bookings attached to it rather than leaving names and addresses behind, and deleting the plugin only removes your content if you have asked it to.
 
@@ -96,7 +96,9 @@ Yes. Feature modules — producer profiles, stand status, availability board, ev
 
 = What are Abilities? =
 
-The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks. Write operations require `edit_posts`, except commission management, which requires `edit_others_posts` because those records hold customer contact details and a quote is binding.
+The WordPress Abilities API (WordPress 6.9+) lets plugins register operations that AI agents and automation tools can discover and execute. ProducerKit registers its read and write operations as abilities with JSON Schema input/output definitions and capability checks — including reading a commission queue, sending a quote, and reading or cancelling an event's RSVPs.
+
+Write operations require `edit_posts`. Anything that touches a customer's contact details — commissions, and the RSVP guest list — requires `edit_others_posts` instead, because those records hold names and email addresses and a quote is a price the business is held to. Tokens are never returned: a quote token lets its holder accept a binding price and an RSVP token lets its holder cancel a booking, so both reach the person by email rather than through an ability response.
 
 = Does the RSVP feature store personal data? =
 

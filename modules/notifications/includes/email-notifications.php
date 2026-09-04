@@ -80,7 +80,7 @@ function send( string $subject, string $body, array $to = [] ): bool {
 	$site_name    = get_bloginfo( 'name' );
 	$full_subject = '[' . $site_name . '] ' . $subject;
 
-	$html  = '<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:600px;margin:0 auto;padding:20px;color:#1f2937;">';
+	$html = '<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:600px;margin:0 auto;padding:20px;color:#1f2937;">';
 	// The site's own name, unadorned. This carried a carrot until 2.3.0, which
 	// went out on every email the plugin sent — to a potter's customers, an
 	// author's readers and a band's mailing list alike.

@@ -7,7 +7,29 @@ declare(strict_types=1);
 
 namespace ProducerKit\EventManager\Abilities;
 
+use ProducerKit\EventManager\RSVP;
+
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * One booking as an agent sees it.
+ *
+ * No token. It is the guest's capability to cancel their own booking, and it
+ * reaches them by email; an agent that can already cancel on their behalf has
+ * no use for it, and handing it out would let it travel further.
+ */
+const RSVP_SCHEMA = [
+	'type'       => 'object',
+	'properties' => [
+		'id'         => [ 'type' => 'integer' ],
+		'event_id'   => [ 'type' => 'integer' ],
+		'name'       => [ 'type' => 'string' ],
+		'email'      => [ 'type' => 'string' ],
+		'party_size' => [ 'type' => 'integer' ],
+		'note'       => [ 'type' => 'string' ],
+		'created_at' => [ 'type' => 'string' ],
+	],
+];
 
 add_action(
 	'wp_abilities_api_categories_init',
@@ -140,6 +162,121 @@ add_action(
 					],
 				],
 				'permission_callback' => '__return_true',
+				'meta'                => [
+					'show_in_rest' => true,
+					'annotations'  => [ 'idempotent' => false ],
+				],
+			]
+		);
+		wp_register_ability(
+			'producerkit/list-event-rsvps',
+			[
+				'label'               => __( 'List Event RSVPs', 'producerkit' ),
+				'description'         => __( 'Who is coming to an event: names, party sizes, notes and the headcount, with spots remaining when the event has a cap. This is how to answer "who is coming on Saturday?". Staff only.', 'producerkit' ),
+				'category'            => 'producerkit-events',
+				'execute_callback'    => static function ( array $input ): array {
+					$event_id = (int) $input['event_id'];
+
+					$rsvps = array_map(
+						static function ( $row ): array {
+							$row = (array) $row;
+							// The token is the guest's own capability; it does
+							// not belong in a list an agent can read.
+							unset( $row['token'], $row['ip_hash'] );
+							return $row;
+						},
+						RSVP\get_event_rsvps( $event_id )
+					);
+
+					return [
+						'rsvps'   => $rsvps,
+						'summary' => RSVP\get_event_rsvp_summary( $event_id ),
+					];
+				},
+				'input_schema'        => [
+					'type'       => 'object',
+					'properties' => [
+						'event_id' => [
+							'type'        => 'integer',
+							'description' => 'Event post ID.',
+						],
+					],
+					'required'   => [ 'event_id' ],
+				],
+				'output_schema'       => [
+					'type'       => 'object',
+					'properties' => [
+						'rsvps'   => [
+							'type'  => 'array',
+							'items' => RSVP_SCHEMA,
+						],
+						'summary' => [
+							'type'       => 'object',
+							'properties' => [
+								'headcount'  => [ 'type' => 'integer' ],
+								'spots_left' => [ 'type' => [ 'integer', 'null' ] ],
+								'is_full'    => [ 'type' => 'boolean' ],
+							],
+						],
+					],
+				],
+				'permission_callback' => static fn (): bool => current_user_can( RSVP\manage_cap() ),
+				'meta'                => [
+					'show_in_rest' => true,
+					'annotations'  => [ 'readonly' => true ],
+				],
+			]
+		);
+
+		wp_register_ability(
+			'producerkit/cancel-rsvp',
+			[
+				'label'               => __( 'Cancel an RSVP', 'producerkit' ),
+				'description'         => __( 'Cancel a booking on a guest\'s behalf, freeing their place in the headcount. Takes the RSVP id from List Event RSVPs. Staff only — a guest cancels their own from the link in their confirmation email.', 'producerkit' ),
+				'category'            => 'producerkit-events',
+				'execute_callback'    => static function ( array $input ): array {
+					$rsvp = RSVP\find_by_id( (int) $input['id'] );
+
+					if ( null === $rsvp ) {
+						return [
+							'success' => false,
+							'message' => __( 'That booking no longer exists.', 'producerkit' ),
+						];
+					}
+
+					// Through the same function the guest's own link uses, so
+					// the cap arithmetic and pkit_rsvp_cancelled fire once, in
+					// one place, however the cancellation was made.
+					$cancelled = RSVP\cancel_rsvp( (string) $rsvp['token'] );
+
+					return [
+						'success'   => $cancelled,
+						'message'   => $cancelled ? '' : __( 'Could not cancel that booking.', 'producerkit' ),
+						'headcount' => RSVP\get_event_rsvp_summary( (int) $rsvp['event_id'] )['headcount'] ?? 0,
+					];
+				},
+				'input_schema'        => [
+					'type'       => 'object',
+					'properties' => [
+						'id' => [
+							'type'        => 'integer',
+							'description' => 'RSVP id, as returned by List Event RSVPs.',
+						],
+					],
+					'required'   => [ 'id' ],
+				],
+				'output_schema'       => [
+					'type'       => 'object',
+					'properties' => [
+						'success'   => [ 'type' => 'boolean' ],
+						'message'   => [ 'type' => 'string' ],
+						'headcount' => [
+							'type'        => 'integer',
+							'description' => 'The event headcount after cancelling.',
+						],
+					],
+				],
+				'permission_callback' => static fn (): bool => current_user_can( RSVP\manage_cap() ),
 				'meta'                => [
 					'show_in_rest' => true,
 					'annotations'  => [ 'idempotent' => false ],

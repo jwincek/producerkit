@@ -336,6 +336,36 @@ function find_by_token( string $token ): ?array {
 }
 
 /**
+ * Find one RSVP by its row id.
+ *
+ * The token is the guest's credential and is not handed to staff tools — the
+ * admin screen and the abilities address a booking by id, then cancel through
+ * the token they read here, so cancellation stays a single code path however
+ * it was triggered.
+ *
+ * @return array|null Row as an associative array, or null.
+ */
+function find_by_id( int $id ): ?array {
+	global $wpdb;
+
+	if ( $id < 1 ) {
+		return null;
+	}
+
+	$table = table_name();
+	$row   = $wpdb->get_row(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, not user input; identifiers cannot be parameterized.
+			"SELECT * FROM {$table} WHERE id = %d LIMIT 1",
+			$id,
+		),
+		ARRAY_A
+	);
+
+	return $row ?: null;
+}
+
+/**
  * Cancel an RSVP by its token.
  */
 function cancel_rsvp( string $token ): bool {
