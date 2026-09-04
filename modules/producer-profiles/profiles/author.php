@@ -29,6 +29,9 @@ return [
 		'menu'     => __( 'Requests', 'producerkit' ),
 		'action'   => __( 'Request a signed copy or an appearance', 'producerkit' ),
 	],
+	'meta_labels'     => [
+		'_pkit_growing_notes' => [ __( 'Book Notes', 'producerkit' ), __( 'Shown on the book page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Novel', 'Novella', 'Short Stories', 'Poetry', 'Chapbook', 'Zine', 'Anthology', 'Non-fiction', 'Illustrated', 'Childrens' ],
 		'pkit_material'     => [ 'Hardcover', 'Trade Paperback', 'Mass Market', 'Perfect Bound', 'Saddle Stitched', 'Hand Sewn', 'Spiral Bound' ],

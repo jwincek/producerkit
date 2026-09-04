@@ -10,6 +10,22 @@
 
 	const el = wp.element.createElement;
 	const __ = wp.i18n.__;
+
+	/**
+	 * The wording this trade uses for a field, resolved server-side from the
+	 * active producer profile. Falls back to the farm wording if the settings
+	 * blob is missing.
+	 *
+	 * @param key
+	 * @param slot
+	 * @param fallback
+	 */
+	function fieldText( key, slot, fallback ) {
+		const labels =
+			( window.pkitSettings && window.pkitSettings.metaLabels ) || {};
+
+		return ( labels[ key ] && labels[ key ][ slot ] ) || fallback;
+	}
 	const useState = wp.element.useState;
 	const registerPlugin = wp.plugins.registerPlugin;
 	const PluginDocumentSettingPanel = wp.editor.PluginDocumentSettingPanel;
@@ -137,7 +153,11 @@
 				: null,
 
 			el( TextareaControl, {
-				label: __( 'Growing / Baking Notes', 'producerkit' ),
+				label: fieldText(
+					'_pkit_growing_notes',
+					'label',
+					__( 'Growing / Baking Notes', 'producerkit' )
+				),
 				value: meta._pkit_growing_notes || '',
 				onChange( val ) {
 					updateMeta( '_pkit_growing_notes', val );

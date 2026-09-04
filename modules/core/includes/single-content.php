@@ -173,7 +173,7 @@ function render_product_details( \WP_Post $post ): string {
 
 		<?php if ( $growing_notes ) : ?>
 			<div class="pkit-single-details__row">
-				<span class="pkit-single-details__label"><?php esc_html_e( 'Notes', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__label"><?php echo esc_html( \ProducerKit\Core\MetaLabels\label( '_pkit_growing_notes' ) ); ?></span>
 				<span class="pkit-single-details__value"><?php echo esc_html( $growing_notes ); ?></span>
 			</div>
 		<?php endif; ?>
@@ -234,28 +234,28 @@ function render_source_details( \WP_Post $post ): string {
 	<div class="pkit-single-details pkit-single-details--source">
 		<?php if ( $farm_name ) : ?>
 			<div class="pkit-single-details__row">
-				<span class="pkit-single-details__label"><?php esc_html_e( 'Farm', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__label"><?php echo esc_html( \ProducerKit\Core\MetaLabels\label( '_pkit_source_farm_name' ) ); ?></span>
 				<span class="pkit-single-details__value"><?php echo esc_html( $farm_name ); ?></span>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $location ) : ?>
 			<div class="pkit-single-details__row">
-				<span class="pkit-single-details__label"><?php esc_html_e( 'Location', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__label"><?php echo esc_html( \ProducerKit\Core\MetaLabels\label( '_pkit_source_location' ) ); ?></span>
 				<span class="pkit-single-details__value"><?php echo esc_html( $location ); ?></span>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $history ) : ?>
 			<div class="pkit-single-details__row">
-				<span class="pkit-single-details__label"><?php esc_html_e( 'History', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__label"><?php echo esc_html( \ProducerKit\Core\MetaLabels\label( '_pkit_source_history' ) ); ?></span>
 				<span class="pkit-single-details__value"><?php echo esc_html( $history ); ?></span>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $milling_notes ) : ?>
 			<div class="pkit-single-details__row">
-				<span class="pkit-single-details__label"><?php esc_html_e( 'Milling Notes', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__label"><?php echo esc_html( \ProducerKit\Core\MetaLabels\label( '_pkit_milling_notes' ) ); ?></span>
 				<span class="pkit-single-details__value"><?php echo esc_html( $milling_notes ); ?></span>
 			</div>
 		<?php endif; ?>

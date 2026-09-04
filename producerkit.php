@@ -301,6 +301,11 @@ add_action(
 						'requestWords'   => function_exists( '\\ProducerKit\\Commissions\\Vocabulary\\words' )
 							? \ProducerKit\Commissions\Vocabulary\words()
 							: null,
+						// Trade-specific field wording. Taxonomy labels reach
+						// the editor free through the REST types endpoint;
+						// meta labels have no equivalent, so they ride along
+						// here rather than needing a route of their own.
+						'metaLabels'     => \ProducerKit\Core\MetaLabels\for_editor(),
 					]
 				),
 			),

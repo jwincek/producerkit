@@ -29,6 +29,11 @@ return [
 	'post_type_names' => [
 		'pkit_product' => [ __( 'Mount', 'producerkit' ), __( 'Mounts', 'producerkit' ), __( 'Mounts', 'producerkit' ) ],
 	],
+	'meta_labels'     => [
+		'_pkit_source_farm_name' => [ __( 'Source', 'producerkit' ), __( 'Where the specimen came from. Falls back to the post title on the front end if left empty.', 'producerkit' ) ],
+		'_pkit_milling_notes' => [ __( 'Preparation Notes', 'producerkit' ), __( 'How it was prepared and mounted.', 'producerkit' ) ],
+		'_pkit_growing_notes' => [ __( 'Mount Notes', 'producerkit' ), __( 'Shown on the product page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Shoulder Mount', 'Full Body Mount', 'European Mount', 'Pedestal Mount', 'Bird Mount', 'Fish Mount', 'Hide or Rug', 'Habitat Scene', 'Repair or Restoration' ],
 		'pkit_material'     => [ 'Whitetail Deer', 'Mule Deer', 'Elk', 'Black Bear', 'Pronghorn', 'Turkey', 'Pheasant', 'Waterfowl', 'Trout', 'Bass', 'Coyote', 'Fox' ],

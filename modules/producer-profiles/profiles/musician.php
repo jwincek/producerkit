@@ -39,6 +39,13 @@ return [
 		'menu'     => __( 'Bookings', 'producerkit' ),
 		'action'   => __( 'Enquire about a booking', 'producerkit' ),
 	],
+	'meta_labels'     => [
+		'_pkit_source_farm_name' => [ __( 'Label', 'producerkit' ), __( 'Who released it. Falls back to the post title on the front end if left empty.', 'producerkit' ) ],
+		'_pkit_source_location' => [ __( 'Studio', 'producerkit' ), __( 'Where it was recorded.', 'producerkit' ) ],
+		'_pkit_source_history' => [ __( 'Background', 'producerkit' ), __( 'The story behind the session or the songs.', 'producerkit' ) ],
+		'_pkit_milling_notes' => [ __( 'Mastering Notes', 'producerkit' ), __( 'What was done in post — mixing, mastering, the cut.', 'producerkit' ) ],
+		'_pkit_growing_notes' => [ __( 'Release Notes', 'producerkit' ), __( 'Shown on the release page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Vinyl LP', 'Vinyl 7"', 'Cassette', 'CD', 'Digital Download', 'T-Shirt', 'Hoodie', 'Poster', 'Sticker', 'Patch', 'Tote Bag', 'Songbook' ],
 		'pkit_material'     => [ 'Black Vinyl', '180g Black Vinyl', 'Colored Vinyl', 'Splatter Vinyl', 'Picture Disc', 'Cassette', 'Compact Disc', 'Digital' ],

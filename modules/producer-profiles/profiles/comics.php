@@ -41,6 +41,9 @@ return [
 		'menu'     => __( 'Requests', 'producerkit' ),
 		'action'   => __( 'Request a commission or a sketch', 'producerkit' ),
 	],
+	'meta_labels'     => [
+		'_pkit_growing_notes' => [ __( 'Book Notes', 'producerkit' ), __( 'Shown on the book page. Free-form.', 'producerkit' ) ],
+	],
 	'terms'           => [
 		'pkit_product_type' => [ 'Graphic Novel', 'Single Issue', 'Trade Paperback', 'Mini-Comic', 'Ashcan', 'Zine', 'Anthology', 'Art Book', 'Sketchbook', 'Original Page', 'Print', 'Sticker', 'Pin' ],
 		'pkit_material'     => [ 'Offset', 'Risograph', 'Digital', 'Photocopy', 'Screen Printed', 'Letterpress' ],
