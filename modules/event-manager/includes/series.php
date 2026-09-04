@@ -135,7 +135,7 @@ function generate( int $series_id ): array|\WP_Error {
 		);
 	}
 
-	$dates = Recurrence\expand( $rule, $start );
+	$dates = Recurrence\expand( $rule, $start, horizon( $start ) );
 
 	if ( is_wp_error( $dates ) ) {
 		return $dates;
@@ -205,6 +205,26 @@ function generate( int $series_id ): array|\WP_Error {
 	}
 
 	return $stats;
+}
+
+/**
+ * How far ahead to generate, for a rule that never ends on its own.
+ *
+ * Anchored on today rather than on the series start, which is the whole of
+ * the rolling horizon: a window measured from the start stops moving the
+ * moment the series is saved, so a market created in 2026 would generate into
+ * 2027 and then quietly run out of Saturdays a year later with nothing to
+ * notice it. Measured from now, the daily extend() keeps the window sliding.
+ *
+ * A series starting further ahead than the window still generates: the window
+ * opens from whichever is later, so a festival booked eighteen months out is
+ * not silently empty.
+ */
+function horizon( \DateTimeImmutable $start ): \DateTimeImmutable {
+	$now  = new \DateTimeImmutable( 'now', wp_timezone() );
+	$from = $start > $now ? $start : $now;
+
+	return $from->add( new \DateInterval( 'P' . Recurrence\horizon_days() . 'D' ) );
 }
 
 /**
@@ -419,6 +439,166 @@ function detach( int $post_id ): void {
 	 * @param int $post_id The now-independent event.
 	 */
 	do_action( 'pkit_occurrence_detached', $post_id );
+}
+
+/* ───────────────────────────────────────────────
+ * The rolling horizon
+ * ─────────────────────────────────────────────── */
+
+/**
+ * Every post that is a series.
+ *
+ * @return int[]
+ */
+function all_series(): array {
+	$ids = get_posts(
+		[
+			'post_type'   => 'pkit_event',
+			'post_status' => [ 'publish', 'draft', 'pending', 'private' ],
+			'post_parent' => 0,
+			'numberposts' => -1,
+			'fields'      => 'ids',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Runs once a day from cron, on a key only recurring events carry.
+			'meta_key'    => '_pkit_recurrence_rule',
+			'meta_compare' => 'EXISTS',
+		]
+	);
+
+	return array_values(
+		array_filter(
+			array_map( 'intval', (array) $ids ),
+			static fn ( int $id ): bool => is_series( $id )
+		)
+	);
+}
+
+/**
+ * Add any occurrences the moving horizon has brought into range.
+ *
+ * Deliberately additive. Unlike generate(), this never updates an existing
+ * occurrence and never deletes one: it runs unattended, and a cron job that
+ * rewrites content while nobody is watching is how a producer loses an edit
+ * they made months ago and never finds out why. Destructive reconciliation
+ * belongs to the save, when the person who asked for it is present.
+ *
+ * @return int|\WP_Error Occurrences created.
+ */
+function extend( int $series_id ): int|\WP_Error {
+	if ( ! is_series( $series_id ) ) {
+		return new \WP_Error( 'not_a_series', __( 'That event has no recurrence rule.', 'producerkit' ) );
+	}
+
+	$start = occurrence_start( $series_id );
+
+	if ( null === $start ) {
+		return new \WP_Error( 'no_start', __( 'That event has no start date.', 'producerkit' ) );
+	}
+
+	$series = get_post( $series_id );
+	$dates  = Recurrence\expand(
+		(string) get_post_meta( $series_id, '_pkit_recurrence_rule', true ),
+		$start,
+		horizon( $start )
+	);
+
+	if ( is_wp_error( $dates ) ) {
+		return $dates;
+	}
+
+	$existing = [];
+	foreach ( occurrences( $series_id ) as $post ) {
+		$existing[ (string) get_post_meta( $post->ID, OCCURRENCE_DATE, true ) ] = true;
+	}
+
+	$created = 0;
+
+	foreach ( $dates as $date ) {
+		$key = $date->format( 'Y-m-d H:i:s' );
+
+		if ( isset( $existing[ $key ] ) ) {
+			continue;
+		}
+
+		create_occurrence( $series, $date );
+		++$created;
+	}
+
+	return $created;
+}
+
+add_action( 'pkit_series_extend', __NAMESPACE__ . '\\extend_all' );
+
+/**
+ * Keep every series topped up.
+ *
+ * @return int Occurrences created across all series.
+ */
+function extend_all(): int {
+	$created = 0;
+
+	foreach ( all_series() as $series_id ) {
+		$result = extend( $series_id );
+
+		// A single broken series — one whose start date was cleared, say —
+		// must not stop the others being topped up.
+		if ( is_wp_error( $result ) ) {
+			continue;
+		}
+
+		$created += $result;
+	}
+
+	if ( $created > 0 ) {
+		/**
+		 * Fires after the rolling horizon has added occurrences.
+		 *
+		 * @param int $created How many.
+		 */
+		do_action( 'pkit_series_extended', $created );
+	}
+
+	return $created;
+}
+
+/**
+ * Schedule the daily top-up. Safe to call repeatedly.
+ */
+function schedule_extend(): void {
+	if ( wp_next_scheduled( 'pkit_series_extend' ) ) {
+		return;
+	}
+
+	// wp_schedule_event() wants a true UTC epoch, and resolving the time
+	// inside wp_timezone() is what makes 03:30 mean 03:30 where the producer
+	// lives — the same trap the availability cleanup documents. Half an hour
+	// after that one so the two do not land together on a small host.
+	$next_run = new \DateTimeImmutable( 'tomorrow 03:30', wp_timezone() );
+
+	wp_schedule_event( $next_run->getTimestamp(), 'daily', 'pkit_series_extend' );
+}
+
+/**
+ * Remove the daily top-up.
+ */
+function unschedule_extend(): void {
+	$timestamp = wp_next_scheduled( 'pkit_series_extend' );
+
+	if ( $timestamp ) {
+		wp_unschedule_event( $timestamp, 'pkit_series_extend' );
+	}
+}
+
+add_action( 'init', __NAMESPACE__ . '\\maybe_schedule_extend', 20 );
+
+/**
+ * Self-healing: put the schedule back if it has gone missing.
+ *
+ * A plugin updated by a git pull never runs its activation hook, so a cron
+ * event added after the first release would otherwise exist only on sites
+ * installed afterwards.
+ */
+function maybe_schedule_extend(): void {
+	schedule_extend();
 }
 
 /* ───────────────────────────────────────────────
