@@ -10,6 +10,7 @@
 	'use strict';
 
 	const el = wp.element.createElement;
+	const __ = wp.i18n.__;
 	const registerPlugin = wp.plugins.registerPlugin;
 	const PluginDocumentSettingPanel = wp.editor.PluginDocumentSettingPanel;
 	const useEntityProp = wp.coreData.useEntityProp;
@@ -94,7 +95,7 @@
 		}, [] );
 
 		const locationOptions = [
-			{ label: '— Select Location —', value: 0 },
+			{ label: __( '— Select Location —', 'producerkit' ), value: 0 },
 		].concat(
 			locations.map( function ( loc ) {
 				return {
@@ -111,7 +112,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-event-details',
-				title: 'Event Details',
+				title: __( 'Event Details', 'producerkit' ),
 				initialOpen: true,
 				icon: 'calendar-alt',
 			},
@@ -144,7 +145,7 @@
 					},
 				},
 				el( TextControl, {
-					label: 'Date',
+					label: __( 'Date', 'producerkit' ),
 					type: 'date',
 					value: start.date,
 					onChange( val ) {
@@ -156,7 +157,7 @@
 					style: { flex: 1 },
 				} ),
 				el( TextControl, {
-					label: 'Time',
+					label: __( 'Time', 'producerkit' ),
 					type: 'time',
 					value: start.time,
 					onChange( val ) {
@@ -185,7 +186,7 @@
 					},
 				},
 				el( TextControl, {
-					label: 'Date',
+					label: __( 'Date', 'producerkit' ),
 					type: 'date',
 					value: end.date || start.date, // Default to same day.
 					onChange( val ) {
@@ -197,7 +198,7 @@
 					style: { flex: 1 },
 				} ),
 				el( TextControl, {
-					label: 'Time',
+					label: __( 'Time', 'producerkit' ),
 					type: 'time',
 					value: end.time,
 					onChange( val ) {
@@ -212,7 +213,7 @@
 
 			// Location.
 			el( SelectControl, {
-				label: 'Location',
+				label: __( 'Location', 'producerkit' ),
 				value: meta._pkit_event_location_id || 0,
 				options: locationOptions,
 				onChange( val ) {
@@ -221,18 +222,21 @@
 						parseInt( val, 10 )
 					);
 				},
-				help: 'Where is this event happening?',
+				help: __( 'Where is this event happening?', 'producerkit' ),
 			} ),
 
 			// Donation link.
 			el( TextControl, {
-				label: 'Donation / Payment Link',
+				label: __( 'Donation / Payment Link', 'producerkit' ),
 				value: meta._pkit_donation_link || '',
 				onChange( val ) {
 					updateMeta( '_pkit_donation_link', val );
 				},
-				placeholder: 'https://venmo.com/examplefarm',
-				help: 'Venmo link or other payment URL.',
+				placeholder: __(
+					'https://venmo.com/examplefarm',
+					'producerkit'
+				),
+				help: __( 'Venmo link or other payment URL.', 'producerkit' ),
 				type: 'url',
 			} )
 		);
@@ -267,18 +271,21 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-event-rsvp',
-				title: 'RSVP Settings',
+				title: __( 'RSVP Settings', 'producerkit' ),
 				initialOpen: false,
 				icon: 'groups',
 			},
 
 			el( ToggleControl, {
-				label: 'Enable RSVPs',
+				label: __( 'Enable RSVPs', 'producerkit' ),
 				checked: rsvpEnabled,
 				onChange( val ) {
 					updateMeta( '_pkit_em_rsvp_enabled', val );
 				},
-				help: 'Allow visitors to RSVP on the front end.',
+				help: __(
+					'Allow visitors to RSVP on the front end.',
+					'producerkit'
+				),
 			} ),
 
 			rsvpEnabled
@@ -286,33 +293,42 @@
 						wp.element.Fragment,
 						null,
 						el( RangeControl, {
-							label: 'RSVP Cap',
+							label: __( 'RSVP Cap', 'producerkit' ),
 							value: meta._pkit_rsvp_cap || 0,
 							onChange( val ) {
 								updateMeta( '_pkit_rsvp_cap', val );
 							},
 							min: 0,
 							max: 200,
-							help: '0 = unlimited. Total headcount including party sizes.',
+							help: __(
+								'0 = unlimited. Total headcount including party sizes.',
+								'producerkit'
+							),
 						} ),
 
 						el( TextControl, {
-							label: 'Button Label',
+							label: __( 'Button Label', 'producerkit' ),
 							value: meta._pkit_em_rsvp_label || '',
 							onChange( val ) {
 								updateMeta( '_pkit_em_rsvp_label', val );
 							},
 							placeholder: "I'm coming!",
-							help: 'Custom text for the RSVP button.',
+							help: __(
+								'Custom text for the RSVP button.',
+								'producerkit'
+							),
 						} ),
 
 						el( ToggleControl, {
-							label: 'Manually Close RSVPs',
+							label: __( 'Manually Close RSVPs', 'producerkit' ),
 							checked: !! meta._pkit_em_rsvp_closed,
 							onChange( val ) {
 								updateMeta( '_pkit_em_rsvp_closed', val );
 							},
-							help: 'Close RSVPs regardless of the cap.',
+							help: __(
+								'Close RSVPs regardless of the cap.',
+								'producerkit'
+							),
 						} )
 				  )
 				: null
@@ -346,38 +362,50 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-event-info',
-				title: 'Event Info',
+				title: __( 'Event Info', 'producerkit' ),
 				initialOpen: false,
 				icon: 'info-outline',
 			},
 
 			el( TextControl, {
-				label: 'Cost / Donation Note',
+				label: __( 'Cost / Donation Note', 'producerkit' ),
 				value: meta._pkit_em_cost_note || '',
 				onChange( val ) {
 					updateMeta( '_pkit_em_cost_note', val );
 				},
-				placeholder: 'Donation-based — suggested $10/person',
-				help: 'Shown on the event card.',
+				placeholder: __(
+					'Donation-based — suggested $10/person',
+					'producerkit'
+				),
+				help: __( 'Shown on the event card.', 'producerkit' ),
 			} ),
 
 			el( TextControl, {
-				label: 'What to Bring',
+				label: __( 'What to Bring', 'producerkit' ),
 				value: meta._pkit_em_what_to_bring || '',
 				onChange( val ) {
 					updateMeta( '_pkit_em_what_to_bring', val );
 				},
-				placeholder: 'A side dish or dessert to share',
-				help: 'Shown on the event card with a 🧺 icon.',
+				placeholder: __(
+					'A side dish or dessert to share',
+					'producerkit'
+				),
+				help: __(
+					'Shown on the event card with a 🧺 icon.',
+					'producerkit'
+				),
 			} ),
 
 			el( ToggleControl, {
-				label: 'Event Cancelled',
+				label: __( 'Event Cancelled', 'producerkit' ),
 				checked: !! meta._pkit_em_cancelled,
 				onChange( val ) {
 					updateMeta( '_pkit_em_cancelled', val );
 				},
-				help: 'Mark this event as cancelled. It will show a cancelled badge.',
+				help: __(
+					'Mark this event as cancelled. It will show a cancelled badge.',
+					'producerkit'
+				),
 			} ),
 
 			!! meta._pkit_em_cancelled

@@ -8,11 +8,14 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
+	const sprintf = i18n.sprintf;
 	const Fragment = element.Fragment;
 	const registerBlockType = blocks.registerBlockType;
 	const InspectorControls = blockEditor.InspectorControls;
@@ -44,7 +47,10 @@
 			}, [] );
 
 			const options = [
-				{ value: 0, label: '(no specific location)' },
+				{
+					value: 0,
+					label: __( '(no specific location)', 'producerkit' ),
+				},
 			].concat(
 				locations.map( function ( l ) {
 					return {
@@ -66,9 +72,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Pre-Order Settings', initialOpen: true },
+						{
+							title: __( 'Pre-Order Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Pickup location',
+							label: __( 'Pickup location', 'producerkit' ),
 							value: attributes.locationId || 0,
 							options,
 							onChange( val ) {
@@ -76,10 +85,16 @@
 									locationId: val ? Number( val ) : 0,
 								} );
 							},
-							help: 'Shown in confirmations; its payment options appear after submitting.',
+							help: __(
+								'Shown in confirmations; its payment options appear after submitting.',
+								'producerkit'
+							),
 						} ),
 						el( ToggleControl, {
-							label: 'Hide sold-out products',
+							label: __(
+								'Hide sold-out products',
+								'producerkit'
+							),
 							checked: !! attributes.onlyAvailable,
 							onChange( val ) {
 								setAttributes( { onlyAvailable: val } );
@@ -92,16 +107,27 @@
 					blockProps,
 					el( Placeholder, {
 						icon: 'cart',
-						label: 'Pre-Order Form',
-						instructions:
-							'Visitors pick products and a pickup date, then pay at the stand. ' +
-							'Pickup location: ' +
-							( selected ? selected.label : '(none)' ) +
-							'. ' +
-							( attributes.onlyAvailable
-								? 'Sold-out products are hidden.'
-								: 'All products are shown.' ) +
-							' The full form renders on the front end and needs the Pre-Orders module enabled.',
+						label: __( 'Pre-Order Form', 'producerkit' ),
+						// Built with sprintf rather than concatenation: a
+						// translator needs the whole sentence, because word
+						// order is not the same in every language and the
+						// fragments alone cannot be reassembled correctly.
+						instructions: sprintf(
+							/* translators: 1: pickup location name, 2: a sentence about whether sold-out products are shown. */
+							__(
+								'Visitors pick products and a pickup date, then pay at the stand. Pickup location: %1$s. %2$s The full form renders on the front end and needs the Pre-Orders module enabled.',
+								'producerkit'
+							),
+							selected
+								? selected.label
+								: __( '(none)', 'producerkit' ),
+							attributes.onlyAvailable
+								? __(
+										'Sold-out products are hidden.',
+										'producerkit'
+								  )
+								: __( 'All products are shown.', 'producerkit' )
+						),
 					} )
 				)
 			);
@@ -112,5 +138,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

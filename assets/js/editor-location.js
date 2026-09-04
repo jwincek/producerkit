@@ -11,6 +11,7 @@
 	'use strict';
 
 	const el = wp.element.createElement;
+	const __ = wp.i18n.__;
 	const registerPlugin = wp.plugins.registerPlugin;
 	const PluginDocumentSettingPanel = wp.editor.PluginDocumentSettingPanel;
 	const useEntityProp = wp.coreData.useEntityProp;
@@ -46,62 +47,86 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-location-details',
-				title: 'Location Details',
+				title: __( 'Location Details', 'producerkit' ),
 				initialOpen: true,
 				icon: 'store',
 			},
 
 			el( SelectControl, {
-				label: 'Location Type',
+				label: __( 'Location Type', 'producerkit' ),
 				value: meta._pkit_location_type || 'stand',
 				options: [
-					{ label: 'Farm Stand', value: 'stand' },
-					{ label: 'Farmers Market', value: 'market' },
-					{ label: 'On-Farm', value: 'on-farm' },
-					{ label: 'Retailer', value: 'retailer' },
-					{ label: 'Other', value: 'other' },
+					{
+						label: __( 'Farm Stand', 'producerkit' ),
+						value: 'stand',
+					},
+					{
+						label: __( 'Farmers Market', 'producerkit' ),
+						value: 'market',
+					},
+					{ label: __( 'On-Farm', 'producerkit' ), value: 'on-farm' },
+					{
+						label: __( 'Retailer', 'producerkit' ),
+						value: 'retailer',
+					},
+					{ label: __( 'Other', 'producerkit' ), value: 'other' },
 				],
 				onChange( val ) {
 					updateMeta( '_pkit_location_type', val );
 				},
-				help: 'What kind of location is this?',
+				help: __( 'What kind of location is this?', 'producerkit' ),
 			} ),
 
 			el( TextControl, {
-				label: 'Address',
+				label: __( 'Address', 'producerkit' ),
 				value: meta._pkit_address || '',
 				onChange( val ) {
 					updateMeta( '_pkit_address', val );
 				},
-				placeholder: '123 Farm Road, Yourtown, ST 00000',
-				help: 'Full street address shown to visitors.',
+				placeholder: __(
+					'123 Farm Road, Yourtown, ST 00000',
+					'producerkit'
+				),
+				help: __(
+					'Full street address shown to visitors.',
+					'producerkit'
+				),
 			} ),
 
 			el( TextControl, {
-				label: 'Hours',
+				label: __( 'Hours', 'producerkit' ),
 				value: meta._pkit_hours || '',
 				onChange( val ) {
 					updateMeta( '_pkit_hours', val );
 				},
-				placeholder: 'Saturdays 1:00 – 4:00 PM, May – December',
-				help: 'Displayed on the front end. Free-form text.',
+				placeholder: __(
+					'Saturdays 1:00 – 4:00 PM, May – December',
+					'producerkit'
+				),
+				help: __(
+					'Displayed on the front end. Free-form text.',
+					'producerkit'
+				),
 			} ),
 
 			el( TextControl, {
-				label: 'Venmo Handle',
+				label: __( 'Venmo Handle', 'producerkit' ),
 				value: meta._pkit_venmo_handle || '',
 				onChange( val ) {
 					updateMeta( '_pkit_venmo_handle', val.replace( /^@/, '' ) );
 				},
-				placeholder: 'examplefarm',
-				help: 'Without the @. Used to generate the Venmo payment link.',
+				placeholder: __( 'examplefarm', 'producerkit' ),
+				help: __(
+					'Without the @. Used to generate the Venmo payment link.',
+					'producerkit'
+				),
 			} ),
 
 			el(
 				'div',
 				{ style: { display: 'flex', gap: '8px' } },
 				el( TextControl, {
-					label: 'Latitude',
+					label: __( 'Latitude', 'producerkit' ),
 					type: 'number',
 					step: 'any',
 					value: meta._pkit_lat || '',
@@ -111,7 +136,7 @@
 					style: { flex: 1 },
 				} ),
 				el( TextControl, {
-					label: 'Longitude',
+					label: __( 'Longitude', 'producerkit' ),
 					type: 'number',
 					step: 'any',
 					value: meta._pkit_lng || '',
@@ -123,23 +148,29 @@
 			),
 
 			el( ToggleControl, {
-				label: 'Currently Open',
+				label: __( 'Currently Open', 'producerkit' ),
 				checked: !! meta._pkit_is_open,
 				onChange( val ) {
 					updateMeta( '_pkit_is_open', val );
 				},
-				help: 'Toggle this location open or closed right now.',
+				help: __(
+					'Toggle this location open or closed right now.',
+					'producerkit'
+				),
 			} ),
 
 			meta._pkit_ss_status_message !== undefined
 				? el( TextControl, {
-						label: 'Status Message',
+						label: __( 'Status Message', 'producerkit' ),
 						value: meta._pkit_ss_status_message || '',
 						onChange( val ) {
 							updateMeta( '_pkit_ss_status_message', val );
 						},
-						placeholder: 'Back at 2 PM',
-						help: 'Optional message shown alongside open/closed status.',
+						placeholder: __( 'Back at 2 PM', 'producerkit' ),
+						help: __(
+							'Optional message shown alongside open/closed status.',
+							'producerkit'
+						),
 				  } )
 				: null
 		);
@@ -242,7 +273,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-stand-schedule',
-				title: 'Schedule & Season',
+				title: __( 'Schedule & Season', 'producerkit' ),
 				initialOpen: false,
 				icon: 'clock',
 			},
@@ -272,7 +303,7 @@
 					},
 				},
 				el( TextControl, {
-					label: 'Start',
+					label: __( 'Start', 'producerkit' ),
 					type: 'date',
 					value: seasonStart,
 					onChange( val ) {
@@ -281,7 +312,7 @@
 					style: { flex: 1 },
 				} ),
 				el( TextControl, {
-					label: 'End',
+					label: __( 'End', 'producerkit' ),
 					type: 'date',
 					value: seasonEnd,
 					onChange( val ) {
@@ -293,12 +324,15 @@
 
 			// Auto-toggle.
 			el( ToggleControl, {
-				label: 'Auto-toggle from schedule',
+				label: __( 'Auto-toggle from schedule', 'producerkit' ),
 				checked: !! meta._pkit_ss_auto_toggle,
 				onChange( val ) {
 					updateMeta( '_pkit_ss_auto_toggle', val );
 				},
-				help: 'Automatically open/close based on the weekly schedule below.',
+				help: __(
+					'Automatically open/close based on the weekly schedule below.',
+					'producerkit'
+				),
 			} ),
 
 			// Weekly schedule entries.
@@ -377,7 +411,7 @@
 						isDestructive: true,
 						isSmall: true,
 						icon: 'no-alt',
-						label: 'Remove',
+						label: __( 'Remove', 'producerkit' ),
 						onClick() {
 							removeDay( i );
 						},
@@ -446,7 +480,7 @@
 						isDestructive: true,
 						isSmall: true,
 						icon: 'no-alt',
-						label: 'Remove',
+						label: __( 'Remove', 'producerkit' ),
 						onClick() {
 							removeBlackout( i );
 						},
@@ -511,16 +545,32 @@
 
 	// Mirrors ProducerKit\Core\Payments\method_types(). kind: handle | url | badge.
 	const PAYMENT_TYPES = [
-		{ value: 'venmo', label: 'Venmo', kind: 'handle' },
-		{ value: 'cashapp', label: 'Cash App', kind: 'handle' },
-		{ value: 'paypal', label: 'PayPal', kind: 'handle' },
-		{ value: 'link', label: 'Payment Link', kind: 'url' },
-		{ value: 'cash', label: 'Cash', kind: 'badge' },
-		{ value: 'check', label: 'Check', kind: 'badge' },
-		{ value: 'snap_ebt', label: 'SNAP/EBT', kind: 'badge' },
+		{ value: 'venmo', label: __( 'Venmo', 'producerkit' ), kind: 'handle' },
+		{
+			value: 'cashapp',
+			label: __( 'Cash App', 'producerkit' ),
+			kind: 'handle',
+		},
+		{
+			value: 'paypal',
+			label: __( 'PayPal', 'producerkit' ),
+			kind: 'handle',
+		},
+		{
+			value: 'link',
+			label: __( 'Payment Link', 'producerkit' ),
+			kind: 'url',
+		},
+		{ value: 'cash', label: __( 'Cash', 'producerkit' ), kind: 'badge' },
+		{ value: 'check', label: __( 'Check', 'producerkit' ), kind: 'badge' },
+		{
+			value: 'snap_ebt',
+			label: __( 'SNAP/EBT', 'producerkit' ),
+			kind: 'badge',
+		},
 		{
 			value: 'market_voucher',
-			label: 'Market Vouchers (WIC/Sr FMNP)',
+			label: __( 'Market Vouchers (WIC/Sr FMNP)', 'producerkit' ),
 			kind: 'badge',
 		},
 	];
@@ -600,7 +650,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-payment-options',
-				title: 'Payment Options',
+				title: __( 'Payment Options', 'producerkit' ),
 				initialOpen: false,
 				icon: 'money-alt',
 			},
@@ -651,7 +701,7 @@
 							},
 						},
 						el( SelectControl, {
-							label: 'Method',
+							label: __( 'Method', 'producerkit' ),
 							value: entry.type,
 							options: PAYMENT_TYPES.map( function ( t ) {
 								return { label: t.label, value: t.value };
@@ -666,7 +716,7 @@
 							isDestructive: true,
 							isSmall: true,
 							icon: 'no-alt',
-							label: 'Remove',
+							label: __( 'Remove', 'producerkit' ),
 							onClick() {
 								removeMethod( i );
 							},
@@ -675,7 +725,7 @@
 					),
 					kind === 'handle'
 						? el( TextControl, {
-								label: 'Handle',
+								label: __( 'Handle', 'producerkit' ),
 								value: entry.value || '',
 								onChange( val ) {
 									updateMethod(
@@ -684,23 +734,29 @@
 										val.replace( /^[@$]/, '' )
 									);
 								},
-								placeholder: 'examplefarm',
-								help: 'Username without the @ or $.',
+								placeholder: __( 'examplefarm', 'producerkit' ),
+								help: __(
+									'Username without the @ or $.',
+									'producerkit'
+								),
 						  } )
 						: null,
 					kind === 'url'
 						? el( TextControl, {
-								label: 'URL',
+								label: __( 'URL', 'producerkit' ),
 								type: 'url',
 								value: entry.value || '',
 								onChange( val ) {
 									updateMethod( i, 'value', val );
 								},
-								placeholder: 'https://squareup.com/…',
+								placeholder: __(
+									'https://squareup.com/…',
+									'producerkit'
+								),
 						  } )
 						: null,
 					el( TextControl, {
-						label: 'Display label (optional)',
+						label: __( 'Display label (optional)', 'producerkit' ),
 						value: entry.label || '',
 						onChange( val ) {
 							updateMethod( i, 'label', val );

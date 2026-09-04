@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const { registerBlockType } = blocks;
 	const { InspectorControls, useBlockProps } = blockEditor;
 	const { PanelBody, ComboboxControl, Placeholder } = components;
@@ -57,7 +59,7 @@
 			} );
 
 			const locationOptions = [
-				{ value: 0, label: '— Any location —' },
+				{ value: 0, label: __( '— Any location —', 'producerkit' ) },
 			].concat(
 				locations.map( function ( l ) {
 					return {
@@ -75,9 +77,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Badge Settings', initialOpen: true },
+						{
+							title: __( 'Badge Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Product',
+							label: __( 'Product', 'producerkit' ),
 							value: productId || '',
 							options: productOptions,
 							onChange( val ) {
@@ -87,7 +92,7 @@
 							},
 						} ),
 						el( ComboboxControl, {
-							label: 'Location (optional)',
+							label: __( 'Location (optional)', 'producerkit' ),
 							value: locationId || '',
 							options: locationOptions,
 							onChange( val ) {
@@ -104,9 +109,14 @@
 					! productId
 						? el( Placeholder, {
 								icon: 'visibility',
-								label: 'Availability Badge',
-								instructions:
+								label: __(
+									'Availability Badge',
+									'producerkit'
+								),
+								instructions: __(
 									'Select a product in the sidebar.',
+									'producerkit'
+								),
 						  } )
 						: el(
 								'span',
@@ -125,5 +135,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

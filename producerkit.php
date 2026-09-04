@@ -318,13 +318,26 @@ add_action(
 		];
 
 		if ( isset( $scripts[ $post_type ] ) ) {
+			$handle = 'pkit-editor-' . $post_type;
+
 			wp_enqueue_script(
-				'pkit-editor-' . $post_type,
+				$handle,
 				plugins_url( 'assets/js/' . $scripts[ $post_type ], __FILE__ ),
-				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element' ],
+				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element', 'wp-i18n' ],
 				filemtime( PLUGIN_DIR . '/assets/js/' . $scripts[ $post_type ] ),
 				true,
 			);
+
+			// Without this the __() calls in these files still run but resolve
+			// to themselves: wp-i18n has no catalogue registered against the
+			// handle, so every sidebar label stays English however complete
+			// the translation is. Blocks get the equivalent for free from
+			// block.json's textdomain, which is why they need no counterpart.
+			//
+			// No path argument: the plugin ships no bundled translations, so
+			// the domain registry resolves this to WP_LANG_DIR/plugins, which
+			// is where WordPress.org delivers them.
+			wp_set_script_translations( $handle, 'producerkit' );
 		}
 	}
 );

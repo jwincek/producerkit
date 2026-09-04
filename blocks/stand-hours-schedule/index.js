@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -168,9 +170,15 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'clock', label: 'Stand Hours Schedule' },
+							{
+								icon: 'clock',
+								label: __(
+									'Stand Hours Schedule',
+									'producerkit'
+								),
+							},
 							el( ComboboxControl, {
-								label: 'Select a location',
+								label: __( 'Select a location', 'producerkit' ),
 								value: '',
 								options,
 								onChange( val ) {
@@ -214,8 +222,13 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Stand Hours Schedule',
-							instructions: error || 'Schedule data unavailable.',
+							label: __( 'Stand Hours Schedule', 'producerkit' ),
+							instructions:
+								error ||
+								__(
+									'Schedule data unavailable.',
+									'producerkit'
+								),
 						} )
 					)
 				);
@@ -330,9 +343,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Schedule Settings', initialOpen: true },
+						{
+							title: __( 'Schedule Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Location',
+							label: __( 'Location', 'producerkit' ),
 							value: locationId || '',
 							options,
 							onChange( val ) {
@@ -342,7 +358,7 @@
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Highlight today',
+							label: __( 'Highlight today', 'producerkit' ),
 							checked: highlightToday,
 							onChange( val ) {
 								setAttributes( { highlightToday: val } );
@@ -358,5 +374,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

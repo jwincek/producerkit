@@ -8,11 +8,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -244,9 +246,12 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'tag', label: 'Product Card' },
+							{
+								icon: 'tag',
+								label: __( 'Product Card', 'producerkit' ),
+							},
 							el( ComboboxControl, {
-								label: 'Select a product',
+								label: __( 'Select a product', 'producerkit' ),
 								value: '',
 								options,
 								onChange( val ) {
@@ -290,8 +295,13 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Product Card',
-							instructions: error || 'Product data unavailable.',
+							label: __( 'Product Card', 'producerkit' ),
+							instructions:
+								error ||
+								__(
+									'Product data unavailable.',
+									'producerkit'
+								),
 						} )
 					)
 				);
@@ -439,7 +449,11 @@
 							? el(
 									'div',
 									{ className: 'pkit-product-card__sources' },
-									el( 'strong', null, 'Sourced from:' ),
+									el(
+										'strong',
+										null,
+										__( 'Sourced from:', 'producerkit' )
+									),
 									sources.map( function ( src ) {
 										const farmName =
 											src.meta &&
@@ -486,9 +500,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Product Settings', initialOpen: true },
+						{
+							title: __( 'Product Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Select Product',
+							label: __( 'Select Product', 'producerkit' ),
 							value: productId || '',
 							options,
 							onChange( val ) {
@@ -498,14 +515,20 @@
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show availability status',
+							label: __(
+								'Show availability status',
+								'producerkit'
+							),
 							checked: showAvailability,
 							onChange( val ) {
 								setAttributes( { showAvailability: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show source / grain info',
+							label: __(
+								'Show source / grain info',
+								'producerkit'
+							),
 							checked: showSource,
 							onChange( val ) {
 								setAttributes( { showSource: val } );
@@ -521,5 +544,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );

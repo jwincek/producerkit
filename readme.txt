@@ -130,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Fixed: the plugin's editor panels and block controls are now translatable. The PHP was fully translated and the JavaScript beside it was hard-coded English — 161 strings a translator could not reach.
 * Changed: made-to-order requests are now called what your trade calls them. "Commission" is right for a potter and wrong for a beekeeper answering an enquiry about bulk honey, or a grower taking a special order — the wording now follows your producer profile everywhere a customer or you can see it.
 * Added: per-product deposits on pre-orders — take a fixed amount, a percentage, or the full price up front, and leave the rest for pickup. The balance can be collected with a payment link or taken in person and marked paid.
 * Fixed: pre-orders could never actually be paid for through WooCommerce. The pricing and the order-raising both existed but were never joined up, so the payment link this plugin promised for "a request" only ever appeared for commissions.

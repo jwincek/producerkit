@@ -9,6 +9,7 @@
 	'use strict';
 
 	const el = wp.element.createElement;
+	const __ = wp.i18n.__;
 	const useState = wp.element.useState;
 	const registerPlugin = wp.plugins.registerPlugin;
 	const PluginDocumentSettingPanel = wp.editor.PluginDocumentSettingPanel;
@@ -36,21 +37,21 @@
 	];
 
 	const COMMON_UNITS = [
-		{ label: '— Select —', value: '' },
-		{ label: 'bunch', value: 'bunch' },
-		{ label: 'bag', value: 'bag' },
-		{ label: 'loaf', value: 'loaf' },
-		{ label: 'half dozen', value: 'half dozen' },
-		{ label: 'dozen', value: 'dozen' },
-		{ label: 'pint', value: 'pint' },
-		{ label: 'pint jar', value: 'pint jar' },
-		{ label: 'quart', value: 'quart' },
-		{ label: 'half pound', value: 'half pound' },
-		{ label: 'pound', value: 'pound' },
-		{ label: 'each', value: 'each' },
-		{ label: 'plant', value: 'plant' },
-		{ label: 'flat', value: 'flat' },
-		{ label: 'other (type below)', value: '__custom' },
+		{ label: __( '— Select —', 'producerkit' ), value: '' },
+		{ label: __( 'bunch', 'producerkit' ), value: 'bunch' },
+		{ label: __( 'bag', 'producerkit' ), value: 'bag' },
+		{ label: __( 'loaf', 'producerkit' ), value: 'loaf' },
+		{ label: __( 'half dozen', 'producerkit' ), value: 'half dozen' },
+		{ label: __( 'dozen', 'producerkit' ), value: 'dozen' },
+		{ label: __( 'pint', 'producerkit' ), value: 'pint' },
+		{ label: __( 'pint jar', 'producerkit' ), value: 'pint jar' },
+		{ label: __( 'quart', 'producerkit' ), value: 'quart' },
+		{ label: __( 'half pound', 'producerkit' ), value: 'half pound' },
+		{ label: __( 'pound', 'producerkit' ), value: 'pound' },
+		{ label: __( 'each', 'producerkit' ), value: 'each' },
+		{ label: __( 'plant', 'producerkit' ), value: 'plant' },
+		{ label: __( 'flat', 'producerkit' ), value: 'flat' },
+		{ label: __( 'other (type below)', 'producerkit' ), value: '__custom' },
 	];
 
 	/* ─────────────────────────────────────────────
@@ -91,23 +92,26 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-product-details',
-				title: 'Product Details',
+				title: __( 'Product Details', 'producerkit' ),
 				initialOpen: true,
 				icon: 'tag',
 			},
 
 			el( TextControl, {
-				label: 'Price',
+				label: __( 'Price', 'producerkit' ),
 				value: meta._pkit_price || '',
 				onChange( val ) {
 					updateMeta( '_pkit_price', val );
 				},
 				placeholder: '$4',
-				help: 'Display price. Can be "$5", "Donation", "$3-5", etc.',
+				help: __(
+					'Display price. Can be "$5", "Donation", "$3–5", etc.',
+					'producerkit'
+				),
 			} ),
 
 			el( SelectControl, {
-				label: 'Unit of Sale',
+				label: __( 'Unit of Sale', 'producerkit' ),
 				value: isCustom ? '__custom' : currentUnit,
 				options: COMMON_UNITS,
 				onChange( val ) {
@@ -118,28 +122,34 @@
 						updateMeta( '_pkit_unit', val );
 					}
 				},
-				help: 'How this product is sold.',
+				help: __( 'How this product is sold.', 'producerkit' ),
 			} ),
 
 			isCustom
 				? el( TextControl, {
-						label: 'Custom Unit',
+						label: __( 'Custom Unit', 'producerkit' ),
 						value: currentUnit,
 						onChange( val ) {
 							updateMeta( '_pkit_unit', val );
 						},
-						placeholder: 'e.g. 4 oz bag',
+						placeholder: __( 'e.g. 4 oz bag', 'producerkit' ),
 				  } )
 				: null,
 
 			el( TextareaControl, {
-				label: 'Growing / Baking Notes',
+				label: __( 'Growing / Baking Notes', 'producerkit' ),
 				value: meta._pkit_growing_notes || '',
 				onChange( val ) {
 					updateMeta( '_pkit_growing_notes', val );
 				},
-				placeholder: 'Heirloom variety, cold-hardy. No-till grown.',
-				help: 'Shown on the product card and single product page.',
+				placeholder: __(
+					'Heirloom variety, cold-hardy. No-till grown.',
+					'producerkit'
+				),
+				help: __(
+					'Shown on the product card and single product page.',
+					'producerkit'
+				),
 				rows: 3,
 			} )
 		);
@@ -219,7 +229,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-product-sources',
-				title: 'Sources',
+				title: __( 'Sources', 'producerkit' ),
 				initialOpen: false,
 				icon: 'admin-site-alt3',
 			},
@@ -263,7 +273,7 @@
 									isSmall: true,
 									isDestructive: true,
 									icon: 'no-alt',
-									label: 'Remove',
+									label: __( 'Remove', 'producerkit' ),
 									onClick() {
 										removeSource( source.id );
 									},
@@ -278,7 +288,10 @@
 				? el( SelectControl, {
 						value: '',
 						options: [
-							{ label: '— Add a source —', value: '' },
+							{
+								label: __( '— Add a source —', 'producerkit' ),
+								value: '',
+							},
 						].concat(
 							availableSources.map( function ( s ) {
 								return {
@@ -367,7 +380,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-product-trade-fields',
-				title: 'Trade Details',
+				title: __( 'Trade Details', 'producerkit' ),
 				className: 'pkit-product-trade-fields',
 			},
 			taxonomies.map( function ( tax ) {
@@ -483,12 +496,24 @@
 		const children = [
 			el( SelectControl, {
 				key: 'mode',
-				label: 'When a customer pre-orders this',
+				label: __( 'When a customer pre-orders this', 'producerkit' ),
 				value: mode,
 				options: [
-					{ label: 'Reserve only — pay at pickup', value: 'none' },
-					{ label: 'Take a deposit now', value: 'deposit' },
-					{ label: 'Take the full amount now', value: 'full' },
+					{
+						label: __(
+							'Reserve only — pay at pickup',
+							'producerkit'
+						),
+						value: 'none',
+					},
+					{
+						label: __( 'Take a deposit now', 'producerkit' ),
+						value: 'deposit',
+					},
+					{
+						label: __( 'Take the full amount now', 'producerkit' ),
+						value: 'full',
+					},
 				],
 				onChange( value ) {
 					updateMeta( '_pkit_payment_mode', value );
@@ -504,11 +529,23 @@
 			children.push(
 				el( SelectControl, {
 					key: 'kind',
-					label: 'Deposit is',
+					label: __( 'Deposit is', 'producerkit' ),
 					value: kind,
 					options: [
-						{ label: 'A fixed amount per item', value: 'fixed' },
-						{ label: 'A percentage of the line', value: 'percent' },
+						{
+							label: __(
+								'A fixed amount per item',
+								'producerkit'
+							),
+							value: 'fixed',
+						},
+						{
+							label: __(
+								'A percentage of the line',
+								'producerkit'
+							),
+							value: 'percent',
+						},
 					],
 					onChange( value ) {
 						updateMeta( '_pkit_deposit_kind', value );
@@ -545,7 +582,7 @@
 			PluginDocumentSettingPanel,
 			{
 				name: 'pkit-product-payment',
-				title: 'Pre-Order Payment',
+				title: __( 'Pre-Order Payment', 'producerkit' ),
 				initialOpen: false,
 				icon: 'money-alt',
 			},

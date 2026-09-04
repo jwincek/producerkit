@@ -5,11 +5,13 @@
  * @param blockEditor
  * @param components
  * @param data
+ * @param i18n
  */
-( function ( blocks, element, blockEditor, components, data ) {
+( function ( blocks, element, blockEditor, components, data, i18n ) {
 	'use strict';
 
 	const el = element.createElement;
+	const __ = i18n.__;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -170,9 +172,12 @@
 						blockProps,
 						el(
 							Placeholder,
-							{ icon: 'calendar', label: 'Event Card' },
+							{
+								icon: 'calendar',
+								label: __( 'Event Card', 'producerkit' ),
+							},
 							el( ComboboxControl, {
-								label: 'Select an event',
+								label: __( 'Select an event', 'producerkit' ),
 								value: '',
 								options,
 								onChange( val ) {
@@ -216,8 +221,10 @@
 						blockProps,
 						el( Placeholder, {
 							icon: 'warning',
-							label: 'Event Card',
-							instructions: error || 'Event data unavailable.',
+							label: __( 'Event Card', 'producerkit' ),
+							instructions:
+								error ||
+								__( 'Event data unavailable.', 'producerkit' ),
 						} )
 					)
 				);
@@ -439,8 +446,10 @@
 														type: 'text',
 														className:
 															'pkit-event-card__rsvp-input',
-														placeholder:
+														placeholder: __(
 															'Your name',
+															'producerkit'
+														),
 														disabled: true,
 													} ),
 													el( 'input', {
@@ -474,9 +483,12 @@
 					null,
 					el(
 						PanelBody,
-						{ title: 'Event Settings', initialOpen: true },
+						{
+							title: __( 'Event Settings', 'producerkit' ),
+							initialOpen: true,
+						},
 						el( ComboboxControl, {
-							label: 'Select Event',
+							label: __( 'Select Event', 'producerkit' ),
 							value: eventId || '',
 							options,
 							onChange( val ) {
@@ -486,21 +498,21 @@
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show image',
+							label: __( 'Show image', 'producerkit' ),
 							checked: showImage,
 							onChange( val ) {
 								setAttributes( { showImage: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show RSVP form',
+							label: __( 'Show RSVP form', 'producerkit' ),
 							checked: showRsvp,
 							onChange( val ) {
 								setAttributes( { showRsvp: val } );
 							},
 						} ),
 						el( ToggleControl, {
-							label: 'Show location',
+							label: __( 'Show location', 'producerkit' ),
 							checked: showLocation,
 							onChange( val ) {
 								setAttributes( { showLocation: val } );
@@ -516,5 +528,6 @@
 	window.wp.element,
 	window.wp.blockEditor,
 	window.wp.components,
-	window.wp.data
+	window.wp.data,
+	window.wp.i18n
 );
