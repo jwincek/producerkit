@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-09-04
+
+The trade fields a producer profile switches on now do something everywhere
+they appear, and the plugin stops looking like it is only for farms.
+
+### Added
+
+- **Filter the availability board by trade field.** A potter with a hundred
+  pieces can ask for everything in stoneware. Each field the active profile
+  switches on gets its own row, and the fields narrow together — Stoneware and
+  Ash Glaze shows what is both. Rows are built from the terms actually on the
+  board, and a field with only one value gets no row, because that is a control
+  that cannot change what you see.
+- **A Trade Details panel in the product editor.** These fields were reaching
+  the editor through WordPress's generic taxonomy panels, so a maker filled in
+  price and unit in one place and Clay Body somewhere else. They are now
+  together, and the duplicate panels are gone.
+- **Six new Abilities**, bringing the total to twenty. Commissions had none at
+  all and RSVPs had only the visitor-facing create, so an agent could answer
+  "which pre-orders are due for pickup?" and not "which commissions are waiting
+  on a quote?" or "who is coming Saturday?". Adds `list-commissions`,
+  `count-commissions-by-status`, `send-commission-quote`,
+  `update-commission-status`, `list-event-rsvps` and `cancel-rsvp` — all gated
+  on `edit_others_posts`, matching the screens that guard the same records, and
+  none of them return a token.
+
+### Changed
+
+- **The icons no longer name one trade.** A carrot sat on the product editor
+  panel and in the block inserter, a hammer on the commission form, a leafy
+  green and a sheaf of grain on the dashboard — and a carrot at the top of
+  every email the plugin sent, to a potter's customers and a band's mailing
+  list alike. The catalogue is now a tag everywhere it appears.
+
+### Fixed
+
+- The optional taxonomies pluralised their REST base by appending "s", giving
+  `finishs`. A REST base is a public route name, so it is now spelled out.
+
 ## [2.2.0] - 2026-09-03
 
 Every request this plugin takes from a visitor can now be reached again by the

@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -126,6 +126,13 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= 2.3.0 =
+* Added: filter the availability board by your trade's own fields — clay body, glaze, ink, format. The fields narrow together, and a farm profile, which uses none of them, sees no extra filters.
+* Added: a **Trade Details** panel in the product editor, so those fields sit beside price and unit instead of in WordPress's generic taxonomy boxes further down the page.
+* Added: six more Abilities, bringing the total to twenty. Commissions had none, and RSVPs only the visitor-facing one — so an assistant could report on pre-orders but not on commissions or a guest list.
+* Changed: the icons no longer assume you farm. A carrot sat on the product editor, in the block inserter and at the top of every email the plugin sent; the commission form had a hammer. The catalogue is a tag everywhere now.
+* Fixed: one of the optional taxonomies exposed a misspelled REST route name.
+
 = 2.2.0 =
 * **Every request can now be reached by the person who made it.** Commission quotes, RSVPs and pre-orders each open from a link showing what was booked, with the one action that makes sense.
 * Added: RSVP guests receive a confirmation email. Previously every notification went to the site admin and the guest received nothing — and could not cancel once they closed the tab, which silently held a seat at a capped event.
@@ -175,6 +182,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.3.0 =
+Safe from 2.2.0 — no data changes. Worth taking if you use a producer profile: the trade fields it switches on can now be filtered on the board and edited beside your other product fields.
 
 = 2.2.0 =
 Recommended. RSVP guests now get a confirmation and can cancel; pre-order customers can finally use the cancellation code the form asks them to keep; and there is at last a screen showing who has RSVP'd.
