@@ -81,6 +81,140 @@ final class EditorI18nTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Strings that are not a property's value.
+	 *
+	 * The first pass at this matched `key: 'string'` pairs only, so text
+	 * passed as a child of an element stayed English — about seventy of them,
+	 * which is how a change that wrapped 161 strings still left the editor
+	 * half-translated.
+	 */
+	public function test_no_bare_message_survives_outside_a_property(): void {
+		$bare = [];
+
+		foreach ( $this->editor_scripts() as $file ) {
+			$source = (string) file_get_contents( $file );
+
+			foreach ( self::message_literals( $source ) as $text ) {
+				$bare[] = basename( dirname( $file ) ) . '/' . basename( $file ) . ': ' . $text;
+			}
+		}
+
+		$this->assertSame(
+			[],
+			$bare,
+			"These read like messages and are not translated:\n" . implode( "\n", $bare )
+		);
+	}
+
+	/**
+	 * Single-quoted literals in a file that look like something a person reads.
+	 *
+	 * Deliberately conservative. Protocol and format constants — PATCH,
+	 * Content-Type, X-WP-Nonce — sit in exactly the same syntactic position as
+	 * a message, and wrapping one is a broken request rather than a
+	 * mistranslation, so anything that is not clearly prose is left alone.
+	 *
+	 * @return string[]
+	 */
+	private static function message_literals( string $source ): array {
+		$never = [
+			'PATCH',
+			'POST',
+			'GET',
+			'PUT',
+			'DELETE',
+			'Content-Type',
+			'X-WP-Nonce',
+			'application/json',
+			'T00:00:00',
+			'UTC',
+			'GMT',
+		];
+
+		preg_match_all( "/'((?:[^'\\\\\n]|\\\\.)*)'/", $source, $matches, PREG_OFFSET_CAPTURE );
+
+		$found = [];
+
+		foreach ( $matches[1] as $i => $capture ) {
+			$text = $capture[0];
+
+			// Already wrapped: __( '…' ) puts the call just before the quote.
+			$before = substr( $source, max( 0, $matches[0][ $i ][1] - 30 ), 30 );
+			if ( str_contains( $before, '__(' ) ) {
+				continue;
+			}
+
+			if ( in_array( $text, $never, true ) || mb_strlen( $text ) < 2 ) {
+				continue;
+			}
+
+			// Prose: opens with a capital, a bracket or an em-dash, and
+			// carries no markup, template syntax, path or URL.
+			if ( ! preg_match( '/^[A-Z(—][^<>{}]*$/u', $text ) ) {
+				continue;
+			}
+
+			if ( preg_match( '~[_/#]|^https?:~', $text ) ) {
+				continue;
+			}
+
+			// An ALL-CAPS token is a constant, not a sentence — except the two
+			// the stand toggle genuinely shows a person.
+			if ( preg_match( '/^[A-Z][A-Z0-9-]*$/', $text ) && ! in_array( $text, [ 'OPEN', 'CLOSED' ], true ) ) {
+				continue;
+			}
+
+			$found[] = $text;
+		}
+
+		return $found;
+	}
+
+	public function test_a_message_is_never_translated_in_fragments(): void {
+		// A string ending in a space is being concatenated with a value.
+		// Word order differs by language, so the fragments cannot be
+		// reassembled — these need sprintf() with the whole sentence.
+		$fragments = [];
+
+		foreach ( $this->editor_scripts() as $file ) {
+			preg_match_all(
+				"/__\(\s*'((?:[^'\\\\]|\\\\.)*[ ])'/",
+				(string) file_get_contents( $file ),
+				$matches
+			);
+
+			foreach ( $matches[1] as $text ) {
+				$fragments[] = basename( dirname( $file ) ) . '/' . basename( $file ) . ': "' . $text . '"';
+			}
+		}
+
+		$this->assertSame(
+			[],
+			$fragments,
+			"These are translated as fragments and need sprintf():\n" . implode( "\n", $fragments )
+		);
+	}
+
+	public function test_every_sprintf_user_defines_it(): void {
+		$missing = [];
+
+		foreach ( $this->editor_scripts() as $file ) {
+			$source = (string) file_get_contents( $file );
+
+			if ( str_contains( $source, 'sprintf(' ) && ! str_contains( $source, 'const sprintf' ) ) {
+				$missing[] = basename( dirname( $file ) ) . '/' . basename( $file );
+			}
+		}
+
+		$this->assertSame(
+			[],
+			$missing,
+			"These call sprintf() without defining it, which is a ReferenceError at render:\n"
+				. implode( "\n", $missing )
+		);
+	}
+
 	public function test_identifiers_are_never_wrapped(): void {
 		// The mirror of the test above, and the more dangerous direction: a
 		// translated option value, CSS class or icon name is not a cosmetic

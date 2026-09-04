@@ -132,7 +132,12 @@
 							setLoading( false );
 						} )
 						.catch( function () {
-							setError( 'Could not load event data.' );
+							setError(
+								__(
+									'Could not load event data.',
+									'producerkit'
+								)
+							);
 							setUpcoming( [] );
 							setPast( [] );
 							setLoading( false );
@@ -238,7 +243,7 @@
 										className:
 											'pkit-event-list__filter-btn pkit-event-list__filter-btn--active',
 									},
-									'All Events'
+									__( 'All Events', 'producerkit' )
 								),
 								typeEntries.map( function ( slug ) {
 									return el(
@@ -256,12 +261,20 @@
 
 					// Upcoming section.
 					upcoming && upcoming.length > 0
-						? renderSection( 'Upcoming', upcoming, false )
+						? renderSection(
+								__( 'Upcoming', 'producerkit' ),
+								upcoming,
+								false
+						  )
 						: null,
 
 					// Past section.
 					showPastEvents && past && past.length > 0
-						? renderSection( 'Past Events', past, true )
+						? renderSection(
+								__( 'Past Events', 'producerkit' ),
+								past,
+								true
+						  )
 						: null
 				)
 			);
@@ -349,7 +362,7 @@
 											className:
 												'pkit-event-card__cancelled-badge',
 										},
-										'Cancelled'
+										__( 'Cancelled', 'producerkit' )
 								  )
 								: null
 						),
@@ -472,7 +485,10 @@
 													className:
 														'pkit-event-card__rsvp-full',
 												},
-												'This event is full!'
+												__(
+													'This event is full!',
+													'producerkit'
+												)
 										  )
 										: rsvp.closed
 										? el(
@@ -481,7 +497,10 @@
 													className:
 														'pkit-event-card__rsvp-closed',
 												},
-												'RSVPs are closed.'
+												__(
+													'RSVPs are closed.',
+													'producerkit'
+												)
 										  )
 										: el(
 												'div',

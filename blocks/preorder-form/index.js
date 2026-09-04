@@ -55,7 +55,9 @@
 				locations.map( function ( l ) {
 					return {
 						value: l.id,
-						label: l.title?.rendered || '(untitled)',
+						label:
+							l.title?.rendered ||
+							__( '(untitled)', 'producerkit' ),
 					};
 				} )
 			);

@@ -12,6 +12,7 @@
 
 	const el = element.createElement;
 	const __ = i18n.__;
+	const sprintf = i18n.sprintf;
 	const Fragment = element.Fragment;
 	const useState = element.useState;
 	const useEffect = element.useEffect;
@@ -37,11 +38,11 @@
 	];
 
 	const STATUS_LABELS = {
-		abundant: 'Abundant',
-		available: 'Available',
-		limited: 'Limited',
-		sold_out: 'Sold out',
-		unavailable: 'Unavailable',
+		abundant: __( 'Abundant', 'producerkit' ),
+		available: __( 'Available', 'producerkit' ),
+		limited: __( 'Limited', 'producerkit' ),
+		sold_out: __( 'Sold out', 'producerkit' ),
+		unavailable: __( 'Unavailable', 'producerkit' ),
 	};
 
 	function getRestBase() {
@@ -114,7 +115,12 @@
 							setLoading( false );
 						} )
 						.catch( function () {
-							setError( 'Could not load board data.' );
+							setError(
+								__(
+									'Could not load board data.',
+									'producerkit'
+								)
+							);
 							setBoard( null );
 							setLoading( false );
 						} );
@@ -146,7 +152,9 @@
 				locations.map( function ( l ) {
 					return {
 						value: l.id,
-						label: l.title?.rendered || '(untitled)',
+						label:
+							l.title?.rendered ||
+							__( '(untitled)', 'producerkit' ),
 					};
 				} )
 			);
@@ -242,7 +250,7 @@
 											className:
 												'pkit-avail-board__filter-label',
 										},
-										'Show:'
+										__( 'Show:', 'producerkit' )
 									),
 									( board.statuses || [] ).map(
 										function ( s ) {
@@ -280,7 +288,7 @@
 													className:
 														'pkit-avail-board__filter-label',
 												},
-												'Type:'
+												__( 'Type:', 'producerkit' )
 											),
 											el(
 												'span',
@@ -288,7 +296,7 @@
 													className:
 														'pkit-avail-board__filter-btn pkit-avail-board__filter-btn--active',
 												},
-												'All'
+												__( 'All', 'producerkit' )
 											),
 											( board.filter_types || [] ).map(
 												function ( ft ) {
@@ -458,7 +466,11 @@
 					el(
 						'p',
 						{ className: 'pkit-avail-board__footer' },
-						'Showing ' + total + ' items',
+						sprintf(
+							/* translators: %d: number of items shown. */
+							__( 'Showing %d items', 'producerkit' ),
+							total
+						),
 						board.generated_at
 							? el(
 									'span',

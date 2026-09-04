@@ -26,13 +26,13 @@
 	const useSelect = data.useSelect;
 
 	const DAY_NAMES = [
-		'Sunday',
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday',
+		__( 'Sunday', 'producerkit' ),
+		__( 'Monday', 'producerkit' ),
+		__( 'Tuesday', 'producerkit' ),
+		__( 'Wednesday', 'producerkit' ),
+		__( 'Thursday', 'producerkit' ),
+		__( 'Friday', 'producerkit' ),
+		__( 'Saturday', 'producerkit' ),
 	];
 
 	function getRestBase() {
@@ -124,7 +124,12 @@
 							setLoading( false );
 						} )
 						.catch( function () {
-							setError( 'Could not load schedule data.' );
+							setError(
+								__(
+									'Could not load schedule data.',
+									'producerkit'
+								)
+							);
 							setStand( null );
 							setLoading( false );
 						} );
@@ -150,7 +155,8 @@
 			const options = locations.map( function ( l ) {
 				return {
 					value: l.id,
-					label: l.title?.rendered || '(untitled)',
+					label:
+						l.title?.rendered || __( '(untitled)', 'producerkit' ),
 				};
 			} );
 
@@ -259,7 +265,7 @@
 							: el(
 									'p',
 									{ className: 'pkit-stand-schedule__empty' },
-									'No schedule set yet.'
+									__( 'No schedule set yet.', 'producerkit' )
 							  )
 					)
 				);
@@ -316,7 +322,7 @@
 														className:
 															'pkit-stand-schedule__today-badge',
 													},
-													'Today'
+													__( 'Today', 'producerkit' )
 											  )
 											: null
 									),
@@ -328,7 +334,7 @@
 										},
 										hasHours
 											? byDay[ d ].join( ', ' )
-											: 'Closed'
+											: __( 'Closed', 'producerkit' )
 									)
 								);
 							} )
