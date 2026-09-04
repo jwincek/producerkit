@@ -1,0 +1,4433 @@
+# Copyright (C) 2026 Jerome Wincek
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ProducerKit 2.3.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/producerkit\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-04T21:49:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: producerkit\n"
+
+#. Plugin Name of the plugin
+#: producerkit.php
+#: includes/admin-dashboard.php:26
+#: includes/admin-dashboard.php:27
+#: includes/admin-dashboard.php:127
+#: producerkit.php:269
+msgid "ProducerKit"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: producerkit.php
+msgid "https://github.com/jwincek/producerkit"
+msgstr ""
+
+#. Description of the plugin
+#: producerkit.php
+msgid "Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support."
+msgstr ""
+
+#. Author of the plugin
+#: producerkit.php
+msgid "Jerome Wincek"
+msgstr ""
+
+#. Author URI of the plugin
+#: producerkit.php
+msgid "https://github.com/jwincek"
+msgstr ""
+
+#. translators: %s: product name.
+#: blocks/availability-badge/render.php:43
+#, php-format
+msgid "%s availability:"
+msgstr ""
+
+#: blocks/availability-badge/render.php:45
+msgid "Availability:"
+msgstr ""
+
+#: blocks/availability-board/render.php:25
+msgid "Check back soon — we're updating what's available this week!"
+msgstr ""
+
+#: blocks/availability-board/render.php:89
+msgid "Product Availability"
+msgstr ""
+
+#: blocks/availability-board/render.php:104
+msgid "Filter by availability status"
+msgstr ""
+
+#: blocks/availability-board/render.php:107
+#: blocks/availability-board/index.js:253
+msgid "Show:"
+msgstr ""
+
+#: blocks/availability-board/render.php:130
+msgid "Filter by product type"
+msgstr ""
+
+#: blocks/availability-board/render.php:133
+#: blocks/availability-board/index.js:291
+msgid "Type:"
+msgstr ""
+
+#: blocks/availability-board/render.php:144
+#: modules/commissions/includes/admin-commissions.php:118
+#: modules/pre-order/includes/admin-orders.php:190
+#: blocks/availability-board/index.js:299
+msgid "All"
+msgstr ""
+
+#. translators: %s: trade field name, e.g. Clay Body.
+#: blocks/availability-board/render.php:168
+#, php-format
+msgid "Filter by %s"
+msgstr ""
+
+#: blocks/availability-board/render.php:298
+#: blocks/product-card/render.php:104
+msgid "Price:"
+msgstr ""
+
+#: blocks/availability-board/render.php:313
+#: blocks/product-card/render.php:113
+msgid "Available seasons"
+msgstr ""
+
+#. translators: %d: number of items shown on the availability board.
+#. translators: %d: number of items shown.
+#: blocks/availability-board/render.php:331
+#: blocks/availability-board/index.js:471
+#, php-format,js-format
+msgid "Showing %d items"
+msgstr ""
+
+#: blocks/availability-board/render.php:338
+msgid "Last updated:"
+msgstr ""
+
+#: blocks/commission-form/render.php:27
+msgid "The Commissions module is turned off, so this form is not shown to visitors."
+msgstr ""
+
+#: blocks/commission-form/render.php:85
+#: modules/event-manager/includes/render-helpers.php:200
+#: modules/event-manager/includes/render-helpers.php:206
+#: blocks/event-card/index.js:459
+#: blocks/event-list/index.js:515
+msgid "Your name"
+msgstr ""
+
+#: blocks/commission-form/render.php:90
+#: modules/event-manager/includes/admin-rsvps.php:138
+#: blocks/commission-form/index.js:36
+msgid "Email"
+msgstr ""
+
+#: blocks/commission-form/render.php:92
+msgid "We send your quote here."
+msgstr ""
+
+#: blocks/commission-form/render.php:96
+msgid "Phone (optional)"
+msgstr ""
+
+#: blocks/commission-form/render.php:106
+#: blocks/commission-form/render.php:118
+msgid "— No preference —"
+msgstr ""
+
+#: blocks/commission-form/render.php:127
+#: blocks/commission-form/index.js:121
+msgid "What would you like made?"
+msgstr ""
+
+#: blocks/commission-form/render.php:129
+msgid "Size, colours, how it will be used, anything it has to match…"
+msgstr ""
+
+#: blocks/commission-form/render.php:134
+#: modules/notifications/includes/commission-notifications.php:65
+#: blocks/commission-form/index.js:39
+msgid "Budget"
+msgstr ""
+
+#: blocks/commission-form/render.php:136
+msgid "— Prefer not to say —"
+msgstr ""
+
+#: blocks/commission-form/render.php:146
+msgid "Needed by (optional)"
+msgstr ""
+
+#: blocks/commission-form/render.php:159
+#: blocks/preorder-form/render.php:188
+msgid "Website"
+msgstr ""
+
+#: blocks/commission-form/render.php:178
+msgid "Send request"
+msgstr ""
+
+#: blocks/event-list/render.php:23
+msgid "No upcoming events right now — check back soon!"
+msgstr ""
+
+#: blocks/event-list/render.php:99
+#: blocks/event-list/index.js:246
+msgid "All Events"
+msgstr ""
+
+#: blocks/event-list/render.php:117
+#: blocks/event-list/index.js:265
+msgid "Upcoming"
+msgstr ""
+
+#: blocks/event-list/render.php:129
+#: blocks/event-list/index.js:274
+msgid "Past Events"
+msgstr ""
+
+#. translators: %s = location name
+#: blocks/location-info/render.php:57
+#, php-format
+msgid "%s — Location Details"
+msgstr ""
+
+#: blocks/location-info/render.php:73
+#: blocks/stand-status-banner/render.php:67
+#: modules/core/includes/single-content.php:299
+#: blocks/location-info/index.js:224
+#: blocks/stand-status-banner/index.js:177
+msgid "Open Now"
+msgstr ""
+
+#: blocks/location-info/render.php:73
+#: blocks/stand-hours-schedule/render.php:127
+#: blocks/stand-status-banner/render.php:68
+#: includes/admin-dashboard.php:142
+#: modules/commissions/includes/admin-commissions.php:272
+#: modules/core/includes/single-content.php:299
+#: blocks/location-info/index.js:225
+#: blocks/stand-hours-schedule/index.js:337
+#: blocks/stand-status-banner/index.js:178
+#: blocks/stand-toggle/index.js:248
+msgid "Closed"
+msgstr ""
+
+#: blocks/location-info/render.php:86
+#: blocks/stand-status-banner/render.php:226
+msgid "Address:"
+msgstr ""
+
+#: blocks/location-info/render.php:100
+msgid "Get directions"
+msgstr ""
+
+#: blocks/location-info/render.php:101
+#: blocks/location-info/render.php:139
+#: blocks/stand-status-banner/render.php:261
+#: modules/core/includes/single-content.php:349
+#: modules/core/includes/single-content.php:514
+#: modules/event-manager/includes/render-helpers.php:167
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: blocks/location-info/render.php:108
+#: blocks/stand-hours-schedule/render.php:69
+#: blocks/stand-status-banner/render.php:234
+msgid "Hours:"
+msgstr ""
+
+#: blocks/location-info/render.php:116
+#: blocks/location-info/index.js:269
+msgid "Payment options:"
+msgstr ""
+
+#. translators: 1: payment service name, 2: account handle.
+#: blocks/location-info/render.php:131
+#: modules/core/includes/single-content.php:341
+#, php-format
+msgid "%1$s (@%2$s)"
+msgstr ""
+
+#. translators: %s: payment method label.
+#: blocks/location-info/render.php:170
+#: modules/availability-board/includes/fresh-sheet.php:172
+#, php-format
+msgid "QR code: pay with %s"
+msgstr ""
+
+#. translators: %s: payment method label.
+#: blocks/location-info/render.php:180
+#: modules/availability-board/includes/fresh-sheet.php:182
+#, php-format
+msgid "Scan to pay with %s"
+msgstr ""
+
+#: blocks/preorder-form/render.php:112
+msgid "Pre-order form"
+msgstr ""
+
+#: blocks/preorder-form/render.php:119
+msgid "What would you like to reserve?"
+msgstr ""
+
+#: blocks/preorder-form/render.php:131
+#: modules/availability-board/includes/fresh-sheet.php:34
+#: blocks/availability-board/index.js:43
+#: blocks/product-card/index.js:34
+msgid "Limited"
+msgstr ""
+
+#: blocks/preorder-form/render.php:151
+#: modules/event-manager/includes/admin-rsvps.php:136
+#: blocks/commission-form/index.js:35
+msgid "Name"
+msgstr ""
+
+#: blocks/preorder-form/render.php:156
+msgid "Email (for confirmation)"
+msgstr ""
+
+#: blocks/preorder-form/render.php:161
+msgid "Phone"
+msgstr ""
+
+#: blocks/preorder-form/render.php:166
+msgid "Pickup date"
+msgstr ""
+
+#. translators: %s: comma-separated list of weekday names.
+#: blocks/preorder-form/render.php:175
+#, php-format
+msgid "Pickup days: %s."
+msgstr ""
+
+#: blocks/preorder-form/render.php:183
+msgid "Note (optional)"
+msgstr ""
+
+#: blocks/preorder-form/render.php:197
+msgid "Place Pre-Order"
+msgstr ""
+
+#: blocks/preorder-form/render.php:198
+msgid "Sending…"
+msgstr ""
+
+#: blocks/preorder-form/render.php:202
+msgid "No payment now — pay when you pick up."
+msgstr ""
+
+#: blocks/preorder-form/render.php:207
+msgid "Pre-order received!"
+msgstr ""
+
+#: blocks/preorder-form/render.php:209
+msgid "We'll have it ready on your pickup date. If your plans change, you can view or cancel it here:"
+msgstr ""
+
+#: blocks/preorder-form/render.php:215
+msgid "Payment is at pickup. We accept:"
+msgstr ""
+
+#: blocks/preorder-form/render.php:229
+msgid "Payment is at pickup."
+msgstr ""
+
+#: blocks/product-card/render.php:134
+msgid "Current availability"
+msgstr ""
+
+#: blocks/product-card/render.php:148
+#: blocks/product-card/index.js:466
+msgid "Sourced from:"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:42
+#: modules/stand-status/includes/rest-extensions.php:271
+#: assets/js/editor-location.js:184
+#: blocks/stand-hours-schedule/index.js:29
+msgid "Sunday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:43
+#: modules/stand-status/includes/rest-extensions.php:272
+#: assets/js/editor-location.js:185
+#: blocks/stand-hours-schedule/index.js:30
+msgid "Monday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:44
+#: modules/stand-status/includes/rest-extensions.php:273
+#: assets/js/editor-location.js:186
+#: blocks/stand-hours-schedule/index.js:31
+msgid "Tuesday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:45
+#: modules/stand-status/includes/rest-extensions.php:274
+#: assets/js/editor-location.js:187
+#: blocks/stand-hours-schedule/index.js:32
+msgid "Wednesday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:46
+#: modules/stand-status/includes/rest-extensions.php:275
+#: assets/js/editor-location.js:188
+#: blocks/stand-hours-schedule/index.js:33
+msgid "Thursday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:47
+#: modules/stand-status/includes/rest-extensions.php:276
+#: assets/js/editor-location.js:189
+#: blocks/stand-hours-schedule/index.js:34
+msgid "Friday"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:48
+#: modules/stand-status/includes/rest-extensions.php:277
+#: assets/js/editor-location.js:190
+#: blocks/stand-hours-schedule/index.js:35
+msgid "Saturday"
+msgstr ""
+
+#. translators: %s = location name
+#: blocks/stand-hours-schedule/render.php:59
+#, php-format
+msgid "%s — Weekly Schedule"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:74
+#: blocks/stand-hours-schedule/index.js:268
+msgid "No schedule set yet."
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:84
+#: assets/js/editor-location.js:381
+msgid "Day"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:85
+#: modules/core/includes/single-content.php:320
+#: assets/js/editor-location.js:97
+msgid "Hours"
+msgstr ""
+
+#: blocks/stand-hours-schedule/render.php:109
+#: blocks/stand-hours-schedule/index.js:325
+msgid "Today"
+msgstr ""
+
+#: blocks/stand-status-banner/render.php:80
+msgid "ago"
+msgstr ""
+
+#. translators: %1$s: season start date, %2$s: season end date.
+#. translators: 1: season start date, 2: season end date.
+#: blocks/stand-status-banner/render.php:103
+#: blocks/stand-status-banner/index.js:356
+#, php-format,js-format
+msgid "Our season runs %1$s – %2$s. See you then!"
+msgstr ""
+
+#. translators: %1$s: season start date, %2$s: season end date.
+#. translators: 1: season start date, 2: season end date.
+#: blocks/stand-status-banner/render.php:112
+#: includes/admin-dashboard.php:172
+#: blocks/stand-status-banner/index.js:378
+#, php-format,js-format
+msgid "Season: %1$s – %2$s"
+msgstr ""
+
+#. translators: %s = stand name
+#: blocks/stand-status-banner/render.php:140
+#, php-format
+msgid "%s — Farm Stand Status"
+msgstr ""
+
+#. translators: %s: date and time the stand next opens.
+#. translators: %s: the next date the stand opens.
+#: blocks/stand-status-banner/render.php:192
+#: blocks/stand-status-banner/index.js:324
+#, php-format,js-format
+msgid "Next open: %s"
+msgstr ""
+
+#. translators: %s: human-readable time since the last status update (e.g. "5 mins ago").
+#. translators: %s: a relative time, e.g. "4 hours ago".
+#: blocks/stand-status-banner/render.php:204
+#: blocks/stand-status-banner/index.js:335
+#, php-format,js-format
+msgid "Updated %s"
+msgstr ""
+
+#. translators: 1: payment service name, 2: account handle.
+#: blocks/stand-status-banner/render.php:249
+#, php-format
+msgid "Pay with %1$s (@%2$s)"
+msgstr ""
+
+#. translators: %s: payment method label.
+#: blocks/stand-status-banner/render.php:256
+#, php-format
+msgid "Pay online: %s"
+msgstr ""
+
+#: includes/admin-dashboard.php:58
+#: modules/core/includes/post-types.php:173
+msgid "Products"
+msgstr ""
+
+#: includes/admin-dashboard.php:62
+#: modules/core/includes/post-types.php:204
+#: modules/core/includes/post-types.php:213
+#: assets/js/editor-product.js:252
+msgid "Sources"
+msgstr ""
+
+#: includes/admin-dashboard.php:66
+#: modules/core/includes/post-types.php:242
+#: modules/core/includes/post-types.php:251
+msgid "Locations"
+msgstr ""
+
+#: includes/admin-dashboard.php:70
+#: modules/core/includes/post-types.php:282
+msgid "Events"
+msgstr ""
+
+#: includes/admin-dashboard.php:141
+#: assets/js/editor-location.js:393
+#: blocks/stand-toggle/index.js:247
+msgid "Open"
+msgstr ""
+
+#. translators: %s: human-readable time since the last update (e.g. "5 mins").
+#: includes/admin-dashboard.php:163
+#, php-format
+msgid "Updated %s ago"
+msgstr ""
+
+#: includes/admin-dashboard.php:181
+msgid "Edit Stand"
+msgstr ""
+
+#: includes/admin-dashboard.php:188
+msgid "Content"
+msgstr ""
+
+#: includes/admin-dashboard.php:198
+msgid "drafts"
+msgstr ""
+
+#: includes/admin-dashboard.php:203
+msgid "View"
+msgstr ""
+
+#: includes/admin-dashboard.php:204
+msgid "Add New"
+msgstr ""
+
+#: includes/admin-dashboard.php:214
+#: modules/availability-board/includes/admin-quick-entry.php:25
+#: modules/core/includes/admin-columns.php:33
+#: modules/core/includes/single-content.php:162
+msgid "Availability"
+msgstr ""
+
+#: includes/admin-dashboard.php:232
+msgid "Needs Attention"
+msgstr ""
+
+#: includes/admin-dashboard.php:254
+msgid "Modules"
+msgstr ""
+
+#: includes/admin-dashboard.php:258
+msgid "Module"
+msgstr ""
+
+#: includes/admin-dashboard.php:259
+#: modules/availability-board/includes/admin-quick-entry.php:117
+#: modules/commissions/includes/admin-commissions.php:158
+#: modules/core/includes/admin-columns.php:277
+#: modules/core/includes/single-content.php:296
+#: modules/pre-order/includes/admin-orders.php:215
+#: modules/pre-order/includes/order-response.php:131
+msgid "Status"
+msgstr ""
+
+#: includes/admin-dashboard.php:260
+#: modules/availability-board/includes/admin-quick-entry.php:116
+#: modules/core/includes/admin-columns.php:276
+#: modules/core/includes/single-content.php:99
+#: modules/core/includes/single-content.php:306
+#: modules/core/includes/single-content.php:449
+#: modules/notifications/includes/commission-notifications.php:63
+msgid "Type"
+msgstr ""
+
+#: includes/admin-dashboard.php:277
+msgid "Active"
+msgstr ""
+
+#: includes/admin-dashboard.php:278
+msgid "Inactive"
+msgstr ""
+
+#: includes/admin-dashboard.php:285
+#: modules/core/includes/product-import-export.php:469
+msgid "Required"
+msgstr ""
+
+#: includes/admin-dashboard.php:286
+msgid "Optional"
+msgstr ""
+
+#: includes/admin-dashboard.php:297
+msgid "Platform"
+msgstr ""
+
+#. translators: %s: WordPress version number.
+#: includes/admin-dashboard.php:302
+#, php-format
+msgid "WordPress %s"
+msgstr ""
+
+#. translators: %s: PHP version number.
+#: includes/admin-dashboard.php:308
+#, php-format
+msgid "PHP %s"
+msgstr ""
+
+#: includes/admin-dashboard.php:312
+msgid "Interactivity API:"
+msgstr ""
+
+#: includes/admin-dashboard.php:314
+#: includes/admin-dashboard.php:322
+#: modules/availability-board/includes/fresh-sheet.php:33
+#: blocks/availability-board/index.js:42
+#: blocks/product-card/index.js:33
+msgid "Available"
+msgstr ""
+
+#: includes/admin-dashboard.php:318
+msgid "Abilities API:"
+msgstr ""
+
+#: includes/admin-dashboard.php:323
+msgid "Not available (requires WP 6.9+)"
+msgstr ""
+
+#. translators: %d: number of products without a featured photo.
+#: includes/admin-dashboard.php:373
+#, php-format
+msgid "%d product without a photo"
+msgid_plural "%d products without photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:374
+msgid "Products look better on the availability board with images."
+msgstr ""
+
+#: includes/admin-dashboard.php:377
+#: includes/admin-dashboard.php:396
+msgid "View Products"
+msgstr ""
+
+#. translators: %d: number of products without a price.
+#: includes/admin-dashboard.php:392
+#, php-format
+msgid "%d product without a price"
+msgid_plural "%d products without prices"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:393
+msgid "Visitors see the price on the availability board and product pages."
+msgstr ""
+
+#. translators: %d: number of events without a start date.
+#: includes/admin-dashboard.php:411
+#, php-format
+msgid "%d event without a start date"
+msgid_plural "%d events without start dates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:412
+msgid "Events need a start date to appear in the event list."
+msgstr ""
+
+#: includes/admin-dashboard.php:415
+msgid "View Events"
+msgstr ""
+
+#. translators: %d: number of locations without an address.
+#: includes/admin-dashboard.php:430
+#, php-format
+msgid "%d location without an address"
+msgid_plural "%d locations without addresses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:431
+msgid "The address shows on location cards and the stand banner."
+msgstr ""
+
+#: includes/admin-dashboard.php:434
+msgid "View Locations"
+msgstr ""
+
+#. translators: %d: number of products with availability over a week old.
+#: includes/admin-dashboard.php:463
+#, php-format
+msgid "%d product with availability over a week old"
+msgid_plural "%d products with availability over a week old"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:464
+msgid "Consider refreshing the availability board."
+msgstr ""
+
+#: includes/admin-dashboard.php:467
+#: includes/admin-dashboard.php:493
+#: modules/availability-board/includes/admin-quick-entry.php:24
+#: modules/availability-board/includes/admin-quick-entry.php:78
+msgid "Update Availability"
+msgstr ""
+
+#. translators: %d: number of products not on the availability board.
+#: includes/admin-dashboard.php:489
+#, php-format
+msgid "%d product not on the availability board"
+msgid_plural "%d products not on the availability board"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin-dashboard.php:490
+msgid "These products won't show up for visitors until you set their status."
+msgstr ""
+
+#: includes/sample-data-markers.php:89
+msgid "Sample data is active. Content marked \"Sample\" is test data."
+msgstr ""
+
+#: includes/sample-data-markers.php:92
+#: includes/sample-data-markers.php:196
+msgid "Remove sample data →"
+msgstr ""
+
+#: includes/sample-data-markers.php:194
+msgid "ProducerKit sample data is loaded. Remember to remove it before going live."
+msgstr ""
+
+#: includes/sample-data.php:67
+msgid "Remove Sample Data"
+msgstr ""
+
+#: includes/sample-data.php:68
+msgid "Load Sample Data"
+msgstr ""
+
+#: includes/sample-data.php:70
+msgid "Remove all sample products, locations, events, and availability entries."
+msgstr ""
+
+#: includes/sample-data.php:71
+msgid "Load example products, a stand location, events, and availability entries so you can see how the blocks look with content."
+msgstr ""
+
+#: includes/sample-data.php:87
+msgid "Sample data loaded! Check your Products, Locations, and Events."
+msgstr ""
+
+#: includes/sample-data.php:88
+msgid "Sample data removed."
+msgstr ""
+
+#: includes/sample-data.php:108
+msgid "Sample Data"
+msgstr ""
+
+#: modules/availability-board/includes/abilities.php:25
+msgid "Get Availability Board"
+msgstr ""
+
+#: modules/availability-board/includes/abilities.php:26
+msgid "Retrieve the full availability board with products grouped by type, including thumbnails, prices, and status badges. Optionally filter by status, product type, or location."
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:80
+msgid "Set what's available this week. Changes take effect immediately on the site."
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:85
+#: modules/availability-board/includes/fresh-sheet.php:97
+#: modules/event-manager/includes/render-helpers.php:130
+msgid "Location:"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:88
+msgid "All locations"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:97
+msgid "Effective date:"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:102
+msgid "Copy Last Week"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:106
+msgid "Save All Changes"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:115
+#: modules/core/includes/post-types.php:172
+#: modules/pre-order/includes/admin-orders.php:110
+#: blocks/availability-badge/index.js:88
+msgid "Product"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:118
+msgid "Quantity Note"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:119
+msgid "Current"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:162
+msgid "— Not listed —"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:179
+msgid "e.g. ~3 bunches left"
+msgstr ""
+
+#: modules/availability-board/includes/admin-quick-entry.php:188
+msgid "Not listed"
+msgstr ""
+
+#. translators: %s: URL of the "Add New Product" admin screen.
+#: modules/availability-board/includes/admin-quick-entry.php:202
+#, php-format
+msgid "No products found. <a href=\"%s\">Add your first product</a> to get started."
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:21
+#: modules/availability-board/includes/fresh-sheet.php:22
+#: modules/availability-board/includes/fresh-sheet.php:88
+msgid "Fresh Sheet"
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:32
+#: blocks/availability-board/index.js:41
+#: blocks/product-card/index.js:32
+msgid "Abundant"
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:35
+#: blocks/availability-board/index.js:44
+#: blocks/product-card/index.js:35
+msgid "Sold out"
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:36
+#: blocks/availability-board/index.js:45
+#: blocks/product-card/index.js:36
+msgid "Unavailable"
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:90
+#: modules/pre-order/includes/admin-orders.php:72
+msgid "Print"
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:126
+msgid "Nothing is marked available right now — update availability first (Farm Stand → Availability)."
+msgstr ""
+
+#: modules/availability-board/includes/fresh-sheet.php:158
+msgid "We accept"
+msgstr ""
+
+#: modules/availability-board/includes/rest-extensions.php:218
+#: assets/js/editor-location.js:72
+msgid "Other"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:62
+#: modules/commissions/includes/vocabulary.php:42
+#: modules/commissions/includes/vocabulary.php:43
+#: producerkit.php:56
+msgid "Commissions"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:63
+msgid "Abilities for reading commission requests and moving them through quoting and making."
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:81
+msgid "List Commissions"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:82
+msgid "Retrieve commission requests, optionally filtered by status (new, quoted, accepted, in_progress, complete, declined, cancelled). Use this to answer questions like which requests are still waiting on a quote. Staff only."
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:126
+msgid "Count Commissions by Status"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:127
+msgid "How many commission requests sit at each status. One grouped query, so this is the cheap way to ask how much work is waiting rather than listing everything. Staff only."
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:157
+msgid "Send Commission Quote"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:158
+msgid "Quote a price for a commission and email the customer a link to accept or decline. Also used to revise a quote, or reissue one after the 30-day link has expired. Staff only."
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:227
+msgid "Update Commission Status"
+msgstr ""
+
+#: modules/commissions/includes/abilities.php:228
+msgid "Move a commission along: accepted, in_progress, complete, declined or cancelled. The transition table is enforced, so an illegal move is refused with a reason rather than applied. Quoting is not available here — it needs a price, so use Send Commission Quote. Staff only."
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:44
+msgid "New"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:45
+msgid "Quoted"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:46
+msgid "Accepted"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:47
+msgid "In progress"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:48
+msgid "Complete"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:49
+msgid "Declined"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:50
+#: modules/event-manager/includes/render-helpers.php:40
+#: modules/event-manager/includes/render-helpers.php:103
+#: modules/pre-order/includes/admin-orders.php:53
+#: modules/pre-order/includes/order-response.php:188
+#: blocks/event-card/index.js:296
+#: blocks/event-list/index.js:365
+msgid "Cancelled"
+msgstr ""
+
+#. translators: %s: this trade's word for commissions, lowercase plural.
+#: modules/commissions/includes/admin-commissions.php:78
+#, php-format
+msgid "You do not have permission to view %s."
+msgstr ""
+
+#. translators: %s: this trade's word for commissions, lowercase plural.
+#: modules/commissions/includes/admin-commissions.php:148
+#, php-format
+msgid "No %s yet. Add the request form to a page so customers can send one."
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:157
+#: modules/producer-profiles/profiles/author.php:27
+#: modules/producer-profiles/profiles/comics.php:39
+msgid "Request"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:159
+msgid "Quote"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:160
+#: modules/event-manager/includes/admin-rsvps.php:141
+#: modules/pre-order/includes/admin-orders.php:216
+msgid "Actions"
+msgstr ""
+
+#. translators: %s: date the customer needs the piece by.
+#: modules/commissions/includes/admin-commissions.php:205
+#, php-format
+msgid "Needed by %s"
+msgstr ""
+
+#. translators: %s: reason the order could not be raised.
+#: modules/commissions/includes/admin-commissions.php:227
+#, php-format
+msgid "Payment link failed: %s"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:234
+msgid "Payment link"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:250
+#: modules/commissions/includes/quote-response.php:177
+#: modules/core/includes/admin-columns.php:32
+#: modules/core/includes/single-content.php:87
+#: assets/js/editor-product.js:117
+msgid "Price"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:251
+msgid "Quoted price"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:253
+msgid "Estimated ready date"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:257
+msgid "Re-quote"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:258
+msgid "Send quote"
+msgstr ""
+
+#. translators: %d: number of commissions.
+#: modules/commissions/includes/admin-commissions.php:290
+#, php-format
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/commissions/includes/admin-commissions.php:343
+msgid "Enter a price before sending the quote."
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:344
+#: blocks/stand-toggle/index.js:280
+msgid "Saving…"
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:345
+#: modules/producer-profiles/includes/admin-settings.php:137
+msgid "Saved."
+msgstr ""
+
+#: modules/commissions/includes/admin-commissions.php:346
+msgid "Could not save:"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:183
+msgid "Under $50"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:184
+msgid "$50 – $100"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:185
+msgid "$100 – $200"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:186
+msgid "$200 – $500"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:187
+msgid "$500+"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:188
+msgid "No preference"
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:252
+#: modules/event-manager/includes/rsvp-table.php:160
+#: modules/pre-order/includes/orders-table.php:342
+msgid "Please provide your name."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:259
+msgid "Please provide an email address so we can send you a quote."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:264
+msgid "Please describe what you would like made."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:267
+msgid "That description is too long. Please shorten it."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:272
+msgid "That deadline is not a valid date."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:293
+msgid "Too many requests from this connection. Please try again later."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:325
+msgid "Could not save the request."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:497
+#: modules/commissions/includes/commissions-table.php:576
+#: modules/commissions/includes/rest-extensions.php:207
+#: modules/woocommerce/includes/checkout.php:76
+#: modules/woocommerce/includes/checkout.php:406
+msgid "Commission not found."
+msgstr ""
+
+#. translators: %s: current commission status.
+#: modules/commissions/includes/commissions-table.php:504
+#, php-format
+msgid "A commission that is %s cannot be quoted."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:509
+msgid "A quote needs a price greater than zero."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:513
+msgid "That estimated date is not a valid date."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:535
+msgid "Could not save the quote."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:559
+msgid "Unknown commission status."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:570
+msgid "Send a quote with a price rather than setting the status directly."
+msgstr ""
+
+#. translators: 1: current status, 2: requested status.
+#: modules/commissions/includes/commissions-table.php:588
+#, php-format
+msgid "A commission cannot go from %1$s to %2$s."
+msgstr ""
+
+#: modules/commissions/includes/commissions-table.php:607
+msgid "Could not update the commission."
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:71
+msgid "This quote link is no longer valid"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:72
+msgid "It may have already been used, or it may have expired. Please get in touch and we will send you a new one."
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:102
+#: modules/event-manager/includes/rsvp-response.php:70
+#: modules/pre-order/includes/order-response.php:72
+msgid "That form had expired"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:103
+#: modules/event-manager/includes/rsvp-response.php:71
+msgid "Please open the link from your email again."
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:112
+msgid "We could not record that"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:119
+msgid "Thank you for letting us know"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:120
+msgid "We have recorded that you would rather not go ahead. Nothing further will happen."
+msgstr ""
+
+#. translators: %s: this trade's word for a commission, lowercase singular.
+#: modules/commissions/includes/quote-response.php:145
+#, php-format
+msgid "Thank you — your %s is confirmed. We will be in touch about payment and timing."
+msgstr ""
+
+#. translators: %s: this trade's word for a commission, lowercase singular.
+#: modules/commissions/includes/quote-response.php:155
+#, php-format
+msgid "Your %s is confirmed"
+msgstr ""
+
+#. translators: %s: customer name.
+#: modules/commissions/includes/quote-response.php:172
+#, php-format
+msgid "Hello %s,"
+msgstr ""
+
+#. translators: %s: customer name.
+#: modules/commissions/includes/quote-response.php:173
+msgid "Here is the quote for the piece you asked about. Nothing is agreed until you choose below."
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:181
+msgid "Estimated ready"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:184
+msgid "What you asked for"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:195
+msgid "Accept this quote"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:198
+msgid "No thank you"
+msgstr ""
+
+#: modules/commissions/includes/quote-response.php:202
+msgid "Your quote"
+msgstr ""
+
+#: modules/commissions/includes/rest-extensions.php:137
+msgid "That field must be a single value."
+msgstr ""
+
+#: modules/commissions/includes/rest-extensions.php:224
+msgid "That quote link is no longer valid. Please ask for a new one."
+msgstr ""
+
+#: modules/commissions/includes/vocabulary.php:41
+msgid "Commission"
+msgstr ""
+
+#: modules/commissions/includes/vocabulary.php:44
+#: blocks/commission-form/index.js:86
+msgid "Commission a piece"
+msgstr ""
+
+#: modules/core/includes/abilities.php:44
+msgid "Farm Products"
+msgstr ""
+
+#: modules/core/includes/abilities.php:45
+msgid "Abilities for managing farm products — produce, bread, pantry goods."
+msgstr ""
+
+#: modules/core/includes/abilities.php:52
+msgid "Farm Availability"
+msgstr ""
+
+#: modules/core/includes/abilities.php:53
+msgid "Abilities for querying and updating product availability at locations."
+msgstr ""
+
+#: modules/core/includes/abilities.php:60
+msgid "Farm Locations"
+msgstr ""
+
+#: modules/core/includes/abilities.php:61
+msgid "Abilities for managing sales locations — stand, market, on-farm."
+msgstr ""
+
+#: modules/core/includes/abilities.php:91
+msgid "List Products"
+msgstr ""
+
+#: modules/core/includes/abilities.php:92
+msgid "Retrieve a list of all published farm products with their type, season, price, and unit."
+msgstr ""
+
+#: modules/core/includes/abilities.php:176
+msgid "Get Product Sources"
+msgstr ""
+
+#: modules/core/includes/abilities.php:177
+msgid "Retrieve the grain origins and partner farms linked to a product."
+msgstr ""
+
+#: modules/core/includes/abilities.php:246
+msgid "Get Current Availability"
+msgstr ""
+
+#: modules/core/includes/abilities.php:247
+msgid "Retrieve the current availability status of all products, optionally filtered by product or location."
+msgstr ""
+
+#: modules/core/includes/abilities.php:312
+msgid "Update Product Availability"
+msgstr ""
+
+#: modules/core/includes/abilities.php:313
+msgid "Set the availability status of a product at a location for a given date."
+msgstr ""
+
+#: modules/core/includes/abilities.php:387
+msgid "List Locations"
+msgstr ""
+
+#: modules/core/includes/abilities.php:388
+msgid "Retrieve all published sales locations with address, type, hours, and open/closed status."
+msgstr ""
+
+#: modules/core/includes/admin-columns.php:133
+msgid "Event Date"
+msgstr ""
+
+#: modules/core/includes/admin-columns.php:134
+#: modules/core/includes/meta-labels.php:44
+#: modules/core/includes/post-types.php:243
+#: modules/core/includes/single-content.php:458
+#: modules/pre-order/includes/admin-orders.php:214
+#: assets/js/editor-event.js:221
+#: assets/js/editor-source.js:134
+#: blocks/stand-hours-schedule/index.js:357
+#: blocks/stand-status-banner/index.js:469
+#: blocks/stand-toggle/index.js:187
+msgid "Location"
+msgstr ""
+
+#: modules/core/includes/admin-columns.php:135
+#: modules/core/includes/single-content.php:489
+#: modules/event-manager/includes/admin-rsvps.php:34
+#: modules/event-manager/includes/admin-rsvps.php:35
+#: modules/event-manager/includes/admin-rsvps.php:81
+msgid "RSVPs"
+msgstr ""
+
+#: modules/core/includes/admin-columns.php:278
+#: modules/core/includes/single-content.php:313
+#: assets/js/editor-location.js:81
+msgid "Address"
+msgstr ""
+
+#: modules/core/includes/deposits.php:136
+msgid "Paid in full when you order."
+msgstr ""
+
+#. translators: %s: percentage, e.g. "25".
+#: modules/core/includes/deposits.php:146
+#, php-format
+msgid "%s%% deposit when you order, balance at pickup."
+msgstr ""
+
+#. translators: %s: formatted money amount, e.g. "$50.00".
+#: modules/core/includes/deposits.php:153
+#, php-format
+msgid "%s deposit per item when you order, balance at pickup."
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:40
+#: assets/js/editor-source.js:114
+msgid "Farm / Origin Name"
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:41
+#: assets/js/editor-source.js:123
+msgid "Who this came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:45
+#: modules/producer-profiles/profiles/beekeeping.php:32
+#: assets/js/editor-source.js:143
+msgid "County and state, or however you would say where."
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:48
+#: assets/js/editor-source.js:178
+msgid "History"
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:49
+#: assets/js/editor-source.js:188
+msgid "Heritage notes — the story behind this ingredient or variety."
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:52
+#: assets/js/editor-source.js:199
+msgid "Milling / Process Notes"
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:53
+#: assets/js/editor-source.js:209
+msgid "What was done to it in between — grind, cure, age, finish."
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:56
+#: assets/js/editor-product.js:159
+msgid "Growing / Baking Notes"
+msgstr ""
+
+#: modules/core/includes/meta-labels.php:57
+#: modules/producer-profiles/profiles/bakery.php:36
+#: modules/producer-profiles/profiles/beekeeping.php:35
+#: modules/producer-profiles/profiles/fiber-arts.php:24
+#: modules/producer-profiles/profiles/jewelry.php:24
+#: modules/producer-profiles/profiles/leather.php:24
+#: modules/producer-profiles/profiles/metalwork.php:24
+#: modules/producer-profiles/profiles/painting.php:28
+#: modules/producer-profiles/profiles/pottery.php:25
+#: modules/producer-profiles/profiles/screen-printing.php:28
+#: modules/producer-profiles/profiles/taxidermy.php:35
+#: modules/producer-profiles/profiles/woodworking.php:24
+msgid "Shown on the product page. Free-form."
+msgstr ""
+
+#: modules/core/includes/payments.php:39
+#: assets/js/editor-location.js:551
+msgid "Venmo"
+msgstr ""
+
+#: modules/core/includes/payments.php:44
+#: assets/js/editor-location.js:554
+msgid "Cash App"
+msgstr ""
+
+#: modules/core/includes/payments.php:49
+#: assets/js/editor-location.js:559
+msgid "PayPal"
+msgstr ""
+
+#: modules/core/includes/payments.php:54
+#: assets/js/editor-location.js:564
+msgid "Payment Link"
+msgstr ""
+
+#: modules/core/includes/payments.php:58
+#: assets/js/editor-location.js:567
+msgid "Cash"
+msgstr ""
+
+#: modules/core/includes/payments.php:62
+#: assets/js/editor-location.js:568
+msgid "Check"
+msgstr ""
+
+#: modules/core/includes/payments.php:66
+#: assets/js/editor-location.js:571
+msgid "SNAP/EBT"
+msgstr ""
+
+#: modules/core/includes/payments.php:70
+msgid "Market Vouchers (WIC/Senior FMNP)"
+msgstr ""
+
+#. translators: %s: singular post type name.
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/post-types.php:147
+#: modules/core/includes/taxonomies.php:65
+#, php-format
+msgid "Add New %s"
+msgstr ""
+
+#. translators: %s: singular post type name.
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/post-types.php:149
+#: modules/core/includes/taxonomies.php:61
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#. translators: %s: singular post type name.
+#: modules/core/includes/post-types.php:151
+#, php-format
+msgid "New %s"
+msgstr ""
+
+#. translators: %s: singular post type name.
+#: modules/core/includes/post-types.php:153
+#, php-format
+msgid "View %s"
+msgstr ""
+
+#. translators: %s: plural post type name.
+#. translators: %s: plural taxonomy name.
+#: modules/core/includes/post-types.php:155
+#: modules/core/includes/taxonomies.php:53
+#, php-format
+msgid "Search %s"
+msgstr ""
+
+#. translators: %s: plural post type name, lowercased.
+#: modules/core/includes/post-types.php:157
+#, php-format
+msgid "No %s found."
+msgstr ""
+
+#. translators: %s: plural post type name, lowercased.
+#: modules/core/includes/post-types.php:159
+#, php-format
+msgid "No %s found in Trash."
+msgstr ""
+
+#. translators: %s: plural post type name.
+#. translators: %s: plural taxonomy name.
+#: modules/core/includes/post-types.php:161
+#: modules/core/includes/taxonomies.php:55
+#, php-format
+msgid "All %s"
+msgstr ""
+
+#: modules/core/includes/post-types.php:174
+msgid "Catalog"
+msgstr ""
+
+#: modules/core/includes/post-types.php:205
+#: modules/producer-profiles/profiles/taxidermy.php:33
+msgid "Source"
+msgstr ""
+
+#: modules/core/includes/post-types.php:206
+msgid "Add New Source"
+msgstr ""
+
+#: modules/core/includes/post-types.php:207
+msgid "Edit Source"
+msgstr ""
+
+#: modules/core/includes/post-types.php:208
+msgid "New Source"
+msgstr ""
+
+#: modules/core/includes/post-types.php:209
+msgid "View Source"
+msgstr ""
+
+#: modules/core/includes/post-types.php:210
+msgid "Search Sources"
+msgstr ""
+
+#: modules/core/includes/post-types.php:211
+msgid "No sources found."
+msgstr ""
+
+#: modules/core/includes/post-types.php:212
+msgid "All Sources"
+msgstr ""
+
+#: modules/core/includes/post-types.php:244
+msgid "Add New Location"
+msgstr ""
+
+#: modules/core/includes/post-types.php:245
+msgid "Edit Location"
+msgstr ""
+
+#: modules/core/includes/post-types.php:246
+msgid "New Location"
+msgstr ""
+
+#: modules/core/includes/post-types.php:247
+msgid "View Location"
+msgstr ""
+
+#: modules/core/includes/post-types.php:248
+msgid "Search Locations"
+msgstr ""
+
+#: modules/core/includes/post-types.php:249
+msgid "No locations found."
+msgstr ""
+
+#: modules/core/includes/post-types.php:250
+msgid "All Locations"
+msgstr ""
+
+#: modules/core/includes/post-types.php:281
+#: modules/event-manager/includes/admin-rsvps.php:95
+#: modules/event-manager/includes/rsvp-response.php:106
+msgid "Event"
+msgstr ""
+
+#: modules/core/includes/post-types.php:283
+msgid "Calendar"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:30
+msgid "Import / Export Products"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:31
+msgid "Product Import"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:170
+msgid "No file uploaded or upload error."
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:182
+msgid "CSV file is empty or could not be parsed."
+msgstr ""
+
+#. translators: %d: CSV row number.
+#: modules/core/includes/product-import-export.php:265
+#, php-format
+msgid "Row %d: missing title, skipped."
+msgstr ""
+
+#. translators: %1$d: CSV row number, %2$s: product title, %3$s: error message.
+#: modules/core/includes/product-import-export.php:302
+#, php-format
+msgid "Row %1$d: failed to update \"%2$s\" — %3$s"
+msgstr ""
+
+#. translators: %1$d: CSV row number, %2$s: product title, %3$s: error message.
+#: modules/core/includes/product-import-export.php:310
+#, php-format
+msgid "Row %1$d: failed to create \"%2$s\" — %3$s"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:386
+msgid "Product Import / Export"
+msgstr ""
+
+#. translators: %d: number of products created.
+#: modules/core/includes/product-import-export.php:395
+#, php-format
+msgid "%d product created"
+msgid_plural "%d products created"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of products updated.
+#: modules/core/includes/product-import-export.php:399
+#, php-format
+msgid "%d product updated"
+msgid_plural "%d products updated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/core/includes/product-import-export.php:401
+msgid "No changes made."
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:407
+msgid "Some rows had issues:"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:420
+msgid "Export"
+msgstr ""
+
+#. translators: %d: number of published products.
+#: modules/core/includes/product-import-export.php:425
+#, php-format
+msgid "Download all %d products as a CSV file. Use this as a backup or as a template for bulk edits."
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:435
+#: modules/event-manager/includes/admin-rsvps.php:108
+msgid "Download CSV"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:441
+msgid "Import"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:442
+msgid "Upload a CSV to create or update products in bulk. Products are matched by title — if a product with the same name exists, it will be updated."
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:454
+msgid "Upload & Import"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:461
+msgid "CSV format reference"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:464
+msgid "The CSV should have these columns (in any order):"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:468
+msgid "Column"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:470
+msgid "Example"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:474
+msgid "Yes"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:475
+#: modules/core/includes/product-import-export.php:476
+#: modules/core/includes/product-import-export.php:477
+#: modules/core/includes/product-import-export.php:478
+#: modules/core/includes/product-import-export.php:479
+#: modules/core/includes/product-import-export.php:480
+#: modules/core/includes/product-import-export.php:481
+#: modules/core/includes/product-import-export.php:482
+#: modules/core/includes/product-import-export.php:483
+msgid "No"
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:487
+msgid "Use pipes (|) to separate multiple values in product_types, seasons, and sources."
+msgstr ""
+
+#: modules/core/includes/product-import-export.php:489
+msgid "Tip: export your existing products first to see the format, then edit the CSV and re-import."
+msgstr ""
+
+#: modules/core/includes/single-content.php:114
+msgid "Where to find it"
+msgstr ""
+
+#: modules/core/includes/single-content.php:140
+#: modules/core/includes/taxonomies.php:184
+msgid "Season"
+msgstr ""
+
+#: modules/core/includes/single-content.php:183
+msgid "Sourced from"
+msgstr ""
+
+#: modules/core/includes/single-content.php:265
+msgid "Used in"
+msgstr ""
+
+#: modules/core/includes/single-content.php:327
+#: modules/core/includes/single-content.php:510
+msgid "Payment"
+msgstr ""
+
+#: modules/core/includes/single-content.php:367
+msgid "Available here"
+msgstr ""
+
+#: modules/core/includes/single-content.php:378
+msgid "Running low"
+msgstr ""
+
+#: modules/core/includes/single-content.php:427
+#: modules/event-manager/includes/rsvp-table.php:145
+msgid "This event has been cancelled."
+msgstr ""
+
+#: modules/core/includes/single-content.php:433
+#: assets/js/editor-event.js:153
+#: assets/js/editor-event.js:194
+msgid "Date"
+msgstr ""
+
+#: modules/core/includes/single-content.php:437
+#: assets/js/editor-event.js:165
+#: assets/js/editor-event.js:206
+msgid "Time"
+msgstr ""
+
+#: modules/core/includes/single-content.php:475
+msgid "Cost"
+msgstr ""
+
+#: modules/core/includes/single-content.php:482
+msgid "What to bring"
+msgstr ""
+
+#. translators: %d: number of people who have RSVPed.
+#: modules/core/includes/single-content.php:493
+#: modules/event-manager/includes/render-helpers.php:178
+#, php-format
+msgid "%d people coming"
+msgstr ""
+
+#. translators: %d: total number of RSVP spots.
+#: modules/core/includes/single-content.php:498
+#, php-format
+msgid "(%d spots total)"
+msgstr ""
+
+#: modules/core/includes/single-content.php:502
+#: modules/event-manager/includes/admin-rsvps.php:121
+msgid "Full"
+msgstr ""
+
+#: modules/core/includes/single-content.php:513
+#: modules/event-manager/includes/render-helpers.php:166
+msgid "Donate / Pay"
+msgstr ""
+
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/taxonomies.php:57
+#, php-format
+msgid "Parent %s"
+msgstr ""
+
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/taxonomies.php:59
+#, php-format
+msgid "Parent %s:"
+msgstr ""
+
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/taxonomies.php:63
+#, php-format
+msgid "Update %s"
+msgstr ""
+
+#. translators: %s: singular taxonomy name.
+#: modules/core/includes/taxonomies.php:67
+#, php-format
+msgid "New %s Name"
+msgstr ""
+
+#: modules/core/includes/taxonomies.php:152
+msgid "Product Type"
+msgstr ""
+
+#: modules/core/includes/taxonomies.php:153
+msgid "Product Types"
+msgstr ""
+
+#: modules/core/includes/taxonomies.php:185
+msgid "Seasons"
+msgstr ""
+
+#: modules/core/includes/taxonomies.php:215
+msgid "Event Type"
+msgstr ""
+
+#: modules/core/includes/taxonomies.php:216
+msgid "Event Types"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:44
+msgid "Farm Events"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:45
+msgid "Abilities for farm events — pizza nights, potlucks, workshops, and tours."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:61
+msgid "List Upcoming Events"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:62
+msgid "Retrieve upcoming farm events with location, RSVP status, and event type."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:111
+msgid "RSVP to Event"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:112
+msgid "Submit an RSVP to a farm event. Returns a cancellation token."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:174
+msgid "List Event RSVPs"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:175
+msgid "Who is coming to an event: names, party sizes, notes and the headcount, with spots remaining when the event has a cap. This is how to answer \"who is coming on Saturday?\". Staff only."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:234
+msgid "Cancel an RSVP"
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:235
+msgid "Cancel a booking on a guest's behalf, freeing their place in the headcount. Takes the RSVP id from List Event RSVPs. Staff only — a guest cancels their own from the link in their confirmation email."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:243
+msgid "That booking no longer exists."
+msgstr ""
+
+#: modules/event-manager/includes/abilities.php:254
+msgid "Could not cancel that booking."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:69
+msgid "You do not have permission to view RSVPs."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:85
+msgid "No events have RSVPs turned on yet. Edit an event and enable RSVPs to start taking bookings."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:103
+#: modules/producer-profiles/profiles/musician.php:29
+msgid "Show"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:116
+msgid "people coming"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:118
+msgid "spots left"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:130
+msgid "Nobody has RSVP'd to this event yet."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:137
+msgid "Party"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:139
+msgid "Note"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:140
+msgid "Booked"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:167
+msgid "Cancel"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:190
+msgid "Cancel this RSVP? Their place goes back into the count."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:191
+msgid "Cancelling…"
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:192
+msgid "Could not cancel that."
+msgstr ""
+
+#: modules/event-manager/includes/admin-rsvps.php:234
+msgid "You do not have permission to export RSVPs."
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:116
+msgid "Date:"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:120
+msgid "Time:"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:147
+msgid "Cost:"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:154
+msgid "What to bring:"
+msgstr ""
+
+#. translators: %d: number of RSVP spots remaining.
+#: modules/event-manager/includes/render-helpers.php:186
+#, php-format
+msgid "%d spots left"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:197
+msgid "RSVP form"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:215
+#: modules/event-manager/includes/rsvp-response.php:122
+msgid "Party size"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:251
+msgid "I'm coming!"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:262
+#: blocks/event-card/index.js:432
+#: blocks/event-list/index.js:488
+msgid "This event is full!"
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:266
+#: blocks/event-card/index.js:444
+#: blocks/event-list/index.js:500
+msgid "RSVPs are closed."
+msgstr ""
+
+#: modules/event-manager/includes/render-helpers.php:277
+#: modules/event-manager/includes/rsvp-response.php:137
+msgid "Cancel my RSVP"
+msgstr ""
+
+#: modules/event-manager/includes/rest-extensions.php:299
+msgid "You're on the list! See you there."
+msgstr ""
+
+#: modules/event-manager/includes/rest-extensions.php:315
+msgid "RSVP not found or already cancelled."
+msgstr ""
+
+#: modules/event-manager/includes/rest-extensions.php:323
+msgid "Your RSVP has been cancelled."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:60
+msgid "We could not find that booking"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:61
+msgid "It may already have been cancelled. If you think it should still be here, get in touch and we will check."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:78
+msgid "Your RSVP is cancelled"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:79
+msgid "Thank you for letting us know — your place has been given back. You are welcome to book again if your plans change."
+msgstr ""
+
+#. translators: %s: guest name.
+#: modules/event-manager/includes/rsvp-response.php:98
+#, php-format
+msgid "Hello %s — here is your booking."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:110
+msgid "When"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:125
+msgid "Your note"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:131
+msgid "See the event page"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:142
+msgid "Cancelling frees your place for someone else. There is no charge either way."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-response.php:146
+msgid "Your booking"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:140
+msgid "Event not found."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:150
+msgid "RSVPs are not enabled for this event."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:155
+msgid "RSVPs are closed for this event."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:175
+msgid "Too many RSVPs from this connection. Please try again later."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:197
+msgid "It looks like you've already RSVP'd to this event!"
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:224
+msgid "Sorry, this event is at capacity."
+msgstr ""
+
+#: modules/event-manager/includes/rsvp-table.php:249
+#: modules/event-manager/includes/rsvp-table.php:254
+msgid "Could not save RSVP."
+msgstr ""
+
+#: modules/notifications/includes/commission-notifications.php:64
+#: modules/producer-profiles/includes/profiles.php:43
+msgid "Material"
+msgstr ""
+
+#: modules/notifications/includes/commission-notifications.php:66
+msgid "Deadline"
+msgstr ""
+
+#: modules/notifications/includes/commission-notifications.php:146
+msgid "To accept or decline, open:"
+msgstr ""
+
+#. translators: 1: guest name, 2: event title.
+#: modules/notifications/includes/email-notifications.php:146
+#, php-format
+msgid "Thanks %1$s — you are on the list for %2$s."
+msgstr ""
+
+#. translators: %d: number of people in the party.
+#: modules/notifications/includes/email-notifications.php:163
+#, php-format
+msgid "Party of %d."
+msgid_plural "Party of %d."
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/notifications/includes/email-notifications.php:167
+msgid "Plans change — you can cancel here, which gives your place back to someone else:"
+msgstr ""
+
+#. translators: %s: event title.
+#: modules/notifications/includes/email-notifications.php:173
+#, php-format
+msgid "You are booked for %s"
+msgstr ""
+
+#: modules/notifications/includes/preorder-notifications.php:78
+msgid "Plans change — you can view or cancel this order here:"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:56
+msgid "Farm Pre-Orders"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:57
+msgid "Abilities for creating and managing pay-at-pickup pre-orders."
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:73
+msgid "Create Pre-Order"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:74
+msgid "Place a pay-at-pickup pre-order for farm products: product lines with quantities, a pickup date within the next month, and contact details. Returns a cancellation token."
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:154
+msgid "List Pre-Orders"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:155
+msgid "Retrieve pre-orders, optionally filtered by status (pending, confirmed, ready, picked_up, cancelled). Staff only."
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:200
+msgid "Get Harvest List"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:201
+msgid "Aggregate active pre-orders (pending, confirmed, ready) into per-pickup-date totals of each product to have ready — the sheet a farmer takes to the field. Staff only."
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:260
+msgid "Update Pre-Order Status"
+msgstr ""
+
+#: modules/pre-order/includes/abilities.php:261
+msgid "Move a pre-order through its lifecycle: pending → confirmed → ready → picked_up, or cancelled. Staff only."
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:23
+#: modules/pre-order/includes/admin-orders.php:24
+#: modules/pre-order/includes/admin-orders.php:180
+#: producerkit.php:55
+msgid "Pre-Orders"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:49
+msgid "Pending"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:50
+#: modules/pre-order/includes/order-response.php:185
+msgid "Confirmed"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:51
+msgid "Ready for pickup"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:52
+msgid "Picked up"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:67
+#: modules/pre-order/includes/admin-orders.php:182
+msgid "Harvest List"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:69
+msgid "All Pre-Orders"
+msgstr ""
+
+#. translators: %s: today's date.
+#: modules/pre-order/includes/admin-orders.php:79
+#, php-format
+msgid "Active pre-orders (pending, confirmed, ready) as of %s."
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:86
+msgid "Nothing to harvest — no active pre-orders."
+msgstr ""
+
+#. translators: %d: number of orders.
+#: modules/pre-order/includes/admin-orders.php:101
+#, php-format
+msgid "(%d order)"
+msgid_plural "(%d orders)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/pre-order/includes/admin-orders.php:111
+msgid "Quantity"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:112
+msgid "Orders"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:211
+#: modules/pre-order/includes/order-response.php:117
+msgid "Pickup"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:212
+msgid "Customer"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:213
+msgid "Items"
+msgstr ""
+
+#: modules/pre-order/includes/admin-orders.php:221
+msgid "No pre-orders yet."
+msgstr ""
+
+#. translators: 1: quantity, 2: product title, 3: unit.
+#: modules/pre-order/includes/admin-orders.php:240
+#, php-format
+msgid "%1$d × %2$s %3$s"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:64
+msgid "We could not find that order"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:65
+msgid "The link may be incomplete, or the order may already have been collected. Please get in touch and we will check."
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:73
+msgid "Please open the link from your confirmation again."
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:83
+msgid "We could not cancel that"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:89
+msgid "Your pre-order is cancelled"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:90
+msgid "Thank you for letting us know — nothing will be set aside. You are welcome to order again any time."
+msgstr ""
+
+#. translators: %s: customer name.
+#: modules/pre-order/includes/order-response.php:110
+#, php-format
+msgid "Hello %s — here is your order."
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:160
+msgid "Cancel this order"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:164
+msgid "Cancelling early means nothing is picked or set aside for you. There is nothing to pay either way."
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:168
+msgid "This order can no longer be cancelled online. Please get in touch if something has changed."
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:173
+msgid "Your pre-order"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:184
+msgid "Received — we will confirm shortly"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:186
+msgid "Ready for collection"
+msgstr ""
+
+#: modules/pre-order/includes/order-response.php:187
+msgid "Collected"
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:148
+#: modules/pre-order/includes/orders-table.php:184
+msgid "Please choose at least one product."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:151
+msgid "Too many product lines in one order."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:164
+msgid "One of the selected products is unavailable."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:273
+msgid "Please choose a pickup date within the next month."
+msgstr ""
+
+#. translators: %s: comma-separated list of weekday names.
+#: modules/pre-order/includes/orders-table.php:285
+#, php-format
+msgid "That day isn't a pickup day. Pickups are available on: %s."
+msgstr ""
+
+#. translators: 1: season start date, 2: season end date.
+#: modules/pre-order/includes/orders-table.php:299
+#, php-format
+msgid "That date is outside our season (%1$s – %2$s)."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:307
+msgid "We're closed that day — please choose another date."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:349
+msgid "Pickup location not found."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:378
+msgid "Too many pre-orders from this connection. Please try again later."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:400
+msgid "Could not save the pre-order."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:458
+#: modules/pre-order/includes/orders-table.php:486
+#: modules/pre-order/includes/rest-extensions.php:180
+msgid "Pre-order not found."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:461
+msgid "This pre-order can no longer be cancelled online."
+msgstr ""
+
+#: modules/pre-order/includes/orders-table.php:479
+msgid "Unknown pre-order status."
+msgstr ""
+
+#: modules/pre-order/includes/rest-extensions.php:170
+msgid "Pre-order received! We'll have it ready for pickup."
+msgstr ""
+
+#: modules/pre-order/includes/rest-extensions.php:191
+msgid "Pre-order cancelled."
+msgstr ""
+
+#: modules/pre-order/includes/rest-extensions.php:223
+msgid "Status updated."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:38
+#: modules/producer-profiles/includes/admin-settings.php:39
+#: modules/producer-profiles/includes/admin-settings.php:129
+msgid "Producer Profile"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:55
+msgid "You do not have permission to change producer profiles."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:133
+msgid "Updated. New vocabulary has been added; nothing was removed."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:141
+msgid "Pick at least one trade — with none, every field loses its name."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:150
+msgid "What this site makes"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:152
+msgid "Tick every trade practised here. This decides which product fields exist and which vocabulary is suggested. Ticking more only ever adds — existing terms and products are never removed."
+msgstr ""
+
+#. translators: %s: comma-separated list of extra product field names.
+#: modules/producer-profiles/includes/admin-settings.php:188
+#, php-format
+msgid "Adds fields: %s"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:192
+msgid "No extra product fields."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:204
+msgid "If you delete this plugin"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:208
+msgid "Your data"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:218
+msgid "Delete everything when the plugin is deleted"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:221
+msgid "Off by default, because deleting a plugin to troubleshoot something should not destroy a catalogue. Version numbers, scheduled jobs and rate-limit records are always cleaned up either way; this decides the rest — products, sources, locations, events, and the RSVPs, pre-orders and commissions that go with them."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:224
+msgid "There is no undo."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:225
+msgid "Deactivating the plugin never deletes anything; only deleting it does, and only with this ticked."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:233
+msgid "What you call things"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:235
+msgid "When a site practises more than one trade the fields are shared, but the words need not be. Pick the trade you work in and the admin uses its vocabulary for you — everyone else keeps theirs."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:242
+msgid "My vocabulary"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:246
+msgid "— Follow the site —"
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:256
+msgid "Only matters once the site practises more than one trade."
+msgstr ""
+
+#: modules/producer-profiles/includes/admin-settings.php:264
+#: modules/stand-status/includes/admin-bar.php:194
+msgid "Save"
+msgstr ""
+
+#: modules/producer-profiles/includes/profiles.php:43
+msgid "Materials"
+msgstr ""
+
+#: modules/producer-profiles/includes/profiles.php:44
+msgid "Finish"
+msgstr ""
+
+#: modules/producer-profiles/includes/profiles.php:44
+msgid "Finishes"
+msgstr ""
+
+#: modules/producer-profiles/includes/profiles.php:45
+msgid "Component"
+msgstr ""
+
+#: modules/producer-profiles/includes/profiles.php:45
+msgid "Components"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:15
+msgid "Author"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:16
+msgid "Self-published and small-press books, sold at readings and by post."
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:19
+#: modules/producer-profiles/profiles/comics.php:33
+msgid "Binding"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:19
+#: modules/producer-profiles/profiles/comics.php:33
+msgid "Bindings"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:20
+#: modules/producer-profiles/profiles/comics.php:32
+#: modules/producer-profiles/profiles/musician.php:33
+msgid "Edition"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:20
+#: modules/producer-profiles/profiles/comics.php:32
+#: modules/producer-profiles/profiles/musician.php:33
+msgid "Editions"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:21
+msgid "Extra"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:21
+msgid "Extras"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:24
+msgid "Title"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:24
+msgid "Titles"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:28
+#: modules/producer-profiles/profiles/author.php:29
+#: modules/producer-profiles/profiles/comics.php:40
+#: modules/producer-profiles/profiles/comics.php:41
+msgid "Requests"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:30
+msgid "Request a signed copy or an appearance"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:33
+#: modules/producer-profiles/profiles/comics.php:45
+msgid "Book Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/author.php:33
+#: modules/producer-profiles/profiles/comics.php:45
+msgid "Shown on the book page. Free-form."
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:16
+#: modules/producer-profiles/profiles/bakery.php:25
+msgid "Bakery"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:17
+msgid "Bread and pastry, graded by flour and method."
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:20
+msgid "Flour"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:20
+msgid "Flours"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:21
+#: assets/js/editor-location.js:710
+msgid "Method"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:21
+msgid "Methods"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:22
+msgid "Add-in"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:22
+msgid "Add-ins"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:28
+#: modules/producer-profiles/profiles/farm.php:21
+msgid "Special Order"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:29
+#: modules/producer-profiles/profiles/bakery.php:30
+#: modules/producer-profiles/profiles/farm.php:22
+#: modules/producer-profiles/profiles/farm.php:23
+msgid "Special Orders"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:31
+msgid "Order something special"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:34
+msgid "Mill / Farm"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:34
+msgid "Who grew or milled it. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:35
+msgid "Milling Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:35
+msgid "Grind, extraction rate, how fresh it was milled."
+msgstr ""
+
+#: modules/producer-profiles/profiles/bakery.php:36
+msgid "Baking Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:16
+msgid "Beekeeping"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:17
+msgid "Honey by floral source, hive products, nucs and queens."
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:20
+msgid "Floral Source"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:20
+msgid "Floral Sources"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:21
+msgid "Style"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:21
+msgid "Styles"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:22
+msgid "Container"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:22
+msgid "Containers"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:25
+msgid "Enquiry"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:26
+#: modules/producer-profiles/profiles/beekeeping.php:27
+msgid "Enquiries"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:28
+msgid "Ask about bulk orders"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:31
+msgid "Apiary"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:31
+msgid "Which yard this came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:32
+msgid "Yard Location"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:33
+msgid "Forage Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:33
+msgid "What the bees were working — the floral sources behind this crop."
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:34
+msgid "Extraction Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:34
+msgid "How it was taken off and handled — crush, spin, strain, settle."
+msgstr ""
+
+#: modules/producer-profiles/profiles/beekeeping.php:35
+msgid "Hive Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/comics.php:27
+msgid "Comics & Graphic Novels"
+msgstr ""
+
+#: modules/producer-profiles/profiles/comics.php:28
+msgid "Graphic novels, single issues, minis and zines, plus prints and original pages."
+msgstr ""
+
+#: modules/producer-profiles/profiles/comics.php:31
+msgid "Printing"
+msgstr ""
+
+#: modules/producer-profiles/profiles/comics.php:36
+msgid "Comics"
+msgstr ""
+
+#: modules/producer-profiles/profiles/comics.php:42
+msgid "Request a commission or a sketch"
+msgstr ""
+
+#: modules/producer-profiles/profiles/farm.php:15
+msgid "Farm"
+msgstr ""
+
+#: modules/producer-profiles/profiles/farm.php:16
+msgid "Produce, bread and pantry goods for a farm stand or market garden."
+msgstr ""
+
+#: modules/producer-profiles/profiles/farm.php:24
+msgid "Request a special order"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:13
+msgid "Fiber Arts"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:14
+msgid "Knitted, woven and stitched textiles."
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:17
+msgid "Fiber"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:17
+msgid "Fibers"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:18
+msgid "Technique"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:18
+msgid "Techniques"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:21
+msgid "Flock / Mill"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:21
+msgid "Where the fibre came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:22
+#: modules/producer-profiles/profiles/leather.php:22
+#: modules/producer-profiles/profiles/metalwork.php:22
+#: modules/producer-profiles/profiles/musician.php:45
+#: modules/producer-profiles/profiles/pottery.php:23
+#: modules/producer-profiles/profiles/screen-printing.php:26
+#: modules/producer-profiles/profiles/woodworking.php:22
+msgid "Background"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:22
+msgid "The story behind this flock or fibre."
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:23
+msgid "Processing Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:23
+msgid "How it was scoured, carded, spun and plied."
+msgstr ""
+
+#: modules/producer-profiles/profiles/fiber-arts.php:24
+#: modules/producer-profiles/profiles/jewelry.php:24
+#: modules/producer-profiles/profiles/leather.php:24
+#: modules/producer-profiles/profiles/metalwork.php:24
+#: modules/producer-profiles/profiles/painting.php:28
+#: modules/producer-profiles/profiles/pottery.php:25
+#: modules/producer-profiles/profiles/woodworking.php:24
+msgid "Making Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/general.php:13
+msgid "General"
+msgstr ""
+
+#: modules/producer-profiles/profiles/general.php:14
+msgid "A blank slate: the full field set with no vocabulary seeded."
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:13
+msgid "Jewelry"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:14
+msgid "Fabricated and cast jewellery in precious and base metals."
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:17
+msgid "Metal"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:17
+msgid "Metals"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:18
+msgid "Stone / Setting"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:18
+msgid "Stones / Settings"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:21
+#: modules/producer-profiles/profiles/metalwork.php:21
+msgid "Supplier"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:21
+msgid "Where the metal or stone came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:22
+#: assets/js/editor-source.js:169
+msgid "Provenance"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:22
+msgid "The story behind this stone or material."
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:23
+#: modules/producer-profiles/profiles/pottery.php:24
+#: modules/producer-profiles/profiles/taxidermy.php:34
+msgid "Preparation Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/jewelry.php:23
+msgid "How it was cut, refined or prepared."
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:13
+msgid "Leather"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:14
+msgid "Hand-cut and hand-stitched leather goods."
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:17
+msgid "Leather Type"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:17
+msgid "Leather Types"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:18
+#: modules/producer-profiles/profiles/woodworking.php:18
+msgid "Hardware"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:21
+msgid "Tannery"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:21
+msgid "Who supplied the hide. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:22
+msgid "The story behind this hide or supplier."
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:23
+msgid "Tanning Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/leather.php:23
+msgid "How it was tanned and finished — veg, chrome, drum, hand-rubbed."
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:13
+msgid "Metalwork"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:14
+msgid "Forged and fabricated steel, iron and non-ferrous metalwork."
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:17
+msgid "Steel / Metal"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:17
+msgid "Steels / Metals"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:18
+msgid "Handle / Accessory"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:18
+msgid "Handles / Accessories"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:21
+msgid "Where the stock came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:22
+msgid "The story behind this material."
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:23
+msgid "Working Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/metalwork.php:23
+msgid "How it was worked — forged, cast, annealed, finished."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:21
+msgid "Musician"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:22
+msgid "Records, tapes and merch for a band or solo artist, with shows as events."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:28
+msgid "Merch"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:29
+msgid "Shows"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:32
+msgid "Format"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:32
+msgid "Formats"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:34
+msgid "Packaging"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:37
+msgid "Booking"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:38
+#: modules/producer-profiles/profiles/musician.php:39
+msgid "Bookings"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:40
+msgid "Enquire about a booking"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:43
+msgid "Label"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:43
+msgid "Who released it. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:44
+msgid "Studio"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:44
+msgid "Where it was recorded."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:45
+msgid "The story behind the session or the songs."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:46
+msgid "Mastering Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:46
+msgid "What was done in post — mixing, mastering, the cut."
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:47
+msgid "Release Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/musician.php:47
+msgid "Shown on the release page. Free-form."
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:16
+msgid "Painting & Drawing"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:17
+msgid "Original work on canvas and paper, plus prints and commissions."
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:20
+msgid "Medium"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:20
+msgid "Media"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:21
+msgid "Surface"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:21
+msgid "Surfaces"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:22
+msgid "Framing"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:25
+msgid "Work"
+msgstr ""
+
+#: modules/producer-profiles/profiles/painting.php:25
+msgid "Works"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:13
+msgid "Pottery"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:14
+msgid "Wheel-thrown and hand-built ceramics."
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:17
+msgid "Clay Body"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:17
+msgid "Clay Bodies"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:18
+msgid "Glaze"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:18
+msgid "Glazes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:19
+msgid "Firing Method"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:19
+msgid "Firing Methods"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:22
+msgid "Clay Supplier"
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:22
+msgid "Where the clay or glaze came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:23
+msgid "The story behind this body or glaze."
+msgstr ""
+
+#: modules/producer-profiles/profiles/pottery.php:24
+msgid "How it was wedged, aged, sieved or blended."
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:16
+msgid "Screen Printing"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:17
+msgid "Printed shirts, totes and posters, priced by substrate, ink and colour count."
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:20
+msgid "Substrate"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:20
+msgid "Substrates"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:21
+msgid "Ink"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:21
+msgid "Inks"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:22
+msgid "Colours"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:25
+msgid "Blank Supplier"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:25
+msgid "Who supplied the blanks. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:26
+msgid "The story behind this blank or supplier."
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:27
+#: modules/producer-profiles/profiles/screen-printing.php:28
+msgid "Printing Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/screen-printing.php:27
+msgid "Inks, mesh, cure — how it was printed."
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:21
+msgid "Taxidermy"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:22
+msgid "Mounts taken in as commissions, catalogued by species, style and base."
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:25
+msgid "Species"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:26
+msgid "Mount Style"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:26
+msgid "Mount Styles"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:27
+msgid "Base"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:27
+msgid "Bases"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:30
+msgid "Mount"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:30
+msgid "Mounts"
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:33
+msgid "Where the specimen came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:34
+msgid "How it was prepared and mounted."
+msgstr ""
+
+#: modules/producer-profiles/profiles/taxidermy.php:35
+msgid "Mount Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:13
+msgid "Woodworking"
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:14
+msgid "Hand-turned and hand-crafted wood items."
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:17
+msgid "Wood Species"
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:21
+msgid "Woodlot / Supplier"
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:21
+msgid "Where the timber came from. Falls back to the post title on the front end if left empty."
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:22
+msgid "The story behind this tree or stand of timber."
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:23
+msgid "Milling & Drying Notes"
+msgstr ""
+
+#: modules/producer-profiles/profiles/woodworking.php:23
+msgid "How it was cut and seasoned — quarter-sawn, air-dried, kiln."
+msgstr ""
+
+#: modules/stand-status/includes/abilities.php:27
+msgid "Toggle Stand Status"
+msgstr ""
+
+#: modules/stand-status/includes/abilities.php:28
+msgid "Open or close the farm stand and optionally set a status message. Records a timestamp of the change."
+msgstr ""
+
+#: modules/stand-status/includes/abilities.php:95
+msgid "Get Stand Info"
+msgstr ""
+
+#: modules/stand-status/includes/abilities.php:96
+msgid "Retrieve the current status, schedule, season dates, address, hours, and Venmo handle for a stand location."
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:120
+msgid "Stand Open"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:120
+msgid "Stand Closed"
+msgstr ""
+
+#. translators: %1$d: number of open stands, %2$d: total number of stands.
+#: modules/stand-status/includes/admin-bar.php:128
+#, php-format
+msgid "Stands (%1$d/%2$d open)"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:174
+msgid "Close the Stand"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:175
+msgid "Open the Stand"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:191
+msgid "Status message"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:192
+msgid "Status message…"
+msgstr ""
+
+#: modules/stand-status/includes/admin-bar.php:212
+msgid "Edit Stand Settings"
+msgstr ""
+
+#. translators: %s: opening time (e.g. "9:00 AM").
+#: modules/stand-status/includes/rest-extensions.php:314
+#, php-format
+msgid "Today at %s"
+msgstr ""
+
+#. translators: %s: opening time (e.g. "9:00 AM").
+#: modules/stand-status/includes/rest-extensions.php:318
+#, php-format
+msgid "Tomorrow at %s"
+msgstr ""
+
+#: modules/woocommerce/bootstrap.php:54
+msgid "The WooCommerce module is enabled but WooCommerce is not active, so requests settle directly (cash, Venmo, or an invoice you send). Everything else works as normal."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:71
+#: modules/woocommerce/includes/checkout.php:305
+#: modules/woocommerce/includes/checkout.php:523
+msgid "WooCommerce is not available."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:81
+msgid "This commission has no quoted price to charge."
+msgstr ""
+
+#. translators: 1: this trade's word for a commission, 2: customer name.
+#: modules/woocommerce/includes/checkout.php:97
+#, php-format
+msgid "%1$s for %2$s"
+msgstr ""
+
+#. translators: 1: this trade's word for a commission, 2: request id.
+#: modules/woocommerce/includes/checkout.php:117
+#, php-format
+msgid "%1$s #%2$d — agreed at the quoted price."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:125
+msgid "Could not create the product."
+msgstr ""
+
+#. translators: %s: product name.
+#: modules/woocommerce/includes/checkout.php:222
+#, php-format
+msgid "“%s” has no numeric price, so this order cannot be paid for online. Give it a price like \"4.00\" and try again."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:258
+msgid "That order has no items to charge for."
+msgstr ""
+
+#. translators: 1: product name, 2: full line amount.
+#: modules/woocommerce/includes/checkout.php:285
+#, php-format
+msgid "Deposit — %1$s (of %2$s)"
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:352
+msgid "Nothing on this order is payable up front, so no payment is needed."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:367
+msgid "Awaiting payment for a ProducerKit request."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:383
+msgid "Could not link this order to its ProducerKit request."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:388
+msgid "Could not link the order to this request, so it was cancelled rather than left unpayable. Please try again."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:453
+msgid "That pre-order does not exist."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:504
+#: modules/woocommerce/includes/checkout.php:584
+msgid "That request does not exist."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:508
+#: modules/woocommerce/includes/checkout.php:588
+msgid "The balance on this has already been paid."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:514
+msgid "A balance payment link already exists for this. Cancel that order first if you need a new one."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:519
+msgid "There is no balance outstanding on this."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:532
+msgid "Balance due at pickup"
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:549
+msgid "Awaiting the balance on a ProducerKit request."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:557
+msgid "Could not link this balance order to its request."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:562
+msgid "Could not link the balance order to this request, so it was cancelled rather than left unpayable. Please try again."
+msgstr ""
+
+#: modules/woocommerce/includes/checkout.php:592
+msgid "Could not record that payment. Please reload and try again."
+msgstr ""
+
+#: producerkit.php:49
+msgid "Core Data Layer"
+msgstr ""
+
+#: producerkit.php:50
+msgid "Producer Profiles"
+msgstr ""
+
+#: producerkit.php:51
+msgid "Stand Status"
+msgstr ""
+
+#: producerkit.php:52
+#: blocks/availability-board/index.js:196
+msgid "Availability Board"
+msgstr ""
+
+#: producerkit.php:53
+msgid "Event Manager"
+msgstr ""
+
+#: producerkit.php:54
+msgid "Notifications"
+msgstr ""
+
+#: producerkit.php:57
+msgid "WooCommerce Settlement"
+msgstr ""
+
+#: assets/js/editor-event.js:98
+msgid "— Select Location —"
+msgstr ""
+
+#: assets/js/editor-event.js:104
+#: assets/js/editor-product.js:294
+#: assets/js/editor-product.js:324
+#: blocks/availability-badge/index.js:58
+#: blocks/availability-badge/index.js:70
+#: blocks/availability-board/index.js:157
+#: blocks/event-card/index.js:160
+#: blocks/location-info/index.js:112
+#: blocks/preorder-form/index.js:60
+#: blocks/product-card/index.js:191
+#: blocks/stand-hours-schedule/index.js:159
+#: blocks/stand-status-banner/index.js:165
+#: blocks/stand-toggle/index.js:97
+msgid "(untitled)"
+msgstr ""
+
+#: assets/js/editor-event.js:117
+msgid "Event Details"
+msgstr ""
+
+#: assets/js/editor-event.js:130
+msgid "Set a start date before publishing."
+msgstr ""
+
+#: assets/js/editor-event.js:141
+#: assets/js/editor-location.js:306
+msgid "Start"
+msgstr ""
+
+#: assets/js/editor-event.js:182
+#: assets/js/editor-location.js:315
+msgid "End"
+msgstr ""
+
+#: assets/js/editor-event.js:230
+msgid "Where is this event happening?"
+msgstr ""
+
+#: assets/js/editor-event.js:235
+msgid "Donation / Payment Link"
+msgstr ""
+
+#: assets/js/editor-event.js:240
+msgid "https://venmo.com/examplefarm"
+msgstr ""
+
+#: assets/js/editor-event.js:244
+msgid "Venmo link or other payment URL."
+msgstr ""
+
+#: assets/js/editor-event.js:279
+msgid "RSVP Settings"
+msgstr ""
+
+#: assets/js/editor-event.js:285
+msgid "Enable RSVPs"
+msgstr ""
+
+#: assets/js/editor-event.js:290
+msgid "Allow visitors to RSVP on the front end."
+msgstr ""
+
+#: assets/js/editor-event.js:301
+msgid "RSVP Cap"
+msgstr ""
+
+#: assets/js/editor-event.js:308
+msgid "0 = unlimited. Total headcount including party sizes."
+msgstr ""
+
+#: assets/js/editor-event.js:315
+msgid "Button Label"
+msgstr ""
+
+#: assets/js/editor-event.js:321
+msgid "Custom text for the RSVP button."
+msgstr ""
+
+#: assets/js/editor-event.js:328
+msgid "Manually Close RSVPs"
+msgstr ""
+
+#: assets/js/editor-event.js:333
+msgid "Close RSVPs regardless of the cap."
+msgstr ""
+
+#: assets/js/editor-event.js:370
+msgid "Event Info"
+msgstr ""
+
+#: assets/js/editor-event.js:376
+msgid "Cost / Donation Note"
+msgstr ""
+
+#: assets/js/editor-event.js:381
+msgid "Donation-based — suggested $10/person"
+msgstr ""
+
+#: assets/js/editor-event.js:385
+msgid "Shown on the event card."
+msgstr ""
+
+#: assets/js/editor-event.js:389
+msgid "What to Bring"
+msgstr ""
+
+#: assets/js/editor-event.js:394
+msgid "A side dish or dessert to share"
+msgstr ""
+
+#: assets/js/editor-event.js:398
+msgid "Shown on the event card with a 🧺 icon."
+msgstr ""
+
+#: assets/js/editor-event.js:405
+msgid "Event Cancelled"
+msgstr ""
+
+#: assets/js/editor-event.js:410
+msgid "Mark this event as cancelled. It will show a cancelled badge."
+msgstr ""
+
+#: assets/js/editor-event.js:423
+msgid "This event is marked as cancelled. It will display with a cancelled badge on the front end."
+msgstr ""
+
+#: assets/js/editor-location.js:50
+msgid "Location Details"
+msgstr ""
+
+#: assets/js/editor-location.js:56
+msgid "Location Type"
+msgstr ""
+
+#: assets/js/editor-location.js:60
+msgid "Farm Stand"
+msgstr ""
+
+#: assets/js/editor-location.js:64
+msgid "Farmers Market"
+msgstr ""
+
+#: assets/js/editor-location.js:67
+msgid "On-Farm"
+msgstr ""
+
+#: assets/js/editor-location.js:69
+msgid "Retailer"
+msgstr ""
+
+#: assets/js/editor-location.js:77
+msgid "What kind of location is this?"
+msgstr ""
+
+#: assets/js/editor-location.js:86
+msgid "123 Farm Road, Yourtown, ST 00000"
+msgstr ""
+
+#: assets/js/editor-location.js:90
+msgid "Full street address shown to visitors."
+msgstr ""
+
+#: assets/js/editor-location.js:102
+msgid "Saturdays 1:00 – 4:00 PM, May – December"
+msgstr ""
+
+#: assets/js/editor-location.js:106
+msgid "Displayed on the front end. Free-form text."
+msgstr ""
+
+#: assets/js/editor-location.js:113
+msgid "Venmo Handle"
+msgstr ""
+
+#: assets/js/editor-location.js:118
+#: assets/js/editor-location.js:743
+msgid "examplefarm"
+msgstr ""
+
+#: assets/js/editor-location.js:119
+msgid "Without the @. Used to generate the Venmo payment link."
+msgstr ""
+
+#: assets/js/editor-location.js:129
+msgid "Latitude"
+msgstr ""
+
+#: assets/js/editor-location.js:139
+msgid "Longitude"
+msgstr ""
+
+#: assets/js/editor-location.js:151
+msgid "Currently Open"
+msgstr ""
+
+#: assets/js/editor-location.js:156
+msgid "Toggle this location open or closed right now."
+msgstr ""
+
+#: assets/js/editor-location.js:164
+msgid "Status Message"
+msgstr ""
+
+#: assets/js/editor-location.js:169
+msgid "Back at 2 PM"
+msgstr ""
+
+#: assets/js/editor-location.js:170
+msgid "Optional message shown alongside open/closed status."
+msgstr ""
+
+#: assets/js/editor-location.js:276
+msgid "Schedule & Season"
+msgstr ""
+
+#: assets/js/editor-location.js:285
+msgid "Season Dates"
+msgstr ""
+
+#: assets/js/editor-location.js:293
+msgid "Leave blank if open year-round."
+msgstr ""
+
+#: assets/js/editor-location.js:327
+msgid "Auto-toggle from schedule"
+msgstr ""
+
+#: assets/js/editor-location.js:332
+msgid "Automatically open/close based on the weekly schedule below."
+msgstr ""
+
+#: assets/js/editor-location.js:348
+msgid "Weekly Schedule"
+msgstr ""
+
+#: assets/js/editor-location.js:361
+msgid "No schedule set. Add a day below."
+msgstr ""
+
+#: assets/js/editor-location.js:402
+msgid "Close"
+msgstr ""
+
+#: assets/js/editor-location.js:414
+#: assets/js/editor-location.js:486
+#: assets/js/editor-location.js:725
+#: assets/js/editor-product.js:300
+msgid "Remove"
+msgstr ""
+
+#: assets/js/editor-location.js:433
+msgid "Add Day"
+msgstr ""
+
+#: assets/js/editor-location.js:447
+msgid "Closed Dates"
+msgstr ""
+
+#: assets/js/editor-location.js:455
+msgid "Specific dates with no pickups — holidays, closures. Pre-orders for these dates are refused."
+msgstr ""
+
+#: assets/js/editor-location.js:503
+msgid "Add Closed Date"
+msgstr ""
+
+#: assets/js/editor-location.js:576
+msgid "Market Vouchers (WIC/Sr FMNP)"
+msgstr ""
+
+#: assets/js/editor-location.js:656
+msgid "Payment Options"
+msgstr ""
+
+#: assets/js/editor-location.js:680
+msgid "No payment options set. Add one below."
+msgstr ""
+
+#: assets/js/editor-location.js:734
+msgid "Handle"
+msgstr ""
+
+#: assets/js/editor-location.js:744
+msgid "Username without the @ or $."
+msgstr ""
+
+#: assets/js/editor-location.js:752
+msgid "URL"
+msgstr ""
+
+#: assets/js/editor-location.js:758
+msgid "https://squareup.com/…"
+msgstr ""
+
+#: assets/js/editor-location.js:765
+msgid "Display label (optional)"
+msgstr ""
+
+#: assets/js/editor-location.js:784
+msgid "Add Payment Option"
+msgstr ""
+
+#: assets/js/editor-product.js:56
+msgid "— Select —"
+msgstr ""
+
+#: assets/js/editor-product.js:57
+msgid "bunch"
+msgstr ""
+
+#: assets/js/editor-product.js:58
+msgid "bag"
+msgstr ""
+
+#: assets/js/editor-product.js:59
+msgid "loaf"
+msgstr ""
+
+#: assets/js/editor-product.js:60
+msgid "half dozen"
+msgstr ""
+
+#: assets/js/editor-product.js:61
+msgid "dozen"
+msgstr ""
+
+#: assets/js/editor-product.js:62
+msgid "pint"
+msgstr ""
+
+#: assets/js/editor-product.js:63
+msgid "pint jar"
+msgstr ""
+
+#: assets/js/editor-product.js:64
+msgid "quart"
+msgstr ""
+
+#: assets/js/editor-product.js:65
+msgid "half pound"
+msgstr ""
+
+#: assets/js/editor-product.js:66
+msgid "pound"
+msgstr ""
+
+#: assets/js/editor-product.js:67
+msgid "each"
+msgstr ""
+
+#: assets/js/editor-product.js:68
+msgid "plant"
+msgstr ""
+
+#: assets/js/editor-product.js:69
+msgid "flat"
+msgstr ""
+
+#: assets/js/editor-product.js:70
+msgid "other (type below)"
+msgstr ""
+
+#: assets/js/editor-product.js:111
+msgid "Product Details"
+msgstr ""
+
+#: assets/js/editor-product.js:123
+msgid "Display price. Can be \"$5\", \"Donation\", \"$3–5\", etc."
+msgstr ""
+
+#: assets/js/editor-product.js:130
+msgid "Unit of Sale"
+msgstr ""
+
+#: assets/js/editor-product.js:141
+msgid "How this product is sold."
+msgstr ""
+
+#: assets/js/editor-product.js:146
+msgid "Custom Unit"
+msgstr ""
+
+#: assets/js/editor-product.js:151
+msgid "e.g. 4 oz bag"
+msgstr ""
+
+#: assets/js/editor-product.js:165
+msgid "Heirloom variety, cold-hardy. No-till grown."
+msgstr ""
+
+#: assets/js/editor-product.js:169
+msgid "Shown on the product card and single product page."
+msgstr ""
+
+#: assets/js/editor-product.js:263
+msgid "Link this product to grain origins or partner farms."
+msgstr ""
+
+#: assets/js/editor-product.js:316
+msgid "— Add a source —"
+msgstr ""
+
+#: assets/js/editor-product.js:345
+msgid "No sources created yet. Add them under Sources in the sidebar."
+msgstr ""
+
+#: assets/js/editor-product.js:412
+msgid "Trade Details"
+msgstr ""
+
+#: assets/js/editor-product.js:528
+msgid "When a customer pre-orders this"
+msgstr ""
+
+#: assets/js/editor-product.js:532
+msgid "Reserve only — pay at pickup"
+msgstr ""
+
+#: assets/js/editor-product.js:539
+msgid "Take a deposit now"
+msgstr ""
+
+#: assets/js/editor-product.js:543
+msgid "Take the full amount now"
+msgstr ""
+
+#: assets/js/editor-product.js:552
+msgid "No money changes hands online. This is the default."
+msgstr ""
+
+#: assets/js/editor-product.js:556
+msgid "Raises a pending WooCommerce order and emails the customer a payment link."
+msgstr ""
+
+#: assets/js/editor-product.js:567
+msgid "Deposit is"
+msgstr ""
+
+#: assets/js/editor-product.js:571
+msgid "A fixed amount per item"
+msgstr ""
+
+#: assets/js/editor-product.js:578
+msgid "A percentage of the line"
+msgstr ""
+
+#: assets/js/editor-product.js:596
+msgid "Percent to take now"
+msgstr ""
+
+#: assets/js/editor-product.js:597
+msgid "Amount per item"
+msgstr ""
+
+#: assets/js/editor-product.js:610
+msgid "A deposit above 100% is charged as the full amount."
+msgstr ""
+
+#: assets/js/editor-product.js:614
+msgid "Multiplied by quantity — $50 on two items takes $100. A deposit above the item price is charged as the full amount."
+msgstr ""
+
+#: assets/js/editor-product.js:626
+msgid "Pre-Order Payment"
+msgstr ""
+
+#: assets/js/editor-source.js:105
+msgid "Source Details"
+msgstr ""
+
+#: blocks/availability-badge/index.js:63
+msgid "— Any location —"
+msgstr ""
+
+#: blocks/availability-badge/index.js:84
+msgid "Badge Settings"
+msgstr ""
+
+#: blocks/availability-badge/index.js:98
+msgid "Location (optional)"
+msgstr ""
+
+#: blocks/availability-badge/index.js:115
+msgid "Availability Badge"
+msgstr ""
+
+#: blocks/availability-badge/index.js:119
+msgid "Select a product in the sidebar."
+msgstr ""
+
+#: blocks/availability-badge/index.js:130
+msgid "Available (preview)"
+msgstr ""
+
+#: blocks/availability-board/index.js:119
+msgid "Could not load board data."
+msgstr ""
+
+#: blocks/availability-board/index.js:149
+msgid "— All locations —"
+msgstr ""
+
+#: blocks/availability-board/index.js:199
+msgid "Board data unavailable."
+msgstr ""
+
+#: blocks/availability-board/index.js:509
+msgid "Board Settings"
+msgstr ""
+
+#: blocks/availability-board/index.js:513
+#: blocks/stand-status-banner/index.js:486
+msgid "Layout"
+msgstr ""
+
+#: blocks/availability-board/index.js:517
+msgid "Grid"
+msgstr ""
+
+#: blocks/availability-board/index.js:521
+msgid "List"
+msgstr ""
+
+#: blocks/availability-board/index.js:530
+msgid "Location filter"
+msgstr ""
+
+#: blocks/availability-board/index.js:540
+#: blocks/event-list/index.js:585
+msgid "Empty state message"
+msgstr ""
+
+#: blocks/availability-board/index.js:550
+msgid "Default Visibility"
+msgstr ""
+
+#: blocks/availability-board/index.js:582
+#: blocks/event-list/index.js:595
+#: blocks/stand-status-banner/index.js:482
+msgid "Display Options"
+msgstr ""
+
+#: blocks/availability-board/index.js:586
+msgid "Show filter controls"
+msgstr ""
+
+#: blocks/availability-board/index.js:593
+msgid "Show product images"
+msgstr ""
+
+#: blocks/availability-board/index.js:600
+msgid "Show prices"
+msgstr ""
+
+#: blocks/availability-board/index.js:607
+msgid "Show quantity notes"
+msgstr ""
+
+#: blocks/commission-form/index.js:42
+msgid "Needed by"
+msgstr ""
+
+#: blocks/commission-form/index.js:53
+msgid "Form fields"
+msgstr ""
+
+#: blocks/commission-form/index.js:55
+msgid "Ask for a budget"
+msgstr ""
+
+#: blocks/commission-form/index.js:56
+msgid "A rough range helps you quote without a back-and-forth."
+msgstr ""
+
+#: blocks/commission-form/index.js:66
+msgid "Ask when they need it"
+msgstr ""
+
+#: blocks/commission-form/index.js:95
+msgid "Tell visitors what you take on, and roughly how long it takes."
+msgstr ""
+
+#: blocks/commission-form/index.js:107
+msgid "Commission Request Form"
+msgstr ""
+
+#: blocks/commission-form/index.js:111
+msgid "The form appears on the front end. Type and material options come from your producer profile."
+msgstr ""
+
+#: blocks/event-card/index.js:129
+msgid "Event not found. It may be unpublished or not yet scheduled."
+msgstr ""
+
+#: blocks/event-card/index.js:181
+#: blocks/event-card/index.js:228
+msgid "Event Card"
+msgstr ""
+
+#: blocks/event-card/index.js:184
+msgid "Select an event"
+msgstr ""
+
+#: blocks/event-card/index.js:231
+msgid "Event data unavailable."
+msgstr ""
+
+#: blocks/event-card/index.js:497
+msgid "Event Settings"
+msgstr ""
+
+#: blocks/event-card/index.js:501
+msgid "Select Event"
+msgstr ""
+
+#: blocks/event-card/index.js:511
+msgid "Show image"
+msgstr ""
+
+#: blocks/event-card/index.js:518
+msgid "Show RSVP form"
+msgstr ""
+
+#: blocks/event-card/index.js:525
+msgid "Show location"
+msgstr ""
+
+#: blocks/event-list/index.js:136
+msgid "Could not load event data."
+msgstr ""
+
+#: blocks/event-list/index.js:183
+msgid "Event List"
+msgstr ""
+
+#: blocks/event-list/index.js:555
+msgid "Event List Settings"
+msgstr ""
+
+#: blocks/event-list/index.js:559
+msgid "Events to show"
+msgstr ""
+
+#: blocks/event-list/index.js:568
+msgid "Show past events"
+msgstr ""
+
+#: blocks/event-list/index.js:575
+msgid "Show event type filters"
+msgstr ""
+
+#: blocks/event-list/index.js:599
+msgid "Show event images"
+msgstr ""
+
+#: blocks/event-list/index.js:606
+msgid "Show RSVP forms"
+msgstr ""
+
+#: blocks/event-list/index.js:613
+msgid "Show location details"
+msgstr ""
+
+#: blocks/location-info/index.js:81
+msgid "Could not load location data."
+msgstr ""
+
+#: blocks/location-info/index.js:136
+#: blocks/location-info/index.js:183
+msgid "Location Info"
+msgstr ""
+
+#: blocks/location-info/index.js:139
+#: blocks/stand-hours-schedule/index.js:187
+#: blocks/stand-status-banner/index.js:217
+msgid "Select a location"
+msgstr ""
+
+#: blocks/location-info/index.js:186
+msgid "Location data unavailable."
+msgstr ""
+
+#: blocks/location-info/index.js:300
+msgid "QR renders on the front end"
+msgstr ""
+
+#: blocks/location-info/index.js:365
+msgid "Location Settings"
+msgstr ""
+
+#: blocks/location-info/index.js:369
+msgid "Select Location"
+msgstr ""
+
+#: blocks/location-info/index.js:379
+msgid "Show open/closed status"
+msgstr ""
+
+#: blocks/location-info/index.js:389
+msgid "Show payment options"
+msgstr ""
+
+#: blocks/location-info/index.js:394
+msgid "Links and accepted-payment badges from the location’s Payment Options panel."
+msgstr ""
+
+#: blocks/location-info/index.js:400
+msgid "Show payment QR code"
+msgstr ""
+
+#: blocks/location-info/index.js:405
+msgid "A scannable code for the first payment link — handy for signage at the stand."
+msgstr ""
+
+#: blocks/preorder-form/index.js:52
+msgid "(no specific location)"
+msgstr ""
+
+#: blocks/preorder-form/index.js:78
+msgid "Pre-Order Settings"
+msgstr ""
+
+#: blocks/preorder-form/index.js:82
+msgid "Pickup location"
+msgstr ""
+
+#: blocks/preorder-form/index.js:90
+msgid "Shown in confirmations; its payment options appear after submitting."
+msgstr ""
+
+#: blocks/preorder-form/index.js:96
+msgid "Hide sold-out products"
+msgstr ""
+
+#: blocks/preorder-form/index.js:112
+msgid "Pre-Order Form"
+msgstr ""
+
+#. translators: 1: pickup location name, 2: a sentence about whether sold-out products are shown.
+#: blocks/preorder-form/index.js:119
+#, js-format
+msgid "Visitors pick products and a pickup date, then pay at the stand. Pickup location: %1$s. %2$s The full form renders on the front end and needs the Pre-Orders module enabled."
+msgstr ""
+
+#: blocks/preorder-form/index.js:125
+msgid "(none)"
+msgstr ""
+
+#: blocks/preorder-form/index.js:127
+msgid "Sold-out products are hidden."
+msgstr ""
+
+#: blocks/preorder-form/index.js:131
+msgid "All products are shown."
+msgstr ""
+
+#: blocks/product-card/index.js:158
+msgid "Could not load product data."
+msgstr ""
+
+#: blocks/product-card/index.js:259
+#: blocks/product-card/index.js:306
+msgid "Product Card"
+msgstr ""
+
+#: blocks/product-card/index.js:262
+msgid "Select a product"
+msgstr ""
+
+#: blocks/product-card/index.js:309
+msgid "Product data unavailable."
+msgstr ""
+
+#: blocks/product-card/index.js:450
+msgid "No availability set"
+msgstr ""
+
+#: blocks/product-card/index.js:515
+msgid "Product Settings"
+msgstr ""
+
+#: blocks/product-card/index.js:519
+msgid "Select Product"
+msgstr ""
+
+#: blocks/product-card/index.js:529
+msgid "Show availability status"
+msgstr ""
+
+#: blocks/product-card/index.js:539
+msgid "Show source / grain info"
+msgstr ""
+
+#: blocks/stand-hours-schedule/index.js:128
+msgid "Could not load schedule data."
+msgstr ""
+
+#: blocks/stand-hours-schedule/index.js:181
+#: blocks/stand-hours-schedule/index.js:231
+msgid "Stand Hours Schedule"
+msgstr ""
+
+#: blocks/stand-hours-schedule/index.js:234
+msgid "Schedule data unavailable."
+msgstr ""
+
+#: blocks/stand-hours-schedule/index.js:353
+msgid "Schedule Settings"
+msgstr ""
+
+#: blocks/stand-hours-schedule/index.js:367
+msgid "Highlight today"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:134
+msgid "Could not load stand data."
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:211
+#: blocks/stand-status-banner/index.js:261
+msgid "Stand Status Banner"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:264
+msgid "Stand data unavailable. Check that this location is still published."
+msgstr ""
+
+#. translators: %s: a Venmo handle without the @.
+#: blocks/stand-status-banner/index.js:443
+#, js-format
+msgid "Pay with Venmo (@%s)"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:465
+#: blocks/stand-toggle/index.js:183
+msgid "Stand Selection"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:490
+msgid "Full Banner"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:494
+msgid "Compact Strip"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:498
+msgid "Card"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:507
+msgid "Show address"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:514
+msgid "Show hours"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:521
+msgid "Show Venmo link"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:528
+msgid "Show season dates"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:538
+msgid "Live Updates"
+msgstr ""
+
+#: blocks/stand-status-banner/index.js:542
+msgid "Auto-refresh status (polls every 60s)"
+msgstr ""
+
+#. translators: %s: OPEN or CLOSED.
+#: blocks/stand-toggle/index.js:151
+#, js-format
+msgid "Stand is now %s."
+msgstr ""
+
+#: blocks/stand-toggle/index.js:153
+msgid "OPEN"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:154
+msgid "CLOSED"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:164
+msgid "Error updating stand status."
+msgstr ""
+
+#: blocks/stand-toggle/index.js:204
+msgid "Stand Quick Toggle"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:208
+msgid "Select a location in the sidebar."
+msgstr ""
+
+#: blocks/stand-toggle/index.js:235
+msgid "Stand is OPEN"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:239
+msgid "Stand is CLOSED"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:255
+msgid "Status message (optional)"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:263
+msgid "e.g. \"Back at 2 PM\" or \"Sold out for today\""
+msgstr ""
+
+#: blocks/stand-toggle/index.js:281
+msgid "Update Stand Status"
+msgstr ""
+
+#: blocks/stand-toggle/index.js:292
+msgid "Error"
+msgstr ""
+
+#: blocks/availability-badge/block.json
+msgctxt "block title"
+msgid "Availability Badge"
+msgstr ""
+
+#: blocks/availability-badge/block.json
+msgctxt "block description"
+msgid "Show a compact availability status badge for a product. Reads from the shared availability table."
+msgstr ""
+
+#: blocks/availability-board/block.json
+msgctxt "block title"
+msgid "Availability Board"
+msgstr ""
+
+#: blocks/availability-board/block.json
+msgctxt "block description"
+msgid "A live board showing what's currently available, grouped by product type with status badges and optional filtering. Uses the Interactivity API for reactive updates."
+msgstr ""
+
+#: blocks/commission-form/block.json
+msgctxt "block title"
+msgid "Request Form"
+msgstr ""
+
+#: blocks/commission-form/block.json
+msgctxt "block description"
+msgid "Let visitors ask for something you make to order. You quote a price; they accept or decline by email. Requires the Commissions module."
+msgstr ""
+
+#: blocks/event-card/block.json
+msgctxt "block title"
+msgid "Event Card"
+msgstr ""
+
+#: blocks/event-card/block.json
+msgctxt "block description"
+msgid "Display a single event with date, location, RSVP, and donation link. Useful for featuring a specific event on any page."
+msgstr ""
+
+#: blocks/event-list/block.json
+msgctxt "block title"
+msgid "Event List"
+msgstr ""
+
+#: blocks/event-list/block.json
+msgctxt "block description"
+msgid "Display upcoming (and optionally past) events with RSVP forms, location info, and event type filtering. Uses the Interactivity API for RSVP submission without page reload."
+msgstr ""
+
+#: blocks/location-info/block.json
+msgctxt "block title"
+msgid "Location Info"
+msgstr ""
+
+#: blocks/location-info/block.json
+msgctxt "block description"
+msgid "Display a location with open/closed status, hours, address, and payment options."
+msgstr ""
+
+#: blocks/preorder-form/block.json
+msgctxt "block title"
+msgid "Pre-Order Form"
+msgstr ""
+
+#: blocks/preorder-form/block.json
+msgctxt "block description"
+msgid "Let visitors pre-order products for pickup — pay on collection. Requires the Pre-Orders module."
+msgstr ""
+
+#: blocks/product-card/block.json
+msgctxt "block title"
+msgid "Product Card"
+msgstr ""
+
+#: blocks/product-card/block.json
+msgctxt "block description"
+msgid "Display a single product with its availability status and source info."
+msgstr ""
+
+#: blocks/stand-hours-schedule/block.json
+msgctxt "block title"
+msgid "Stand Hours Schedule"
+msgstr ""
+
+#: blocks/stand-hours-schedule/block.json
+msgctxt "block description"
+msgid "Display the stand's weekly schedule with visual indicators for today's hours. Reads from the stand's schedule meta."
+msgstr ""
+
+#: blocks/stand-status-banner/block.json
+msgctxt "block title"
+msgid "Stand Status Banner"
+msgstr ""
+
+#: blocks/stand-status-banner/block.json
+msgctxt "block description"
+msgid "A prominent banner showing the farm stand's current open/closed status, address, hours, Venmo link, and custom status message. Uses the Interactivity API for reactive updates."
+msgstr ""
+
+#: blocks/stand-toggle/block.json
+msgctxt "block title"
+msgid "Stand Quick Toggle"
+msgstr ""
+
+#: blocks/stand-toggle/block.json
+msgctxt "block description"
+msgid "A quick-toggle control panel that renders in the editor for switching stand status. Shows a live toggle + message field. Renders nothing on the front end (admin tool only)."
+msgstr ""

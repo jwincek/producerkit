@@ -13,6 +13,10 @@
  *                      Stable tag, package.json and every block.json agree.
  *                      A Stable tag that does not match the tagged release
  *                      makes WordPress.org serve the wrong code.
+ *  2b. i18n          — languages/<slug>.pot exists, was generated for this
+ *                      text domain, and its Project-Id-Version matches the
+ *                      plugin version. A stale template still loads and still
+ *                      translates, just without anything added since.
  *   3. readme        — the headers and sections WordPress.org parses are all
  *                      present, and the tag count is within its limit.
  *   4. screenshots   — `screenshot-N` files and the Nth caption line pair up.
@@ -167,6 +171,41 @@ if ( null !== $canonical ) {
 			$add( 'error', 'version', "$where declares $found but the plugin header says $canonical — run bin/bump-version.php to resync." );
 		}
 	}
+}
+
+// ── Check 2b: the translation template ───────────────────────────────────────
+// The .pot is committed so a translator can work from the repository and so a
+// diff shows which strings a change added. Its Project-Id-Version carries the
+// plugin version, which means it goes stale on every bump — silently, because
+// a stale template still loads and still translates, just missing whatever was
+// added since.
+$pot_path = $root . '/languages/' . $slug . '.pot';
+
+if ( ! is_file( $pot_path ) ) {
+	$add( 'error', 'i18n', "No languages/$slug.pot — run bin/make-pot.sh and commit the result." );
+} else {
+	$pot_head = (string) file_get_contents( $pot_path, false, null, 0, 2048 );
+
+	if ( preg_match( '/^"Project-Id-Version:\s*(.+?)\\\\n"/m', $pot_head, $m ) ) {
+		$declared = trim( $m[1] );
+
+		if ( null !== $canonical && ! str_ends_with( $declared, ' ' . $canonical ) ) {
+			$add( 'error', 'i18n', "languages/$slug.pot declares '$declared' but the plugin header says $canonical — run bin/make-pot.sh to resync." );
+		}
+	} else {
+		$add( 'warning', 'i18n', "languages/$slug.pot has no Project-Id-Version header, so its version cannot be checked." );
+	}
+
+	if ( ! preg_match( '/^"X-Domain:\s*' . preg_quote( $slug, '/' ) . '\\\\n"/m', $pot_head ) ) {
+		$add( 'error', 'i18n', "languages/$slug.pot was generated for a different text domain — regenerate it with bin/make-pot.sh." );
+	}
+}
+
+// The header that tells WordPress where the catalogues live. Without it the
+// default is /languages anyway, but a plugin that ships a template and does
+// not say so reads as an oversight.
+if ( '' !== $main_src && ! preg_match( '/^\s*\*\s*Domain Path:\s*\S/mi', $main_src ) ) {
+	$add( 'warning', 'i18n', 'No "Domain Path:" header — declare it alongside Text Domain.' );
 }
 
 // ── Check 3: readme.txt structure ────────────────────────────────────────────

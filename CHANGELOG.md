@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A committed translation template at `languages/producerkit.pot`, generated
+  by `bin/make-pot.sh`. WordPress.org builds catalogues from the hosted plugin
+  once it is listed, so this is not required — but a template in the
+  repository lets someone translate before the listing exists, and a diff on
+  it shows which strings a change added or removed, which is the cheapest way
+  to notice a control that shipped hard-coded.
+
+  Checked in three places, because the failure is silent: a stale template
+  still loads and still translates, just without whatever was added since.
+  `bin/validate-config.php` fails if it is missing, was generated for another
+  text domain, or declares a version other than the plugin's. CI regenerates
+  and compares. The build refuses to package without it.
+
+  The comparison ignores `POT-Creation-Date`, `X-Generator` and
+  `Project-Id-Version`, which churn on every run for reasons that have nothing
+  to do with the strings — a byte comparison would fail on all three and teach
+  everyone to ignore the check. It also separates its two failure modes:
+  strings appearing or vanishing is translation work, while source references
+  moving because a line shifted is a one-command fix that loses nothing.
+
+  Also adds the `Domain Path` header, which was missing.
+
 - Producer profiles now re-word fields, not just taxonomies and post types.
   A musician cataloguing a release read "Farm / Origin Name", "Location",
   "History" and "Milling / Process Notes"; they now read Label, Studio,

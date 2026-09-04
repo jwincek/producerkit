@@ -96,6 +96,24 @@ jobs:
       - name: Validate contracts
         run: php bin/validate-config.php
 
+      # wp-cli is not on the runner by default and the plugin needs it for
+      # nothing else, so it is fetched here rather than added to the whole
+      # matrix.
+      - name: Install wp-cli
+        run: |
+          curl -sSLo /tmp/wp-cli.phar \
+            https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x /tmp/wp-cli.phar
+          sudo mv /tmp/wp-cli.phar /usr/local/bin/wp
+          wp --version --allow-root
+
+      # Catches the case the validator cannot: a string added to the code and
+      # never extracted. The committed template still loads and still
+      # translates, just without whatever shipped since, so nothing is
+      # obviously broken until a translator asks where the new labels went.
+      - name: Check the translation template is current
+        run: bin/make-pot.sh --check
+
   js-lint:
     name: JS & CSS Lint
     runs-on: ubuntu-latest
