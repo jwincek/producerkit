@@ -36,7 +36,9 @@
  *   9. interactivity — actions.X / callbacks.X referenced by a block's
  *                      render.php resolve to a method in that block's view.js.
  *  12. doc-counts     — numbers the docs assert about the plugin (how many
- *                      blocks, abilities, profiles) match what is on disk.
+ *                      blocks, abilities, profiles, REST endpoints) match what
+ *                      is on disk. Every one of these had drifted at least
+ *                      once; prose does not fail a test suite.
  *
  * Usage:
  *   php bin/validate-config.php [--format=human|json]
@@ -363,6 +365,19 @@ foreach ( glob( $root . '/blocks/*/block.json' ) ?: [] as $block_json ) {
 }
 
 // ── Check 7: ability names and categories ────────────────────────────────────
+// Distinct paths rather than register_rest_route() calls. /availability is
+// registered twice — once for GET, once for POST — and counting registrations
+// would make the documented number move when a method is added to a route that
+// already existed, which reads as drift when nothing was added. A reader of
+// the API section is counting addresses, not handlers.
+$rest_routes = [];
+foreach ( glob( $root . '/modules/*/includes/*.php' ) ?: [] as $rest_file ) {
+	if ( preg_match_all( "/register_rest_route\(\s*[^,]+,\s*'([^']+)'/", (string) file_get_contents( $rest_file ), $rm ) ) {
+		$rest_routes = array_merge( $rest_routes, $rm[1] );
+	}
+}
+$rest_route_count = count( array_unique( $rest_routes ) );
+
 $ability_names = [];
 $ability_cats  = [];
 $declared_cats = [];
@@ -697,6 +712,16 @@ $documented_counts = [
 		'pattern' => '/(\S+) profiles ship/i',
 		'actual'  => count( glob( $root . '/modules/producer-profiles/profiles/*.php' ) ?: [] ),
 		'label'   => 'producer profiles',
+	],
+	[
+		'doc'     => 'README.md',
+		// Digits only, deliberately. \S+ would match whatever word happens to
+		// precede "custom endpoints" if the number were deleted, reporting a
+		// confusing mismatch instead of the missing claim — and the count is
+		// past the number-word table anyway.
+		'pattern' => '/(\d+) custom endpoints/i',
+		'actual'  => $rest_route_count,
+		'label'   => 'REST endpoints',
 	],
 ];
 

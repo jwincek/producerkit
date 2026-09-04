@@ -3,7 +3,7 @@
  * Plugin Name:       ProducerKit
  * Plugin URI:        https://github.com/jwincek/producerkit
  * Description:       Catalog, sales locations, live availability, pickup pre-orders and events for small independent producers — farms, makers and beekeepers. Blocks and Abilities API support.
- * Version:           2.3.0
+ * Version:           2.4.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * WC requires at least: 8.2
@@ -22,7 +22,7 @@ namespace ProducerKit;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION    = '2.3.0';
+const VERSION    = '2.4.0';
 const PLUGIN_DIR = __DIR__;
 const PREFIX     = 'pkit';
 
