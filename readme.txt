@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 = Products and sources =
 
 * **Products** as a custom post type with price, unit, product type, and season.
-* **Sources** — document where ingredients come from: partner farms, grain origins, milling notes. Link sources to products to tell the story behind what you sell.
+* **Sources** — record where what you sell came from: who, where, and what was done to it in between. Link sources to products to tell the story behind what you make. The fields are named for your trade, so a beekeeper fills in an Apiary with Forage Notes and a musician a Label with a Studio.
 * **CSV import/export** — bulk-manage products from a spreadsheet, with a downloadable template and optional featured-image sideloading from URLs.
 
 = Availability =
@@ -38,7 +38,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 
 = Producer profiles =
 
-* **Sixteen trades** — farm, bakery, beekeeping, musician, author, comics, painting, screen printing, taxidermy, and seven crafts. Each re-labels the product fields for the trade you actually practise: a potter's Material is a Clay Body, a beekeeper's is a Floral Source, a printer's is a Substrate.
+* **Sixteen trades** — farm, bakery, beekeeping, musician, author, comics, painting, screen printing, taxidermy, and seven crafts. Each re-labels the plugin for the trade you actually practise: a potter's Material is a Clay Body, a beekeeper's is a Floral Source, a printer's is a Substrate. Individual fields follow too — a musician's source is a Label with a Studio and Mastering Notes — and so does the word for a made-to-order request, which is a Commission to a potter and an Enquiry to a beekeeper.
 * **Optional fields switch on per trade** — Material, Finish and Component exist only for profiles that ask for them, so a farm never sees them, and they render on the product card and single product page under your own labels.
 * **More than one trade on a site** — a farm that also bakes, or two people sharing an install. Which fields exist and which vocabulary is seeded combine; the wording resolves per person, so each of you reads the same field in your own trade's words.
 
@@ -129,7 +129,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
-= Unreleased =
+= 2.4.0 =
 * Added: a translation template ships with the plugin, so it can be translated into another language without waiting for the WordPress.org listing.
 * Added: your producer profile now names the fields too, not just the categories. A beekeeper's source is an Apiary with Forage Notes; a musician's is a Label with a Studio and Mastering Notes. The help text under each field follows the label.
 * Added: sources now have an editor panel. Their four fields were shown on the front end and returned by the API but there was nowhere in the editor to enter them.

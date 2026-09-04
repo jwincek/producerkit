@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-09-05
+
+Three sales formats a beekeeper actually uses, and two features that turned
+out never to have worked.
+
+Retailer stock answers the question a combined availability board cannot:
+someone in town wanting a jar today needs to know which of four shops to walk
+to. Deposits answer the one a nucleus colony raises, and building them
+uncovered that pre-orders could not be paid for through WooCommerce at all —
+the pricing and the order-raising both existed and nothing called them
+together. Sources had four fields with nowhere to type them, complete on
+every layer except the one a person touches.
+
 ### Added
 
 - A committed translation template at `languages/producerkit.pot`, generated
@@ -481,7 +494,8 @@ before updating any site that ran 1.1.0 or earlier.
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `pkit_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/producerkit/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/jwincek/producerkit/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/jwincek/producerkit/compare/v2.3.0...v2.4.0
 [1.1.0]: https://github.com/jwincek/producerkit/releases/tag/v1.1.0
 [1.0.2]: https://github.com/jwincek/producerkit/releases/tag/v1.0.2
 [1.0.1]: https://github.com/jwincek/producerkit/releases/tag/v1.0.1
