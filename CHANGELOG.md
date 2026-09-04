@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- An editor panel for sources. The `pkit_source` post type registered four
+  fields — origin name, location, history and milling notes — rendered them
+  on the front end, returned them from REST and reported them through the
+  list-sources ability, and offered nowhere to type any of them. The
+  editor-script map covered products, locations and events; `pkit_source` was
+  never in it and `editor-source.js` did not exist.
+
+  Not strictly unwritable: the post type declares `custom-fields` support, so
+  someone who enabled that panel and knew the meta keys could set them by
+  hand. That is the absence of a feature rather than one.
+
+  A test now cross-checks the thing that let this through — every layer was
+  individually complete, so nothing was obviously broken. For each post type
+  with an editor script, every registered meta key must appear in it or be
+  listed with a reason. It found two more the same day (issue #37).
+
+### Added
+
 - Per-product deposits on pre-orders. A product can now take a fixed amount
   per item, a percentage of the line, or the full price up front, with
   everything else left for pickup — and reserve-only stays the default, so an

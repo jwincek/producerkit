@@ -315,6 +315,7 @@ add_action(
 			'pkit_location' => 'editor-location.js',
 			'pkit_product'  => 'editor-product.js',
 			'pkit_event'    => 'editor-event.js',
+			'pkit_source'   => 'editor-source.js',
 		];
 
 		if ( isset( $scripts[ $post_type ] ) ) {
