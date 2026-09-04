@@ -103,6 +103,38 @@ function render_product_details( \WP_Post $post ): string {
 			</div>
 		<?php endif; ?>
 
+		<?php
+		// Which shops currently have this — the question a customer asks
+		// standing in town wanting a jar today, which a combined board cannot
+		// answer.
+		$stocked_by = \ProducerKit\Core\Availability\get_locations_for_product( $id );
+		?>
+		<?php if ( $stocked_by ) : ?>
+			<div class="pkit-single-details__row">
+				<span class="pkit-single-details__label"><?php esc_html_e( 'Where to find it', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__value">
+					<?php
+					$stock_links = [];
+					foreach ( $stocked_by as $stock_row ) {
+						$stock_loc = get_post( (int) $stock_row->location_id );
+						if ( ! $stock_loc || 'publish' !== $stock_loc->post_status ) {
+							continue;
+						}
+
+						$stock_label = esc_html( get_the_title( $stock_loc ) );
+						if ( ! empty( $stock_row->quantity_note ) ) {
+							$stock_label .= ' <span class="pkit-stocked-item__note">(' . esc_html( (string) $stock_row->quantity_note ) . ')</span>';
+						}
+
+						$stock_links[] = '<a href="' . esc_url( (string) get_permalink( $stock_loc ) ) . '">' . $stock_label . '</a>';
+					}
+
+					echo wp_kses_post( implode( ', ', $stock_links ) );
+					?>
+				</span>
+			</div>
+		<?php endif; ?>
+
 		<?php if ( $seasons && ! is_wp_error( $seasons ) ) : ?>
 			<div class="pkit-single-details__row">
 				<span class="pkit-single-details__label"><?php esc_html_e( 'Season', 'producerkit' ); ?></span>
@@ -323,6 +355,34 @@ function render_location_details( \WP_Post $post ): string {
 				</span>
 			</div>
 		<?php endif; ?>
+
+		<?php
+		// What is on the shelf here. A shop's page is where someone checks
+		// before driving over, so the answer belongs on it rather than only in
+		// a combined board that lists every location at once.
+		$here = \ProducerKit\Core\Availability\get_for_location( $id );
+		?>
+		<?php if ( $here ) : ?>
+			<div class="pkit-single-details__row">
+				<span class="pkit-single-details__label"><?php esc_html_e( 'Available here', 'producerkit' ); ?></span>
+				<span class="pkit-single-details__value pkit-single-details__value--stack">
+					<?php foreach ( $here as $here_row ) : ?>
+						<span class="pkit-stocked-item">
+							<a href="<?php echo esc_url( (string) get_permalink( (int) $here_row->product_post_id ) ); ?>">
+								<?php echo esc_html( (string) $here_row->product_name ); ?>
+							</a>
+							<?php if ( ! empty( $here_row->quantity_note ) ) : ?>
+								<span class="pkit-stocked-item__note"><?php echo esc_html( (string) $here_row->quantity_note ); ?></span>
+							<?php endif; ?>
+							<?php if ( 'limited' === $here_row->status ) : ?>
+								<span class="pkit-stocked-item__flag"><?php esc_html_e( 'Running low', 'producerkit' ); ?></span>
+							<?php endif; ?>
+						</span>
+					<?php endforeach; ?>
+				</span>
+			</div>
+		<?php endif; ?>
+
 	</div>
 	<?php
 	return ob_get_clean();

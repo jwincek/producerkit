@@ -77,6 +77,24 @@ add_action(
 			color: #6b7280;
 		}
 
+		/* Stocked-at lists: a shelf reads better as a column than a sentence. */
+		.pkit-single-details__value--stack {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+
+		.pkit-stocked-item__note,
+		.pkit-stocked-item__flag {
+			font-size: 0.85rem;
+			opacity: 0.75;
+		}
+
+		.pkit-stocked-item__flag {
+			color: #9a6700;
+			opacity: 1;
+		}
+
 		.pkit-single-details__links {
 			display: flex;
 			flex-wrap: wrap;

@@ -165,6 +165,38 @@ You can now set availability per-location on the Availability page, and the boar
 
 ---
 
+## Step 7: Shops That Carry Your Goods
+
+If a shop, feed store or co-op stocks what you make, add it as a location with
+Location Type **Retailer**. The hours you enter are theirs, not yours — a
+customer reading the page needs to know when *that shop* is open.
+
+1. **Locations → Add New**
+2. Title: the shop's name, e.g. `Oil City Feed & Seed`
+3. Location Type: **Retailer**
+4. Fill in the shop's address and their opening hours.
+5. **Publish**.
+
+Then record what they have, the same way you would for your own stand:
+**ProducerKit → Availability**, choosing that shop as the location.
+
+Two pages update on their own once you do:
+
+- **The shop's page** gains an "Available here" list — what is currently on
+  their shelf, with your quantity note ("about 2 cases") and a *Running low*
+  flag when you mark something Limited.
+- **Each product's page** gains a "Where to find it" line naming every shop
+  that has it, so someone wanting a jar today can tell which one to drive to.
+
+Marking an item **Sold out** at a shop removes it from both lists, rather than
+sending someone on a wasted trip. Leaving a row's location blank means
+"available everywhere", and it shows on every shop's shelf.
+
+Retailers do not need accounts. Nobody but you writes to this — you update it
+from your own delivery notes.
+
+---
+
 ## Daily Workflow Cheat Sheet
 
 | Task | Where | How Often |
@@ -172,6 +204,7 @@ You can now set availability per-location on the Availability page, and the boar
 | Open/close the stand | Admin bar dot (any page) | Every stand day |
 | Set a status message | Admin bar → "Set Status Message…" | As needed |
 | Update availability | ProducerKit → Availability | Weekly (Saturday morning) |
+| Update a shop's shelf after a delivery | ProducerKit → Availability | Each delivery |
 | Add a new product | Products → Add New | As new crops/items come in |
 | Bulk add products | ProducerKit → Product Import | Start of season |
 | Create an event | Events → Add New | When planning events |

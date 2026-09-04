@@ -58,6 +58,7 @@
 					{ label: 'Farm Stand', value: 'stand' },
 					{ label: 'Farmers Market', value: 'market' },
 					{ label: 'On-Farm', value: 'on-farm' },
+					{ label: 'Retailer', value: 'retailer' },
 					{ label: 'Other', value: 'other' },
 				],
 				onChange( val ) {
