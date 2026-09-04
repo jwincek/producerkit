@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-04T22:23:39+00:00\n"
+"POT-Creation-Date: 2026-09-04T22:40:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -1924,6 +1924,76 @@ msgstr ""
 
 #: modules/event-manager/includes/admin-rsvps.php:234
 msgid "You do not have permission to export RSVPs."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:75
+msgid "No recurrence rule."
+msgstr ""
+
+#. translators: %s: the offending fragment of the rule.
+#: modules/event-manager/includes/recurrence.php:97
+#, php-format
+msgid "\"%s\" is not a NAME=VALUE pair."
+msgstr ""
+
+#. translators: %s: the repeated part name, e.g. FREQ.
+#: modules/event-manager/includes/recurrence.php:113
+#, php-format
+msgid "%s appears more than once."
+msgstr ""
+
+#. translators: %s: comma-separated list of rule parts, e.g. "BYSETPOS".
+#: modules/event-manager/includes/recurrence.php:147
+#, php-format
+msgid "This plugin does not support %s in a recurrence rule. Supported: FREQ, INTERVAL, COUNT, UNTIL, BYDAY, BYMONTHDAY, BYMONTH."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:154
+msgid "A recurrence rule needs a FREQ."
+msgstr ""
+
+#. translators: %s: the frequency given, e.g. HOURLY.
+#: modules/event-manager/includes/recurrence.php:162
+#, php-format
+msgid "FREQ=%s is not supported. Use DAILY, WEEKLY, MONTHLY or YEARLY."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:172
+msgid "A rule cannot have both COUNT and UNTIL."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:177
+msgid "INTERVAL must be a whole number of 1 or more."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:181
+msgid "COUNT must be a whole number of 1 or more."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:185
+msgid "UNTIL must be a date like 20261231 or 20261231T235959Z."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:202
+msgid "An ordinal like 2SA only makes sense with FREQ=MONTHLY or FREQ=YEARLY."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:214
+msgid "BYMONTHDAY must be between 1 and 31, or -1 to -31."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:222
+msgid "BYMONTH must be between 1 and 12."
+msgstr ""
+
+#. translators: %s: the offending BYDAY token, e.g. "XX".
+#: modules/event-manager/includes/recurrence.php:249
+#, php-format
+msgid "\"%s\" is not a weekday. Use MO, TU, WE, TH, FR, SA or SU, optionally with a number like 2SA."
+msgstr ""
+
+#: modules/event-manager/includes/recurrence.php:258
+msgid "A BYDAY ordinal must be between -5 and 5."
 msgstr ""
 
 #: modules/event-manager/includes/render-helpers.php:116

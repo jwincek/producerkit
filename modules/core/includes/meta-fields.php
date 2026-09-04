@@ -90,6 +90,48 @@ function register_product_meta(): void {
 }
 
 /* ───────────────────────────────────────────────
+ * Recurrence
+ * ─────────────────────────────────────────────── */
+
+/**
+ * Keep a rule the plugin cannot honour out of the database.
+ *
+ * Storing one is worse than refusing it: the field would look set, and the
+ * series would expand to dates the rule does not describe — silently, because
+ * an unsupported part is simply absent from the expansion.
+ *
+ * The event-manager module owns the parser, so without it there is nothing to
+ * validate against. The value passes through in that case rather than being
+ * discarded: a site that switches the module off should not lose the rules it
+ * had, and switching it back on validates them again on the next save.
+ */
+function sanitize_recurrence_rule( mixed $value ): string {
+	$value = trim( (string) $value );
+
+	if ( '' === $value ) {
+		return '';
+	}
+
+	if ( ! function_exists( '\\ProducerKit\\EventManager\\Recurrence\\validate' ) ) {
+		return sanitize_text_field( $value );
+	}
+
+	$valid = \ProducerKit\EventManager\Recurrence\validate( $value );
+
+	// A refused rule is dropped rather than stored. That keeps a rule the
+	// plugin cannot honour out of the database, which is the important half
+	// — but it is not the whole answer: a REST write still returns 200 and
+	// the value comes back empty, which reads as a control that did nothing.
+	//
+	// A sanitize_callback cannot do better on its own. It is handed the value
+	// with no object id, so it cannot leave the previous rule in place, and
+	// register_post_meta() has no validate hook that could refuse the request
+	// outright. The editor panel is where a person is told why, and until one
+	// exists this is the safe failure rather than the clear one.
+	return is_wp_error( $valid ) ? '' : sanitize_text_field( $value );
+}
+
+/* ───────────────────────────────────────────────
  * Deposit sanitisers
  * ─────────────────────────────────────────────── */
 
@@ -285,8 +327,9 @@ function register_event_meta(): void {
 		],
 		'_pkit_recurrence_rule'      => [
 			'type'        => 'string',
-			'description' => 'iCal RRULE string for recurring events.',
+			'description' => 'iCal RRULE string for recurring events. A subset of RFC 5545; anything the plugin cannot honour is refused rather than stored.',
 			'default'     => '',
+			'sanitize'    => __NAMESPACE__ . '\\sanitize_recurrence_rule',
 		],
 		'_pkit_rsvp_cap'             => [
 			'type'        => 'integer',

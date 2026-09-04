@@ -36,6 +36,39 @@ if ( ! function_exists( 'number_format_i18n' ) ) {
 	}
 }
 
+// The recurrence parser reports refusals as WP_Error, which is the plugin's
+// convention everywhere else and worth keeping rather than inventing a second
+// error shape for the one file the unit suite happens to reach.
+// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed -- A test
+// bootstrap is a pile of stubs by nature; splitting this one class into its
+// own file to satisfy the sniff would make the stubs harder to find, not
+// easier.
+if ( ! class_exists( 'WP_Error' ) ) {
+	class WP_Error {
+		public string $code;
+		public string $message;
+
+		public function __construct( string $code = '', string $message = '' ) {
+			$this->code    = $code;
+			$this->message = $message;
+		}
+
+		public function get_error_code(): string {
+			return $this->code;
+		}
+
+		public function get_error_message(): string {
+			return $this->message;
+		}
+	}
+}
+
+if ( ! function_exists( 'is_wp_error' ) ) {
+	function is_wp_error( $thing ): bool {
+		return $thing instanceof WP_Error;
+	}
+}
+
 if ( ! function_exists( 'apply_filters' ) ) {
 	function apply_filters( string $hook, $value, ...$args ) {
 		return $value;
@@ -48,3 +81,4 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 require_once dirname( __DIR__ ) . '/modules/core/includes/payments.php';
 require_once dirname( __DIR__ ) . '/modules/core/includes/structured-data.php';
 require_once dirname( __DIR__ ) . '/modules/core/includes/deposits.php';
+require_once dirname( __DIR__ ) . '/modules/event-manager/includes/recurrence.php';
