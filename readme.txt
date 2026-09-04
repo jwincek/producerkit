@@ -129,6 +129,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= Unreleased =
+* Added: pick the products you are featuring at an event. The field was already returned by the API but there was no way to set it, so it was always empty.
+
 = 2.4.0 =
 * Added: a translation template ships with the plugin, so it can be translated into another language without waiting for the WordPress.org listing.
 * Added: your producer profile now names the fields too, not just the categories. A beekeeper's source is an Apiary with Forage Notes; a musician's is a Label with a Studio and Mastering Notes. The help text under each field follows the label.

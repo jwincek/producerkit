@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Featured products on an event. `_pkit_featured_product_ids` had been
+  returned by two REST readers since it was registered and written by
+  nothing, so a client could read the key and always get an empty array —
+  the same shape as the sources bug, on a different post type. This is the
+  writer: a picker in the event sidebar, mirroring the one products already
+  use for sources.
+
+  A farm at a festival can now name the three things worth the trip, and
+  `/events/<id>/details` and `/events/upcoming` reflect it.
+
+  The panel keeps its linked-product lookup separate from the list it offers
+  to add, so a featured product beyond the first fifty, or one since
+  unpublished, still renders as a row that can be removed rather than
+  vanishing from the panel while staying in the meta.
+
 ## [2.4.0] - 2026-09-05
 
 Three sales formats a beekeeper actually uses, and two features that turned
