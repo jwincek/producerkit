@@ -1,6 +1,8 @@
 # Getting Started with ProducerKit
 
-Welcome! This guide walks you through setting up your website's farm tools — the stand status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.
+Welcome! This guide walks you through setting up your website's tools — the stand status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.
+
+The examples below are written for a farm, because that is where the plugin started. If you keep bees, throw pots, bake, print or record, do **Step 1** first and the rest of the plugin will use your words instead of these ones.
 
 ---
 
@@ -8,7 +10,10 @@ Welcome! This guide walks you through setting up your website's farm tools — t
 
 After the plugin is activated, you'll see a **ProducerKit** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
 
-The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked Good, Pantry Good, Seedling), Seasons (Spring, Summer, Fall, Winter), and Event Types (Pizza Night, Potluck, Farm Dinner, Workshop, Farm Tour, Seed Exchange, Mini Market). You can use these as-is or rename them.
+Two of the plugin's menus are named to stay out of the way of other plugins:
+**Catalog** is your products (WooCommerce owns "Products"), and **Calendar** is
+your events (The Events Calendar owns "Events"). Locations and Sources live
+inside the **ProducerKit** menu.
 
 ---
 
@@ -20,17 +25,55 @@ The plugin also pre-loads default terms for Product Types (Produce, Bread, Baked
 
 **Pre-orders**: add the **Pre-Order Form** block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under **ProducerKit → Pre-Orders**: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically. Pickup dates respect the location's weekly schedule and season, and you can block specific dates (holidays, closures) under **Schedule & Season → Closed Dates** when editing the location.
 
+**Taking money up front**: by default a pre-order is a reservation and nothing is charged. If WooCommerce is installed and its module is on, you can mark a product to take a **deposit** or the **full price** when someone orders it — open the **Pre-Order Payment** panel when editing that product. A $50 deposit on a nucleus colony takes $100 for two and leaves $300 for pickup; anything else in the same order still asks for nothing. The balance is yours to collect either way: send a payment link, or take it at the table and mark it paid.
+
 **Harvest list**: on the Pre-Orders screen, click **Harvest List** for per-pickup-date totals of everything to have ready — print it and take it to the field.
 
 **Fresh Sheet**: under **ProducerKit → Fresh Sheet**, print a one-pager of today's availability with prices, your hours, payment options, and a payment QR code — the morning sign for the stand.
 
 ---
 
-## Step 1: Set Up Your Stand Location
+## Step 1: Choose Your Trade
+
+Do this before anything else. It is one dropdown, and it decides what the rest
+of the plugin calls things.
+
+1. Go to **ProducerKit → Producer Profile**.
+2. Pick the **producer profile** that matches what you make — Farm, Bakery,
+   Beekeeping, Pottery, Woodworking, Jewelry, Leather, Fiber Arts, Metalwork,
+   Screen Printing, Painting & Drawing, Taxidermy, Author, Comics, Musician,
+   or General.
+3. Save.
+
+Everything downstream follows from it. Where a farm records a **Farm / Origin
+Name** and **Milling / Process Notes**, a beekeeper records an **Apiary** and
+**Extraction Notes**, and a musician a **Label** and **Mastering Notes** — the
+same three questions, in each trade's own words. The optional product fields
+only exist for trades that asked for them, so a farm never sees them at all
+and a potter gets **Clay Body**, **Glaze** and **Firing Method**. Even the word for a made-to-order request changes: a potter takes
+a **Commission**, a beekeeper answers an **Enquiry**, a grower takes a
+**Special Order**.
+
+You can change it later and nothing is lost — switching a profile off leaves
+its terms in the database — but picking it now saves renaming things around
+work you have already typed.
+
+**More than one trade on one site?** You can turn on several. The fields
+combine, and further down the same screen each person can pick which trade's
+wording *they* read — so a farm that also bakes can have one of you reading
+Milling Notes and the other reading Baking Notes.
+
+The plugin also pre-loads default terms for your trade — for a farm that is Product Types (Produce, Bread, Baked Good, Pantry Good, Seedling), Seasons (Spring, Summer, Fall, Winter), and Event Types (Pizza Night, Potluck, Farm Dinner, Workshop, Farm Tour, Seed Exchange, Mini Market). You can use these as-is or rename them.
+
+---
+
+---
+
+## Step 2: Set Up Your Stand Location
 
 Your roadside stand needs to exist as a Location in WordPress before the stand status tools will work.
 
-1. Go to **Locations → Add New** in the sidebar.
+1. Go to **ProducerKit → Locations**, then **Add New**.
 2. **Title**: `Farm Stand` (or whatever you call it).
 3. In the post editor sidebar, you'll see a **Location Details** panel with proper form fields:
    - **Location Type**: Pick "Farm Stand" from the dropdown.
@@ -50,18 +93,18 @@ You should now see a green or red dot in the admin bar at the top of every page 
 
 ---
 
-## Step 2: Add Your Products
+## Step 3: Add Your Products
 
 Products are everything you sell — produce, bread, baked goods, seedlings, pantry items.
 
-1. Go to **Products → Add New**.
+1. Go to **Catalog → Add New**. (Your products live under Catalog, not Products — WooCommerce owns that menu.)
 2. **Title**: The product name (e.g., `Arugula`, `Country Sourdough`).
 3. Add a **Featured Image** — this shows up on the availability board.
 4. In the sidebar, you'll see a **Product Details** panel:
    - **Price**: Whatever you want to display (e.g., `$4`, `$12`, `Donation`).
    - **Unit of Sale**: Pick from the dropdown (bunch, loaf, pint, pound, etc.) or choose "other" to type a custom unit.
    - **Growing / Baking Notes**: A short note shown to visitors (e.g., `No-till, heirloom variety`).
-5. If this product uses grains from a specific farm or source, expand the **Sources** panel to link source posts.
+5. If this product came from somewhere worth naming — a partner farm, a mill, a tannery, a particular hive — expand the **Sources** panel to link it. Create sources first under **ProducerKit → Sources**: each one records who it came from, where, and what was done to it in between, in your trade's own words.
 6. In the right sidebar, assign a **Product Type** (Produce, Bread, Baked Good, Pantry Good, Seedling).
 7. Assign **Seasons** (Spring, Summer, Fall, Winter) for when this product is typically available.
 8. **Publish**.
@@ -74,7 +117,7 @@ Repeat for each product. Don't worry about getting them all in at once — you c
 
 ---
 
-## Step 3: Update Weekly Availability
+## Step 4: Update Weekly Availability
 
 This is the task you'll do most often — probably every Saturday morning.
 
@@ -90,7 +133,7 @@ That's it — the availability board on your website updates immediately.
 
 ---
 
-## Step 4: Place Blocks on Your Pages
+## Step 5: Place Blocks on Your Pages
 
 Now put the tools on your actual website pages. Go to any page in the editor (or create a new one) and add blocks from the **ProducerKit** category:
 
@@ -119,12 +162,18 @@ Now put the tools on your actual website pages. Go to any page in the editor (or
 - **Location Info**: Show stand details in a sidebar or footer.
 - **Stand Hours Schedule**: Show your weekly schedule in a clean table format with today's row highlighted.
 - **Availability Badge**: Show a single product's status inline in any post or page.
+- **Stand Quick Toggle**: An open/closed switch you can put on a private page, for opening the stand from a phone without the admin bar.
+
+### Taking orders
+
+- **Pre-Order Form**: Visitors reserve products for a pickup date. See *Payments, QR Codes, and Pre-Orders* above.
+- **Request Form**: For things you make to order — a commission, an enquiry about bulk honey, a special order. Visitors describe what they want, you quote a price and a date, and they accept or decline from a link in their email. Needs the Commissions module. The form and its emails use your trade's own word for the job, so nobody is asked to "commission a piece" of honey.
 
 ---
 
-## Step 5: Create Your First Event
+## Step 6: Create Your First Event
 
-1. Go to **Events → Add New**.
+1. Go to **Calendar → Add New**. (Events live under Calendar — The Events Calendar owns that menu.)
 2. **Title**: e.g., `Pizza Night — June 6`
 3. Write a description in the editor.
 4. In the sidebar, you'll see an **Event Details** panel:
@@ -150,11 +199,11 @@ The event will now appear in the Event List block and can be featured with an Ev
 
 ---
 
-## Step 6: Set Up the Jonesborough Farmers Market
+## Step 7: Set Up the Jonesborough Farmers Market
 
 If you're selling at the Jonesborough Farmers Market (starting May 2, 2026), create a second location:
 
-1. **Locations → Add New**
+1. **ProducerKit → Locations → Add New**
 2. Title: `Jonesborough Farmers Market`
 3. Location Type: **Farmers Market**
 4. Fill in the market's address and hours.
@@ -165,13 +214,13 @@ You can now set availability per-location on the Availability page, and the boar
 
 ---
 
-## Step 7: Shops That Carry Your Goods
+## Step 8: Shops That Carry Your Goods
 
 If a shop, feed store or co-op stocks what you make, add it as a location with
 Location Type **Retailer**. The hours you enter are theirs, not yours — a
 customer reading the page needs to know when *that shop* is open.
 
-1. **Locations → Add New**
+1. **ProducerKit → Locations → Add New**
 2. Title: the shop's name, e.g. `Oil City Feed & Seed`
 3. Location Type: **Retailer**
 4. Fill in the shop's address and their opening hours.
@@ -205,9 +254,9 @@ from your own delivery notes.
 | Set a status message | Admin bar → "Set Status Message…" | As needed |
 | Update availability | ProducerKit → Availability | Weekly (Saturday morning) |
 | Update a shop's shelf after a delivery | ProducerKit → Availability | Each delivery |
-| Add a new product | Products → Add New | As new crops/items come in |
+| Add a new product | Catalog → Add New | As new crops/items come in |
 | Bulk add products | ProducerKit → Product Import | Start of season |
-| Create an event | Events → Add New | When planning events |
+| Create an event | Calendar → Add New | When planning events |
 | Check RSVPs | Events list → RSVP column | Before each event |
 | Check for content gaps | ProducerKit dashboard | Occasionally |
 
