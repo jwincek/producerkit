@@ -42,6 +42,7 @@ function pkit_uninstall(): void {
 		'pkit_settlement_db_version',
 		'pkit_sample_data_loaded',
 		'pkit_producer_profile_flush',
+		'pkit_profile_prompt_dismissed',
 	];
 
 	foreach ( $options as $option ) {

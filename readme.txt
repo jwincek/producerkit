@@ -130,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Added: the plugin now asks what you make the first time you use it. It names everything after your trade, and until you say, it uses a farm's words — so a beekeeper was quietly getting "Growing / Baking Notes" where they meant hive notes.
 * Added: set a repeat from the event editor — every week, every other week, the first Saturday of the month, and so on — and see the next few dates before you publish. If a rule cannot be honoured exactly, it now tells you why instead of quietly clearing itself.
 * Added: a recurring event with no end date keeps generating. It stays about a year ahead of today rather than a year ahead of when you created it, so a market never quietly runs out of dates.
 * Added: a recurring event now creates a real event for each date, so people can RSVP to one Saturday rather than to the series. Any single one can be edited or cancelled — for a holiday, say — and it stays that way when the series changes.
