@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- ProducerKit now asks what you make. Everything downstream is named by that
+  answer — which taxonomies exist, what every field is called, what the menus
+  say, what a made-to-order request is called — and until now nothing ever
+  prompted for it. The default is a farm, because that is where the plugin
+  started, so a beekeeper quietly got somebody else's words and the longer
+  they went the more a switch cost them in re-reading.
+
+  A dismissible notice on the plugin's own screens, not a wizard and not an
+  activation redirect. Walking the getting-started guide end to end showed
+  the later steps are fine; only the first was missing. And hijacking the page
+  load after activation is both rude and a known irritant in WordPress.org
+  review.
+
+  Detecting "never asked" needed care. `active_slugs()` falls back to `farm`,
+  so it reports the same thing for a site that deliberately chose a farm and
+  one that has never been asked — which are exactly the two cases that must be
+  told apart. The prompt reads the option without its default instead, and
+  tests pin both halves so a future change to the fallback cannot quietly
+  break it.
+
+  The dismissal is site-wide rather than per user: the choice being prompted
+  for is site-wide, so nagging a colleague about a decision somebody already
+  made is asking a question that is not theirs to answer.
+
 - A **Recurrence** panel in the event editor. Recurring events worked in every
   respect except being settable: the rule could only be entered through
   WordPress's raw custom-field box, which meant enabling that panel in
