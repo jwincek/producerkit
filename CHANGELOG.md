@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A **Recurrence** panel in the event editor. Recurring events worked in every
+  respect except being settable: the rule could only be entered through
+  WordPress's raw custom-field box, which meant enabling that panel in
+  Preferences and knowing the meta key.
+
+  The panel offers the patterns a market, a class or a pickup day actually
+  uses — every week, every other week, the first or last weekday of the month,
+  monthly on a date, yearly — worked out from the event's own start date, so
+  most producers never see an RRULE. The raw field is still there behind
+  *Custom rule…* for everything else.
+
+  It also finally shows the refusals. The parser has always said exactly why
+  it would not honour a rule — naming `BYSETPOS`, explaining that `COUNT` and
+  `UNTIL` cannot both appear, that an ordinal like `2SA` needs a monthly
+  frequency — and none of it reached anybody, because the sanitiser dropped an
+  invalid rule and the write returned 200 with the value gone. A new
+  `producerkit/v1/recurrence/preview` route asks the server, so validation
+  stays in one place rather than becoming a second RFC 5545 parser in
+  JavaScript that would eventually disagree with the first.
+
+  The route answers 200 for an invalid rule rather than 400: a refusal is an
+  expected answer to the question being asked, and a 400 would have the
+  editor's fetch treat it as a network problem and show nothing — the silence
+  this was built to end.
+
+  And it previews the next eight dates. A rule is hard to read and a list of
+  Saturdays is not, which is how a producer notices they picked the wrong
+  weekday.
+
 - Recurring events keep themselves topped up. A rule with no end date now
   generates a rolling window ahead of today rather than ahead of the series'
   own start, and a daily job slides it forward.

@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/recurrence.php';
 require_once __DIR__ . '/includes/series.php';
+require_once __DIR__ . '/includes/recurrence-rest.php';
 require_once __DIR__ . '/includes/meta-extensions.php';
 require_once __DIR__ . '/includes/rsvp-table.php';
 require_once __DIR__ . '/includes/rsvp-response.php';

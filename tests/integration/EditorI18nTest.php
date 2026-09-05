@@ -159,6 +159,14 @@ final class EditorI18nTest extends WP_UnitTestCase {
 				continue;
 			}
 
+			// A token of capitals, digits and punctuation is a constant, not
+			// a sentence — an RRULE fragment like "FREQ=WEEKLY;BYDAY=" reads
+			// as prose to the rule above and is no more translatable than
+			// Content-Type. Anything a person reads has a lowercase letter.
+			if ( ! preg_match( '/[a-z]/', $text ) ) {
+				continue;
+			}
+
 			// An ALL-CAPS token is a constant, not a sentence — except the two
 			// the stand toggle genuinely shows a person.
 			if ( preg_match( '/^[A-Z][A-Z0-9-]*$/', $text ) && ! in_array( $text, [ 'OPEN', 'CLOSED' ], true ) ) {

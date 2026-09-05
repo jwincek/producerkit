@@ -330,7 +330,7 @@ add_action(
 			wp_enqueue_script(
 				$handle,
 				plugins_url( 'assets/js/' . $scripts[ $post_type ], __FILE__ ),
-				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element', 'wp-i18n' ],
+				[ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-data', 'wp-core-data', 'wp-element', 'wp-i18n', 'wp-api-fetch' ],
 				filemtime( PLUGIN_DIR . '/assets/js/' . $scripts[ $post_type ] ),
 				true,
 			);

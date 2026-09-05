@@ -261,7 +261,7 @@ All blocks follow WCAG 2.1 AA:
 
 ## REST API Endpoints
 
-All under `producerkit/v1`. 24 custom endpoints plus standard WP REST for each CPT.
+All under `producerkit/v1`. 25 custom endpoints plus standard WP REST for each CPT.
 
 ### Core
 | Method | Endpoint | Auth | Purpose |

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-04T23:19:33+00:00\n"
+"POT-Creation-Date: 2026-09-05T01:28:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -1306,7 +1306,7 @@ msgstr ""
 #: modules/core/includes/post-types.php:243
 #: modules/core/includes/single-content.php:458
 #: modules/pre-order/includes/admin-orders.php:214
-#: assets/js/editor-event.js:222
+#: assets/js/editor-event.js:226
 #: assets/js/editor-source.js:134
 #: blocks/stand-hours-schedule/index.js:357
 #: blocks/stand-status-banner/index.js:469
@@ -1735,14 +1735,14 @@ msgid "This event has been cancelled."
 msgstr ""
 
 #: modules/core/includes/single-content.php:433
-#: assets/js/editor-event.js:154
-#: assets/js/editor-event.js:195
+#: assets/js/editor-event.js:158
+#: assets/js/editor-event.js:199
 msgid "Date"
 msgstr ""
 
 #: modules/core/includes/single-content.php:437
-#: assets/js/editor-event.js:166
-#: assets/js/editor-event.js:207
+#: assets/js/editor-event.js:170
+#: assets/js/editor-event.js:211
 msgid "Time"
 msgstr ""
 
@@ -2157,6 +2157,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/event-manager/includes/series.php:795
+#: assets/js/editor-event.js:897
 msgid "Recurrence"
 msgstr ""
 
@@ -3507,13 +3508,13 @@ msgstr ""
 msgid "WooCommerce Settlement"
 msgstr ""
 
-#: assets/js/editor-event.js:99
+#: assets/js/editor-event.js:103
 msgid "— Select Location —"
 msgstr ""
 
-#: assets/js/editor-event.js:105
-#: assets/js/editor-event.js:548
-#: assets/js/editor-event.js:583
+#: assets/js/editor-event.js:109
+#: assets/js/editor-event.js:552
+#: assets/js/editor-event.js:587
 #: assets/js/editor-product.js:294
 #: assets/js/editor-product.js:324
 #: blocks/availability-badge/index.js:58
@@ -3529,125 +3530,125 @@ msgstr ""
 msgid "(untitled)"
 msgstr ""
 
-#: assets/js/editor-event.js:118
+#: assets/js/editor-event.js:122
 msgid "Event Details"
 msgstr ""
 
-#: assets/js/editor-event.js:131
+#: assets/js/editor-event.js:135
 msgid "Set a start date before publishing."
 msgstr ""
 
-#: assets/js/editor-event.js:142
+#: assets/js/editor-event.js:146
 #: assets/js/editor-location.js:306
 msgid "Start"
 msgstr ""
 
-#: assets/js/editor-event.js:183
+#: assets/js/editor-event.js:187
 #: assets/js/editor-location.js:315
 msgid "End"
 msgstr ""
 
-#: assets/js/editor-event.js:231
+#: assets/js/editor-event.js:235
 msgid "Where is this event happening?"
 msgstr ""
 
-#: assets/js/editor-event.js:236
+#: assets/js/editor-event.js:240
 msgid "Donation / Payment Link"
 msgstr ""
 
-#: assets/js/editor-event.js:241
+#: assets/js/editor-event.js:245
 msgid "https://venmo.com/examplefarm"
 msgstr ""
 
-#: assets/js/editor-event.js:245
+#: assets/js/editor-event.js:249
 msgid "Venmo link or other payment URL."
 msgstr ""
 
-#: assets/js/editor-event.js:280
+#: assets/js/editor-event.js:284
 msgid "RSVP Settings"
 msgstr ""
 
-#: assets/js/editor-event.js:286
+#: assets/js/editor-event.js:290
 msgid "Enable RSVPs"
 msgstr ""
 
-#: assets/js/editor-event.js:291
+#: assets/js/editor-event.js:295
 msgid "Allow visitors to RSVP on the front end."
 msgstr ""
 
-#: assets/js/editor-event.js:302
+#: assets/js/editor-event.js:306
 msgid "RSVP Cap"
 msgstr ""
 
-#: assets/js/editor-event.js:309
+#: assets/js/editor-event.js:313
 msgid "0 = unlimited. Total headcount including party sizes."
 msgstr ""
 
-#: assets/js/editor-event.js:316
+#: assets/js/editor-event.js:320
 msgid "Button Label"
 msgstr ""
 
-#: assets/js/editor-event.js:322
+#: assets/js/editor-event.js:326
 msgid "Custom text for the RSVP button."
 msgstr ""
 
-#: assets/js/editor-event.js:329
+#: assets/js/editor-event.js:333
 msgid "Manually Close RSVPs"
 msgstr ""
 
-#: assets/js/editor-event.js:334
+#: assets/js/editor-event.js:338
 msgid "Close RSVPs regardless of the cap."
 msgstr ""
 
-#: assets/js/editor-event.js:371
+#: assets/js/editor-event.js:375
 msgid "Event Info"
 msgstr ""
 
-#: assets/js/editor-event.js:377
+#: assets/js/editor-event.js:381
 msgid "Cost / Donation Note"
 msgstr ""
 
-#: assets/js/editor-event.js:382
+#: assets/js/editor-event.js:386
 msgid "Donation-based — suggested $10/person"
 msgstr ""
 
-#: assets/js/editor-event.js:386
+#: assets/js/editor-event.js:390
 msgid "Shown on the event card."
 msgstr ""
 
-#: assets/js/editor-event.js:390
+#: assets/js/editor-event.js:394
 msgid "What to Bring"
 msgstr ""
 
-#: assets/js/editor-event.js:395
+#: assets/js/editor-event.js:399
 msgid "A side dish or dessert to share"
 msgstr ""
 
-#: assets/js/editor-event.js:399
+#: assets/js/editor-event.js:403
 msgid "Shown on the event card with a 🧺 icon."
 msgstr ""
 
-#: assets/js/editor-event.js:406
+#: assets/js/editor-event.js:410
 msgid "Event Cancelled"
 msgstr ""
 
-#: assets/js/editor-event.js:411
+#: assets/js/editor-event.js:415
 msgid "Mark this event as cancelled. It will show a cancelled badge."
 msgstr ""
 
-#: assets/js/editor-event.js:424
+#: assets/js/editor-event.js:428
 msgid "This event is marked as cancelled. It will display with a cancelled badge on the front end."
 msgstr ""
 
-#: assets/js/editor-event.js:507
+#: assets/js/editor-event.js:511
 msgid "Featured Products"
 msgstr ""
 
-#: assets/js/editor-event.js:518
+#: assets/js/editor-event.js:522
 msgid "What you are bringing to this one. Shown on the event in the API, so a booth listing can name the three things worth the trip."
 msgstr ""
 
-#: assets/js/editor-event.js:554
+#: assets/js/editor-event.js:558
 #: assets/js/editor-location.js:414
 #: assets/js/editor-location.js:486
 #: assets/js/editor-location.js:725
@@ -3655,16 +3656,76 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: assets/js/editor-event.js:575
+#: assets/js/editor-event.js:579
 msgid "— Add a product —"
 msgstr ""
 
-#: assets/js/editor-event.js:600
+#: assets/js/editor-event.js:604
 msgid "No products created yet. Add them under Catalog in the sidebar."
 msgstr ""
 
-#: assets/js/editor-event.js:604
+#: assets/js/editor-event.js:608
 msgid "Every product is already featured."
+msgstr ""
+
+#: assets/js/editor-event.js:765
+msgid "Repeats"
+msgstr ""
+
+#: assets/js/editor-event.js:769
+msgid "Does not repeat"
+msgstr ""
+
+#: assets/js/editor-event.js:773
+msgid "Every week"
+msgstr ""
+
+#: assets/js/editor-event.js:777
+msgid "Every other week"
+msgstr ""
+
+#: assets/js/editor-event.js:781
+msgid "Every month, on this date"
+msgstr ""
+
+#: assets/js/editor-event.js:785
+msgid "Every month, on the first of this weekday"
+msgstr ""
+
+#: assets/js/editor-event.js:792
+msgid "Every month, on the last of this weekday"
+msgstr ""
+
+#: assets/js/editor-event.js:799
+msgid "Every year"
+msgstr ""
+
+#: assets/js/editor-event.js:803
+msgid "Custom rule…"
+msgstr ""
+
+#: assets/js/editor-event.js:817
+msgid "Worked out from this event’s own start date."
+msgstr ""
+
+#: assets/js/editor-event.js:821
+msgid "Set a start date first — the pattern is worked out from it."
+msgstr ""
+
+#: assets/js/editor-event.js:832
+msgid "Recurrence rule"
+msgstr ""
+
+#: assets/js/editor-event.js:835
+msgid "An iCal RRULE. Supported: FREQ, INTERVAL, COUNT, UNTIL, BYDAY, BYMONTHDAY, BYMONTH."
+msgstr ""
+
+#: assets/js/editor-event.js:871
+msgid "Next dates"
+msgstr ""
+
+#: assets/js/editor-event.js:883
+msgid "…and more. Dates are created about a year ahead and topped up daily."
 msgstr ""
 
 #: assets/js/editor-location.js:50
