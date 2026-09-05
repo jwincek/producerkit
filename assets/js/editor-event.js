@@ -20,6 +20,10 @@
 	const ToggleControl = wp.components.ToggleControl;
 	const RangeControl = wp.components.RangeControl;
 	const Notice = wp.components.Notice;
+	const Spinner = wp.components.Spinner;
+	const useState = wp.element.useState;
+	const useEffect = wp.element.useEffect;
+	const apiFetch = wp.apiFetch;
 	const Button = wp.components.Button;
 
 	/* ─────────────────────────────────────────────
@@ -610,6 +614,295 @@
 	}
 
 	/* ─────────────────────────────────────────────
+	 * Panel: Recurrence
+	 *
+	 * Most producers should never see an RRULE. The patterns below cover
+	 * what a market, a class or a pickup day actually does; the raw field is
+	 * there for the rest, behind a toggle.
+	 *
+	 * The server is the only thing that decides whether a rule is valid.
+	 * Reimplementing RFC 5545 here would mean two parsers to keep agreeing
+	 * with each other forever, and the one that disagreed would be this one.
+	 * ───────────────────────────────────────────── */
+
+	const WEEKDAY_CODES = [ 'SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA' ];
+
+	/**
+	 * Build a rule from a pattern and the event's own start date.
+	 *
+	 * @param pattern
+	 * @param startIso
+	 */
+	function ruleFor( pattern, startIso ) {
+		const start = startIso ? new Date( startIso ) : new Date();
+		const day = WEEKDAY_CODES[ start.getDay() ];
+
+		switch ( pattern ) {
+			case 'weekly':
+				return 'FREQ=WEEKLY;BYDAY=' + day;
+			case 'fortnightly':
+				return 'FREQ=WEEKLY;INTERVAL=2;BYDAY=' + day;
+			case 'monthly-date':
+				return 'FREQ=MONTHLY';
+			case 'monthly-first':
+				return 'FREQ=MONTHLY;BYDAY=1' + day;
+			case 'monthly-last':
+				return 'FREQ=MONTHLY;BYDAY=-1' + day;
+			case 'yearly':
+				return 'FREQ=YEARLY';
+			default:
+				return '';
+		}
+	}
+
+	/**
+	 * Which pattern, if any, a stored rule came from — so reopening the event
+	 * shows the choice the producer made rather than resetting to Custom.
+	 *
+	 * @param rule
+	 * @param startIso
+	 */
+	function patternFor( rule, startIso ) {
+		if ( ! rule ) {
+			return 'none';
+		}
+
+		const patterns = [
+			'weekly',
+			'fortnightly',
+			'monthly-date',
+			'monthly-first',
+			'monthly-last',
+			'yearly',
+		];
+
+		for ( let i = 0; i < patterns.length; i++ ) {
+			if ( ruleFor( patterns[ i ], startIso ) === rule ) {
+				return patterns[ i ];
+			}
+		}
+
+		return 'custom';
+	}
+
+	function EventRecurrencePanel() {
+		const postType = useSelect( function ( select ) {
+			return select( 'core/editor' ).getCurrentPostType();
+		}, [] );
+
+		const _meta = useEntityProp( 'postType', 'pkit_event', 'meta' );
+		const meta = _meta[ 0 ] || {};
+		const setMeta = _meta[ 1 ];
+
+		const rule = meta._pkit_recurrence_rule || '';
+		const startIso = meta._pkit_start_datetime || '';
+
+		const _preview = useState( null );
+		const preview = _preview[ 0 ];
+		const setPreview = _preview[ 1 ];
+
+		const _busy = useState( false );
+		const busy = _busy[ 0 ];
+		const setBusy = _busy[ 1 ];
+
+		const _advanced = useState( false );
+		const advanced = _advanced[ 0 ];
+		const setAdvanced = _advanced[ 1 ];
+
+		// Ask the server what the rule means, whenever it or the start moves.
+		useEffect(
+			function () {
+				if ( ! rule ) {
+					setPreview( null );
+					return;
+				}
+
+				let cancelled = false;
+				setBusy( true );
+
+				apiFetch( {
+					path: '/producerkit/v1/recurrence/preview',
+					method: 'POST',
+					data: { rule, start: startIso },
+				} )
+					.then( function ( result ) {
+						if ( ! cancelled ) {
+							setPreview( result );
+							setBusy( false );
+						}
+					} )
+					.catch( function () {
+						if ( ! cancelled ) {
+							// A failed request is not a failed rule; say so
+							// rather than showing a refusal nobody caused.
+							setPreview( null );
+							setBusy( false );
+						}
+					} );
+
+				return function () {
+					cancelled = true;
+				};
+			},
+			[ rule, startIso ]
+		);
+
+		if ( postType !== 'pkit_event' ) {
+			return null;
+		}
+
+		function setRule( value ) {
+			setMeta(
+				Object.assign( {}, meta, { _pkit_recurrence_rule: value } )
+			);
+		}
+
+		const pattern = patternFor( rule, startIso );
+
+		const children = [
+			el( SelectControl, {
+				key: 'pattern',
+				label: __( 'Repeats', 'producerkit' ),
+				value: pattern,
+				options: [
+					{
+						label: __( 'Does not repeat', 'producerkit' ),
+						value: 'none',
+					},
+					{
+						label: __( 'Every week', 'producerkit' ),
+						value: 'weekly',
+					},
+					{
+						label: __( 'Every other week', 'producerkit' ),
+						value: 'fortnightly',
+					},
+					{
+						label: __( 'Every month, on this date', 'producerkit' ),
+						value: 'monthly-date',
+					},
+					{
+						label: __(
+							'Every month, on the first of this weekday',
+							'producerkit'
+						),
+						value: 'monthly-first',
+					},
+					{
+						label: __(
+							'Every month, on the last of this weekday',
+							'producerkit'
+						),
+						value: 'monthly-last',
+					},
+					{
+						label: __( 'Every year', 'producerkit' ),
+						value: 'yearly',
+					},
+					{
+						label: __( 'Custom rule…', 'producerkit' ),
+						value: 'custom',
+					},
+				],
+				onChange( value ) {
+					if ( value === 'custom' ) {
+						setAdvanced( true );
+						return;
+					}
+
+					setAdvanced( false );
+					setRule( ruleFor( value, startIso ) );
+				},
+				help: startIso
+					? __(
+							'Worked out from this event’s own start date.',
+							'producerkit'
+					  )
+					: __(
+							'Set a start date first — the pattern is worked out from it.',
+							'producerkit'
+					  ),
+			} ),
+		];
+
+		if ( advanced || pattern === 'custom' ) {
+			children.push(
+				el( TextControl, {
+					key: 'raw',
+					label: __( 'Recurrence rule', 'producerkit' ),
+					value: rule,
+					onChange: setRule,
+					help: __(
+						'An iCal RRULE. Supported: FREQ, INTERVAL, COUNT, UNTIL, BYDAY, BYMONTHDAY, BYMONTH.',
+						'producerkit'
+					),
+				} )
+			);
+		}
+
+		if ( busy ) {
+			children.push( el( Spinner, { key: 'busy' } ) );
+		}
+
+		// The refusal, finally shown to the person who caused it.
+		if ( preview && ! preview.valid ) {
+			children.push(
+				el(
+					Notice,
+					{ key: 'error', status: 'error', isDismissible: false },
+					preview.message
+				)
+			);
+		}
+
+		if (
+			preview &&
+			preview.valid &&
+			preview.dates &&
+			preview.dates.length
+		) {
+			children.push(
+				el(
+					'div',
+					{
+						key: 'dates',
+						style: { marginTop: '8px', fontSize: '12px' },
+					},
+					el( 'strong', null, __( 'Next dates', 'producerkit' ) ),
+					el(
+						'ul',
+						{ style: { margin: '4px 0 0', paddingLeft: '18px' } },
+						preview.dates.map( function ( d ) {
+							return el( 'li', { key: d.iso }, d.label );
+						} )
+					),
+					preview.more
+						? el(
+								'p',
+								{ style: { opacity: 0.7, margin: '4px 0 0' } },
+								__(
+									'…and more. Dates are created about a year ahead and topped up daily.',
+									'producerkit'
+								)
+						  )
+						: null
+				)
+			);
+		}
+
+		return el(
+			PluginDocumentSettingPanel,
+			{
+				name: 'pkit-event-recurrence',
+				title: __( 'Recurrence', 'producerkit' ),
+				initialOpen: false,
+				icon: 'update',
+			},
+			children
+		);
+	}
+
+	/* ─────────────────────────────────────────────
 	 * Register
 	 * ───────────────────────────────────────────── */
 
@@ -626,6 +919,11 @@
 	registerPlugin( 'pkit-event-featured-products', {
 		render: EventFeaturedProductsPanel,
 		icon: 'tag',
+	} );
+
+	registerPlugin( 'pkit-event-recurrence', {
+		render: EventRecurrencePanel,
+		icon: 'update',
 	} );
 
 	registerPlugin( 'pkit-event-info', {
