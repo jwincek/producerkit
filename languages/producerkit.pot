@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-04T23:09:37+00:00\n"
+"POT-Creation-Date: 2026-09-04T23:19:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -2136,6 +2136,7 @@ msgid "That is not an event."
 msgstr ""
 
 #: modules/event-manager/includes/series.php:125
+#: modules/event-manager/includes/series.php:488
 msgid "That event has no recurrence rule."
 msgstr ""
 
@@ -2143,29 +2144,33 @@ msgstr ""
 msgid "A recurring event needs a start date and time before its occurrences can be worked out."
 msgstr ""
 
+#: modules/event-manager/includes/series.php:494
+msgid "That event has no start date."
+msgstr ""
+
 #. translators: %d: number of occurrences.
-#: modules/event-manager/includes/series.php:594
+#: modules/event-manager/includes/series.php:774
 #, php-format
 msgid "%d occurrence"
 msgid_plural "%d occurrences"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/event-manager/includes/series.php:615
+#: modules/event-manager/includes/series.php:795
 msgid "Recurrence"
 msgstr ""
 
-#: modules/event-manager/includes/series.php:634
+#: modules/event-manager/includes/series.php:814
 msgid "Series"
 msgstr ""
 
 #. translators: %s: the series this occurrence belongs to.
-#: modules/event-manager/includes/series.php:650
+#: modules/event-manager/includes/series.php:830
 #, php-format
 msgid "One of %s"
 msgstr ""
 
-#: modules/event-manager/includes/series.php:655
+#: modules/event-manager/includes/series.php:835
 msgid "Edited — the series will not overwrite it"
 msgstr ""
 

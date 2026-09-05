@@ -49,6 +49,7 @@ function pkit_uninstall(): void {
 	}
 
 	wp_clear_scheduled_hook( 'pkit_availability_cleanup' );
+	wp_clear_scheduled_hook( 'pkit_series_extend' );
 
 	// Transients are per-visitor and short-lived; the LIKE covers the per-IP rate
 	// limit keys and the per-request payment links, which are generated names.

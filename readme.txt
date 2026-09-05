@@ -130,6 +130,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Added: a recurring event with no end date keeps generating. It stays about a year ahead of today rather than a year ahead of when you created it, so a market never quietly runs out of dates.
 * Added: a recurring event now creates a real event for each date, so people can RSVP to one Saturday rather than to the series. Any single one can be edited or cancelled — for a holiday, say — and it stays that way when the series changes.
 * Added: recurring events are now understood — weekly markets, first-Saturday classes, the last day of the month. Rules the plugin cannot honour exactly are refused rather than quietly expanded to the wrong dates.
 * Added: pick the products you are featuring at an event. The field was already returned by the API but there was no way to set it, so it was always empty.

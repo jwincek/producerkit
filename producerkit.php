@@ -371,12 +371,22 @@ function activate(): void {
 	// Schedule daily availability cleanup.
 	\ProducerKit\Core\Availability\schedule_cleanup();
 
+	// The event-manager module owns this one, and it is optional — a site
+	// running without it has no series to top up.
+	if ( function_exists( '\\ProducerKit\\EventManager\\Series\\schedule_extend' ) ) {
+		\ProducerKit\EventManager\Series\schedule_extend();
+	}
+
 	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, __NAMESPACE__ . '\\activate' );
 
 function deactivate(): void {
 	\ProducerKit\Core\Availability\unschedule_cleanup();
+
+	if ( function_exists( '\\ProducerKit\\EventManager\\Series\\unschedule_extend' ) ) {
+		\ProducerKit\EventManager\Series\unschedule_extend();
+	}
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\deactivate' );

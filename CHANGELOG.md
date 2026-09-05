@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Recurring events keep themselves topped up. A rule with no end date now
+  generates a rolling window ahead of today rather than ahead of the series'
+  own start, and a daily job slides it forward.
+
+  The distinction is the whole feature. A window measured from the start
+  stops moving the moment the series is saved, so a market created in 2026
+  generates into 2027 and then quietly runs out of Saturdays a year later
+  with nothing to notice it. Measured from today, a market that began a year
+  ago still has most of a year ahead of it.
+
+  The daily job is deliberately additive: it creates occurrences the moving
+  window has reached and never updates or deletes one. It runs unattended,
+  and a job that rewrites content while nobody is watching is how a producer
+  loses an edit they made months ago and never finds out why. Reconciling
+  changes — pruning dates a shortened rule no longer produces — stays on the
+  save, where the person who asked for it is present.
+
+  A series whose start date has been cleared is skipped rather than allowed
+  to stop the others being topped up. The schedule re-creates itself on
+  `init`, so a site updated by a git pull, which never runs an activation
+  hook, gets it too.
+
+  Closes the recurrence work: rules are read and refused, occurrences are
+  real editable events, and the series no longer runs dry.
+
 - Recurring events generate real occurrences. A weekly market is now a series
   post carrying the rule, and one `pkit_event` per Saturday parented to it —
   so RSVPs, capacity, guest lists and cancellation work on an occurrence
