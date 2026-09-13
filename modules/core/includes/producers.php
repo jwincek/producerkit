@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
  * User meta holding the business or project name.
  *
  * Distinct from display_name on purpose: a person may want to be "Jamie" in
- * a comment thread and "Slowbird Bread Co." on a loaf.
+ * a comment thread and their bakery's name on a loaf.
  */
 const USER_META = 'pkit_producer_name';
 
@@ -229,8 +229,8 @@ function count_on_site(): int {
 /**
  * Whether a byline is worth showing at all.
  *
- * On a single-producer site — which is most of them — "Grown by Leftfield
- * Urban Farm" on every one of your own products is noise, so it stays hidden
+ * On a single-producer site — which is most of them — your own name on every
+ * one of your own products is noise, so the byline stays hidden
  * until there is genuinely something to tell apart. This follows the
  * availability board's filter rows, which are built from what is on the
  * board rather than from the whole taxonomy: derive it from the data instead

@@ -138,8 +138,8 @@ function sanitize_ticket_url( mixed $value ): string {
  * Split "who else is here" into a label and a link.
  *
  * One string still, so nothing migrates: a trailing http(s) address becomes
- * the link and whatever precedes it becomes the label. "Slowbird Bread Co.
- * https://slowbird.example" reads as the name, pointing at the site. An
+ * the link and whatever precedes it becomes the label. "The bakery next door
+ * https://example.com" reads as the name, pointing at their site. An
  * address on its own is labelled with its host, because a bare URL is not
  * what a visitor is looking for. Anything without an address is plain text,
  * exactly as before.

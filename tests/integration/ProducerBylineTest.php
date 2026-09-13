@@ -41,8 +41,8 @@ class ProducerBylineTest extends WP_UnitTestCase {
 			]
 		);
 
-		update_user_meta( $this->grower, Producers\USER_META, 'Leftfield Urban Farm' );
-		update_user_meta( $this->baker, Producers\USER_META, 'Slowbird Bread Co.' );
+		update_user_meta( $this->grower, Producers\USER_META, 'Example Farm' );
+		update_user_meta( $this->baker, Producers\USER_META, 'Example Bakery' );
 
 		update_user_meta( $this->grower, Profiles\USER_META, 'farm' );
 		update_user_meta( $this->baker, Profiles\USER_META, 'bakery' );
@@ -67,8 +67,8 @@ class ProducerBylineTest extends WP_UnitTestCase {
 		$lettuce = $this->product_by( $this->grower );
 		$loaf    = $this->product_by( $this->baker );
 
-		$this->assertSame( 'Grown by Leftfield Urban Farm', Producers\byline_for( $lettuce ) );
-		$this->assertSame( 'Baked by Slowbird Bread Co.', Producers\byline_for( $loaf ) );
+		$this->assertSame( 'Grown by Example Farm', Producers\byline_for( $lettuce ) );
+		$this->assertSame( 'Baked by Example Bakery', Producers\byline_for( $loaf ) );
 	}
 
 	/**
@@ -86,11 +86,11 @@ class ProducerBylineTest extends WP_UnitTestCase {
 
 		// A grower is reading the site.
 		wp_set_current_user( $this->grower );
-		$this->assertSame( 'Baked by Slowbird Bread Co.', Producers\byline_for( $loaf ) );
+		$this->assertSame( 'Baked by Example Bakery', Producers\byline_for( $loaf ) );
 
 		// Nobody is.
 		wp_set_current_user( 0 );
-		$this->assertSame( 'Baked by Slowbird Bread Co.', Producers\byline_for( $loaf ) );
+		$this->assertSame( 'Baked by Example Bakery', Producers\byline_for( $loaf ) );
 	}
 
 	/**
@@ -118,8 +118,8 @@ class ProducerBylineTest extends WP_UnitTestCase {
 		$mine   = $this->product_by( $this->grower );
 		$theirs = $this->product_by( $this->baker );
 
-		$this->assertSame( 'Grown by Leftfield Urban Farm', Producers\byline_for( $mine ) );
-		$this->assertSame( 'Grown by Slowbird Bread Co.', Producers\byline_for( $theirs ) );
+		$this->assertSame( 'Grown by Example Farm', Producers\byline_for( $mine ) );
+		$this->assertSame( 'Grown by Example Bakery', Producers\byline_for( $theirs ) );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class ProducerBylineTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'Hosted by Leftfield Urban Farm', Producers\byline_for( $event ) );
+		$this->assertSame( 'Hosted by Example Farm', Producers\byline_for( $event ) );
 	}
 
 	/**
@@ -161,7 +161,7 @@ class ProducerBylineTest extends WP_UnitTestCase {
 		$bare     = $this->product_by( $this->grower );
 
 		$with = \ProducerKit\Core\StructuredData\product_data( get_post( $declared ) );
-		$this->assertSame( 'Slowbird Bread Co.', $with['brand']['name'] );
+		$this->assertSame( 'Example Bakery', $with['brand']['name'] );
 
 		$without = \ProducerKit\Core\StructuredData\product_data( get_post( $bare ) );
 		$this->assertArrayNotHasKey( 'brand', $without );

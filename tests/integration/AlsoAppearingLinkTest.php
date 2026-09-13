@@ -31,10 +31,10 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	 * The case this exists for.
 	 */
 	public function test_a_name_and_address_become_a_named_link(): void {
-		$parsed = Meta\also_appearing( 'Slowbird Bread Co. https://slowbird.example' );
+		$parsed = Meta\also_appearing( 'Example Bakery https://bakery.example' );
 
-		$this->assertSame( 'Slowbird Bread Co.', $parsed['text'] );
-		$this->assertSame( 'https://slowbird.example', $parsed['url'] );
+		$this->assertSame( 'Example Bakery', $parsed['text'] );
+		$this->assertSame( 'https://bakery.example', $parsed['url'] );
 	}
 
 	/**
@@ -42,19 +42,19 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	 * visitor is looking for.
 	 */
 	public function test_a_bare_address_is_labelled_with_its_host(): void {
-		$parsed = Meta\also_appearing( 'https://www.slowbird.example/about' );
+		$parsed = Meta\also_appearing( 'https://www.bakery.example/about' );
 
-		$this->assertSame( 'slowbird.example', $parsed['text'] );
-		$this->assertSame( 'https://www.slowbird.example/about', $parsed['url'] );
+		$this->assertSame( 'bakery.example', $parsed['text'] );
+		$this->assertSame( 'https://www.bakery.example/about', $parsed['url'] );
 	}
 
 	/**
 	 * What everyone has stored today keeps working, unchanged.
 	 */
 	public function test_a_plain_name_is_untouched(): void {
-		$parsed = Meta\also_appearing( 'Slowbird Bread Co.' );
+		$parsed = Meta\also_appearing( 'Example Bakery' );
 
-		$this->assertSame( 'Slowbird Bread Co.', $parsed['text'] );
+		$this->assertSame( 'Example Bakery', $parsed['text'] );
 		$this->assertSame( '', $parsed['url'] );
 	}
 
@@ -70,9 +70,9 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	 * sentence around it would be a guess.
 	 */
 	public function test_only_a_trailing_address_is_treated_as_the_link(): void {
-		$parsed = Meta\also_appearing( 'See https://slowbird.example for the bread' );
+		$parsed = Meta\also_appearing( 'See https://bakery.example for the bread' );
 
-		$this->assertSame( 'See https://slowbird.example for the bread', $parsed['text'] );
+		$this->assertSame( 'See https://bakery.example for the bread', $parsed['text'] );
 		$this->assertSame( '', $parsed['url'] );
 	}
 
@@ -90,7 +90,7 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 		$stored = (string) get_post_meta( $event, '_pkit_also_appearing', true );
 		$parsed = Meta\also_appearing( $stored );
 
-		$this->assertSame( 'Slowbird', $stored, 'The address should have been dropped, leaving the name.' );
+		$this->assertSame( 'Example Bakery', $stored, 'The address should have been dropped, leaving the name.' );
 		$this->assertSame( '', $parsed['url'], 'A rejected scheme must never become a link.' );
 	}
 
@@ -99,9 +99,9 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	 */
 	public static function dangerous_schemes(): array {
 		return [
-			'javascript' => [ 'Slowbird javascript://alert(1)' ],
-			'data'       => [ 'Slowbird data://text/html,<script>' ],
-			'ftp'        => [ 'Slowbird ftp://slowbird.example' ],
+			'javascript' => [ 'Example Bakery javascript://alert(1)' ],
+			'data'       => [ 'Example Bakery data://text/html,<script>' ],
+			'ftp'        => [ 'Example Bakery ftp://bakery.example' ],
 		];
 	}
 
@@ -115,10 +115,10 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	 * going to be rendered as a link would be the wrong trade.
 	 */
 	public function test_a_scheme_without_slashes_stays_plain_text(): void {
-		$parsed = Meta\also_appearing( 'Slowbird javascript:alert(1)' );
+		$parsed = Meta\also_appearing( 'Example Bakery javascript:alert(1)' );
 
 		$this->assertSame( '', $parsed['url'], 'It must not become a link.' );
-		$this->assertSame( 'Slowbird javascript:alert(1)', $parsed['text'] );
+		$this->assertSame( 'Example Bakery javascript:alert(1)', $parsed['text'] );
 	}
 
 	/**
@@ -127,12 +127,12 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 	public function test_a_valid_link_round_trips_through_meta(): void {
 		$event = (int) self::factory()->post->create( [ 'post_type' => 'pkit_event' ] );
 
-		update_post_meta( $event, '_pkit_also_appearing', 'Slowbird Bread Co. https://slowbird.example' );
+		update_post_meta( $event, '_pkit_also_appearing', 'Example Bakery https://bakery.example' );
 
 		$parsed = Meta\also_appearing( (string) get_post_meta( $event, '_pkit_also_appearing', true ) );
 
-		$this->assertSame( 'Slowbird Bread Co.', $parsed['text'] );
-		$this->assertSame( 'https://slowbird.example', $parsed['url'] );
+		$this->assertSame( 'Example Bakery', $parsed['text'] );
+		$this->assertSame( 'https://bakery.example', $parsed['url'] );
 	}
 
 	/**
@@ -147,12 +147,12 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 		);
 
 		update_post_meta( $event, '_pkit_start_datetime', '2026-10-03T09:00:00' );
-		update_post_meta( $event, '_pkit_also_appearing', 'Slowbird Bread Co. https://slowbird.example' );
+		update_post_meta( $event, '_pkit_also_appearing', 'Example Bakery https://bakery.example' );
 
 		$html = \ProducerKit\Core\SingleContent\render_event_details( get_post( $event ) );
 
-		$this->assertStringContainsString( 'href="https://slowbird.example"', $html );
-		$this->assertStringContainsString( 'Slowbird Bread Co.', $html );
+		$this->assertStringContainsString( 'href="https://bakery.example"', $html );
+		$this->assertStringContainsString( 'Example Bakery', $html );
 	}
 
 	/**
@@ -167,11 +167,11 @@ class AlsoAppearingLinkTest extends WP_UnitTestCase {
 		);
 
 		update_post_meta( $event, '_pkit_start_datetime', '2026-10-03T09:00:00' );
-		update_post_meta( $event, '_pkit_also_appearing', 'Slowbird Bread Co.' );
+		update_post_meta( $event, '_pkit_also_appearing', 'Example Bakery' );
 
 		$html = \ProducerKit\Core\SingleContent\render_event_details( get_post( $event ) );
 
-		$this->assertStringContainsString( 'Slowbird Bread Co.', $html );
+		$this->assertStringContainsString( 'Example Bakery', $html );
 		$this->assertStringNotContainsString( '<a href="http', $html );
 	}
 }
