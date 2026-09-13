@@ -18,11 +18,6 @@ use WP_UnitTestCase;
 use ProducerKit\SampleData;
 use ProducerKit\Core\Availability;
 
-// producerkit.php loads this behind is_admin(), false under PHPUnit — the same
-// reason the admin dashboard went untested. File scope rather than set_up():
-// WP_UnitTestCase snapshots $wp_filter on the first set_up() and restores it
-// after each case.
-require_once dirname( __DIR__, 2 ) . '/includes/sample-data.php';
 
 class SampleDataRemovalTest extends WP_UnitTestCase {
 

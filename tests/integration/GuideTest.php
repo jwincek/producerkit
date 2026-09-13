@@ -18,7 +18,6 @@ use WP_UnitTestCase;
 use ProducerKit\Guide;
 use ProducerKit\ProducerProfiles\Profiles;
 
-require_once dirname( __DIR__, 2 ) . '/includes/guide.php';
 
 class GuideTest extends WP_UnitTestCase {
 

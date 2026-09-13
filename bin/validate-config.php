@@ -481,6 +481,35 @@ if ( ! file_exists( $guide_template ) ) {
 	}
 }
 
+// ── Check 6d: no file is loaded behind is_admin() ────────────────────────────
+//
+// is_admin() is false under PHPUnit, so a require inside such a block hides
+// the whole file from the suite. Nine files were loaded that way, five with no
+// coverage at all, and it cost a dashboard nobody could click to (#67) and a
+// sample-data removal that deleted more than sample data (#69) — both shipped,
+// both invisible to 590 tests.
+//
+// Guarding the hooks is fine and sometimes necessary: producer-profiles gates
+// an init callback that would otherwise flush rewrite rules on every front-end
+// request. It is guarding the *load* that blinds the suite. See #70.
+foreach ( array_merge( [ $root . '/producerkit.php' ], glob( $root . '/modules/*/bootstrap.php' ) ?: [] ) as $loader ) {
+	$src = (string) file_get_contents( $loader );
+	$rel = str_replace( $root . '/', '', $loader );
+
+	if ( preg_match_all( '/if \( is_admin\(\) \) \{(.*?)\n\}/s', $src, $blocks ) ) {
+		foreach ( $blocks[1] as $block ) {
+			if ( preg_match( '/^\s*require(_once)?\s/m', $block ) ) {
+				$add(
+					'error',
+					'loading',
+					"$rel loads a file inside an is_admin() block, which hides it from the test suite. "
+						. 'Load it unconditionally and guard its hooks instead.'
+				);
+			}
+		}
+	}
+}
+
 // ── Check 7: ability names and categories ────────────────────────────────────
 // Distinct paths rather than register_rest_route() calls. /availability is
 // registered twice — once for GET, once for POST — and counting registrations

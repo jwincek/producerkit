@@ -23,9 +23,7 @@ require_once __DIR__ . '/includes/sample-hints.php';
 require_once __DIR__ . '/includes/profiles.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 
-if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin-settings.php';
-}
+require_once __DIR__ . '/includes/admin-settings.php';
 
 // Registered now, at plugins_loaded, so both are in place before core's own
 // init callback builds its labels and seeds its terms.

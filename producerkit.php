@@ -157,12 +157,21 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\\boot', 5 );
  * Admin dashboard
  * ─────────────────────────────────────────────── */
 
-if ( is_admin() ) {
-	require_once PLUGIN_DIR . '/includes/admin-dashboard.php';
-	require_once PLUGIN_DIR . '/includes/sample-data.php';
-	require_once PLUGIN_DIR . '/includes/default-pages.php';
-	require_once PLUGIN_DIR . '/includes/admin-guide.php';
-}
+// Loaded unconditionally, and gated on their hooks instead.
+//
+// These register admin_menu, admin_init, admin_post_* and the user-profile
+// hooks, none of which fire outside the admin — so the guard bought nothing at
+// runtime and cost the whole surface its test coverage: is_admin() is false
+// under PHPUnit, so none of this was ever loaded when the suite ran. A
+// dashboard that could not be reached by clicking shipped that way (#67), and
+// so did sample-data removal that deleted more than sample data (#69).
+//
+// Loading them in tests by some other path would be worse than not testing
+// them: the test would exercise a load order production never uses. See #70.
+require_once PLUGIN_DIR . '/includes/admin-dashboard.php';
+require_once PLUGIN_DIR . '/includes/sample-data.php';
+require_once PLUGIN_DIR . '/includes/default-pages.php';
+require_once PLUGIN_DIR . '/includes/admin-guide.php';
 
 // Sample data markers load on both front and admin.
 require_once PLUGIN_DIR . '/includes/guide.php';
@@ -313,10 +322,10 @@ add_action(
 				'window.pkitSettings = %s;',
 				wp_json_encode(
 					[
-						'restBase'      => esc_url_raw( rest_url( 'producerkit/v1' ) ),
-						'nonce'         => wp_create_nonce( 'wp_rest' ),
-						'pluginUrl'     => plugins_url( '', __FILE__ ),
-						'activeModules' => get_active_modules(),
+						'restBase'       => esc_url_raw( rest_url( 'producerkit/v1' ) ),
+						'nonce'          => wp_create_nonce( 'wp_rest' ),
+						'pluginUrl'      => plugins_url( '', __FILE__ ),
+						'activeModules'  => get_active_modules(),
 						// Distinct from the module being active: a site can have
 						// the module switched on with WooCommerce uninstalled,
 						// in which case its bootstrap returns early and any
