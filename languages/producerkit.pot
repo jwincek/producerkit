@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-12T01:13:02+00:00\n"
+"POT-Creation-Date: 2026-09-13T22:00:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin-dashboard.php:33
 #: includes/admin-dashboard.php:145
 #: modules/core/includes/admin-producer-field.php:33
-#: producerkit.php:295
+#: producerkit.php:304
 msgid "ProducerKit"
 msgstr ""
 
