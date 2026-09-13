@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-13T22:36:26+00:00\n"
+"POT-Creation-Date: 2026-09-13T22:52:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -3021,7 +3021,7 @@ msgid "Flours"
 msgstr ""
 
 #: modules/producer-profiles/profiles/bakery.php:21
-#: assets/js/editor-location.js:719
+#: assets/js/editor-location.js:828
 msgid "Method"
 msgstr ""
 
@@ -4234,7 +4234,7 @@ msgstr ""
 #: assets/js/editor-event.js:582
 #: assets/js/editor-location.js:421
 #: assets/js/editor-location.js:493
-#: assets/js/editor-location.js:734
+#: assets/js/editor-location.js:843
 #: assets/js/editor-product.js:304
 msgid "Remove"
 msgstr ""
@@ -4372,7 +4372,7 @@ msgid "Venmo Handle"
 msgstr ""
 
 #: assets/js/editor-location.js:120
-#: assets/js/editor-location.js:752
+#: assets/js/editor-location.js:861
 msgid "examplefarm"
 msgstr ""
 
@@ -4460,35 +4460,51 @@ msgstr ""
 msgid "Market Vouchers (WIC/Sr FMNP)"
 msgstr ""
 
-#: assets/js/editor-location.js:665
+#: assets/js/editor-location.js:641
+msgid "(no title)"
+msgstr ""
+
+#: assets/js/editor-location.js:729
 msgid "Payment Options"
 msgstr ""
 
-#: assets/js/editor-location.js:689
+#: assets/js/editor-location.js:753
 msgid "No payment options set. Add one below."
 msgstr ""
 
-#: assets/js/editor-location.js:743
+#: assets/js/editor-location.js:771
+msgid "Copy from another location"
+msgstr ""
+
+#: assets/js/editor-location.js:779
+msgid "Choose a location…"
+msgstr ""
+
+#: assets/js/editor-location.js:797
+msgid "Copies its payment options here so you can edit them. It does not keep the two in step afterwards."
+msgstr ""
+
+#: assets/js/editor-location.js:852
 msgid "Handle"
 msgstr ""
 
-#: assets/js/editor-location.js:753
+#: assets/js/editor-location.js:862
 msgid "Username without the @ or $."
 msgstr ""
 
-#: assets/js/editor-location.js:761
+#: assets/js/editor-location.js:870
 msgid "URL"
 msgstr ""
 
-#: assets/js/editor-location.js:767
+#: assets/js/editor-location.js:876
 msgid "https://squareup.com/…"
 msgstr ""
 
-#: assets/js/editor-location.js:774
+#: assets/js/editor-location.js:883
 msgid "Display label (optional)"
 msgstr ""
 
-#: assets/js/editor-location.js:793
+#: assets/js/editor-location.js:902
 msgid "Add Payment Option"
 msgstr ""
 

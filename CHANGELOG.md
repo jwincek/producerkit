@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Copy from another location** in a location's Payment Options. With three
+  stands you no longer fill the same list in three times — pick a location that
+  already has payment options and its list is copied in as a starting point,
+  then edited freely.
+
+  A copy, not a link: the two do not stay in step afterwards. What a farm stand
+  takes and what a market booth takes genuinely differ, which is why payment
+  options live per location rather than site-wide, and anything that kept them
+  synchronised would undo that.
+
+  Offered only while the location you are editing has nothing set and another
+  one does, so it never appears where it would overwrite work in progress.
+
+
+### Added
+
 - Optional modules can be switched off from the dashboard: **Pre-Orders**,
   **Commissions**, **Notifications** and **WooCommerce Settlement**. A farm
   that takes neither pre-orders nor made-to-order requests can put those
