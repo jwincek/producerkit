@@ -42,8 +42,8 @@ Two renames, and why the second could do what the first could not.
 
 **2026-09-01, `farm-stand-manager` → `producerkit`.** Public identity only:
 name, slug, directory, main file, text domain, ability names, artwork. The
-internal prefix stayed `lfuf` — short for Leftfield Urban Farm, the one site
-this began as — because at that point every identifier above held live data
+internal prefix stayed `lfuf` — initials of the single farm this began as —
+because at that point every identifier above held live data
 and renaming would have orphaned it.
 
 **Later the same day, `lfuf` → `pkit`.** A row count found the install

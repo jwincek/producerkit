@@ -135,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - "Sharing the booth" can now link. Paste the other producer's web address
-  after their name — "Slowbird Bread Co. https://slowbird.example" — and the
+  after their name — "The bakery next door https://example.com" — and the
   event page shows their name as a link to their own site. A name on its own
   still renders as plain text, and nothing already stored changes.
 
@@ -164,8 +164,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Attribution when two businesses share one install. A product or event now
-  carries a byline naming the producer who published it — "Grown by Leftfield
-  Urban Farm" on the lettuce, "Baked by Slowbird Bread Co." on the loaf — on
+  carries a byline naming the producer who published it — "Grown by" on the
+  lettuce, "Baked by" on the loaf, each followed by the business name — on
   the single pages, on the product card, in its accessible label, and as
   `brand` in the product's structured data.
 
