@@ -601,6 +601,51 @@
 		const meta = _meta[ 0 ] || {};
 		const setMeta = _meta[ 1 ];
 
+		const currentId = useSelect( function ( select ) {
+			return select( 'core/editor' ).getCurrentPostId();
+		}, [] );
+
+		// Other locations that already have a list worth copying. Read through
+		// the entity store the panel already uses, so this needs no endpoint
+		// of its own — one less permanent route for the sake of one control.
+		const donors = useSelect(
+			function ( select ) {
+				const records = select( 'core' ).getEntityRecords(
+					'postType',
+					'pkit_location',
+					{ per_page: 50, status: 'any', _locale: 'user' }
+				);
+
+				if ( ! records ) {
+					return [];
+				}
+
+				return records
+					.filter( function ( record ) {
+						if ( record.id === currentId ) {
+							return false;
+						}
+						const raw =
+							( record.meta || {} )._pkit_payment_methods || '';
+						try {
+							return JSON.parse( raw || '[]' ).length > 0;
+						} catch ( e ) {
+							return false;
+						}
+					} )
+					.map( function ( record ) {
+						return {
+							id: record.id,
+							title:
+								( record.title && record.title.rendered ) ||
+								__( '(no title)', 'producerkit' ),
+							raw: ( record.meta || {} )._pkit_payment_methods,
+						};
+					} );
+			},
+			[ currentId ]
+		);
+
 		const methodsRaw = meta._pkit_payment_methods || '[]';
 		let methods;
 		try {
@@ -616,6 +661,25 @@
 			const updated = {};
 			updated._pkit_payment_methods = JSON.stringify( next );
 			setMeta( Object.assign( {}, meta, updated ) );
+		}
+
+		function copyFrom( donorId ) {
+			const donor = donors.filter( function ( entry ) {
+				return String( entry.id ) === String( donorId );
+			} )[ 0 ];
+
+			if ( ! donor ) {
+				return;
+			}
+
+			try {
+				const parsed = JSON.parse( donor.raw || '[]' );
+				if ( Array.isArray( parsed ) && parsed.length ) {
+					updateMethods( parsed );
+				}
+			} catch ( e ) {
+				// A donor whose meta will not parse is simply not copied.
+			}
 		}
 
 		function addMethod() {
@@ -690,6 +754,51 @@
 							'No payment options set. Add one below.',
 							'producerkit'
 						)
+				  )
+				: null,
+
+			// Offered only while this location has nothing set and another one
+			// does. It is a starting point, not a sync: what a stand takes and
+			// what a market booth takes genuinely differ, which is why these
+			// live per location in the first place. Copying into a list
+			// already being filled in would risk overwriting the work it is
+			// meant to save.
+			methods.length === 0 && donors.length > 0
+				? el(
+						'div',
+						{ style: { marginBottom: '12px' } },
+						el( SelectControl, {
+							label: __(
+								'Copy from another location',
+								'producerkit'
+							),
+							value: '',
+							options: [
+								{
+									value: '',
+									label: __(
+										'Choose a location…',
+										'producerkit'
+									),
+								},
+							].concat(
+								donors.map( function ( donor ) {
+									return {
+										value: String( donor.id ),
+										label: donor.title,
+									};
+								} )
+							),
+							onChange( value ) {
+								if ( value ) {
+									copyFrom( value );
+								}
+							},
+							help: __(
+								'Copies its payment options here so you can edit them. It does not keep the two in step afterwards.',
+								'producerkit'
+							),
+						} )
 				  )
 				: null,
 
