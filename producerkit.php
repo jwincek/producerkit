@@ -174,6 +174,7 @@ require_once PLUGIN_DIR . '/includes/default-pages.php';
 require_once PLUGIN_DIR . '/includes/admin-guide.php';
 
 // Sample data markers load on both front and admin.
+require_once PLUGIN_DIR . '/includes/modules.php';
 require_once PLUGIN_DIR . '/includes/guide.php';
 require_once PLUGIN_DIR . '/includes/sample-data-markers.php';
 

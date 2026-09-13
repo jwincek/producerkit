@@ -270,30 +270,73 @@ function render_dashboard(): void {
 		<!-- ── Modules ── -->
 		<div class="pkit-dashboard__section">
 			<h2><?php esc_html_e( 'Modules', 'producerkit' ); ?></h2>
+
+			<?php
+			// Display-only flags, set by our own redirect after the
+			// nonce-checked action in includes/modules.php already ran.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$done = isset( $_GET['pkit_module_done'] ) ? sanitize_key( wp_unslash( $_GET['pkit_module_done'] ) ) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$now = isset( $_GET['pkit_module_now'] ) ? sanitize_key( wp_unslash( $_GET['pkit_module_now'] ) ) : '';
+			?>
+			<?php if ( $done ) : ?>
+				<div class="notice notice-success inline" style="margin-bottom:0.75rem;">
+					<p>
+						<?php
+						printf(
+							'off' === $now
+								/* translators: %s: module name. */
+								? esc_html__( '%s is switched off. Nothing was deleted — switching it back on restores everything.', 'producerkit' )
+								/* translators: %s: module name. */
+								: esc_html__( '%s is switched back on.', 'producerkit' ),
+							'<strong>' . esc_html( $labels[ $done ] ?? $done ) . '</strong>'
+						);
+						?>
+					</p>
+				</div>
+			<?php endif; ?>
+
+			<p class="description">
+				<?php esc_html_e( 'Switching a module off hides its screens and stops its features. It never deletes anything, and switching it back on restores everything.', 'producerkit' ); ?>
+			</p>
+
 			<table class="widefat pkit-dashboard__modules-table">
 				<thead>
 					<tr>
 						<th><?php esc_html_e( 'Module', 'producerkit' ); ?></th>
 						<th><?php esc_html_e( 'Status', 'producerkit' ); ?></th>
 						<th><?php esc_html_e( 'Type', 'producerkit' ); ?></th>
+						<th><?php esc_html_e( 'Action', 'producerkit' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
+					$toggleable = \ProducerKit\Modules\toggleable();
+
 					foreach ( $registered as $slug => $config ) :
-						$is_active = in_array( $slug, $active, true );
+						$is_active    = in_array( $slug, $active, true );
+						$can_toggle   = in_array( $slug, $toggleable, true );
+						$module_usage = $is_active && $can_toggle
+							? \ProducerKit\Modules\usage( $slug )
+							: [
+								'lines'      => [],
+								'holds_data' => false,
+							];
 						?>
 						<tr>
 							<td>
 								<strong><?php echo esc_html( $labels[ $slug ] ?? $slug ); ?></strong>
 								<code class="pkit-dashboard__module-slug"><?php echo esc_html( $slug ); ?></code>
+								<?php foreach ( $module_usage['lines'] as $line ) : ?>
+									<p class="description pkit-dashboard__module-usage"><?php echo esc_html( $line ); ?></p>
+								<?php endforeach; ?>
 							</td>
 							<td>
 								<span class="pkit-dashboard__module-status pkit-dashboard__module-status--<?php echo $is_active ? 'active' : 'inactive'; ?>">
 									<?php
 									echo $is_active
 										? esc_html__( 'Active', 'producerkit' )
-										: esc_html__( 'Inactive', 'producerkit' );
+										: esc_html__( 'Off', 'producerkit' );
 									?>
 								</span>
 							</td>
@@ -303,6 +346,40 @@ function render_dashboard(): void {
 									? esc_html__( 'Required', 'producerkit' )
 									: esc_html__( 'Optional', 'producerkit' );
 								?>
+							</td>
+							<td>
+								<?php if ( ! $can_toggle ) : ?>
+									<span class="description">&mdash;</span>
+								<?php else : ?>
+									<?php
+									// Confirm only when something would actually be
+									// stranded — the same rule Clear everything
+									// follows in staying disabled until it would do
+									// something.
+									$confirm = '';
+
+									if ( $is_active && ( $module_usage['holds_data'] || $module_usage['lines'] ) ) {
+										$confirm = sprintf(
+											/* translators: %s: what the module is currently holding. */
+											__( "Switch this off?\n\n%s\n\nNothing is deleted, and switching it back on restores everything.", 'producerkit' ),
+											implode( "\n", $module_usage['lines'] )
+										);
+									}
+									?>
+									<a
+										href="<?php echo esc_url( \ProducerKit\Modules\toggle_url( $slug ) ); ?>"
+										class="button<?php echo $is_active ? '' : ' button-primary'; ?>"
+										<?php if ( '' !== $confirm ) : ?>
+											onclick="return confirm( <?php echo esc_attr( wp_json_encode( $confirm ) ); ?> );"
+										<?php endif; ?>
+									>
+										<?php
+										echo $is_active
+											? esc_html__( 'Switch off', 'producerkit' )
+											: esc_html__( 'Switch on', 'producerkit' );
+										?>
+									</a>
+								<?php endif; ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
