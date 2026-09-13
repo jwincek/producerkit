@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-13T22:00:35+00:00\n"
+"POT-Creation-Date: 2026-09-13T22:36:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin-dashboard.php:33
 #: includes/admin-dashboard.php:145
 #: modules/core/includes/admin-producer-field.php:33
-#: producerkit.php:304
+#: producerkit.php:305
 msgid "ProducerKit"
 msgstr ""
 
@@ -117,7 +117,7 @@ msgid "Show these"
 msgstr ""
 
 #: blocks/availability-board/render.php:284
-#: includes/admin-dashboard.php:278
+#: includes/admin-dashboard.php:308
 #: modules/availability-board/includes/admin-quick-entry.php:116
 #: modules/core/includes/admin-columns.php:276
 #: modules/core/includes/single-content.php:113
@@ -614,11 +614,27 @@ msgstr ""
 msgid "Modules"
 msgstr ""
 
-#: includes/admin-dashboard.php:276
+#. translators: %s: module name.
+#: includes/admin-dashboard.php:289
+#, php-format
+msgid "%s is switched off. Nothing was deleted — switching it back on restores everything."
+msgstr ""
+
+#. translators: %s: module name.
+#: includes/admin-dashboard.php:291
+#, php-format
+msgid "%s is switched back on."
+msgstr ""
+
+#: includes/admin-dashboard.php:300
+msgid "Switching a module off hides its screens and stops its features. It never deletes anything, and switching it back on restores everything."
+msgstr ""
+
+#: includes/admin-dashboard.php:306
 msgid "Module"
 msgstr ""
 
-#: includes/admin-dashboard.php:277
+#: includes/admin-dashboard.php:307
 #: modules/availability-board/includes/admin-quick-entry.php:117
 #: modules/commissions/includes/admin-commissions.php:158
 #: modules/core/includes/admin-columns.php:277
@@ -628,148 +644,171 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/admin-dashboard.php:295
+#: includes/admin-dashboard.php:309
+msgid "Action"
+msgstr ""
+
+#: includes/admin-dashboard.php:338
 msgid "Active"
 msgstr ""
 
-#: includes/admin-dashboard.php:296
-msgid "Inactive"
+#: includes/admin-dashboard.php:339
+msgid "Off"
 msgstr ""
 
-#: includes/admin-dashboard.php:303
+#: includes/admin-dashboard.php:346
 #: modules/core/includes/product-import-export.php:473
 msgid "Required"
 msgstr ""
 
-#: includes/admin-dashboard.php:304
+#: includes/admin-dashboard.php:347
 msgid "Optional"
 msgstr ""
 
-#: includes/admin-dashboard.php:315
+#. translators: %s: what the module is currently holding.
+#: includes/admin-dashboard.php:364
+#, php-format
+msgid ""
+"Switch this off?\n"
+"\n"
+"%s\n"
+"\n"
+"Nothing is deleted, and switching it back on restores everything."
+msgstr ""
+
+#: includes/admin-dashboard.php:378
+msgid "Switch off"
+msgstr ""
+
+#: includes/admin-dashboard.php:379
+msgid "Switch on"
+msgstr ""
+
+#: includes/admin-dashboard.php:392
 msgid "Platform"
 msgstr ""
 
 #. translators: %s: WordPress version number.
-#: includes/admin-dashboard.php:320
+#: includes/admin-dashboard.php:397
 #, php-format
 msgid "WordPress %s"
 msgstr ""
 
 #. translators: %s: PHP version number.
-#: includes/admin-dashboard.php:326
+#: includes/admin-dashboard.php:403
 #, php-format
 msgid "PHP %s"
 msgstr ""
 
-#: includes/admin-dashboard.php:330
+#: includes/admin-dashboard.php:407
 msgid "Interactivity API:"
 msgstr ""
 
-#: includes/admin-dashboard.php:332
-#: includes/admin-dashboard.php:340
+#: includes/admin-dashboard.php:409
+#: includes/admin-dashboard.php:417
 #: modules/availability-board/includes/fresh-sheet.php:33
 #: blocks/availability-board/index.js:42
 #: blocks/product-card/index.js:33
 msgid "Available"
 msgstr ""
 
-#: includes/admin-dashboard.php:336
+#: includes/admin-dashboard.php:413
 msgid "Abilities API:"
 msgstr ""
 
-#: includes/admin-dashboard.php:341
+#: includes/admin-dashboard.php:418
 msgid "Not available (requires WP 6.9+)"
 msgstr ""
 
 #. translators: %d: number of products without a featured photo.
-#: includes/admin-dashboard.php:395
+#: includes/admin-dashboard.php:472
 #, php-format
 msgid "%d product without a photo"
 msgid_plural "%d products without photos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:396
+#: includes/admin-dashboard.php:473
 msgid "Products look better on the availability board with images."
 msgstr ""
 
-#: includes/admin-dashboard.php:399
-#: includes/admin-dashboard.php:418
+#: includes/admin-dashboard.php:476
+#: includes/admin-dashboard.php:495
 msgid "View Products"
 msgstr ""
 
 #. translators: %d: number of products without a price.
-#: includes/admin-dashboard.php:414
+#: includes/admin-dashboard.php:491
 #, php-format
 msgid "%d product without a price"
 msgid_plural "%d products without prices"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:415
+#: includes/admin-dashboard.php:492
 msgid "Visitors see the price on the availability board and product pages."
 msgstr ""
 
 #. translators: %d: number of events without a start date.
-#: includes/admin-dashboard.php:433
+#: includes/admin-dashboard.php:510
 #, php-format
 msgid "%d event without a start date"
 msgid_plural "%d events without start dates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:434
+#: includes/admin-dashboard.php:511
 msgid "Events need a start date to appear in the event list."
 msgstr ""
 
-#: includes/admin-dashboard.php:437
+#: includes/admin-dashboard.php:514
 msgid "View Events"
 msgstr ""
 
 #. translators: %d: number of locations without an address.
-#: includes/admin-dashboard.php:452
+#: includes/admin-dashboard.php:529
 #, php-format
 msgid "%d location without an address"
 msgid_plural "%d locations without addresses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:453
+#: includes/admin-dashboard.php:530
 msgid "The address shows on location cards and the stand banner."
 msgstr ""
 
-#: includes/admin-dashboard.php:456
+#: includes/admin-dashboard.php:533
 msgid "View Locations"
 msgstr ""
 
 #. translators: %d: number of products with availability over a week old.
-#: includes/admin-dashboard.php:485
+#: includes/admin-dashboard.php:562
 #, php-format
 msgid "%d product with availability over a week old"
 msgid_plural "%d products with availability over a week old"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:486
+#: includes/admin-dashboard.php:563
 msgid "Consider refreshing the availability board."
 msgstr ""
 
-#: includes/admin-dashboard.php:489
-#: includes/admin-dashboard.php:515
+#: includes/admin-dashboard.php:566
+#: includes/admin-dashboard.php:592
 #: modules/availability-board/includes/admin-quick-entry.php:24
 #: modules/availability-board/includes/admin-quick-entry.php:78
 msgid "Update Availability"
 msgstr ""
 
 #. translators: %d: number of products not on the availability board.
-#: includes/admin-dashboard.php:511
+#: includes/admin-dashboard.php:588
 #, php-format
 msgid "%d product not on the availability board"
 msgid_plural "%d products not on the availability board"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin-dashboard.php:512
+#: includes/admin-dashboard.php:589
 msgid "These products won't show up for visitors until you set their status."
 msgstr ""
 
@@ -866,6 +905,42 @@ msgstr ""
 #: includes/guide.php:113
 msgid "none by default"
 msgstr ""
+
+#. translators: 1: total pre-orders. 2: how many are not yet collected.
+#: includes/modules.php:94
+#, php-format
+msgid "%1$d order, %2$d still to collect"
+msgid_plural "%1$d orders, %2$d still to collect"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: total requests. 2: how many are still open.
+#: includes/modules.php:112
+#, php-format
+msgid "%1$d request, %2$d still open"
+msgid_plural "%1$d requests, %2$d still open"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules.php:125
+msgid "Customers stop receiving email about their orders and requests. Nothing else changes."
+msgstr ""
+
+#: includes/modules.php:130
+msgid "WooCommerce is not active, so this module is already doing nothing."
+msgstr ""
+
+#: includes/modules.php:134
+msgid "Accepted quotes and pre-orders stop being sent to WooCommerce for payment. You would arrange payment directly instead."
+msgstr ""
+
+#. translators: %d: number of published pages using the block.
+#: includes/modules.php:215
+#, php-format
+msgid "%d published page uses its block, and would render nothing there."
+msgid_plural "%d published pages use its block, and would render nothing there."
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/sample-data-markers.php:89
 msgid "Sample data is active. Content marked \"Sample\" is test data."

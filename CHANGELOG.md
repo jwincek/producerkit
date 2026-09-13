@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Optional modules can be switched off from the dashboard: **Pre-Orders**,
+  **Commissions**, **Notifications** and **WooCommerce Settlement**. A farm
+  that takes neither pre-orders nor made-to-order requests can put those
+  screens away.
+
+  Each says what it is holding before you switch it off — "3 orders, 2 still to
+  collect", "1 published page uses its block, and would render nothing there" —
+  and asks for confirmation only when something would actually be affected.
+  Nothing is ever deleted, and switching a module back on restores everything.
+
+  Only these four. The rest are either required or the plugin makes little
+  sense without them, and Producer Profiles in particular is a vocabulary
+  switch rather than a feature: turning it off would revert every word on a
+  pottery site to a farm's.
+
+  A site with its own `pkit_active_modules` filter still wins over the setting,
+  so code beats a click and the filter stays the documented extension point.
+
+
 ## [2.8.0] - 2026-09-11
 
 ### Added

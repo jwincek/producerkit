@@ -132,6 +132,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= Unreleased =
+* Added: switch off the parts you do not use — Pre-Orders, Commissions, Notifications and WooCommerce Settlement — from the ProducerKit dashboard. It tells you what each one is holding first, and never deletes anything.
+
 = 2.8.0 =
 * Added: a Getting Started guide inside the dashboard, written in your trade's words — a beekeeper reads about their home yard and hive notes, a potter about their studio and clay supplier.
 * Fixed: on a site with no other block plugin installed, none of ProducerKit's blocks appeared in the editor. They do now — and their editor labels can be translated for the first time.
