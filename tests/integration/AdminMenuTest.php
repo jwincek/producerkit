@@ -9,12 +9,6 @@ declare(strict_types=1);
 use ProducerKit\Core\Post_Types;
 use ProducerKit\ProducerProfiles\Profiles;
 
-// producerkit.php loads the dashboard behind is_admin(), false under PHPUnit —
-// which is why its menu registration went untested. Required at file scope
-// rather than in set_up(): WP_UnitTestCase snapshots $wp_filter on the first
-// set_up() and restores it after every test, so a hook added inside set_up()
-// would exist for one case and vanish for the rest.
-require_once dirname( __DIR__, 2 ) . '/includes/admin-dashboard.php';
 
 final class AdminMenuTest extends WP_UnitTestCase {
 

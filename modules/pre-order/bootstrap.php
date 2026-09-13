@@ -19,6 +19,4 @@ require_once __DIR__ . '/includes/rest-extensions.php';
 require_once __DIR__ . '/includes/order-response.php';
 require_once __DIR__ . '/includes/abilities.php';
 
-if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin-orders.php';
-}
+require_once __DIR__ . '/includes/admin-orders.php';

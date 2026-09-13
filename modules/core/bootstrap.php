@@ -31,9 +31,7 @@ require_once __DIR__ . '/includes/single-styles.php';
 require_once __DIR__ . '/includes/admin-columns.php';
 require_once __DIR__ . '/includes/product-import-export.php';
 
-if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin-producer-field.php';
-}
+require_once __DIR__ . '/includes/admin-producer-field.php';
 
 /**
  * Init hook: register all data structures.

@@ -14,11 +14,6 @@ use WP_UnitTestCase;
 
 use ProducerKit\DefaultPages;
 
-// producerkit.php loads this behind is_admin(), false under PHPUnit. File
-// scope rather than set_up(): WP_UnitTestCase snapshots $wp_filter on the
-// first set_up() and restores it after each case, so a hook registered in
-// set_up() would exist for one test only. See #70.
-require_once dirname( __DIR__, 2 ) . '/includes/default-pages.php';
 
 class DefaultPagesTest extends WP_UnitTestCase {
 

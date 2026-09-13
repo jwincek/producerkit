@@ -25,6 +25,4 @@ require_once __DIR__ . '/includes/rest-extensions.php';
 require_once __DIR__ . '/includes/quote-response.php';
 require_once __DIR__ . '/includes/abilities.php';
 
-if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin-commissions.php';
-}
+require_once __DIR__ . '/includes/admin-commissions.php';
