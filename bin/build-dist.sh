@@ -87,6 +87,15 @@ for f in .git .github bin vendor node_modules composer.json composer.lock \
          README.md CHANGELOG.md GETTING-STARTED.md docs; do
 	[[ -e "$DEST/$f" ]] && LEAKED+=("$f")
 done
+# Any dotfile at all. The enumerated list above only catches the ones that
+# existed when it was written: .gitattributes was added later, shipped, and
+# Plugin Check failed on it as a hidden file. A WordPress plugin needs no
+# dotfiles in its zip, so the rule is simply that there are none — which
+# catches the next one too, whatever it turns out to be called.
+while IFS= read -r dotfile; do
+	LEAKED+=( "${dotfile#"$DEST/"}" )
+done < <( find "$DEST" -name '.*' -not -name '.' -not -name '..' )
+
 if (( ${#LEAKED[@]} )); then
 	echo "Error: development files leaked into the build: ${LEAKED[*]}" >&2
 	exit 1

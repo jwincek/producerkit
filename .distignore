@@ -6,6 +6,7 @@
 .git
 .github
 .gitignore
+.gitattributes
 .distignore
 .git-blame-ignore-revs
 .editorconfig
