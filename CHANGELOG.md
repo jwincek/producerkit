@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The plugin's admin files are now loaded on every request rather than only in
+  the admin, and gated on their hooks instead. Nothing behaves differently —
+  every hook in them was already admin-only — but they were invisible to the
+  test suite while loaded behind `is_admin()`, which is how a dashboard nobody
+  could click to and a sample-data removal that deleted more than sample data
+  both shipped. Costs about 100KB on a front-end request.
+
+
 ### Added
 
 - **Copy from another location** in a location's Payment Options. With three

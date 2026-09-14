@@ -10,7 +10,7 @@ The examples below use **Farm**'s words, because that is the trade this site is 
 
 ## First Things First
 
-After the plugin is activated, you'll see a **ProducerKit** menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your farm stand's current status. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
+After the plugin is activated, you'll see a **ProducerKit** menu in your WordPress sidebar. Click it to see the dashboard — it shows how much content you have, your farm stand's current status, and which parts of the plugin are switched on. You can switch off the ones you do not use, like pre-orders or made-to-order requests; it tells you what each is holding first, and never deletes anything. If anything needs attention (like products without photos or events without dates), a **Needs Attention** section will flag those items with direct links to fix them.
 
 Two of the plugin's menus are named to stay out of the way of other plugins:
 **Catalog** is your products (WooCommerce owns "Products"), and **Calendar** is
@@ -21,7 +21,7 @@ inside the **ProducerKit** menu.
 
 ## Payments, QR Codes, and Pre-Orders
 
-**Payment options**: edit a Location and open the **Payment Options** panel in the sidebar. Add links (Venmo, Cash App, PayPal, or a custom payment URL) and badges for other accepted payments (cash, check, SNAP/EBT, market vouchers). They appear in the Location Info block, your farm stand banner, and the location's page.
+**Payment options**: edit a Location and open the **Payment Options** panel in the sidebar. Add links (Venmo, Cash App, PayPal, or a custom payment URL) and badges for other accepted payments (cash, check, SNAP/EBT, market vouchers). They appear in the Location Info block, your farm stand banner, and the location's page. With more than one location, the panel offers to copy the list from one you have already set up, so you do not type it twice.
 
 **QR code**: in the Location Info block's settings, turn on **Show payment QR code**. Visitors scan it to open your first payment link — and if you print the page, the code enlarges for stand signage.
 
