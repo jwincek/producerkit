@@ -26,6 +26,66 @@ const VERSION    = '2.9.0';
 const PLUGIN_DIR = __DIR__;
 const PREFIX     = 'pkit';
 
+/**
+ * The oldest PHP this plugin's code can be parsed by.
+ *
+ * Kept in step with the "Requires PHP" header above by check 14 in
+ * bin/validate-config.php, because two numbers that must agree and are never
+ * compared will eventually disagree.
+ */
+const MINIMUM_PHP = '8.1';
+
+/* ───────────────────────────────────────────────
+ * Version guard
+ * ─────────────────────────────────────────────── */
+
+/*
+ * WordPress honours "Requires PHP" when a plugin is activated through the
+ * admin, and not otherwise. Replace the files in place — an FTP upload over an
+ * existing install, a host-level sync, a restored backup — and nothing checks
+ * anything: the next request simply fatals.
+ *
+ * That is not hypothetical. A live install on a host whose web PHP was 7.x
+ * while its control panel reported 8.4 went white with
+ * "unexpected '=>' (T_DOUBLE_ARROW)" — a match expression in
+ * modules/core/includes/meta-fields.php, which is PHP 8.0 syntax, read by a
+ * PHP 7 parser. The owner had no way to tell from that what was wrong, or even
+ * which plugin caused it.
+ *
+ * So: bail before requiring anything, and say so. Everything above this point
+ * is deliberately syntax PHP 7 can parse, which is what makes the guard
+ * reachable — that fatal happened in a file this one loads, so this file
+ * itself parsed fine. Nothing below can be relied on to, which is why the
+ * guard lives here and not in an include.
+ *
+ * The plugin's data is untouched: its post types simply never register, so the
+ * content is invisible until PHP is fixed rather than gone.
+ */
+if ( version_compare( PHP_VERSION, MINIMUM_PHP, '<' ) ) {
+
+	add_action(
+		'admin_notices',
+		function () {
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+
+			echo '<div class="notice notice-error"><p>';
+			printf(
+				/* translators: 1: required PHP version. 2: the PHP version this site is running. */
+				esc_html__( 'ProducerKit needs PHP %1$s or newer and this site is running PHP %2$s, so it has not loaded. Your content is safe and will reappear once PHP is updated.', 'producerkit' ),
+				esc_html( MINIMUM_PHP ),
+				esc_html( PHP_VERSION )
+			);
+			echo '</p><p>';
+			esc_html_e( 'If your host says you are already on a newer version, check the setting for this specific domain — the command line and the web server are often configured separately.', 'producerkit' );
+			echo '</p></div>';
+		}
+	);
+
+	return;
+}
+
 /* ───────────────────────────────────────────────
  * Module registry
  *
