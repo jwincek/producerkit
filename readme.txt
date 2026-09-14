@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.8.0
+Stable tag: 2.9.0
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -132,7 +132,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
-= Unreleased =
+= 2.9.0 =
 * Added: copy a location's payment options from another location instead of typing the same list in again.
 * Added: switch off the parts you do not use — Pre-Orders, Commissions, Notifications and WooCommerce Settlement — from the ProducerKit dashboard. It tells you what each one is holding first, and never deletes anything.
 
@@ -236,6 +236,11 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.9.0 =
+Optional. Adds a way to switch off the parts of ProducerKit you do not use — pre-orders, made-to-order requests, customer emails, WooCommerce settlement — from the dashboard. It tells you what each one is currently holding before you switch it off, and never deletes anything: switching one back on restores everything.
+
+Also lets a second location copy its payment options from one you have already set up, instead of typing the same list again.
 
 = 2.8.0 =
 Important if you installed ProducerKit on a site without another block plugin: its blocks never appeared in the editor. They do now. Nothing to do beyond updating — pages you already built were never affected, only the ability to add new blocks.

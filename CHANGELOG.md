@@ -7,15 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- The plugin's admin files are now loaded on every request rather than only in
-  the admin, and gated on their hooks instead. Nothing behaves differently —
-  every hook in them was already admin-only — but they were invisible to the
-  test suite while loaded behind `is_admin()`, which is how a dashboard nobody
-  could click to and a sample-data removal that deleted more than sample data
-  both shipped. Costs about 100KB on a front-end request.
-
+## [2.9.0] - 2026-09-13
 
 ### Added
 
@@ -33,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   one does, so it never appears where it would overwrite work in progress.
 
 
-### Added
 
 - Optional modules can be switched off from the dashboard: **Pre-Orders**,
   **Commissions**, **Notifications** and **WooCommerce Settlement**. A farm
@@ -53,6 +44,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   A site with its own `pkit_active_modules` filter still wins over the setting,
   so code beats a click and the filter stays the documented extension point.
 
+### Changed
+
+- The plugin's admin files are now loaded on every request rather than only in
+  the admin, and gated on their hooks instead. Nothing behaves differently —
+  every hook in them was already admin-only — but they were invisible to the
+  test suite while loaded behind `is_admin()`, which is how a dashboard nobody
+  could click to and a sample-data removal that deleted more than sample data
+  both shipped. Costs about 100KB on a front-end request.
 
 ## [2.8.0] - 2026-09-11
 
@@ -1041,7 +1040,8 @@ before updating any site that ran 1.1.0 or earlier.
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `pkit_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/producerkit/compare/v2.8.0...HEAD
+[Unreleased]: https://github.com/jwincek/producerkit/compare/v2.9.0...HEAD
+[2.9.0]: https://github.com/jwincek/producerkit/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/jwincek/producerkit/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/jwincek/producerkit/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/jwincek/producerkit/compare/v2.5.0...v2.6.0
