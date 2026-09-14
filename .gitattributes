@@ -1,0 +1,19 @@
+# Append-only documents. Every pull request adds an entry at the top of these
+# two, at the same anchor, so any two open branches conflict by construction —
+# it happened three times in a fortnight and the resolution was identical each
+# time: keep both.
+#
+# merge=union does exactly that. The cost is that git stops reporting a
+# conflict here, so two branches editing the SAME existing line get both
+# versions silently rather than a marker. These files are almost entirely
+# append-only, which is what makes the trade worth taking; the one line that is
+# genuinely edited rather than appended is readme.txt's "Stable tag", and
+# bin/validate-config.php fails the build if union merge ever duplicates a
+# single-value header there.
+CHANGELOG.md    merge=union
+readme.txt      merge=union
+
+# Deliberately NOT union: languages/producerkit.pot is generated, and
+# concatenating two versions of it produces a file neither branch would
+# reproduce. The right resolution is always to regenerate, and
+# `composer make-pot:check` fails CI on a stale one.

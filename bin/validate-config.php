@@ -210,6 +210,28 @@ if ( '' !== $main_src && ! preg_match( '/^\s*\*\s*Domain Path:\s*\S/mi', $main_s
 	$add( 'warning', 'i18n', 'No "Domain Path:" header — declare it alongside Text Domain.' );
 }
 
+// ── Check 2c: readme headers appear exactly once ─────────────────────────────
+//
+// .gitattributes marks readme.txt merge=union so the changelog entries two open
+// branches both add are kept rather than conflicting. The price is that a line
+// genuinely edited on both sides — "Stable tag" during two releases — would be
+// kept twice, silently, and WordPress.org would read whichever came first.
+//
+// The version check above uses preg_match, which stops at the first hit and
+// would not notice. This does.
+foreach ( [ 'Stable tag', 'Requires at least', 'Tested up to', 'Requires PHP', 'License', 'Contributors' ] as $header ) {
+	$found = preg_match_all( '/^' . preg_quote( $header, '/' ) . ':/mi', $readme_src );
+
+	if ( $found > 1 ) {
+		$add(
+			'error',
+			'readme',
+			"readme.txt has {$found} \"{$header}:\" headers. WordPress.org reads the first and ignores the rest — "
+				. 'a union merge probably kept both sides of an edit.'
+		);
+	}
+}
+
 // ── Check 3: readme.txt structure ────────────────────────────────────────────
 if ( '' !== $readme_src ) {
 	foreach ( [ 'Contributors', 'Tags', 'Requires at least', 'Tested up to', 'Requires PHP', 'License' ] as $header ) {
