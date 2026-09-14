@@ -15,21 +15,21 @@ declare(strict_types=1);
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'source_hash' => 'c63b129882e3f723d5f82f1a88b3b79ffc6ffbd7a442e4fa7be42a236a392ad2',
+	'source_hash' => '1896570dabdbcc2426cb2829ca2e4f5cd5f44bb2c51f46b846c56017e11db224',
 	'html'        => <<<'PKITGUIDE'
 <h1>Getting Started with ProducerKit</h1>
 <p>Welcome! This guide walks you through setting up your website's tools — your {{place_lower}} status, availability board, events, and more. You don't need to know how to code. Everything here happens through the WordPress admin.</p>
 <p>The examples below use <strong>{{trade}}</strong>'s words, because that is the trade this site is set up for. If you keep bees, throw pots, bake, print or record something else, do <strong>Step 1</strong> first — change the trade and this guide changes with it.</p>
 <hr>
 <h2>First Things First</h2>
-<p>After the plugin is activated, you'll see a <strong>ProducerKit</strong> menu in your WordPress sidebar. Click it to see the dashboard — it shows which modules are active, how much content you have, and your {{place_lower}}'s current status. If anything needs attention (like products without photos or events without dates), a <strong>Needs Attention</strong> section will flag those items with direct links to fix them.</p>
+<p>After the plugin is activated, you'll see a <strong>ProducerKit</strong> menu in your WordPress sidebar. Click it to see the dashboard — it shows how much content you have, your {{place_lower}}'s current status, and which parts of the plugin are switched on. You can switch off the ones you do not use, like pre-orders or made-to-order requests; it tells you what each is holding first, and never deletes anything. If anything needs attention (like products without photos or events without dates), a <strong>Needs Attention</strong> section will flag those items with direct links to fix them.</p>
 <p>Two of the plugin's menus are named to stay out of the way of other plugins:
 <strong>Catalog</strong> is your products (WooCommerce owns &quot;Products&quot;), and <strong>Calendar</strong> is
 your events (The Events Calendar owns &quot;Events&quot;). Locations and Sources live
 inside the <strong>ProducerKit</strong> menu.</p>
 <hr>
 <h2>Payments, QR Codes, and Pre-Orders</h2>
-<p><strong>Payment options</strong>: edit a Location and open the <strong>Payment Options</strong> panel in the sidebar. Add links (Venmo, Cash App, PayPal, or a custom payment URL) and badges for other accepted payments (cash, check, SNAP/EBT, market vouchers). They appear in the Location Info block, your {{place_lower}} banner, and the location's page.</p>
+<p><strong>Payment options</strong>: edit a Location and open the <strong>Payment Options</strong> panel in the sidebar. Add links (Venmo, Cash App, PayPal, or a custom payment URL) and badges for other accepted payments (cash, check, SNAP/EBT, market vouchers). They appear in the Location Info block, your {{place_lower}} banner, and the location's page. With more than one location, the panel offers to copy the list from one you have already set up, so you do not type it twice.</p>
 <p><strong>QR code</strong>: in the Location Info block's settings, turn on <strong>Show payment QR code</strong>. Visitors scan it to open your first payment link — and if you print the page, the code enlarges for stand signage.</p>
 <p><strong>Pre-orders</strong>: add the <strong>Pre-Order Form</strong> block to a page. Visitors pick products and a pickup date and pay when they collect. Manage orders under <strong>ProducerKit → Pre-Orders</strong>: confirm them, mark them ready (the customer gets an email if they left one), and mark them picked up. Sold-out products are hidden from the form automatically. Pickup dates respect the location's weekly schedule and season, and you can block specific dates (holidays, closures) under <strong>Schedule &amp; Season → Closed Dates</strong> when editing the location.</p>
 <p><strong>Taking money up front</strong>: by default a pre-order is a reservation and nothing is charged. If WooCommerce is installed and its module is on, you can mark a product to take a <strong>deposit</strong> or the <strong>full price</strong> when someone orders it — open the <strong>Pre-Order Payment</strong> panel when editing that product. A $50 deposit on a nucleus colony takes $100 for two and leaves $300 for pickup; anything else in the same order still asks for nothing. The balance is yours to collect either way: send a payment link, or take it at the table and mark it paid.</p>
