@@ -85,6 +85,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   server serves another, or a per-domain setting that was never changed.
 
 
+### Fixed
+
+- Deleting the plugin now cleans up everything it stored. Four things were
+  never removed: two internal version markers, the list of parts you switched
+  off, and the producer name on each user's profile. The uninstaller was also
+  deleting a setting under a name the plugin has never used. The version
+  markers now always go. The switched-off list and the producer names go with
+  the rest of your data when you have asked for it to be deleted on uninstall.
+  Pages generated from the dashboard are kept either way, since you may have
+  edited them.
+
+
 ## [2.9.0] - 2026-09-13
 
 ### Added

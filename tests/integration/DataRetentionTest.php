@@ -185,6 +185,54 @@ final class DataRetentionTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * The kept-content path: what goes regardless, and what stays for a
+	 * reinstall to pick up again.
+	 */
+	public function test_uninstall_always_removes_bookkeeping(): void {
+		update_option( 'pkit_meta_key_version', 2 );
+		update_option( 'pkit_wc_settlement_db_version', '1.0.0' );
+		update_option( 'pkit_disabled_modules', [ 'commissions' ] );
+
+		$producer = self::factory()->user->create();
+		update_user_meta( $producer, 'pkit_producer_name', 'Hilltop Honey' );
+
+		$product = self::factory()->post->create( [ 'post_type' => 'pkit_product' ] );
+
+		$this->run_uninstall();
+
+		$this->assertFalse( get_option( 'pkit_meta_key_version' ), 'A schema version means nothing without the plugin.' );
+		$this->assertFalse( get_option( 'pkit_wc_settlement_db_version' ), 'A schema version means nothing without the plugin.' );
+
+		$this->assertSame( [ 'commissions' ], get_option( 'pkit_disabled_modules' ), 'Settings stay unless deletion was asked for.' );
+		$this->assertSame( 'Hilltop Honey', get_user_meta( $producer, 'pkit_producer_name', true ) );
+		$this->assertInstanceOf( WP_Post::class, get_post( $product ) );
+	}
+
+	/**
+	 * The deletion path has to reach every setting, including per-person ones.
+	 */
+	public function test_uninstall_on_request_removes_settings_and_user_meta(): void {
+		update_option( 'pkit_delete_data_on_uninstall', 1 );
+		update_option( 'pkit_disabled_modules', [ 'commissions' ] );
+
+		$producer = self::factory()->user->create();
+		update_user_meta( $producer, 'pkit_producer_name', 'Hilltop Honey' );
+		update_user_meta( $producer, 'pkit_producer_profile', 'potter' );
+
+		$page = self::factory()->post->create( [ 'post_type' => 'page' ] );
+		update_post_meta( $page, '_pkit_generated_page', '1' );
+
+		$this->run_uninstall();
+
+		$this->assertFalse( get_option( 'pkit_disabled_modules' ) );
+		$this->assertSame( '', get_user_meta( $producer, 'pkit_producer_name', true ) );
+		$this->assertSame( '', get_user_meta( $producer, 'pkit_producer_profile', true ) );
+
+		$this->assertInstanceOf( WP_Post::class, get_post( $page ), 'A generated page is an ordinary page by now, and may have been edited.' );
+		$this->assertSame( '', get_post_meta( $page, '_pkit_generated_page', true ), 'The marker should not outlive the plugin that set it.' );
+	}
+
 	private function an_event(): int {
 		$event = self::factory()->post->create(
 			[
@@ -196,5 +244,24 @@ final class DataRetentionTest extends WP_UnitTestCase {
 		update_post_meta( $event, '_pkit_rsvp_enabled', 1 );
 
 		return $event;
+	}
+
+	/**
+	 * Run uninstall.php for real.
+	 *
+	 * Safe inside a test: the test case rewrites DROP TABLE to DROP TEMPORARY
+	 * TABLE, which leaves the real tables alone and does not commit, so every
+	 * deletion rolls back with the rest of the test.
+	 */
+	private function run_uninstall(): void {
+		defined( 'WP_UNINSTALL_PLUGIN' ) || define( 'WP_UNINSTALL_PLUGIN', 'producerkit/producerkit.php' );
+
+		// The file calls pkit_uninstall() itself, and can only be loaded once.
+		if ( function_exists( 'pkit_uninstall' ) ) {
+			pkit_uninstall();
+			return;
+		}
+
+		require dirname( __DIR__, 2 ) . '/uninstall.php';
 	}
 }

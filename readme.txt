@@ -139,6 +139,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * Fixed: marking a product sold out now takes effect on the availability board straight away, instead of the board still showing last week's status.
 * Fixed: a board on a shop's page now lists only what that shop carries.
 * Fixed: on a site running a PHP version older than ProducerKit needs, the plugin now shows an explanation instead of a blank white page.
+* Fixed: deleting the plugin now removes everything it stored, including the producer name on user profiles when you have asked for your data to be deleted.
 
 = 2.9.0 =
 * Added: copy a location's payment options from another location instead of typing the same list in again.
