@@ -243,6 +243,41 @@ final class DataRetentionTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Asking for content to go on uninstall has to reach the terms: the site's
+	 * own, and the vocabulary a producer profile seeded.
+	 */
+	public function test_uninstall_on_request_removes_terms(): void {
+		global $wpdb;
+
+		update_option( 'pkit_delete_data_on_uninstall', 1 );
+
+		$parent = self::factory()->term->create( [ 'taxonomy' => 'pkit_product_type' ] );
+		$child  = self::factory()->term->create(
+			[
+				'taxonomy' => 'pkit_product_type',
+				'parent'   => $parent,
+			]
+		);
+		$season = self::factory()->term->create( [ 'taxonomy' => 'pkit_season' ] );
+		// An ordinary post, so the relationship can only go with the term.
+		$tagged = self::factory()->post->create( [ 'post_type' => 'post' ] );
+		wp_set_object_terms( $tagged, [ $child ], 'pkit_product_type' );
+
+		$count = static fn (): int => (int) $wpdb->get_var(
+			"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy LIKE 'pkit\\_%'"
+		);
+
+		$this->assertGreaterThanOrEqual( 3, $count(), 'Precondition: terms exist in the plugin taxonomies.' );
+
+		$this->run_uninstall();
+
+		$this->assertSame( 0, $count(), 'Every term in a plugin taxonomy should go when deletion was asked for.' );
+		$this->assertNull( get_term( $season ), 'The term row itself should go, not just its taxonomy link.' );
+		$this->assertSame( [], wp_get_object_terms( $tagged, 'pkit_product_type', [ 'fields' => 'ids' ] ), 'No relationship should point at a deleted term.' );
+		$this->assertFalse( get_option( 'pkit_product_type_children' ), 'Emptying a taxonomy must not rebuild its hierarchy cache.' );
+	}
+
+	/**
 	 * Registration is the source of truth for what uninstall has to reach.
 	 * A post type or taxonomy added later without touching uninstall.php
 	 * would otherwise keep its content forever, whatever the site asked for.
@@ -300,21 +335,43 @@ final class DataRetentionTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Run uninstall.php for real.
+	 * Run uninstall.php for real, under the conditions of a real uninstall.
 	 *
 	 * Safe inside a test: the test case rewrites DROP TABLE to DROP TEMPORARY
 	 * TABLE, which leaves the real tables alone and does not commit, so every
 	 * deletion rolls back with the rest of the test.
+	 *
+	 * During a real uninstall the plugin is not loaded, so none of its
+	 * taxonomies are registered. Here they have been since init, and a test
+	 * that left them registered would pass where the real thing fails (#115).
+	 * They are set aside for the run and put back exactly as they were.
 	 */
 	private function run_uninstall(): void {
+		global $wp_taxonomies;
+
 		defined( 'WP_UNINSTALL_PLUGIN' ) || define( 'WP_UNINSTALL_PLUGIN', 'producerkit/producerkit.php' );
 
-		// The file calls pkit_uninstall() itself, and can only be loaded once.
-		if ( function_exists( 'pkit_uninstall' ) ) {
-			pkit_uninstall();
-			return;
+		$set_aside = [];
+		foreach ( get_taxonomies( [], 'objects' ) as $name => $taxonomy ) {
+			if ( str_starts_with( $name, 'pkit_' ) ) {
+				$set_aside[ $name ] = $taxonomy;
+				unregister_taxonomy( $name );
+			}
 		}
 
-		require dirname( __DIR__, 2 ) . '/uninstall.php';
+		try {
+			// The file calls pkit_uninstall() itself, and can only be loaded once.
+			if ( function_exists( 'pkit_uninstall' ) ) {
+				pkit_uninstall();
+			} else {
+				require dirname( __DIR__, 2 ) . '/uninstall.php';
+			}
+		} finally {
+			foreach ( $set_aside as $name => $taxonomy ) {
+				$taxonomy->add_rewrite_rules();
+				$taxonomy->add_hooks();
+				$wp_taxonomies[ $name ] = $taxonomy; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restoring the registrations this helper removed.
+			}
+		}
 	}
 }

@@ -112,15 +112,32 @@ function pkit_uninstall(): void {
 		}
 	}
 
-	// Terms in the plugin's taxonomies.
+	// Terms in the plugin's taxonomies. The plugin is not loaded during
+	// uninstall, and wp_delete_term() refuses a taxonomy that is not registered,
+	// so each one is registered just long enough to empty it. Flat on purpose:
+	// a hierarchical registration would have WordPress rebuild the
+	// {taxonomy}_children cache cleared above.
 	foreach ( $taxonomies as $taxonomy ) {
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- The taxonomy is not registered during uninstall, so get_terms() returns nothing.
-		$term_ids = $wpdb->get_col(
-			$wpdb->prepare( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s", $taxonomy )
+		$borrowed = ! taxonomy_exists( $taxonomy );
+
+		if ( $borrowed ) {
+			register_taxonomy( $taxonomy, [] );
+		}
+
+		$term_ids = get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'fields'     => 'ids',
+			]
 		);
 
-		foreach ( $term_ids as $term_id ) {
+		foreach ( is_array( $term_ids ) ? $term_ids : [] as $term_id ) {
 			wp_delete_term( (int) $term_id, $taxonomy );
+		}
+
+		if ( $borrowed ) {
+			unregister_taxonomy( $taxonomy );
 		}
 	}
 
