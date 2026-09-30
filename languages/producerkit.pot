@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-14T03:06:24+00:00\n"
+"POT-Creation-Date: 2026-09-30T02:56:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -1137,27 +1137,27 @@ msgstr ""
 msgid "Retrieve commission requests, optionally filtered by status (new, quoted, accepted, in_progress, complete, declined, cancelled). Use this to answer questions like which requests are still waiting on a quote. Staff only."
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:126
+#: modules/commissions/includes/abilities.php:129
 msgid "Count Commissions by Status"
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:127
+#: modules/commissions/includes/abilities.php:130
 msgid "How many commission requests sit at each status. One grouped query, so this is the cheap way to ask how much work is waiting rather than listing everything. Staff only."
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:157
+#: modules/commissions/includes/abilities.php:166
 msgid "Send Commission Quote"
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:158
+#: modules/commissions/includes/abilities.php:167
 msgid "Quote a price for a commission and email the customer a link to accept or decline. Also used to revise a quote, or reissue one after the 30-day link has expired. Staff only."
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:227
+#: modules/commissions/includes/abilities.php:236
 msgid "Update Commission Status"
 msgstr ""
 
-#: modules/commissions/includes/abilities.php:228
+#: modules/commissions/includes/abilities.php:237
 msgid "Move a commission along: accepted, in_progress, complete, declined or cancelled. The transition table is enforced, so an illegal move is refused with a reason rather than applied. Quoting is not available here — it needs a price, so use Send Commission Quote. Staff only."
 msgstr ""
 
