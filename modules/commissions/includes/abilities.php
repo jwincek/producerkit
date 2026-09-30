@@ -86,6 +86,9 @@ add_action(
 				},
 				'input_schema'        => [
 					'type'       => 'object',
+					// Every filter is optional, so "list the commissions" with no
+					// arguments has to work. See count-commissions-by-status.
+					'default'    => [],
 					'properties' => [
 						'status' => [
 							'type'        => 'string',
@@ -132,6 +135,12 @@ add_action(
 				'input_schema'        => [
 					'type'       => 'object',
 					'properties' => [],
+					// Takes nothing, so it must accept being given nothing. Without
+					// a default, a call with no input arrives as null, fails the
+					// object check before the callback runs, and the one question
+					// this answers — how much work is waiting? — cannot be asked
+					// the natural way. Core substitutes this for null input.
+					'default'    => [],
 				],
 				'output_schema'       => [
 					'type'       => 'object',
