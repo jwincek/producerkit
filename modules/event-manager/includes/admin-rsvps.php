@@ -245,18 +245,18 @@ function export_csv(): void {
 	header( 'Content-Disposition: attachment; filename="rsvps-' . $slug . '-' . gmdate( 'Y-m-d' ) . '.csv"' );
 
 	$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming CSV to the response; WP_Filesystem cannot write to php://output.
-	fputcsv( $out, [ 'Name', 'Party size', 'Email', 'Note', 'Booked' ] );
+	\ProducerKit\Core\Csv\write_row( $out, [ 'Name', 'Party size', 'Email', 'Note', 'Booked' ] );
 
 	foreach ( $rsvps as $rsvp ) {
 		$row = (array) $rsvp;
 
-		fputcsv(
+		\ProducerKit\Core\Csv\write_row(
 			$out,
 			[
-				RSVP\esc_csv_field( (string) $row['name'] ),
+				(string) $row['name'],
 				(int) $row['party_size'],
-				RSVP\esc_csv_field( (string) ( $row['email'] ?? '' ) ),
-				RSVP\esc_csv_field( (string) ( $row['note'] ?? '' ) ),
+				(string) ( $row['email'] ?? '' ),
+				(string) ( $row['note'] ?? '' ),
 				(string) $row['created_at'],
 			]
 		);

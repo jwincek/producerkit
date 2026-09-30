@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- The product CSV export can no longer carry a spreadsheet formula. It wrote
+  product titles, excerpts, notes and term names straight into cells, and any
+  user who can edit products controls those — so a title beginning with `=`
+  would run as a formula when an administrator opened the export. Such cells
+  are now escaped, as the RSVP export already did. Importing the file reverses
+  exactly that escape, so a real product called "-40° Frozen Berries" survives
+  the round trip unchanged.
+
+### Fixed
+
+- CSV exports and imports no longer raise a PHP 8.4 deprecation, which with
+  display errors on was printed into the downloaded file ahead of the data.
+
+
 ### Fixed
 
 - The availability board no longer ignores a correction. If a product was
