@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- A product that isn't published no longer has its sources revealed. The
+  public product-sources route, and the matching ability an AI assistant can
+  call, answered for any product ID — so the sources behind a draft, private,
+  scheduled or password-protected product could be read by anyone counting
+  through IDs. Both now answer only for published products, and give the same
+  empty reply for everything else, so they don't reveal what exists either.
+
+
+### Security
+
 - The product CSV export can no longer carry a spreadsheet formula. It wrote
   product titles, excerpts, notes and term names straight into cells, and any
   user who can edit products controls those — so a title beginning with `=`

@@ -177,19 +177,9 @@ function register_product_abilities(): void {
 			'description'         => __( 'Retrieve the grain origins and partner farms linked to a product.', 'producerkit' ),
 			'category'            => 'producerkit-products',
 			'execute_callback'    => function ( array $input ): array {
-				$source_ids = get_post_meta( $input['product_id'], '_pkit_source_ids', true );
-				if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
-					return [];
-				}
-
-				$sources = get_posts(
-					[
-						'post_type'   => 'pkit_source',
-						'post__in'    => $source_ids,
-						'numberposts' => 20,
-						'post_status' => 'publish',
-					]
-				);
+				// Public, and answers for any product_id — so it has to check
+				// the product is published first, like the REST route (#102).
+				$sources = \ProducerKit\Core\Sources\for_product( (int) $input['product_id'] );
 
 				return array_map(
 					fn ( \WP_Post $s ) => [
