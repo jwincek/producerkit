@@ -50,6 +50,24 @@ function pkit_uninstall(): void {
 		delete_option( $option );
 	}
 
+	// The plugin's taxonomies, including the three a producer profile may have
+	// switched on.
+	$taxonomies = [
+		'pkit_product_type',
+		'pkit_season',
+		'pkit_event_type',
+		'pkit_material',
+		'pkit_finish',
+		'pkit_component',
+	];
+
+	// WordPress caches each hierarchical taxonomy's parent/child map in an
+	// option of its own. It rebuilds that on demand, so it goes even when the
+	// terms are kept.
+	foreach ( $taxonomies as $taxonomy ) {
+		delete_option( "{$taxonomy}_children" );
+	}
+
 	wp_clear_scheduled_hook( 'pkit_availability_cleanup' );
 	wp_clear_scheduled_hook( 'pkit_series_extend' );
 
@@ -94,17 +112,7 @@ function pkit_uninstall(): void {
 		}
 	}
 
-	// Terms in the plugin's taxonomies, including the three a producer profile
-	// may have switched on.
-	$taxonomies = [
-		'pkit_product_type',
-		'pkit_season',
-		'pkit_event_type',
-		'pkit_material',
-		'pkit_finish',
-		'pkit_component',
-	];
-
+	// Terms in the plugin's taxonomies.
 	foreach ( $taxonomies as $taxonomy ) {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- The taxonomy is not registered during uninstall, so get_terms() returns nothing.
 		$term_ids = $wpdb->get_col(

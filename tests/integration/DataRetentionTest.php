@@ -210,6 +210,59 @@ final class DataRetentionTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * WordPress writes a {taxonomy}_children option for every hierarchical
+	 * taxonomy. Nothing in the plugin calls update_option() for it, so the
+	 * validator cannot see it; only running uninstall shows it left behind.
+	 */
+	public function test_uninstall_removes_the_term_hierarchy_cache(): void {
+		$hierarchical = array_filter(
+			get_taxonomies( [ 'hierarchical' => true ] ),
+			static fn ( string $taxonomy ): bool => str_starts_with( $taxonomy, 'pkit_' )
+		);
+
+		$this->assertNotEmpty( $hierarchical, 'Precondition: the plugin registers hierarchical taxonomies.' );
+
+		foreach ( $hierarchical as $taxonomy ) {
+			$parent = self::factory()->term->create( [ 'taxonomy' => $taxonomy ] );
+			self::factory()->term->create(
+				[
+					'taxonomy' => $taxonomy,
+					'parent'   => $parent,
+				]
+			);
+			_get_term_hierarchy( $taxonomy );
+
+			$this->assertIsArray( get_option( "{$taxonomy}_children" ), "Precondition: WordPress cached {$taxonomy}'s hierarchy." );
+		}
+
+		$this->run_uninstall();
+
+		foreach ( $hierarchical as $taxonomy ) {
+			$this->assertFalse( get_option( "{$taxonomy}_children" ), "{$taxonomy}_children should not outlive the plugin." );
+		}
+	}
+
+	/**
+	 * Registration is the source of truth for what uninstall has to reach.
+	 * A post type or taxonomy added later without touching uninstall.php
+	 * would otherwise keep its content forever, whatever the site asked for.
+	 */
+	public function test_uninstall_names_every_registered_post_type_and_taxonomy(): void {
+		$source = (string) file_get_contents( dirname( __DIR__, 2 ) . '/uninstall.php' );
+
+		$registered = array_filter(
+			array_merge( array_values( get_post_types() ), array_values( get_taxonomies() ) ),
+			static fn ( string $name ): bool => str_starts_with( $name, 'pkit_' )
+		);
+
+		$this->assertGreaterThanOrEqual( 7, count( $registered ), 'Precondition: four post types and at least three taxonomies.' );
+
+		foreach ( $registered as $name ) {
+			$this->assertStringContainsString( "'{$name}'", $source, "{$name} is registered but uninstall.php never names it." );
+		}
+	}
+
+	/**
 	 * The deletion path has to reach every setting, including per-person ones.
 	 */
 	public function test_uninstall_on_request_removes_settings_and_user_meta(): void {
