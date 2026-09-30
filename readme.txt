@@ -133,6 +133,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Security: the product CSV export now escapes cells a spreadsheet would run as a formula.
 * Fixed: on a site running a PHP version older than ProducerKit needs, the plugin now shows an explanation instead of a blank white page.
 
 = 2.9.0 =
