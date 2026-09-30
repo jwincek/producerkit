@@ -218,21 +218,9 @@ function delete_availability( \WP_REST_Request $request ): \WP_REST_Response {
 }
 
 function get_product_sources( \WP_REST_Request $request ): \WP_REST_Response {
-	$product_id = $request->get_param( 'id' );
-	$source_ids = get_post_meta( $product_id, '_pkit_source_ids', true );
-
-	if ( empty( $source_ids ) || ! is_array( $source_ids ) ) {
-		return new \WP_REST_Response( [], 200 );
-	}
-
-	$sources = get_posts(
-		[
-			'post_type'   => 'pkit_source',
-			'post__in'    => $source_ids,
-			'numberposts' => 20,
-			'post_status' => 'publish',
-		]
-	);
+	// Checks the product is published before revealing anything about it —
+	// this used to read the meta from any ID a caller supplied (#102).
+	$sources = \ProducerKit\Core\Sources\for_product( (int) $request->get_param( 'id' ) );
 
 	$result = array_map(
 		fn ( \WP_Post $p ) => [

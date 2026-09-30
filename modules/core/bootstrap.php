@@ -18,6 +18,7 @@ require_once __DIR__ . '/includes/meta-fields.php';
 require_once __DIR__ . '/includes/deposits.php';
 require_once __DIR__ . '/includes/meta-labels.php';
 require_once __DIR__ . '/includes/csv.php';
+require_once __DIR__ . '/includes/sources.php';
 require_once __DIR__ . '/includes/producers.php';
 require_once __DIR__ . '/includes/requests.php';
 require_once __DIR__ . '/includes/token-page.php';

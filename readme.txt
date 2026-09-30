@@ -133,6 +133,7 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 == Changelog ==
 
 = Unreleased =
+* Security: the sources behind an unpublished product are no longer visible through the public product-sources route.
 * Fixed: availability statuses such as "Sold out" are now translated on sites in other languages.
 * Security: the product CSV export now escapes cells a spreadsheet would run as a formula.
 * Fixed: marking a product sold out now takes effect on the availability board straight away, instead of the board still showing last week's status.
