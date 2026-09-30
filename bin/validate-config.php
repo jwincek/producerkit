@@ -1034,6 +1034,205 @@ if ( false === $guard_at ) {
 	}
 }
 
+// ── Check 16: uninstall.php removes what the plugin stores ───────────────────
+//
+// Every feature that added an option or a piece of user meta also had to
+// remember uninstall.php, and several did not: a schema version, the disabled
+// modules setting, and the producer name on user profiles were all left behind,
+// while the list removed an option under a name nothing had ever written. So
+// the list is derived rather than trusted.
+//
+// Forwards: every option and user meta key the plugin writes has to appear as
+// a string in uninstall.php. The name is resolved through constants and `use`
+// imports, because most of them are written through a constant. Transients are
+// not listed; uninstall.php sweeps them by prefix.
+//
+// Backwards: every pkit_ string in uninstall.php has to be one the plugin names
+// somewhere. A name nothing uses deletes nothing, and hides that it does.
+//
+// Only real string tokens count, not comments, so mentioning a key in prose is
+// not a way to satisfy the check. A key that should outlive the plugin belongs
+// in $uninstall_keeps, with the reason beside it.
+$uninstall_keeps = [];
+
+$runtime_files = array_merge(
+	[ $root . '/' . basename( (string) $main_file ) ],
+	$php_files_in( 'includes' ),
+	$php_files_in( 'modules' ),
+	$php_files_in( 'blocks' )
+);
+
+$unquote = static fn( string $literal ): string => stripcslashes( substr( $literal, 1, -1 ) );
+
+// Pass 1: every namespaced constant with a string value, and every string the
+// runtime mentions at all.
+$const_values    = [];
+$runtime_strings = [];
+
+foreach ( $runtime_files as $file ) {
+	$tokens    = token_get_all( (string) file_get_contents( $file ) );
+	$namespace = '';
+	$count     = count( $tokens );
+
+	for ( $i = 0; $i < $count; $i++ ) {
+		$t = $tokens[ $i ];
+		if ( ! is_array( $t ) ) {
+			continue;
+		}
+
+		if ( T_CONSTANT_ENCAPSED_STRING === $t[0] ) {
+			$runtime_strings[ $unquote( $t[1] ) ] = true;
+		} elseif ( T_NAMESPACE === $t[0] && is_array( $tokens[ $i + 2 ] ?? null ) ) {
+			$namespace = $tokens[ $i + 2 ][1];
+		} elseif (
+			T_CONST === $t[0]
+			&& T_STRING === ( $tokens[ $i + 2 ][0] ?? null )
+			&& T_CONSTANT_ENCAPSED_STRING === ( $tokens[ $i + 6 ][0] ?? null )
+			&& '=' === trim( is_array( $tokens[ $i + 4 ] ) ? $tokens[ $i + 4 ][1] : $tokens[ $i + 4 ] )
+		) {
+			$const_values[ ltrim( $namespace . '\\' . $tokens[ $i + 2 ][1], '\\' ) ] = $unquote( $tokens[ $i + 6 ][1] );
+		}
+	}
+}
+
+// Pass 2: every write, and the name it writes to. The key is the first argument
+// of an option write and the second of a user meta write.
+$stored_keys = [];
+$key_arg     = [
+	'update_option'    => 0,
+	'add_option'       => 0,
+	'update_user_meta' => 1,
+	'add_user_meta'    => 1,
+];
+
+foreach ( $runtime_files as $file ) {
+	$rel       = str_replace( $root . '/', '', $file );
+	$tokens    = array_values(
+		array_filter(
+			token_get_all( (string) file_get_contents( $file ) ),
+			static fn( $t ) => ! is_array( $t ) || ! in_array( $t[0], [ T_WHITESPACE, T_COMMENT, T_DOC_COMMENT ], true )
+		)
+	);
+	$namespace = '';
+	$imports   = [];
+	$depth     = 0;
+	$count     = count( $tokens );
+
+	for ( $i = 0; $i < $count; $i++ ) {
+		$t = $tokens[ $i ];
+
+		if ( '{' === $t || ( is_array( $t ) && in_array( $t[0], [ T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES ], true ) ) ) {
+			++$depth;
+			continue;
+		}
+		if ( '}' === $t ) {
+			--$depth;
+			continue;
+		}
+		if ( ! is_array( $t ) ) {
+			continue;
+		}
+
+		if ( T_NAMESPACE === $t[0] ) {
+			$namespace = $tokens[ $i + 1 ][1];
+			continue;
+		}
+
+		// A top-level `use` imports a name; one inside a function body is a
+		// closure's variable list.
+		if ( T_USE === $t[0] && 0 === $depth && is_array( $tokens[ $i + 1 ] ) ) {
+			$imported = ltrim( $tokens[ $i + 1 ][1], '\\' );
+			$alias    = substr( strrchr( '\\' . $imported, '\\' ), 1 );
+			if ( is_array( $tokens[ $i + 2 ] ) && T_AS === $tokens[ $i + 2 ][0] ) {
+				$alias = $tokens[ $i + 3 ][1];
+			}
+			$imports[ $alias ] = $imported;
+			continue;
+		}
+
+		if ( T_STRING !== $t[0] || ! isset( $key_arg[ $t[1] ] ) || '(' !== $tokens[ $i + 1 ] ) {
+			continue;
+		}
+
+		// A method of the same name is somebody else's API.
+		$before = $tokens[ $i - 1 ] ?? null;
+		if ( is_array( $before ) && in_array( $before[0], [ T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION ], true ) ) {
+			continue;
+		}
+
+		// Collect the tokens of the argument that holds the key.
+		$args  = [ [] ];
+		$level = 0;
+		for ( $j = $i + 2; $j < $count; $j++ ) {
+			$a = $tokens[ $j ];
+			if ( in_array( $a, [ '(', '[' ], true ) ) {
+				++$level;
+			} elseif ( in_array( $a, [ ')', ']' ], true ) ) {
+				if ( 0 === $level-- ) {
+					break;
+				}
+			} elseif ( ',' === $a && 0 === $level ) {
+				$args[] = [];
+				continue;
+			}
+			$args[ count( $args ) - 1 ][] = $a;
+		}
+
+		$arg  = $args[ $key_arg[ $t[1] ] ] ?? [];
+		$line = $t[2];
+		$key  = null;
+
+		if ( 1 === count( $arg ) && is_array( $arg[0] ) ) {
+			[ $type, $text ] = $arg[0];
+
+			if ( T_CONSTANT_ENCAPSED_STRING === $type ) {
+				$key = $unquote( $text );
+			} else {
+				$fqn = match ( $type ) {
+					T_NAME_FULLY_QUALIFIED => ltrim( $text, '\\' ),
+					T_STRING               => ltrim( $namespace . '\\' . $text, '\\' ),
+					T_NAME_QUALIFIED       => isset( $imports[ strstr( $text, '\\', true ) ] )
+						? $imports[ strstr( $text, '\\', true ) ] . strstr( $text, '\\' )
+						: ltrim( $namespace . '\\' . $text, '\\' ),
+					default                => null,
+				};
+				$key = null !== $fqn ? ( $const_values[ $fqn ] ?? null ) : null;
+			}
+		}
+
+		if ( null === $key ) {
+			$add( 'error', 'uninstall', "{$rel}:{$line} writes {$t[1]}() under a name this check cannot resolve — use a string or a constant, so uninstall.php can be checked against it." );
+			continue;
+		}
+
+		$stored_keys[ $key ][] = "{$rel}:{$line}";
+	}
+}
+
+$uninstall_strings = [];
+foreach ( token_get_all( $read( 'uninstall.php' ) ) as $t ) {
+	if ( is_array( $t ) && T_CONSTANT_ENCAPSED_STRING === $t[0] ) {
+		$uninstall_strings[ $unquote( $t[1] ) ] = true;
+	}
+}
+
+if ( [] === $uninstall_strings ) {
+	$add( 'error', 'uninstall', 'uninstall.php is missing or names nothing.' );
+} else {
+	ksort( $stored_keys );
+	foreach ( $stored_keys as $key => $where ) {
+		if ( ! isset( $uninstall_strings[ $key ] ) && ! isset( $uninstall_keeps[ $key ] ) ) {
+			$add( 'error', 'uninstall', "{$key} is written at {$where[0]} but uninstall.php never removes it." );
+		}
+	}
+
+	foreach ( array_keys( $uninstall_strings ) as $name ) {
+		if ( preg_match( '/^_?pkit_/', (string) $name ) && ! isset( $runtime_strings[ $name ] ) ) {
+			$add( 'error', 'uninstall', "uninstall.php removes {$name}, which nothing in the plugin names." );
+		}
+	}
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 $errors   = array_filter( $issues, static fn( $i ) => $i['level'] === 'error' );
 $warnings = array_filter( $issues, static fn( $i ) => $i['level'] === 'warning' );

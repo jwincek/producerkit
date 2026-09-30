@@ -39,7 +39,8 @@ function pkit_uninstall(): void {
 		'pkit_preorder_db_version',
 		'pkit_rsvp_db_version',
 		'pkit_commissions_db_version',
-		'pkit_settlement_db_version',
+		'pkit_wc_settlement_db_version',
+		'pkit_meta_key_version',
 		'pkit_sample_data_loaded',
 		'pkit_producer_profile_flush',
 		'pkit_profile_prompt_dismissed',
@@ -115,10 +116,16 @@ function pkit_uninstall(): void {
 		}
 	}
 
+	// The pages the dashboard generated are kept — they are ordinary pages by
+	// now, likely edited — but the marker saying ProducerKit made them goes.
+	delete_post_meta_by_key( '_pkit_generated_page' );
+
 	// Per-person settings.
 	delete_metadata( 'user', 0, 'pkit_producer_profile', '', true );
+	delete_metadata( 'user', 0, 'pkit_producer_name', '', true );
 
 	delete_option( 'pkit_producer_profile' );
+	delete_option( 'pkit_disabled_modules' );
 	delete_option( 'pkit_delete_data_on_uninstall' );
 }
 
