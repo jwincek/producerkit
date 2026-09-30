@@ -971,6 +971,69 @@ if ( '' === $upgrade_src ) {
 	}
 }
 
+// ── Check 14: the version guard can actually run ─────────────────────────────
+//
+// The guard in producerkit.php bails before requiring anything when PHP is
+// older than the plugin needs, so a host that silently serves an old PHP gets
+// an explanatory notice instead of a white screen. That only works while two
+// things hold, and neither is obvious enough to survive on trust.
+//
+// First, MINIMUM_PHP has to match the "Requires PHP" header. Two numbers that
+// must agree and are never compared will eventually disagree.
+//
+// Second, every line above the guard has to be parseable by the PHP being
+// guarded against. A match expression or an arrow function added to the header
+// of this file would fatal before the guard could report anything, which is
+// precisely the failure it exists to prevent.
+if ( preg_match( '/^\s*\*\s*Requires PHP:\s*(\S+)/mi', $main_src, $m ) ) {
+	$header_php = $m[1];
+
+	if ( preg_match( "/const MINIMUM_PHP\s*=\s*'([^']+)'/", $main_src, $m2 ) ) {
+		if ( $m2[1] !== $header_php ) {
+			$add( 'error', 'php', "MINIMUM_PHP is {$m2[1]} but the \"Requires PHP\" header says {$header_php}." );
+		}
+	} else {
+		$add( 'error', 'php', 'producerkit.php has no MINIMUM_PHP constant, so nothing guards an unsupported PHP.' );
+	}
+}
+
+$guard_at = strpos( $main_src, 'if ( version_compare( PHP_VERSION' );
+
+if ( false === $guard_at ) {
+	$add( 'error', 'php', 'producerkit.php has no PHP version guard before its requires.' );
+} else {
+	$first_require = strpos( $main_src, 'require_once' );
+
+	if ( false !== $first_require && $first_require < $guard_at ) {
+		$add( 'error', 'php', 'producerkit.php requires a file before the PHP version guard runs, so the guard cannot save an unsupported site.' );
+	}
+
+	// Comments are stripped first: this file explains the guard in prose that
+	// mentions the very keywords being looked for.
+	$head = substr( $main_src, 0, $guard_at );
+	$code = '';
+
+	foreach ( token_get_all( $head ) as $token ) {
+		if ( is_array( $token ) ) {
+			if ( T_COMMENT === $token[0] || T_DOC_COMMENT === $token[0] ) {
+				continue;
+			}
+			$code .= $token[1];
+			continue;
+		}
+		$code .= $token;
+	}
+
+	if ( preg_match( '/\bmatch\s*\(|\bfn\s*\(|\?->|\benum\s|\breadonly\s|#\[/', $code, $found ) ) {
+		$add(
+			'error',
+			'php',
+			"producerkit.php uses \"{$found[0]}\" before its version guard. That is PHP 8 syntax, so an older PHP "
+				. 'would fatal on this file before the guard could explain why.'
+		);
+	}
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 $errors   = array_filter( $issues, static fn( $i ) => $i['level'] === 'error' );
 $warnings = array_filter( $issues, static fn( $i ) => $i['level'] === 'warning' );

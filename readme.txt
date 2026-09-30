@@ -132,6 +132,9 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
+= Unreleased =
+* Fixed: on a site running a PHP version older than ProducerKit needs, the plugin now shows an explanation instead of a blank white page.
+
 = 2.9.0 =
 * Added: copy a location's payment options from another location instead of typing the same list in again.
 * Added: switch off the parts you do not use — Pre-Orders, Commissions, Notifications and WooCommerce Settlement — from the ProducerKit dashboard. It tells you what each one is holding first, and never deletes anything.

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- An unsupported PHP version now explains itself instead of taking the site
+  down. WordPress only checks a plugin's "Requires PHP" when you activate it
+  from the admin — replace the files in place, as an FTP upload or a host-level
+  sync does, and nothing checks anything. The plugin uses PHP 8 syntax, so on an
+  older version the next request was a fatal parse error naming a file most
+  people have never heard of.
+
+  It now stops before loading anything and says which version it needs, which
+  one the site is running, and that the content is safe. It also points at the
+  usual cause: a host whose control panel reports one version while the web
+  server serves another, or a per-domain setting that was never changed.
+
+
 ## [2.9.0] - 2026-09-13
 
 ### Added
