@@ -233,7 +233,7 @@ function render_dashboard(): void {
 				<div class="pkit-dashboard__availability-bar">
 					<?php foreach ( $availability_summary as $status => $count ) : ?>
 						<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $status ); ?>">
-							<?php echo esc_html( ucfirst( str_replace( '_', ' ', $status ) ) ); ?>:
+							<?php echo esc_html( \ProducerKit\Core\Availability\status_label( (string) $status ) ); ?>:
 							<?php echo (int) $count; ?>
 						</span>
 					<?php endforeach; ?>

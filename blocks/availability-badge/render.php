@@ -24,7 +24,7 @@ if ( empty( $rows ) ) {
 }
 
 $row          = $rows[0];
-$status_text  = ucfirst( str_replace( '_', ' ', $row->status ) );
+$status_text  = \ProducerKit\Core\Availability\status_label( (string) $row->status );
 $product      = get_post( $product_id );
 $product_name = $product ? $product->post_title : '';
 

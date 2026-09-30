@@ -10,6 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-09-30T17:04:45+00:00\n"
+"POT-Creation-Date: 2026-09-30T16:59:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: producerkit\n"
@@ -310,14 +311,14 @@ msgstr ""
 
 #. translators: %s: payment method label.
 #: blocks/location-info/render.php:170
-#: modules/availability-board/includes/fresh-sheet.php:172
+#: modules/availability-board/includes/fresh-sheet.php:167
 #, php-format
 msgid "QR code: pay with %s"
 msgstr ""
 
 #. translators: %s: payment method label.
 #: blocks/location-info/render.php:180
-#: modules/availability-board/includes/fresh-sheet.php:182
+#: modules/availability-board/includes/fresh-sheet.php:177
 #, php-format
 msgid "Scan to pay with %s"
 msgstr ""
@@ -331,7 +332,7 @@ msgid "What would you like to reserve?"
 msgstr ""
 
 #: blocks/preorder-form/render.php:131
-#: modules/availability-board/includes/fresh-sheet.php:34
+#: modules/core/includes/availability-table.php:119
 #: blocks/availability-board/index.js:43
 #: blocks/product-card/index.js:34
 msgid "Limited"
@@ -706,7 +707,7 @@ msgstr ""
 
 #: includes/admin-dashboard.php:409
 #: includes/admin-dashboard.php:417
-#: modules/availability-board/includes/fresh-sheet.php:33
+#: modules/core/includes/availability-table.php:118
 #: blocks/availability-board/index.js:42
 #: blocks/product-card/index.js:33
 msgid "Available"
@@ -1029,7 +1030,7 @@ msgid "Set what's available this week. Changes take effect immediately on the si
 msgstr ""
 
 #: modules/availability-board/includes/admin-quick-entry.php:85
-#: modules/availability-board/includes/fresh-sheet.php:97
+#: modules/availability-board/includes/fresh-sheet.php:92
 #: modules/event-manager/includes/render-helpers.php:130
 msgid "Location:"
 msgstr ""
@@ -1078,38 +1079,20 @@ msgstr ""
 
 #: modules/availability-board/includes/fresh-sheet.php:21
 #: modules/availability-board/includes/fresh-sheet.php:22
-#: modules/availability-board/includes/fresh-sheet.php:88
+#: modules/availability-board/includes/fresh-sheet.php:83
 msgid "Fresh Sheet"
 msgstr ""
 
-#: modules/availability-board/includes/fresh-sheet.php:32
-#: blocks/availability-board/index.js:41
-#: blocks/product-card/index.js:32
-msgid "Abundant"
-msgstr ""
-
-#: modules/availability-board/includes/fresh-sheet.php:35
-#: blocks/availability-board/index.js:44
-#: blocks/product-card/index.js:35
-msgid "Sold out"
-msgstr ""
-
-#: modules/availability-board/includes/fresh-sheet.php:36
-#: blocks/availability-board/index.js:45
-#: blocks/product-card/index.js:36
-msgid "Unavailable"
-msgstr ""
-
-#: modules/availability-board/includes/fresh-sheet.php:90
+#: modules/availability-board/includes/fresh-sheet.php:85
 #: modules/pre-order/includes/admin-orders.php:72
 msgid "Print"
 msgstr ""
 
-#: modules/availability-board/includes/fresh-sheet.php:126
+#: modules/availability-board/includes/fresh-sheet.php:121
 msgid "Nothing is marked available right now — update availability first (Farm Stand → Availability)."
 msgstr ""
 
-#: modules/availability-board/includes/fresh-sheet.php:158
+#: modules/availability-board/includes/fresh-sheet.php:153
 msgid "We accept"
 msgstr ""
 
@@ -1577,6 +1560,24 @@ msgstr ""
 #: modules/core/includes/admin-producer-field.php:51
 #, php-format
 msgid "Shown on the products and events you publish, when more than one producer shares this site. Leave blank to use %s."
+msgstr ""
+
+#: modules/core/includes/availability-table.php:117
+#: blocks/availability-board/index.js:41
+#: blocks/product-card/index.js:32
+msgid "Abundant"
+msgstr ""
+
+#: modules/core/includes/availability-table.php:120
+#: blocks/availability-board/index.js:44
+#: blocks/product-card/index.js:35
+msgid "Sold out"
+msgstr ""
+
+#: modules/core/includes/availability-table.php:121
+#: blocks/availability-board/index.js:45
+#: blocks/product-card/index.js:36
+msgid "Unavailable"
 msgstr ""
 
 #: modules/core/includes/deposits.php:136
@@ -3021,7 +3022,7 @@ msgid "Flours"
 msgstr ""
 
 #: modules/producer-profiles/profiles/bakery.php:21
-#: assets/js/editor-location.js:828
+#: assets/js/editor-location.js:831
 msgid "Method"
 msgstr ""
 
@@ -4244,7 +4245,7 @@ msgstr ""
 #: assets/js/editor-event.js:582
 #: assets/js/editor-location.js:421
 #: assets/js/editor-location.js:493
-#: assets/js/editor-location.js:843
+#: assets/js/editor-location.js:846
 #: assets/js/editor-product.js:304
 msgid "Remove"
 msgstr ""
@@ -4382,7 +4383,7 @@ msgid "Venmo Handle"
 msgstr ""
 
 #: assets/js/editor-location.js:120
-#: assets/js/editor-location.js:861
+#: assets/js/editor-location.js:864
 msgid "examplefarm"
 msgstr ""
 
@@ -4478,43 +4479,47 @@ msgstr ""
 msgid "Payment Options"
 msgstr ""
 
-#: assets/js/editor-location.js:753
+#: assets/js/editor-location.js:740
+msgid "Links (Venmo, Cash App, PayPal, custom) and accepted-payment badges (cash, SNAP/EBT, …) shown on the front end. The legacy Venmo Handle field still works if this list is empty."
+msgstr ""
+
+#: assets/js/editor-location.js:756
 msgid "No payment options set. Add one below."
 msgstr ""
 
-#: assets/js/editor-location.js:771
+#: assets/js/editor-location.js:774
 msgid "Copy from another location"
 msgstr ""
 
-#: assets/js/editor-location.js:779
+#: assets/js/editor-location.js:782
 msgid "Choose a location…"
 msgstr ""
 
-#: assets/js/editor-location.js:797
+#: assets/js/editor-location.js:800
 msgid "Copies its payment options here so you can edit them. It does not keep the two in step afterwards."
 msgstr ""
 
-#: assets/js/editor-location.js:852
+#: assets/js/editor-location.js:855
 msgid "Handle"
 msgstr ""
 
-#: assets/js/editor-location.js:862
+#: assets/js/editor-location.js:865
 msgid "Username without the @ or $."
 msgstr ""
 
-#: assets/js/editor-location.js:870
+#: assets/js/editor-location.js:873
 msgid "URL"
 msgstr ""
 
-#: assets/js/editor-location.js:876
+#: assets/js/editor-location.js:879
 msgid "https://squareup.com/…"
 msgstr ""
 
-#: assets/js/editor-location.js:883
+#: assets/js/editor-location.js:886
 msgid "Display label (optional)"
 msgstr ""
 
-#: assets/js/editor-location.js:902
+#: assets/js/editor-location.js:905
 msgid "Add Payment Option"
 msgstr ""
 

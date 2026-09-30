@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Availability statuses are now translated. "Sold out", "Abundant" and the
+  rest were built from their internal names, so on a site in another language
+  every availability badge stayed in English — on the board, the product card,
+  the badge block, the product page, and in the admin. A translated version
+  existed and only the Fresh Sheet used it.
+
+- The help text at the top of a location's Payment Options panel can now be
+  translated.
+
+
 ### Security
 
 - A product that isn't published no longer has its sources revealed. The
