@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The availability board no longer ignores a correction. If a product was
+  "abundant" last week and you marked it sold out today, the board kept
+  showing it as abundant: it chose each product's status by best news rather
+  than by most recent. Today's statement now wins, everywhere.
+
+- A board on a shop's page lists what that shop carries, not everything you
+  make. Products marked "available everywhere I sell" belong on your own
+  stand's board and not on a retailer's — #53 fixed that for one part of the
+  plugin, and the board was still using the old rule.
+
+- At your own stand, a product marked "available everywhere I sell" no longer
+  disappears from the availability badge, the availability API, or what an AI
+  assistant is told when it asks.
+
+
+### Fixed
+
 - An unsupported PHP version now explains itself instead of taking the site
   down. WordPress only checks a plugin's "Requires PHP" when you activate it
   from the admin — replace the files in place, as an FTP upload or a host-level
