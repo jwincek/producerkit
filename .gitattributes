@@ -3,13 +3,19 @@
 # it happened three times in a fortnight and the resolution was identical each
 # time: keep both.
 #
-# merge=union does exactly that. The cost is that git stops reporting a
-# conflict here, so two branches editing the SAME existing line get both
-# versions silently rather than a marker. These files are almost entirely
-# append-only, which is what makes the trade worth taking; the one line that is
-# genuinely edited rather than appended is readme.txt's "Stable tag", and
-# bin/validate-config.php fails the build if union merge ever duplicates a
-# single-value header there.
+# merge=union does exactly that — but only for merges made with git itself.
+# GitHub's web conflict editor does not honour it: these files still arrive
+# there as conflicts, and choosing a side drops the other. That is how #106's
+# readme line was lost (restored in #108). So a pull request that conflicts is
+# updated locally — `git merge origin/main`, then `composer make-pot` — and
+# pushed clean, rather than resolved in the browser.
+#
+# The cost is that git stops reporting a conflict here, so two branches editing
+# the SAME existing line get both versions silently rather than a marker. These
+# files are almost entirely append-only, which is what makes the trade worth
+# taking; the one line that is genuinely edited rather than appended is
+# readme.txt's "Stable tag", and bin/validate-config.php fails the build if
+# union merge ever duplicates a single-value header there.
 CHANGELOG.md    merge=union
 readme.txt      merge=union
 
