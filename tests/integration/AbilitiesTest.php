@@ -212,4 +212,130 @@ final class AbilitiesTest extends WP_UnitTestCase {
 		$this->assertContains( 'accepted', $enum );
 		$this->assertContains( 'cancelled', $enum );
 	}
+
+	/* ── Every read-only ability, called the way an agent would ──── */
+
+	/**
+	 * A little of everything, so no collection is trivially empty.
+	 *
+	 * @return array<string, int>
+	 */
+	private function catalogue(): array {
+		\ProducerKit\Core\Post_Types\register();
+		\ProducerKit\Core\Taxonomies\register();
+		\ProducerKit\Core\Availability\create_table();
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+		$location = self::factory()->post->create(
+			[
+				'post_type'   => 'pkit_location',
+				'post_status' => 'publish',
+			]
+		);
+		$source   = self::factory()->post->create(
+			[
+				'post_type'   => 'pkit_source',
+				'post_status' => 'publish',
+			]
+		);
+		$product  = self::factory()->post->create(
+			[
+				'post_type'   => 'pkit_product',
+				'post_status' => 'publish',
+			]
+		);
+		$event    = self::factory()->post->create(
+			[
+				'post_type'   => 'pkit_event',
+				'post_status' => 'publish',
+			]
+		);
+
+		update_post_meta( $product, '_pkit_source_ids', [ $source ] );
+		update_post_meta( $event, '_pkit_start_datetime', gmdate( 'Y-m-d\\TH:i:s', (int) strtotime( '+1 week' ) ) );
+		\ProducerKit\Core\Availability\upsert(
+			[
+				'product_id'     => $product,
+				'location_id'    => $location,
+				'status'         => 'available',
+				'effective_date' => current_time( 'Y-m-d' ),
+			]
+		);
+
+		return [
+			'product_id'  => $product,
+			'event_id'    => $event,
+			'location_id' => $location,
+			'id'          => $event,
+		];
+	}
+
+	/**
+	 * @return array<int, \WP_Ability>
+	 */
+	private function readonly_abilities(): array {
+		return array_values(
+			array_filter(
+				wp_get_abilities(),
+				static fn ( $ability ): bool => str_starts_with( $ability->get_name(), 'producerkit/' )
+					&& ! empty( $ability->get_meta()['annotations']['readonly'] )
+			)
+		);
+	}
+
+	/**
+	 * An agent asking "how many commissions are waiting?" sends no arguments.
+	 * Two commission abilities declared an object input with no default, so
+	 * that call arrived as null and was refused before the callback ran —
+	 * while every other read-only ability accepted it (#100).
+	 */
+	public function test_every_readonly_ability_without_required_input_accepts_no_arguments(): void {
+		$this->catalogue();
+		$refused = [];
+
+		foreach ( $this->readonly_abilities() as $ability ) {
+			if ( ! empty( $ability->get_input_schema()['required'] ) ) {
+				continue;
+			}
+
+			$out = $ability->execute( null );
+
+			if ( is_wp_error( $out ) ) {
+				$refused[] = $ability->get_name() . ': ' . $out->get_error_code();
+			}
+		}
+
+		$this->assertSame( [], $refused, 'These refuse a call with no arguments.' );
+	}
+
+	/**
+	 * What an ability returns has to be what it says it returns — an agent
+	 * plans against the schema. Found clean in a sweep; kept as a guard.
+	 */
+	public function test_every_readonly_ability_returns_what_its_schema_promises(): void {
+		$inputs     = $this->catalogue();
+		$mismatched = [];
+
+		foreach ( $this->readonly_abilities() as $ability ) {
+			$input = [];
+			foreach ( (array) ( $ability->get_input_schema()['required'] ?? [] ) as $field ) {
+				$input[ $field ] = $inputs[ $field ] ?? 1;
+			}
+
+			$out = $ability->execute( $input ?: null );
+
+			if ( is_wp_error( $out ) ) {
+				$mismatched[] = $ability->get_name() . ': ' . $out->get_error_message();
+				continue;
+			}
+
+			$valid = rest_validate_value_from_schema( $out, $ability->get_output_schema(), 'output' );
+
+			if ( is_wp_error( $valid ) ) {
+				$mismatched[] = $ability->get_name() . ': ' . $valid->get_error_message();
+			}
+		}
+
+		$this->assertSame( [], $mismatched );
+	}
 }
