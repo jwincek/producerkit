@@ -28,14 +28,9 @@ add_action(
 );
 
 function status_label( string $status ): string {
-	return match ( $status ) {
-		'abundant'    => __( 'Abundant', 'producerkit' ),
-		'available'   => __( 'Available', 'producerkit' ),
-		'limited'     => __( 'Limited', 'producerkit' ),
-		'sold_out'    => __( 'Sold out', 'producerkit' ),
-		'unavailable' => __( 'Unavailable', 'producerkit' ),
-		default       => $status,
-	};
+	// Moved to core so every availability label is translated the same way;
+	// kept here so this file's own calls read naturally.
+	return \ProducerKit\Core\Availability\status_label( $status );
 }
 
 function render_page(): void {

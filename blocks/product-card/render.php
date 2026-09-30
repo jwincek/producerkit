@@ -72,7 +72,7 @@ if ( $price ) {
 	$aria_parts[] = $price . ( $unit ? '/' . $unit : '' );
 }
 if ( ! empty( $availability_rows ) ) {
-	$aria_parts[] = ucfirst( str_replace( '_', ' ', $availability_rows[0]->status ) );
+	$aria_parts[] = \ProducerKit\Core\Availability\status_label( (string) $availability_rows[0]->status );
 }
 
 $wrapper_attrs = get_block_wrapper_attributes(
@@ -145,7 +145,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 			<div class="pkit-product-card__availability" aria-label="<?php esc_attr_e( 'Current availability', 'producerkit' ); ?>">
 				<?php foreach ( $availability_rows as $row ) : ?>
 					<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $row->status ); ?>">
-						<?php echo esc_html( ucfirst( str_replace( '_', ' ', $row->status ) ) ); ?>
+						<?php echo esc_html( \ProducerKit\Core\Availability\status_label( (string) $row->status ) ); ?>
 					</span>
 					<?php if ( $row->quantity_note ) : ?>
 						<span class="pkit-product-card__quantity-note"><?php echo esc_html( $row->quantity_note ); ?></span>

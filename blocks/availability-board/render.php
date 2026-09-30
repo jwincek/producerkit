@@ -140,7 +140,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				// server where the plural rules already work.
 				?>
 				<?php foreach ( $statuses as $status ) : ?>
-					<?php $status_label = ucfirst( str_replace( '_', ' ', $status ) ); ?>
+					<?php $status_label = \ProducerKit\Core\Availability\status_label( (string) $status ); ?>
 					<span
 						class="pkit-avail-board__pill"
 						data-wp-context='<?php echo esc_attr( (string) wp_json_encode( [ 'filterStatus' => $status ] ) ); ?>'
@@ -273,7 +273,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 						>
 							<span class="pkit-avail-board__box" aria-hidden="true">&check;</span>
 							<span class="pkit-avail-board__swatch pkit-availability-badge--<?php echo esc_attr( $status ); ?>" aria-hidden="true"></span>
-							<span class="pkit-avail-board__checkname"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $status ) ) ); ?></span>
+							<span class="pkit-avail-board__checkname"><?php echo esc_html( \ProducerKit\Core\Availability\status_label( (string) $status ) ); ?></span>
 							<span class="pkit-avail-board__n" data-wp-text="state.currentStatusCount"></span>
 						</button>
 					<?php endforeach; ?>
@@ -424,7 +424,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 				<div class="pkit-avail-board__items pkit-avail-board__items--<?php echo esc_attr( $layout ); ?>">
 					<?php
 					foreach ( $group['items'] as $item ) :
-						$status_text = ucfirst( str_replace( '_', ' ', $item['status'] ) );
+						$status_text = \ProducerKit\Core\Availability\status_label( (string) $item['status'] );
 						$aria_parts  = [ $item['product_name'], $status_text ];
 						if ( $show_prices && $item['price'] ) {
 							$price_str = $item['price'];
