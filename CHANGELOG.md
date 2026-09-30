@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Availability statuses are now translated. "Sold out", "Abundant" and the
+  rest were built from their internal names, so on a site in another language
+  every availability badge stayed in English — on the board, the product card,
+  the badge block, the product page, and in the admin. A translated version
+  existed and only the Fresh Sheet used it.
+
+- The help text at the top of a location's Payment Options panel can now be
+  translated.
+
+
+### Security
+
+- A product that isn't published no longer has its sources revealed. The
+  public product-sources route, and the matching ability an AI assistant can
+  call, answered for any product ID — so the sources behind a draft, private,
+  scheduled or password-protected product could be read by anyone counting
+  through IDs. Both now answer only for published products, and give the same
+  empty reply for everything else, so they don't reveal what exists either.
+
+
 ### Security
 
 - The product CSV export can no longer carry a spreadsheet formula. It wrote

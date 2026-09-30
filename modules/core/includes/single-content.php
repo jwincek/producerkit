@@ -170,7 +170,7 @@ function render_product_details( \WP_Post $post ): string {
 		<?php
 		if ( ! empty( $availability ) ) :
 			$row         = $availability[0];
-			$status_text = ucfirst( str_replace( '_', ' ', $row->status ) );
+			$status_text = \ProducerKit\Core\Availability\status_label( (string) $row->status );
 			?>
 			<div class="pkit-single-details__row">
 				<span class="pkit-single-details__label"><?php esc_html_e( 'Availability', 'producerkit' ); ?></span>

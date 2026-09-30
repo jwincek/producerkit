@@ -165,7 +165,7 @@ function render_page(): void {
 										value="<?php echo esc_attr( $s ); ?>"
 										<?php selected( $existing->status ?? '', $s ); ?>
 									>
-										<?php echo esc_html( ucfirst( str_replace( '_', ' ', $s ) ) ); ?>
+										<?php echo esc_html( \ProducerKit\Core\Availability\status_label( (string) $s ) ); ?>
 									</option>
 								<?php endforeach; ?>
 							</select>
@@ -182,7 +182,7 @@ function render_page(): void {
 						<td class="pkit-qe-col-current">
 							<?php if ( $existing ) : ?>
 								<span class="pkit-availability-badge pkit-availability-badge--<?php echo esc_attr( $existing->status ); ?>">
-									<?php echo esc_html( ucfirst( str_replace( '_', ' ', $existing->status ) ) ); ?>
+									<?php echo esc_html( \ProducerKit\Core\Availability\status_label( (string) $existing->status ) ); ?>
 								</span>
 							<?php else : ?>
 								<span class="pkit-qe-not-listed"><?php esc_html_e( 'Not listed', 'producerkit' ); ?></span>
