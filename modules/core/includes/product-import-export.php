@@ -72,7 +72,7 @@ function handle_export(): void {
 	fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- see fopen above.
 
 	// Header row.
-	fputcsv(
+	\ProducerKit\Core\Csv\write_row(
 		$out,
 		[
 			'title',
@@ -117,7 +117,7 @@ function handle_export(): void {
 		$thumb_id  = get_post_thumbnail_id( $pid );
 		$thumb_url = $thumb_id ? wp_get_attachment_url( $thumb_id ) : '';
 
-		fputcsv(
+		\ProducerKit\Core\Csv\write_row(
 			$out,
 			[
 				$product->post_title,
@@ -197,7 +197,7 @@ function handle_import(): void {
  * @return array<array<string,string>>
  */
 function parse_csv( string $filepath ): array {
-	$handle = fopen( $filepath, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming row-by-row CSV parse of an uploaded file via fgetcsv(); WP_Filesystem has no CSV reader.
+	$handle = fopen( $filepath, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming row-by-row CSV parse of an uploaded file via Csv\\read_row(); WP_Filesystem has no CSV reader.
 	if ( ! $handle ) {
 		return [];
 	}
@@ -208,7 +208,7 @@ function parse_csv( string $filepath ): array {
 		rewind( $handle );
 	}
 
-	$headers = fgetcsv( $handle );
+	$headers = \ProducerKit\Core\Csv\read_row( $handle );
 	if ( ! $headers ) {
 		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- see fopen above.
 		return [];
@@ -218,7 +218,7 @@ function parse_csv( string $filepath ): array {
 	$headers = array_map( fn ( $h ) => strtolower( trim( $h ) ), $headers );
 
 	$rows = [];
-	while ( ( $data = fgetcsv( $handle ) ) !== false ) {
+	while ( ( $data = \ProducerKit\Core\Csv\read_row( $handle ) ) !== false ) {
 		if ( count( $data ) !== count( $headers ) ) {
 			continue; // Skip malformed rows.
 		}

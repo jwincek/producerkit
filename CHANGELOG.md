@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- The product CSV export can no longer carry a spreadsheet formula. It wrote
+  product titles, excerpts, notes and term names straight into cells, and any
+  user who can edit products controls those — so a title beginning with `=`
+  would run as a formula when an administrator opened the export. Such cells
+  are now escaped, as the RSVP export already did. Importing the file reverses
+  exactly that escape, so a real product called "-40° Frozen Berries" survives
+  the round trip unchanged.
+
+### Fixed
+
+- CSV exports and imports no longer raise a PHP 8.4 deprecation, which with
+  display errors on was printed into the downloaded file ahead of the data.
+
+
+### Fixed
+
+- The availability board no longer ignores a correction. If a product was
+  "abundant" last week and you marked it sold out today, the board kept
+  showing it as abundant: it chose each product's status by best news rather
+  than by most recent. Today's statement now wins, everywhere.
+
+- A board on a shop's page lists what that shop carries, not everything you
+  make. Products marked "available everywhere I sell" belong on your own
+  stand's board and not on a retailer's — #53 fixed that for one part of the
+  plugin, and the board was still using the old rule.
+
+- At your own stand, a product marked "available everywhere I sell" no longer
+  disappears from the availability badge, the availability API, or what an AI
+  assistant is told when it asks.
+
+
 ### Fixed
 
 - An AI assistant can now ask how many commission requests are waiting, or

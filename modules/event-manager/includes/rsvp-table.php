@@ -298,11 +298,9 @@ function manage_cap(): string {
  * still import as numbers.
  */
 function esc_csv_field( string $value ): string {
-	if ( '' === $value || is_numeric( $value ) ) {
-		return $value;
-	}
-
-	return preg_match( '/^[=+\-@\t\r]/', $value ) ? "'" . $value : $value;
+	// Moved to core so every export shares it; kept here for anything that
+	// still calls it by this name.
+	return \ProducerKit\Core\Csv\escape_field( $value );
 }
 
 /**

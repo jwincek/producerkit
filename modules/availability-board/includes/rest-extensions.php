@@ -91,23 +91,29 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
 		"p.post_status = 'publish'",
 	];
 
-	// Status filter.
+	// Status filter — read here, applied only after each product's winning row
+	// has been chosen. Filtering in SQL first would let last week's "abundant"
+	// survive a filter that today's "sold out" did not, and then win: the
+	// get-board ability passes a status, so an agent asking what is abundant
+	// would be told about honey that sold out this morning.
+	$statuses      = [];
 	$status_filter = $request->get_param( 'status' );
 	if ( $status_filter ) {
-		$statuses = array_filter( array_map( 'sanitize_text_field', explode( ',', $status_filter ) ) );
-		$valid    = \ProducerKit\Core\Availability\valid_statuses();
-		$statuses = array_intersect( $statuses, $valid );
-		if ( $statuses ) {
-			$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated from a count, and the values are intersected against valid_statuses() before binding.
-			$where_parts[] = $wpdb->prepare( "a.status IN ({$placeholders})", ...$statuses );
-		}
+		$statuses = array_values(
+			array_intersect(
+				array_filter( array_map( 'sanitize_text_field', explode( ',', (string) $status_filter ) ) ),
+				\ProducerKit\Core\Availability\valid_statuses()
+			)
+		);
 	}
 
 	// Location filter.
-	$location_id = $request->get_param( 'location' );
+	$location_id = (int) $request->get_param( 'location' );
 	if ( $location_id > 0 ) {
-		$where_parts[] = $wpdb->prepare( '(a.location_id = %d OR a.location_id = 0)', $location_id );
+		// The same rule every other path uses. This query used to hardcode the
+		// version from before #53, so a board on a retailer's page listed
+		// everything the producer makes rather than what the shop carries.
+		$where_parts[] = \ProducerKit\Core\Availability\location_clause( $location_id, 'a.location_id' );
 	}
 
 	// Product type filter (join to taxonomy).
@@ -141,24 +147,37 @@ function get_board( \WP_REST_Request $request ): \WP_REST_Response {
         INNER JOIN {$wpdb->posts} p ON p.ID = a.product_id
         {$type_join}
         WHERE {$where}
-        ORDER BY
-            FIELD(a.status, 'abundant', 'available', 'limited', 'sold_out', 'unavailable'),
-            p.post_title ASC
     ";
 
 	$rows = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- every variable fragment in $sql is built with $wpdb->prepare() above; remaining interpolations are wpdb table names.
 
+	// Which row speaks for each product, decided by the same rule as every
+	// other path: the most recent statement wins. This used to fall out of the
+	// display order — best status first — so a product marked sold out this
+	// morning kept showing last week's "abundant" beneath a comment claiming
+	// the latest status won.
+	$rows = \ProducerKit\Core\Availability\winners( (array) $rows );
+
+	if ( $statuses ) {
+		$rows = array_values(
+			array_filter( $rows, static fn ( object $row ): bool => in_array( $row->status, $statuses, true ) )
+		);
+	}
+
+	// Then, and only then, the display order: best news first, alphabetical
+	// within it. The order the board has always shown.
+	$rank = array_flip( \ProducerKit\Core\Availability\valid_statuses() );
+	usort(
+		$rows,
+		static fn ( object $a, object $b ): int =>
+			[ $rank[ $a->status ] ?? PHP_INT_MAX, (string) $a->product_name ]
+			<=> [ $rank[ $b->status ] ?? PHP_INT_MAX, (string) $b->product_name ]
+	);
+
 	// Enrich with product meta and taxonomy terms.
-	$items         = [];
-	$seen_products = [];
+	$items = [];
 
 	foreach ( $rows as $row ) {
-		// Deduplicate: one entry per product (latest status wins).
-		if ( isset( $seen_products[ $row->product_id ] ) ) {
-			continue;
-		}
-		$seen_products[ $row->product_id ] = true;
-
 		$pid = (int) $row->product_id;
 
 		// Product type terms.

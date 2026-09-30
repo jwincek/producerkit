@@ -180,11 +180,16 @@ function get_current( int $product_id, int $location_id = 0 ): array {
 	);
 
 	if ( $location_id > 0 ) {
-		$where .= $wpdb->prepare( ' AND location_id = %d', $location_id );
+		$where .= ' AND ' . location_clause( $location_id );
 	}
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The interpolated fragment is itself $wpdb->prepare() output.
-	return $wpdb->get_results( "SELECT * FROM {$table} WHERE {$where} ORDER BY effective_date DESC" );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The interpolated fragments are $wpdb->prepare() output.
+	$rows = (array) $wpdb->get_results( "SELECT * FROM {$table} WHERE {$where}" );
+
+	// Every row that applies, the winning one first — callers read [0].
+	usort( $rows, __NAMESPACE__ . '\\compare_precedence' );
+
+	return $rows;
 }
 
 /**
@@ -273,6 +278,91 @@ function general_rows_apply_at( int $location_id ): bool {
 }
 
 /**
+ * The SQL condition selecting the rows that apply at one location.
+ *
+ * The only place that turns general_rows_apply_at() into SQL. Until #98 there
+ * were three: get_for_location() applied the rule, the availability board
+ * hardcoded the version from before #53 — so a board on a retailer's page
+ * listed everything the producer makes — and get_current() matched the
+ * location exactly, so at the producer's own stand a product marked
+ * "available everywhere I sell" disappeared. Three answers to one question.
+ *
+ * @param string $column The column to test, as the caller's query names it.
+ *                       A literal chosen in code, never input — and checked,
+ *                       since it is interpolated into a prepare() format.
+ */
+function location_clause( int $location_id, string $column = 'location_id' ): string {
+	global $wpdb;
+
+	if ( ! preg_match( '/^[a-z_]+(\.[a-z_]+)?$/', $column ) ) {
+		$column = 'location_id';
+	}
+
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $column is a validated identifier above; the location is bound.
+	$clause = general_rows_apply_at( $location_id )
+		? $wpdb->prepare( "( {$column} = %d OR {$column} = 0 )", $location_id )
+		: $wpdb->prepare( "{$column} = %d", $location_id );
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	return (string) $clause;
+}
+
+/**
+ * Whether row $a beats row $b as the statement about one product.
+ *
+ * The most recent statement wins, so a correction made today replaces last
+ * week's. On the same day, a statement about this specific place beats a
+ * general one. After that, the one written last.
+ *
+ * The availability board used to pick by best status instead — its display
+ * order — so a product marked sold out this morning kept showing last week's
+ * "abundant". Display order and precedence are different questions; this
+ * answers only the second.
+ *
+ * @return int Negative when $a wins, positive when $b wins.
+ */
+function compare_precedence( object $a, object $b ): int {
+	$rank = static fn ( object $row ): array => [
+		(string) ( $row->effective_date ?? '' ),
+		(int) ( $row->location_id ?? 0 ),
+		(int) ( $row->id ?? $row->availability_id ?? 0 ),
+	];
+
+	return $rank( $b ) <=> $rank( $a );
+}
+
+/**
+ * One row per product: the one that wins.
+ *
+ * Products keep the order in which they first appear, so a caller's own
+ * ordering across products survives; only the choice within a product is
+ * made here.
+ *
+ * @param array<int, object> $rows
+ * @return array<int, object>
+ */
+function winners( array $rows ): array {
+	$best  = [];
+	$order = [];
+
+	foreach ( $rows as $row ) {
+		$product = (int) $row->product_id;
+
+		if ( ! isset( $best[ $product ] ) ) {
+			$order[]          = $product;
+			$best[ $product ] = $row;
+			continue;
+		}
+
+		if ( compare_precedence( $row, $best[ $product ] ) < 0 ) {
+			$best[ $product ] = $row;
+		}
+	}
+
+	return array_map( static fn ( int $product ): object => $best[ $product ], $order );
+}
+
+/**
  * Everything currently available at one location.
  *
  * The inverse of get_current(), which answers "where is this product". A shop
@@ -301,11 +391,9 @@ function get_for_location( int $location_id, bool $include_sold_out = false ): a
 		? ''
 		: " AND a.status NOT IN ( 'sold_out', 'unavailable' )";
 
-	$location_clause = general_rows_apply_at( $location_id )
-		? '( a.location_id = %d OR a.location_id = 0 )'
-		: 'a.location_id = %d';
+	$location_clause = location_clause( $location_id, 'a.location_id' );
 
-	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier, and both the status and location clauses are literals chosen above; neither is user input. The location and dates are bound.
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a $wpdb->prefix identifier; the status clause is a literal chosen above; the location clause is location_clause()'s prepared output, integers only. The dates are bound.
 	$rows = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT a.*, p.post_title AS product_name, p.ID AS product_post_id
@@ -318,26 +406,13 @@ function get_for_location( int $location_id, bool $include_sold_out = false ): a
 			   AND ( a.expires_date IS NULL OR a.expires_date >= %s )
 			   {$status_clause}
 			 ORDER BY a.effective_date DESC, p.post_title ASC",
-			$location_id,
 			$today,
 			$today
 		)
 	);
 	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-	// One row per product: the most recent statement wins, so a correction
-	// made today replaces last week's rather than appearing beside it.
-	$seen = [];
-	$out  = [];
-	foreach ( (array) $rows as $row ) {
-		if ( isset( $seen[ $row->product_id ] ) ) {
-			continue;
-		}
-		$seen[ $row->product_id ] = true;
-		$out[]                    = $row;
-	}
-
-	return $out;
+	return winners( (array) $rows );
 }
 
 /**
