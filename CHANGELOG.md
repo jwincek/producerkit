@@ -42,6 +42,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- An AI assistant can now ask how many commission requests are waiting, or
+  list them, without passing anything. Both abilities refused a call with no
+  arguments — the most natural way to ask — while every other read-only
+  ability accepted one.
+
+
+### Fixed
+
 - An unsupported PHP version now explains itself instead of taking the site
   down. WordPress only checks a plugin's "Requires PHP" when you activate it
   from the admin — replace the files in place, as an FTP upload or a host-level
