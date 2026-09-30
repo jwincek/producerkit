@@ -98,6 +98,31 @@ function valid_statuses(): array {
 	return [ 'abundant', 'available', 'limited', 'sold_out', 'unavailable' ];
 }
 
+/**
+ * What a status is called, in the site's language.
+ *
+ * The only place a status becomes words. Until #101 there were eleven others,
+ * each building the label from the slug with ucfirst( str_replace( '_', ' ' ) )
+ * — which produces English and can never be translated. So on a translated
+ * site every availability badge stayed in English: the board, the product
+ * card, the badge block, the product page, the admin columns and the
+ * dashboard. The Fresh Sheet alone had a translated version, and nothing else
+ * used it.
+ *
+ * bin/validate-config.php now fails the build on the slug-building pattern,
+ * because an enumerated fix of eleven sites is what produced eleven sites.
+ */
+function status_label( string $status ): string {
+	return match ( $status ) {
+		'abundant'    => __( 'Abundant', 'producerkit' ),
+		'available'   => __( 'Available', 'producerkit' ),
+		'limited'     => __( 'Limited', 'producerkit' ),
+		'sold_out'    => __( 'Sold out', 'producerkit' ),
+		'unavailable' => __( 'Unavailable', 'producerkit' ),
+		default       => $status,
+	};
+}
+
 /* ───────────────────────────────────────────────
  * CRUD helpers
  * ─────────────────────────────────────────────── */

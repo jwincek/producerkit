@@ -60,7 +60,7 @@ add_action(
 				$rows = \ProducerKit\Core\Availability\get_current( $post_id );
 				if ( ! empty( $rows ) ) {
 					$row         = $rows[0];
-					$status_text = ucfirst( str_replace( '_', ' ', $row->status ) );
+					$status_text = \ProducerKit\Core\Availability\status_label( (string) $row->status );
 					$colors      = [
 						'abundant'    => '#065f46',
 						'available'   => '#1e40af',

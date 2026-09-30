@@ -737,7 +737,10 @@
 					className: 'components-base-control__help',
 					style: { marginTop: 0 },
 				},
-				'Links (Venmo, Cash App, PayPal, custom) and accepted-payment badges (cash, SNAP/EBT, …) shown on the front end. The legacy Venmo Handle field still works if this list is empty.'
+				__(
+					'Links (Venmo, Cash App, PayPal, custom) and accepted-payment badges (cash, SNAP/EBT, …) shown on the front end. The legacy Venmo Handle field still works if this list is empty.',
+					'producerkit'
+				)
 			),
 
 			methods.length === 0

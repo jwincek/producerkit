@@ -1034,6 +1034,47 @@ if ( false === $guard_at ) {
 	}
 }
 
+// ── Check 15: no label built from a slug ─────────────────────────────────────
+//
+// ucfirst( str_replace( '_', ' ', $status ) ) turns "sold_out" into "Sold out"
+// — in English, permanently, whatever language the site is in. It had spread
+// to eleven places while a translated status_label() sat unused beside them
+// (#101). Labels come from a function that calls __(), never from the slug.
+//
+// Comments are stripped first: the function that replaced this pattern quotes
+// it in its own documentation.
+$slug_label_hits = [];
+
+foreach ( [ 'includes', 'modules', 'blocks' ] as $slug_label_dir ) {
+	$slug_label_files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $root . '/' . $slug_label_dir ) );
+
+	foreach ( $slug_label_files as $slug_label_file ) {
+		if ( 'php' !== $slug_label_file->getExtension() ) {
+			continue;
+		}
+
+		$slug_label_code = '';
+		foreach ( token_get_all( (string) file_get_contents( $slug_label_file->getPathname() ) ) as $token ) {
+			if ( is_array( $token ) ) {
+				if ( T_COMMENT === $token[0] || T_DOC_COMMENT === $token[0] ) {
+					continue;
+				}
+				$slug_label_code .= $token[1];
+				continue;
+			}
+			$slug_label_code .= $token;
+		}
+
+		if ( preg_match( "/ucfirst\\(\\s*str_replace\\(\\s*'_'\\s*,\\s*' '/", $slug_label_code ) ) {
+			$slug_label_hits[] = str_replace( $root . '/', '', $slug_label_file->getPathname() );
+		}
+	}
+}
+
+foreach ( $slug_label_hits as $slug_label_hit ) {
+	$add( 'error', 'i18n', "$slug_label_hit builds a label from a slug with ucfirst( str_replace( '_', ' ' ) ), which can never be translated. Use a label function that calls __()." );
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 $errors   = array_filter( $issues, static fn( $i ) => $i['level'] === 'error' );
 $warnings = array_filter( $issues, static fn( $i ) => $i['level'] === 'warning' );
