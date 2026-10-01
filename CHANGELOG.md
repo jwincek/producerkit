@@ -7,17 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- Availability statuses are now translated. "Sold out", "Abundant" and the
-  rest were built from their internal names, so on a site in another language
-  every availability badge stayed in English — on the board, the product card,
-  the badge block, the product page, and in the admin. A translated version
-  existed and only the Fresh Sheet used it.
-
-- The help text at the top of a location's Payment Options panel can now be
-  translated.
-
+## [2.9.1] - 2026-09-30
 
 ### Security
 
@@ -28,9 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   through IDs. Both now answer only for published products, and give the same
   empty reply for everything else, so they don't reveal what exists either.
 
-
-### Security
-
 - The product CSV export can no longer carry a spreadsheet formula. It wrote
   product titles, excerpts, notes and term names straight into cells, and any
   user who can edit products controls those — so a title beginning with `=`
@@ -38,37 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   are now escaped, as the RSVP export already did. Importing the file reverses
   exactly that escape, so a real product called "-40° Frozen Berries" survives
   the round trip unchanged.
-
-### Fixed
-
-- CSV exports and imports no longer raise a PHP 8.4 deprecation, which with
-  display errors on was printed into the downloaded file ahead of the data.
-
-
-### Fixed
-
-- The availability board no longer ignores a correction. If a product was
-  "abundant" last week and you marked it sold out today, the board kept
-  showing it as abundant: it chose each product's status by best news rather
-  than by most recent. Today's statement now wins, everywhere.
-
-- A board on a shop's page lists what that shop carries, not everything you
-  make. Products marked "available everywhere I sell" belong on your own
-  stand's board and not on a retailer's — #53 fixed that for one part of the
-  plugin, and the board was still using the old rule.
-
-- At your own stand, a product marked "available everywhere I sell" no longer
-  disappears from the availability badge, the availability API, or what an AI
-  assistant is told when it asks.
-
-
-### Fixed
-
-- An AI assistant can now ask how many commission requests are waiting, or
-  list them, without passing anything. Both abilities refused a call with no
-  arguments — the most natural way to ask — while every other read-only
-  ability accepted one.
-
 
 ### Fixed
 
@@ -84,18 +40,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   usual cause: a host whose control panel reports one version while the web
   server serves another, or a per-domain setting that was never changed.
 
+- The availability board no longer ignores a correction. If a product was
+  "abundant" last week and you marked it sold out today, the board kept
+  showing it as abundant: it chose each product's status by best news rather
+  than by most recent. Today's statement now wins, everywhere.
 
-### Fixed
+- A board on a shop's page lists what that shop carries, not everything you
+  make. Products marked "available everywhere I sell" belong on your own
+  stand's board and not on a retailer's — #53 fixed that for one part of the
+  plugin, and the board was still using the old rule.
+
+- At your own stand, a product marked "available everywhere I sell" no longer
+  disappears from the availability badge, the availability API, or what an AI
+  assistant is told when it asks.
+
+- Availability statuses are now translated. "Sold out", "Abundant" and the
+  rest were built from their internal names, so on a site in another language
+  every availability badge stayed in English — on the board, the product card,
+  the badge block, the product page, and in the admin. A translated version
+  existed and only the Fresh Sheet used it.
+
+- The help text at the top of a location's Payment Options panel can now be
+  translated.
+
+- CSV exports and imports no longer raise a PHP 8.4 deprecation, which with
+  display errors on was printed into the downloaded file ahead of the data.
+
+- An AI assistant can now ask how many commission requests are waiting, or
+  list them, without passing anything. Both abilities refused a call with no
+  arguments — the most natural way to ask — while every other read-only
+  ability accepted one.
 
 - Deleting the plugin now cleans up everything it stored. Four things were
   never removed: two internal version markers, the list of parts you switched
   off, and the producer name on each user's profile. The uninstaller was also
-  deleting a setting under a name the plugin has never used. The version
-  markers now always go. The switched-off list and the producer names go with
+  deleting a setting under a name the plugin has never used, and it left
+  behind WordPress's cached hierarchy for product types, seasons and event
+  types. The version markers and those caches now always go. The switched-off list and the producer names go with
   the rest of your data when you have asked for it to be deleted on uninstall.
   Pages generated from the dashboard are kept either way, since you may have
   edited them.
 
+- Deleting the plugin with your data now removes its terms as well: product
+  types, seasons, event types, and a profile's materials, finishes and
+  components. Every uninstall since 2.2.0 left them all behind. WordPress
+  refuses to delete a term from a taxonomy that isn't registered, and a plugin
+  being uninstalled isn't loaded to register it.
 
 ## [2.9.0] - 2026-09-13
 
@@ -1130,7 +1120,8 @@ before updating any site that ran 1.1.0 or earlier.
 - **Modular architecture** — every feature module except the core data layer
   can be switched off through the `pkit_active_modules` filter.
 
-[Unreleased]: https://github.com/jwincek/producerkit/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/jwincek/producerkit/compare/v2.9.1...HEAD
+[2.9.1]: https://github.com/jwincek/producerkit/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/jwincek/producerkit/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/jwincek/producerkit/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/jwincek/producerkit/compare/v2.6.0...v2.7.0

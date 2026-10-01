@@ -3,7 +3,7 @@ Contributors: jeromewincek
 Tags: availability, pre-orders, farmers market, artisan, events
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -73,7 +73,7 @@ ProducerKit gives small farms, makers, beekeepers and market gardeners a complet
 * Eleven blocks under a dedicated category, server-rendered with live front-end updates via the WordPress Interactivity API.
 * REST API endpoints for products, sources, taxonomies, availability, locations, stand status, events, RSVPs, pre-orders and commissions.
 * **Abilities API** — on WordPress 6.9+, twenty operations (list products, get/update availability, toggle stand status, RSVP to an event, read a guest list, create and manage pre-orders and commissions, send a quote, build a harvest list, and more) are registered as Abilities, so AI agents and automation tools can discover and call them with full input/output schemas and permission checks.
-* Modular architecture — disable feature modules you don't need with a single filter.
+* Modular architecture — switch off the parts you don't use from the ProducerKit dashboard, or disable any feature module with a single filter.
 * **Your data stays yours.** Deleting an event or a location removes the bookings attached to it rather than leaving names and addresses behind, and deleting the plugin only removes your content if you have asked it to.
 
 == Installation ==
@@ -95,7 +95,9 @@ The availability board and stand status banner are server-rendered and then kept
 
 = Can I turn off features I don't use? =
 
-Yes. Feature modules — producer profiles, stand status, availability board, event manager, notifications, pre-orders, commissions and WooCommerce — can each be disabled via the `pkit_active_modules` filter. Only the core data layer is required.
+Yes. Pre-Orders, Commissions, Notifications and WooCommerce Settlement can be switched off from the ProducerKit dashboard. It tells you what each one is holding before you switch it off, and never deletes anything, so switching one back on restores everything.
+
+In code, every feature module except the core data layer — producer profiles, stand status, availability board, event manager, notifications, pre-orders, commissions and WooCommerce — can be disabled via the `pkit_active_modules` filter, which takes precedence over the dashboard.
 
 = What are Abilities? =
 
@@ -132,14 +134,14 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 
 == Changelog ==
 
-= Unreleased =
+= 2.9.1 =
 * Security: the sources behind an unpublished product are no longer visible through the public product-sources route.
-* Fixed: availability statuses such as "Sold out" are now translated on sites in other languages.
 * Security: the product CSV export now escapes cells a spreadsheet would run as a formula.
+* Fixed: on a site running a PHP version older than ProducerKit needs, the plugin now shows an explanation instead of a blank white page.
 * Fixed: marking a product sold out now takes effect on the availability board straight away, instead of the board still showing last week's status.
 * Fixed: a board on a shop's page now lists only what that shop carries.
-* Fixed: on a site running a PHP version older than ProducerKit needs, the plugin now shows an explanation instead of a blank white page.
-* Fixed: deleting the plugin now removes everything it stored, including the producer name on user profiles when you have asked for your data to be deleted.
+* Fixed: availability statuses such as "Sold out" are now translated on sites in other languages.
+* Fixed: deleting the plugin now removes everything it stored when you have asked for your data to be deleted, including product types, seasons and other terms, and the producer name on user profiles.
 
 = 2.9.0 =
 * Added: copy a location's payment options from another location instead of typing the same list in again.
@@ -245,6 +247,11 @@ They are generated in the visitor's browser by a bundled open-source library (qr
 * REST API and Abilities API coverage for all core operations.
 
 == Upgrade Notice ==
+
+= 2.9.1 =
+Recommended. Fixes two security issues. The sources behind a draft or private product could be read through the public API, and the product CSV export could carry a spreadsheet formula that would run when an administrator opened the file.
+
+Also fixes the availability board ignoring a product you had just marked sold out, and shows an explanation instead of a blank page if your host serves an older PHP than ProducerKit needs.
 
 = 2.9.0 =
 Optional. Adds a way to switch off the parts of ProducerKit you do not use — pre-orders, made-to-order requests, customer emails, WooCommerce settlement — from the dashboard. It tells you what each one is currently holding before you switch it off, and never deletes anything: switching one back on restores everything.
